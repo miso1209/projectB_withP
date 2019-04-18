@@ -1,8 +1,12 @@
 import { DIRECTIONS } from './define';
 import MoveEngine from './moveengine';
 import PathFinder from './pathfinder';
-import Tile from './tile';
 import Tweens from './tweens';
+
+import Tile from './tile/tile';
+import Anvil from './tile/anvil';
+import Gate from './tile/gate';
+import Chest from './tile/chest';
 
 function hitTestRectangle(rect1, rect2) {
     return  (rect1.x < rect2.x + rect2.width &&
@@ -10,189 +14,6 @@ function hitTestRectangle(rect1, rect2) {
     rect1.y < rect2.y + rect2.height &&
     rect1.y + rect1.height > rect2.y);
 };
-
-
-// 
-class Gate extends Tile {
-    constructor(x, y, tileData) {
-        super(x, y, tileData);
-
-        // 철망을 붙인다
-        const base = (tileData.direction === DIRECTIONS.SW) ?
-                PIXI.Texture.fromFrame("stealBarL.png") : 
-                PIXI.Texture.fromFrame("stealBarR.png");
-
-        this.base = base;
-        this.bar1 = new PIXI.Sprite(new PIXI.Texture(base, new PIXI.Rectangle(0, 0, base.width, 50)));
-        this.bar2 = new PIXI.Sprite(new PIXI.Texture(base, new PIXI.Rectangle(0, 50, base.width, 40)));
-        this.bar3 = new PIXI.Sprite(new PIXI.Texture(base, new PIXI.Rectangle(0, 90, base.width, base.height - 90)));
-        this.addChild(this.bar1);
-        this.addChild(this.bar2);
-        this.addChild(this.bar3);
-
-        // 초기값을 설정할 수 있어야 한다
-        this.openRatio = 1; // 기본으로 닫아놓는다
-        
-        // 열쇠로 열수 있는지 확인한다
-        if (tileData.tags && tileData.tags.indexOf("key") >= 0) {
-            this.needsKey = true;
-        }
-    }
-
-    set openRatio(value) {
-        // 0이면 닫힌거고 1 이면 열린것
-        this.bar1.position.y = -this.base.height;
-        
-        this.bar2.position.y = this.bar1.position.y + this.bar1.height;
-        this.bar2.height = value * 40;
-        
-        this.bar3.position.y = this.bar1.position.y + 50 + this.bar2.height;
-
-        this._openRatio = value;
-        this.duration = 0.5;
-    }
-
-    open(tweens) {
-        if (tweens) {
-            // 열쇠가 돌아가는 시간을 조금 벌어야 한다. 바로 열리면 뭔가 이상하다
-            tweens.addTween(this, this.duration, { openRatio: 0 }, 0.5, "easeInOut", true);
-        } else {
-            this.openRatio = 0;
-        }
-    }
-
-    close(tweens) {
-        if (tweens) {
-            
-            tweens.addTween(this, this.duration, { openRatio: 1 }, 0, "easeInOut", true);
-        } else {
-            this.openRatio = 1;
-        }
-    }
-
-    get openRatio() {
-        return this._openRatio;
-    }
-
-    get isOpened() {
-        return this._openRatio <= 0;
-    }
-
-    get isInteractive() {
-        if (this.isOpened) {
-            // 열린문은 인터랙트 하지 않아도 된다
-            // 다시 닫을 일이 있을까?
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    touch(game) {
-        // 다이얼로그를 연다
-        if (!this.isOpened) {
-            if (this.needsKey) {
-                // 열쇠를 가지고 있는지 검사한다
-                const keyItem = game.player.inventory.getItemByType(3);
-                if (keyItem) {
-                    game.ui.showDialog("문을 열었다!");
-                    this.open(game.tweens);
-                    // 열쇠를 파괴한다
-                    game.player.inventory.deleteItem(keyItem.itemId);
-                } else {
-                    game.ui.showDialog("문을 열기 위해서 열쇠가 필요하다");
-                }
-                
-            } else {
-                game.ui.showDialog("이 문은 열리지 않을 것 같다\n\n다른 문을 찾아보자");
-            }
-        }
-    }
-    
-}   
-
-class Chest extends Tile {
-    constructor(x, y, tileData) {
-        super(x, y, tileData);
-
-        this.isInteractive = true;
-        this.isOpened = false;
-
-        // 자신의 타일 모양을 바꾸어야 한다
-        this.animations = tileData.animations;
-    }
-
-    open() {
-        // TODO : 애니메이션을 플레이 해야한다
-        // 텍스쳐 변경
-        this.setTexture(PIXI.Texture.fromFrame(this.animations[1].textureName));
-
-        this.isOpened = true;
-    }
-
-    touch(game) {
-        if (this.isOpened) {
-            game.ui.showDialog("상자는 비어있다.");
-        } else {
-            this.open();
-            // TODO : 아이템 아이디가 어딘가 있어야 하는데.. 일단 1,2번이 열쇠조각, 3번이 열쇠이다
-            let itemType;
-            if (!game.player.inventory.getItemByType(1))  {
-                game.player.inventory.addItem(1, 1);
-                itemType = 1;
-            } else if (!game.player.inventory.getItemByType(2))  {
-                game.player.inventory.addItem(2, 2);
-                itemType = 2;
-            }
-            
-            // 두번째상자에서 몬스터가 나오게 한다
-            if (itemType === 2) {
-                game.battleMode.callback = () => {
-                    this.onItemAdded(game, itemType);
-                };
-                game.enterStage('assets/mapdata/map2.json', "battle");
-            } else {
-                this.onItemAdded(game, itemType);
-            }
-        }
-    }
-
-    onItemAdded(game, itemType) {
-        game.ui.showItemAcquire(itemType, () => {
-            // TODO:  모달 클로즈 이벤트를 만들어야 한다
-            // 트리거를 만들어야 한다!!
-
-            if (game.player.inventory.getItemByType(1) && 
-                game.player.inventory.getItemByType(2)) {
-
-                game.ui.showChatBallon(game.player, "열쇠조각은 모두 모았어!!\n아까 모루를 본 것 같은데 \n그쪽으로 가보자", 4);
-            } else {
-                game.ui.showChatBallon(game.player, "열쇠조각이다! 나머지 조각도 어딘가 있을거야", 4);
-            }
-        });
-    }
-}
-
-class Anvil extends Tile {
-    constructor(x, y, tileData) {
-        super(x, y, tileData);
-
-        this.isInteractive = true;
-        this.firstTouch = true;
-    }
-
-    touch(game) {
-        if (this.firstTouch) {
-            this.firstTouch = false;
-            game.ui.showDialog("모루를 발견하였다\n\n새로운 아이템을 조합할 수 있게 되었다", () => {
-                game.ui.showCombine();
-            });
-        } else {
-            game.ui.showCombine();
-        }
-    }
-}
-
 
 function getDirection(x1, y1, x2, y2) {
     if (x1 === x2) {
@@ -232,20 +53,22 @@ export default class Stage extends PIXI.Container {
         this.TILE_HALF_W = tileWidth / 2;
         this.TILE_HALF_H = tileHeight / 2;
 
-        this.tiles = {}
-        this.groundMap = new Array(height * width);
-        this.objectMap = new Array(height * width);
+        //this.tiles = {}
+        //this.groundMap = new Array(height * width);
+        //this.objectMap = new Array(height * width);
+        this.tilemap = new Array(height * width);
+        this.alphaTiles = [];
        
         this.mapContainer = new PIXI.Container();
 	    this.addChild(this.mapContainer);
 
-        this.groundContainer = new PIXI.Container();
-        this.objectContainer = new PIXI.Container()
-        this.overlayContainer = new PIXI.Container()
+        //this.groundContainer = new PIXI.Container();
+        //this.objectContainer = new PIXI.Container()
+        //this.overlayContainer = new PIXI.Container()
 
-        this.mapContainer.addChild(this.groundContainer);
-        this.mapContainer.addChild(this.objectContainer);
-        this.mapContainer.addChild(this.overlayContainer);
+        //this.mapContainer.addChild(this.groundContainer);
+        //this.mapContainer.addChild(this.objectContainer);
+        //this.mapContainer.addChild(this.overlayContainer);
         
         this.interactive = true;
 
@@ -267,31 +90,6 @@ export default class Stage extends PIXI.Container {
 
         this.currentFocusLocation = { x: this.mapWidth >> 1, y: this.mapHeight >> 1 };
 		this.centralizeToPoint(this.externalCenter.x, this.externalCenter.y, true);
-    }
-
-    // Obj를 흔들어주는 function 이런건 유틸쪽으로 빼야할까..?..
-    // set Timeout 을 사용하는게 맞는가..? MovieClip Timeline이 있는데
-    vibrateObj(obj, strength, callback) {
-        var size = strength ? strength : 4;
-        var x = obj.position.x;
-        var y = obj.position.y;
-
-        var vibrate = () => {
-            setTimeout(() => {
-                obj.position.x = x;
-                obj.position.y = y;
-                if (size < -1 || size > 1) {
-                    obj.position.x += size;
-                    obj.position.y += size;
-                    size = size / -4 * 3;
-                    vibrate();
-                } else {
-                    callback ? callback() : null;
-                }
-            }, 30);
-        };
-
-        vibrate();
     }
 
     zoomTo(scale, instantZoom) {
@@ -327,16 +125,8 @@ export default class Stage extends PIXI.Container {
             this.tweens.addTween(this.mapContainer.position, 0.5, { x: px, y: py }, 0, "easeInOut", true );
         }
     }
-
-    addTile(id, textureName, options) {
-        options = options || {};
-        options.textureName = textureName;
-        this.tiles[id] = options;
-            
-    }
-
-    generateTile(x, y, tileId) {
-        const tileData = this.getTileData(tileId);
+  
+    setTile(x, y, tileData) {
         let tile;
         if (tileData.objectType === "gate") {
             tile = new Gate(x, y, tileData);
@@ -350,22 +140,17 @@ export default class Stage extends PIXI.Container {
         }
         tile.position.x = this.getTilePosXFor(x, y) - this.TILE_HALF_W;
         tile.position.y = this.getTilePosYFor(x ,y) + this.TILE_HALF_H;
-        return tile;
-    }
 
-    setGroundTile(x, y, tileId) {
-        if (tileId > 0) {
-            this.groundMap[x + y * this.mapWidth] = this.generateTile(x, y, tileId);
+        // 맵에 추가한다
+        const index = x + y * this.mapWidth;
+        if (this.tilemap[index]) {
+            this.tilemap[index].push(tile);
+        } else {
+            this.tilemap[index] = [tile];
         }
     }
 
-    setObjectTile(x, y, tileId) {
-        if (tileId > 0) {
-            this.objectMap[x + y * this.mapWidth] = this.generateTile(x, y, tileId);
-
-        }
-    }
-
+   
     getTilePosXFor = function(c, r) {
         return (c * this.TILE_HALF_W) + (r * this.TILE_HALF_W);
     };
@@ -375,34 +160,36 @@ export default class Stage extends PIXI.Container {
     }
     
     getGroundTileAt(x, y) {
-        return this.groundMap[x + y*this.mapWidth];
+        const tilesArray = this.tilemap[x + y*this.mapWidth];
+        if (tilesArray) {
+            if (tilesArray.length > 0) {
+                return tilesArray[0];
+            }
+        }
+        return null;
     }
 
+    // 이것은 나중에 특정 타입의 타일을  얻어오도록 바꾸어야 한다.
     getObjectAt(x, y) {
-        return this.objectMap[x + y*this.mapWidth];
-    }
 
-    getTileData(tileid) {
-        return this.tiles[tileid];
+        const tilesArray = this.tilemap[x + y*this.mapWidth];
+        if (tilesArray) {
+            if (tilesArray.length > 0) {
+                return tilesArray[tilesArray.length - 1];
+            }
+        }
+        return null;
     }
 
     build() {
         for (let y = 0; y < this.mapHeight; y++ ) {
             for (let x = this.mapWidth - 1; x >= 0; --x) {
                 const index = x + y * this.mapWidth;
-                const groundTile = this.groundMap[index];
-
-                if (groundTile) {
-                    this.groundContainer.addChild(groundTile);
-                    this.pathFinder.setCell(x, y, groundTile.movable);
+                const tileArray = this.tilemap[index] || [];
+                for(const tile of tileArray) {
+                    this.mapContainer.addChild(tile);
+                    this.pathFinder.setCell(x, y, tile.movable);
                 }
-
-                const objectTile = this.objectMap[index];
-                if (objectTile) {
-                    this.objectContainer.addChild(objectTile);   
-                    this.pathFinder.setDynamicCell(x, y, objectTile.movable);
-                }
-                
             }
         }
     }
@@ -413,10 +200,11 @@ export default class Stage extends PIXI.Container {
 
     checkForTileClick(mdata) {
         const localPoint = this.mapContainer.toLocal(mdata.global);
-        const selectedTile = this.getTileFromLocalPos(localPoint);
-        if (selectedTile) {
+        const selectedTiles = this.getTileFromLocalPos(localPoint);
+        if (selectedTiles && selectedTiles.length > 0) {
            if (this.onTileSelected) {
-                this.onTileSelected(selectedTile.gridX, selectedTile.gridY);
+                const oneTile = selectedTiles[0];
+                this.onTileSelected(oneTile.gridX, oneTile.gridY);
            }
         }
     }
@@ -440,7 +228,7 @@ export default class Stage extends PIXI.Container {
                     // 타일마름모 안에 있는지 확인한다
                     if (Math.abs(point.x - cx) * this.TILE_HALF_H / this.TILE_HALF_W + Math.abs(point.y - cy) <= this.TILE_HALF_H) {
                         const index = x + y * this.mapWidth;
-                        return this.groundMap[index];
+                        return this.tilemap[index];
                     }
                 }
             }
@@ -634,24 +422,6 @@ export default class Stage extends PIXI.Container {
         }	
     }
 
-    focusBattleCenter() {
-        if (true) {
-            const px = this.externalCenter.x - this.mapVisualWidthReal / 2 * this.currentScale;
-            const py = this.externalCenter.y - this.mapVisualHeightReal / 20 * this.currentScale;
-
-            this.tweens.addTween(this.mapContainer.position, 0.5, { x: px, y: py }, 0, "easeInOut", true);
-        }
-    }
-
-    focusBattleObject(obj) {
-        this.currentFocusLocation = { c: obj.gridX, r: obj.gridY };
-        const px = this.externalCenter.x - obj.position.x * this.currentScale;
-        const py = this.externalCenter.y - obj.position.y * this.currentScale + 20;
-
-        setTimeout(() => {
-            this.tweens.addTween(this.mapContainer.position, 0.5, { x: px, y: py }, 0, "easeInOut", true);
-        }, 500)
-    }
 
     checkForFollowCharacter(obj, instantFollow) {
         if (true) {
@@ -668,36 +438,26 @@ export default class Stage extends PIXI.Container {
         }
     }
 
-    
-
     arrangeObjTransperancies(obj, prevX, prevY, x, y) {
-        if (true) {
-            for (let i = 0; i < this.objectMap.length; ++i) {
-                const a = this.objectMap[i];
-                if (a) {
-                    a.alpha = 1;
-                }
-            }
+        for (const t of this.alphaTiles) {
+            t.alpha = 1;
+        }
+        this.alphaTiles = [];
 
-            for (let j = y; j < this.mapHeight; ++j) {
-                for (let i = 0; i <= x; ++i) {
-                    const tile = this.objectMap[i + j * this.mapWidth];
-                    if (tile && tile !== obj) {
+        for (let j = y; j < this.mapHeight; ++j) {
+            for (let i = 0; i <= x; ++i) {
+                const tiles = this.tilemap[i + j * this.mapWidth] || [];
+                for (const tile of tiles) {
+                    if (tile && tile !== obj && tile.transperancy) {
                         // 충돌체크를 한다
-                        const hit = hitTestRectangle(tile.getBounds(), obj.getBounds());
+                        const hit = hitTestRectangle(tile.getBounds(true), obj.getBounds(true));
                         if (hit) {
                             tile.alpha = 0.75;
+                            this.alphaTiles.push(tile);
                         }
                     }
                 }
             }
-        }
-    }
-
-    changeObjAlphasInLocation(value, x, y) {
-        const a = this.objectContainer[x + y * this.mapWidth];
-        if (a) {
-            a.alpha = value;
         }
     }
         
@@ -708,10 +468,12 @@ export default class Stage extends PIXI.Container {
     
     arrangeDepthsFromLocation(gridX, gridY) {
         for (let y = gridY; y < this.mapHeight; y++) {
-            for (let x = gridX - 1; x >= 0; x--) {
-                const a = this.objectMap[x + y * this.mapWidth];
-                if (a) {
-                    this.objectContainer.addChild(a);
+            for (let x = 0; x <= gridX; x++) {
+                const tileArray = this.tilemap[x + y * this.mapWidth] || [];
+                for (const tile of tileArray) {
+                    if (!tile.isGroundTile) {
+                        this.mapContainer.addChild(tile);
+                    }
                 }
             }
         }
@@ -720,7 +482,7 @@ export default class Stage extends PIXI.Container {
     removeObjRefFromLocation(obj) {
         //const index = obj.gridX + obj.gridY * this.mapWidth;
         //this.objectMap[index] = null;
-        this.objectContainer.removeChild(obj);
+        this.mapContainer.removeChild(obj);
     }
     
     addObjRefToLocation(obj, x, y) {
@@ -731,7 +493,7 @@ export default class Stage extends PIXI.Container {
 
         //const index = x + y * this.mapWidth;
         //this.objectMap[index] = obj;
-        this.objectContainer.addChild(obj);
+        this.mapContainer.addChild(obj);
     }
 
     update() {

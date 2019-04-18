@@ -8,7 +8,7 @@ export default class Tile extends PIXI.Container {
         this.gridY = y;
 
         // 스프라이트 정보를 출력한다
-        const texture = PIXI.Texture.fromFrame(options.textureName);
+        const texture = options.texture;
         const sprite = new PIXI.Sprite(texture);
         sprite.position.y = -texture.height;
         this.addChild(sprite);
@@ -42,6 +42,9 @@ export default class Tile extends PIXI.Container {
         this.isHighlighted = false;
         
         this.movable = options.movable || false;
+        this.transperancy = options.transperancy;
+
+        this.isGroundTile = options.objectType === "tiles";
     }
 
     setTexture(texture) {

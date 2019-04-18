@@ -7,6 +7,8 @@ import Player  from "./player";
 import Battle  from "./battle";
 import Explore  from "./explore";
 
+import TileSet from "./tiledmap";
+
 export default class Game {
     constructor(pixi) {
 
@@ -168,110 +170,24 @@ export default class Game {
 
             // 타일셋을 먼저 등록한다
             for (const tileset of mapData.tilesets) {
-                const tiles = resources[tileset.source].data;
-                const prefix = tileset.source.replace('.json', '_');
-                const idStart = tileset.firstgid;
-
-                // ======================================================
-                // 타일안에 디테일 데이터가 있으면 별도로 처리한다
-                const customTileData = {};
-                if (tiles.tiles) {
-                    for (const data of tiles.tiles) {
-                        const custom = {};
-                        // 애니메이션 정보 복사
-                        if (data.animation) {
-                            custom.animations = [];
-                            for(const anim of data.animation) {
-                                custom.animations.push({
-                                    duration: anim.duration,
-                                    textureName: prefix + anim.tileid + ".png",
-                                })
-                            }
-                        }
-                        // 커스텀 프라퍼티 복사
-                        for( const property of data.properties) {
-                            if (property.name === "movable") {
-                                custom.movable = property.value;
-                            }
-                            else if(property.name === "objectType") {
-                                custom.objectType = property.value;
-                            } 
-                            else if (property.name === "tag") {
-                                custom.tags = property.value.split(';');
-                            }
-                            else if (property.name === "direction") {
-                                custom.direction = (property.value === "left") ? DIRECTIONS.SW : DIRECTIONS.SE;
-                            }
-                        }
-                        customTileData[data.id + idStart] = custom;
-                    }
-                }
-                // ======================================================
-
-                for (let i = 0; i < tiles.tilecount; ++i) {
-
-                    const textureName = prefix + i + ".png";
-                    if (!PIXI.utils.TextureCache[textureName]) {
-
-                        const image = resources[tiles.image].data;
-
-                        const x = i % tiles.columns;
-                        const y = Math.floor(i / tiles.columns);
-                        const c = document.createElement('canvas');
-                        c.width = tiles.tilewidth + 2; 
-                        c.height = tiles.tileheight + 2;
-                        const context = c.getContext('2d');
-                        context.drawImage(image, x * tiles.tilewidth, y * tiles.tileheight, tiles.tilewidth, tiles.tileheight, 1, 1, tiles.tilewidth, tiles.tileheight);
-                        const texture = PIXI.Texture.fromCanvas(c, new PIXI.Rectangle (1, 1, tiles.tilewidth, tiles.tileheight));
-                        PIXI.Texture.addToCache(texture, textureName);
-                    }
-                    // TODO : 나중에 타일매니져로 교체한다
-                    stage.addTile(i+idStart, textureName, customTileData[i + idStart]); 
-                }
+                Object.assign(tileset, resources[tileset.source].data);
+                tileset.image = resources[tileset.image].data;
             }
+
+            // 여기에 데이터를 입력한다
+            const tileset = new TileSet(mapData);
 
             // 타일맵을 설정한다
-            for (const layer of mapData.layers) {
-                for (let y = 0; y < layer.height;++y) {
-                    for (let x = 0; x < layer.width;++x) {
-                        // 맵툴문제 때문에 90 도를 뒤집어야 한다
-                        const index =  y + (layer.width - x -1) * layer.width;
-                        const tileId = layer.data[index];
-
-                        // 90 도 회전시킨다.
-                        if (layer.name === "Tiles") {
-                            // 타일
-                            stage.setGroundTile(x, y, tileId);
-                        } else {
-                            // 오브젝트이다
-                            stage.setObjectTile(x, y, tileId);
-                        }
-
-                        // 특수 타일 처리
-                        // 이 특수타일들에 대한 정보를 나중에 별도의 데이터로 분리해야한다.
-                        // { tileid , tiletype }
-                        // 앵커를 없애고 타일좌표로 맞추는것이 필요할지도 모르겠다.
-                        if (tileId === 282) {
-                            // 윈도우
-                            const light = new PIXI.Sprite(PIXI.Texture.fromFrame("window_light.png"));
-                            light.anchor.x = 1;
-                            light.position.x = stage.getTilePosXFor(x, y) + 15;
-                            light.position.y = stage.getTilePosYFor(x, y) + stage.TILE_HALF_H - 71;
-                            light.blendMode = PIXI.BLEND_MODES.ADD;
-                            stage.overlayContainer.addChild(light)
-                        } else if (tileId === 279) {
-                            // 토치 라이트
-                            const light = new PIXI.Sprite(PIXI.Texture.fromFrame("torch_light.png"));
-                            light.anchor.x = 0.5;
-                            light.anchor.y = 0.5;
-                            light.position.x = stage.getTilePosXFor(x, y) + 16;
-                            light.position.y = stage.getTilePosYFor(x, y) + stage.TILE_HALF_H - 69;
-                            light.blendMode = PIXI.BLEND_MODES.ADD;
-                            stage.overlayContainer.addChild(light)
-                        }
+            for (let y = 0; y < tileset.height;++y) {
+                for (let x = 0; x < tileset.width;++x) {
+                    const tiles = tileset.getTilesAt(x, y);
+                    for(const t of tiles)  {
+                        const tiledata = tileset.getTile(t);
+                        stage.setTile(x, y, tiledata);
                     }
                 }
             }
+            
 
             // 렌더링 데이터를 빌드한다
             stage.build();
