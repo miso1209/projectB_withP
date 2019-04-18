@@ -53,22 +53,11 @@ export default class Stage extends PIXI.Container {
         this.TILE_HALF_W = tileWidth / 2;
         this.TILE_HALF_H = tileHeight / 2;
 
-        //this.tiles = {}
-        //this.groundMap = new Array(height * width);
-        //this.objectMap = new Array(height * width);
         this.tilemap = new Array(height * width);
         this.alphaTiles = [];
        
         this.mapContainer = new PIXI.Container();
 	    this.addChild(this.mapContainer);
-
-        //this.groundContainer = new PIXI.Container();
-        //this.objectContainer = new PIXI.Container()
-        //this.overlayContainer = new PIXI.Container()
-
-        //this.mapContainer.addChild(this.groundContainer);
-        //this.mapContainer.addChild(this.objectContainer);
-        //this.mapContainer.addChild(this.overlayContainer);
         
         this.interactive = true;
 
@@ -77,8 +66,7 @@ export default class Stage extends PIXI.Container {
         this.tweens = new Tweens();
 
         this.currentScale = 1.0;
-        this.currentZoom = 0;
-    
+            
         this.posFrame = { x : 0, y : 0, w : 980, h : 500 };
         this.externalCenter = {
             x : this.posFrame.w >> 1,
@@ -468,7 +456,7 @@ export default class Stage extends PIXI.Container {
     
     arrangeDepthsFromLocation(gridX, gridY) {
         for (let y = gridY; y < this.mapHeight; y++) {
-            for (let x = 0; x <= gridX; x++) {
+            for (let x = gridX; x >= 0 ; x--) {
                 const tileArray = this.tilemap[x + y * this.mapWidth] || [];
                 for (const tile of tileArray) {
                     if (!tile.isGroundTile) {

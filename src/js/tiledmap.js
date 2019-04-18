@@ -13,6 +13,7 @@ export default class TileSet {
 
         // 타일셋을 먼저 등록한다
         const tileset = {};
+        
         for (const _tileset of mapData.tilesets) {
 
             const margin = _tileset.margin;
@@ -21,26 +22,45 @@ export default class TileSet {
             const spacing = _tileset.spacing;
             const firstgid = _tileset.firstgid;
 
-            const baseTexture = new PIXI.BaseTexture(_tileset.image, { scaleMode: PIXI.SCALE_MODES.NEAREST });
-            
-            for (let i = 0; i < _tileset.tilecount; ++i) {
-                const tileInfo = {};
-                tileInfo.id = i + firstgid;
-                tileInfo.objectType = _tileset.name;
+            if (_tileset.image) {
+                const baseTexture = PIXI.Texture.fromFrame(_tileset.image);
+                baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
                 
-                const x = i % _tileset.columns;
-                const y = Math.floor(i / _tileset.columns);
-
-                const xOffset = margin + (tileWidth + spacing) * x;
-                const yOffset = margin + (tileHeight + spacing) * y;
-                tileInfo.texture = new PIXI.Texture(baseTexture, new PIXI.Rectangle(xOffset, yOffset, tileWidth, tileHeight));
-
-                tileset[tileInfo.id] = tileInfo;
+                for (let i = 0; i < _tileset.tilecount; ++i) {
+                    const tileInfo = {};
+                    tileInfo.id = i + firstgid;
+                    
+                    const x = i % _tileset.columns;
+                    const y = Math.floor(i / _tileset.columns);
+    
+                    const xOffset = margin + (tileWidth + spacing) * x;
+                    const yOffset = margin + (tileHeight + spacing) * y;
+                    tileInfo.texture = new PIXI.Texture(baseTexture, new PIXI.Rectangle(xOffset, yOffset, tileWidth, tileHeight));
+                    tileset[tileInfo.id] = tileInfo;
+                }
+            } else {
+                for (let i = 0; i < _tileset.tilecount; ++i) {
+                    const tileInfo = {};
+                    tileInfo.id = i + firstgid;
+                    tileset[tileInfo.id] = tileInfo;
+                }
             }
 
+            
+          
                         
             for (const src of (_tileset.tiles || [])) {
                 const dst = tileset[src.id + firstgid];
+                console.log(dst, src.id + firstgid, tileset);
+
+                // 기본 타입을 복사
+                dst.type = src.type;
+
+                // 타일 전용 이미지가 있는지?
+                if (src.image) {
+                    dst.texture = PIXI.Texture.fromFrame(src.image);
+                }
+
                 // 애니메이션 정보 복사
                 dst.animations = src.animation || [];
                 for(const anim of dst.animations) {
@@ -52,6 +72,22 @@ export default class TileSet {
                 for( const property of src.properties) {
                     dst[property.name] = property.value;
                 }
+
+                // 프라퍼티중에 가장 중요한 것이 x, y 의 폭이다.
+                // 기본은 1x1 이고 이 상태에서는 따로 그룹생성을 하지 않는다
+                // 이외의 것은 텍스쳐의 오프셋을 정하고, 그룹을 만들어야 한다.
+                const xsize = dst.xsize || 1;
+                const ysize = dst.ysize || 1;
+                if (ysize > 1) {
+                    // 오프셋을 정한다 
+                    dst.imageOffset = {
+                        x: -(ysize - 1) * mapData.tilewidth / 2 ,
+                        y: 0,
+                    };
+                }
+
+                dst.xsize = xsize;
+                dst.ysize = ysize;
             }
         }
 
@@ -68,12 +104,35 @@ export default class TileSet {
                     // 맵툴문제 때문에 90 도를 뒤집어야 한다
                     const dstIndex = x + y * this.width;
                     const srcIndex =  y + (layer.width - x -1) * layer.width;
-                    const tileId = layer.data[srcIndex];
+                    let tileId = layer.data[srcIndex];
 
                     if (tileId !== 0) {
+                        // flip 여부를 찾는다
+                        const flipX = !!(tileId & 0x80000000);
+                        tileId = tileId &0x0FFFFFFF;
+                        
+                        const instance = {};
+                        Object.assign(instance, tileset[tileId]);
+                        instance.flipX = flipX;
+
+                        
+                        // 그룹을 세팅한다
+                        for(let j = 0; j < instance.ysize; ++j ) {
+                            for(let i = 0; i < instance.xsize; ++i ) {
+                                if (i === 0 && j === 0) { continue; }
+
+                                // 타일의 데이터를 추가로 변경한다
+                                const gindex = (x + i) + (y - j) * this.width;
+                                tiledata[gindex] = tiledata[gindex] || [];
+                                tiledata[gindex].push({
+                                    primary: {x:x, y:y }
+                                });
+                            }
+                        }
+
                         // 타일이 배열로 들어가게 된다. 배열의 순서는 드로잉 순서이기 때문에 매우 중요하다
                         tiledata[dstIndex] = tiledata[dstIndex] || [];
-                        tiledata[dstIndex].push(tileId);
+                        tiledata[dstIndex].push(instance);
                     }
                 }
             }
@@ -87,9 +146,5 @@ export default class TileSet {
     getTilesAt(x, y) {
         const i = x + y * this.width;
         return this.tiledata[i] || [];
-    }
-
-    getTile(tileId) {
-        return this.tileset[tileId];
     }
 }

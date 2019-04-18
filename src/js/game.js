@@ -145,7 +145,7 @@ export default class Game {
         // =======================================================
 
         // 필요한 리소스를 로딩한다
-        this.resourceManager.add("stage", stagePath);
+        /*this.resourceManager.add("stage", stagePath);
         this.resourceManager.add("tiles.json", "assets/mapdata/tiles.json");
         this.resourceManager.add("tiles.png", "assets/mapdata/tiles.png");
         this.resourceManager.add("objects.json", "assets/mapdata/objects.json");
@@ -156,7 +156,12 @@ export default class Game {
         this.resourceManager.add("torch_light.png", "assets/torch_light.png");
         this.resourceManager.add("background.png", "assets/background.png");
         this.resourceManager.add("stealBarL.png", "assets/mapdata/stealBarL.png");
-        this.resourceManager.add("stealBarR.png", "assets/mapdata/stealBarR.png");
+        this.resourceManager.add("stealBarR.png", "assets/mapdata/stealBarR.png");*/
+
+        this.resourceManager.add("stage", "assets/mapdata/house.json");
+        this.resourceManager.add("house2x2.png", "assets/mapdata/house2x2.png");
+        this.resourceManager.add("house4x4.png", "assets/mapdata/house4x4.png");
+        this.resourceManager.add("house-table.png", "assets/mapdata/house-table.png");
 
     
 
@@ -168,12 +173,6 @@ export default class Game {
             const mapData = resources["stage"].data; // 이것은 규칙을 정한다
             const stage = new Stage(mapData.width, mapData.height, mapData.tilewidth, mapData.tileheight);
 
-            // 타일셋을 먼저 등록한다
-            for (const tileset of mapData.tilesets) {
-                Object.assign(tileset, resources[tileset.source].data);
-                tileset.image = resources[tileset.image].data;
-            }
-
             // 여기에 데이터를 입력한다
             const tileset = new TileSet(mapData);
 
@@ -181,8 +180,7 @@ export default class Game {
             for (let y = 0; y < tileset.height;++y) {
                 for (let x = 0; x < tileset.width;++x) {
                     const tiles = tileset.getTilesAt(x, y);
-                    for(const t of tiles)  {
-                        const tiledata = tileset.getTile(t);
+                    for(const tiledata of tiles)  {
                         stage.setTile(x, y, tiledata);
                     }
                 }

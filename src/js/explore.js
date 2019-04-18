@@ -38,8 +38,8 @@ export default class Explore {
             this.game.stage.onTilePassing = this.onTilePassing.bind(this);
 
             // 게이트를 열어놓는다
-            const gate = this.game.stage.getObjectAt(3, 1);
-            gate.open();
+            //const gate = this.game.stage.getObjectAt(3, 1);
+            //gate.open();
         }
     }
 
@@ -57,8 +57,8 @@ export default class Explore {
             this.game.stage.moveCharacter(this.game.player, 4,4);
             setTimeout(() => {
                 // 게이트문을 찾아서 닫는다.
-                const gate = this.game.stage.getObjectAt(3, 1);
-                gate.close(this.game.tweens);
+                //const gate = this.game.stage.getObjectAt(3, 1);
+                //gate.close(this.game.tweens);
             }, 2000);
 
             setTimeout(() => {
