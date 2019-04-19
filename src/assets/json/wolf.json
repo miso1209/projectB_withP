@@ -1,0 +1,25 @@
+{
+    "name": "Wolf",
+    "battleUi": {
+        "portrait": "monster02_active.png",
+        "skillAIcon": "ch01_skill01_on.png",
+        "skillBIcon": "ch01_skill01_on.png"
+    },
+    "stat": {
+        "hp": 150,
+        "maxHp": 150,
+        "damage": 50,
+        "balance": 0.8,
+        "criticalRate": 0.4,
+        "criticalBalance": 1.5,
+        "defense": 0.3
+    },
+    "animations": {
+        "idle": { "texture": "monster1_idle", "length": 1},
+        "attack": { "texture": "monster1-atk", "length": 4}
+    },
+    "offset": {
+        "x": 0,
+        "y": -48
+    }
+}

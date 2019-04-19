@@ -1,7 +1,7 @@
 import ResourceManager from "./resource-manager";
 import Tweens from "./tweens";
 import Stage  from "./stage";
-import { DIRECTIONS } from './define';
+import CharacterFactory from "./characterFactory";
 
 import Player  from "./player";
 import Battle  from "./battle";
@@ -101,6 +101,9 @@ export default class Game {
         // 이펙트
         this.resourceManager.add("assets/slash_1.json");
 
+        // Character JSON Load
+        CharacterFactory.loadCharacterJson();
+
         this.enterStage(playerInfo.stagePath, "explore");
     }
 
@@ -173,7 +176,7 @@ export default class Game {
 
         this.resourceManager.load((resources) => {
             if (!this.player) {
-                this.player = new Player();
+                this.player = CharacterFactory.createPlayer(CharacterFactory.createCharacterSpec('hector'));
             }
 
             const mapData = resources["stage"].data; // 이것은 규칙을 정한다

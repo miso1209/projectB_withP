@@ -1,0 +1,26 @@
+{
+    "name": "Hector",
+    "battleUi": {
+        "portrait": "player1_active.png",
+        "skillAIcon": "ch03_skill01_on.png",
+        "skillBIcon": "ch03_skill02.png"
+    },
+    "stat": {
+        "hp": 300,
+        "maxHp": 300,
+        "damage": 120,
+        "balance": 0.85,
+        "criticalRate": 0.3,
+        "criticalBalance": 1.7,
+        "defense": 0.5
+    },
+    "animations": {
+        "idle": { "texture": "idle", "length": 2},
+        "attack": { "texture": "atk", "length": 10},
+        "walk": { "texture": "walk", "length": 8}
+    },
+    "offset": {
+        "x": 0,
+        "y": -48
+    }
+}

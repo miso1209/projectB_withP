@@ -21,7 +21,7 @@ function getDirectionName(dir) {
 }
 
 export default class Character extends PIXI.Container {
-    constructor() {
+    constructor(spec) {
         super();
 
         this.gridX = 0;
@@ -47,6 +47,41 @@ export default class Character extends PIXI.Container {
         this.hpBar = hpBar;
         this.hpHolder.alpha = 0;
         this.hpBar.alpha = 0;
+
+        if(spec) {
+            this.name = spec.name;
+            
+            for(let key in spec.battleUi) {
+                this[key] = new PIXI.Sprite(PIXI.Texture.fromFrame(spec.battleUi[key]));
+            }
+    
+            for(let key in spec.stat) {
+                this[key] = spec.stat[key];
+            }
+    
+            for(let key in spec.animations) {
+                this.animations[key + '_nw'] = { textures: loadAniTexture(spec.animations[key].texture + "_nw", spec.animations[key].length), flipX: false };
+                this.animations[key + '_ne'] = { textures: this.animations[key + '_nw'].textures, flipX: true };
+                
+                this.animations[key + '_sw'] = { textures: loadAniTexture(spec.animations[key].texture + "_sw", spec.animations[key].length), flipX: false };
+                this.animations[key + '_se'] = { textures: this.animations[key + '_sw'].textures, flipX: true };
+            }
+
+            this.offset = spec.offset;
+        
+            const anim = new PIXI.extras.AnimatedSprite(this.animations.idle_sw.textures);
+            anim.animationSpeed = 0.1;
+            anim.play();
+            anim.position.x = this.offset.x;
+            anim.position.y = this.offset.y;
+            this.anim = anim;
+            this.container.addChild(anim);
+
+            this.hpHolder.position.y = -this.anim.height - 8;
+            this.hpHolder.position.x = 16 - this.hpHolder.width / 2;
+            this.hpBar.position.y = -this.anim.height - 7;
+            this.hpBar.position.x = 16 - this.hpHolder.width / 2 + 1;
+        }
 
         this.container.addChild(hpHolder);
         this.container.addChild(hpBar);
@@ -138,5 +173,5 @@ export default class Character extends PIXI.Container {
         } else {
             this.setAnimation('idle_' + getDirectionName(direction));
         }
-    }    
+    }
 }

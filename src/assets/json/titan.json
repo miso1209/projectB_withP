@@ -1,0 +1,25 @@
+{
+    "name": "Titan",
+    "battleUi": {
+        "portrait": "monster01_active.png",
+        "skillAIcon": "ch01_skill01_on.png",
+        "skillBIcon": "ch01_skill01_on.png"
+    },
+    "stat": {
+        "hp": 300,
+        "maxHp": 300,
+        "damage": 30,
+        "balance": 0.7,
+        "criticalRate": 0.2,
+        "criticalBalance": 1.2,
+        "defense": 0.5
+    },
+    "animations": {
+        "idle": { "texture": "monster2-idle", "length": 1},
+        "attack": { "texture": "monster2-atk", "length": 6}
+    },
+    "offset": {
+        "x": -9,
+        "y": -55
+    }
+}
