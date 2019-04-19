@@ -124,7 +124,21 @@ export default class Game {
     }
 
     enterBattle() {
-        // 전투는 별도 처리를 해야 할 듯하다
+        if (this.currentMode === this.exploreMode) {
+            // 기존 스테이지를 보이지 않게 한다 (스테이지를 떠날 필요는없다)
+            this.gamelayer.removeChild(this.stage);
+            // 배틀을 사용한다
+            this.currentMode = this.battleMode;
+        }
+    }
+
+    leaveBattle() {
+        if (this.currentMode === this.battleMode) {
+            // 기존 스테이지를 보이지 않게 한다 (스테이지를 떠날 필요는없다)
+            this.gamelayer.addChild(this.stage);
+            // 배틀을 사용한다
+            this.currentMode = this.exploreMode;
+        }
     }
 
     loadStage(stagePath, onLoadComplete) {

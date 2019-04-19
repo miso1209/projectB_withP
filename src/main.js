@@ -80,9 +80,9 @@ function gameStart(pixi) {
               // 스테이지를 변경한다
               toggle = !toggle;
               if (toggle) {
-                  game.enterStage('assets/mapdata/map.json', "explore");
+                  game.enterBattle();
               } else {
-                  game.enterStage('assets/mapdata/map2.json', "battle");
+                  game.leaveBattle();
               }
           } else if (e.keyCode  === 67) {
               //ui.showDialog("테스트 다이얼로그입니다. 클릭하면 꺼집니다");
