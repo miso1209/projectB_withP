@@ -1,3 +1,4 @@
+import path from 'path';
 import ResourceManager from "./resource-manager";
 import Tweens from "./tweens";
 import Stage  from "./stage";
@@ -142,81 +143,57 @@ export default class Game {
     }
 
     loadStage(stagePath, onLoadComplete) {
-        // =======================================================
-        // 전투 관련 하드 코딩이다. 나중에 스테이지 관련 핸들링을 변경하다
-        // 전투로 넘어갈때는 스테이지 정보를 백업한다
-        if (this.nextStageMode === "battle") {
-            // 배틀로 갈때는 스테이지를 기록한다
-            this.exploreMode.stage = this.stage;
-            this.exploreMode.backupX = this.player.gridX;
-            this.exploreMode.backupY = this.player.gridY;
 
-        } else if (this.currentMode === this.battleMode) {
-            // 전투에서 되돌아올때는 백업을 사용한다
-            const backup = this.exploreMode.stage;
-            this.exploreMode.fromBattle = true;
-            this.exploreMode.stage = undefined;
-            onLoadComplete(backup);
-            return;
-        }
-        // =======================================================
-
-        // 필요한 리소스를 로딩한다
-        /*this.resourceManager.add("stage", stagePath);
-        this.resourceManager.add("tiles.json", "assets/mapdata/tiles.json");
-        this.resourceManager.add("tiles.png", "assets/mapdata/tiles.png");
-        this.resourceManager.add("objects.json", "assets/mapdata/objects.json");
-        this.resourceManager.add("objects.png", "assets/mapdata/objects.png");
-        this.resourceManager.add("walls.json", "assets/mapdata/walls.json");
-        this.resourceManager.add("walls.png", "assets/mapdata/walls.png");
-        this.resourceManager.add("window_light.png", "assets/window_light.png");
-        this.resourceManager.add("torch_light.png", "assets/torch_light.png");
-        this.resourceManager.add("background.png", "assets/background.png");
-        this.resourceManager.add("stealBarL.png", "assets/mapdata/stealBarL.png");
-        this.resourceManager.add("stealBarR.png", "assets/mapdata/stealBarR.png");*/
-
-        this.resourceManager.add("stage", "assets/mapdata/house.json");
-        this.resourceManager.add("house-tile.png", "assets/mapdata/house-tile.png");
-        this.resourceManager.add("house-table.png", "assets/mapdata/house-table.png");
-        this.resourceManager.add("house-tile01.png", "assets/mapdata/house-tile01.png");
-        this.resourceManager.add("house-tile92.png", "assets/mapdata/house-tile92.png");
-        this.resourceManager.add("house4x4.png", "assets/mapdata/house4x4.png");
-        this.resourceManager.add("house-footpad.png", "assets/mapdata/house-footpad.png");
-        this.resourceManager.add("house-pillar.png", "assets/mapdata/house-pillar.png");
-        this.resourceManager.add("house-object01.png", "assets/mapdata/house-object01.png");
-        this.resourceManager.add("house-object02.png", "assets/mapdata/house-object02.png");
-
-    
-
+        this.resourceManager.add("stage", stagePath);
         this.resourceManager.load((resources) => {
-            if (!this.player) {
-                this.player = CharacterFactory.createPlayer(CharacterFactory.createCharacterSpec('hector'));
-            }
+            const resourcePath = path.dirname(stagePath) + '/';
 
             const mapData = resources["stage"].data; // 이것은 규칙을 정한다
-            const stage = new Stage(mapData.width, mapData.height, mapData.tilewidth, mapData.tileheight);
-
-            // 여기에 데이터를 입력한다
-            const tileset = new TileSet(mapData);
-
-            // 타일맵을 설정한다
-            for (let y = 0; y < tileset.height;++y) {
-                for (let x = 0; x < tileset.width;++x) {
-                    const tiles = tileset.getTilesAt(x, y);
-                    for(const tiledata of tiles)  {
-                        stage.setTile(x, y, tiledata);
+            // 맵데이터로부터 필요한 리소스를 전부 가져온다
+            // 나중에 클래스로 만들어야 할 것 같은데!?
+            for(const tileset of mapData.tilesets) {
+                if (tileset.image) {
+                    // 타일셋이 이미지 하나를 타일링 해서 쓰고 있는 경우이다
+                    this.resourceManager.add(tileset.image, resourcePath + tileset.image);
+                }
+                // 타일마다 개별 이미지를 쓰는 경우도 있다
+                for(const tile of tileset.tiles) {
+                    if (tile.image) {
+                        this.resourceManager.add(tile.image, resourcePath + tile.image);
                     }
                 }
             }
-            
 
-            // 렌더링 데이터를 빌드한다
-            stage.build();
+            this.resourceManager.load((resources) => {
 
-            // 로딩 완료 콜백
-            if (onLoadComplete) {
-                onLoadComplete(stage);
-            }
+                if (!this.player) {
+                    this.player = CharacterFactory.createPlayer(CharacterFactory.createCharacterSpec('hector'));
+                }
+
+                const stage = new Stage(mapData.width, mapData.height, mapData.tilewidth, mapData.tileheight);
+
+                // 여기에 데이터를 입력한다
+                const tileset = new TileSet(mapData);
+
+                // 타일맵을 설정한다
+                for (let y = 0; y < tileset.height;++y) {
+                    for (let x = 0; x < tileset.width;++x) {
+                        const tiles = tileset.getTilesAt(x, y);
+                        for(const tiledata of tiles)  {
+                            stage.setTile(x, y, tiledata);
+                        }
+                    }
+                }
+                
+
+                // 렌더링 데이터를 빌드한다
+                stage.build();
+
+                // 로딩 완료 콜백
+                if (onLoadComplete) {
+                    onLoadComplete(stage);
+                }
+            });
         });
     }
 
