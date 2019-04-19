@@ -170,16 +170,32 @@ export default class Stage extends PIXI.Container {
     }
 
     build() {
-        for (let y = 0; y < this.mapHeight; y++ ) {
-            for (let x = this.mapWidth - 1; x >= 0; --x) {
-                const index = x + y * this.mapWidth;
-                const tileArray = this.tilemap[index] || [];
-                for(const tile of tileArray) {
-                    this.mapContainer.addChild(tile);
-                    this.pathFinder.setCell(x, y, tile.movable);
+
+        const forEachTile = (callback) => {
+            for (let y = 0; y < this.mapHeight; y++ ) {
+                for (let x = this.mapWidth - 1; x >= 0; --x) {
+                    const index = x + y * this.mapWidth;
+                    const tileArray = this.tilemap[index] || [];
+                    for(const tile of tileArray) {
+                        callback(tile, x, y);
+                    }
                 }
             }
         }
+
+        forEachTile((tile, x, y) => {
+            if (tile.isGroundTile) {
+                this.mapContainer.addChild(tile);
+                this.pathFinder.setCell(x, y, tile.movable);
+            }
+        });
+
+        forEachTile((tile, x, y) => {
+            if (!tile.isGroundTile) {
+                this.mapContainer.addChild(tile);
+                this.pathFinder.setDynamicCell(x, y, tile.movable);
+            }
+        });
     }
 
     onMouseUp(event) {
@@ -370,7 +386,7 @@ export default class Stage extends PIXI.Container {
                 if (!newPath || newPath.indexOf(pathItem) === -1)
                 {
                     const tile = this.getGroundTileAt(pathItem.x, pathItem.y);
-                    tile.setHighlighted(false);
+                    tile && tile.setHighlighted(false);
                 }
             }
         }
@@ -382,7 +398,7 @@ export default class Stage extends PIXI.Container {
                 if (!currentPath || currentPath.indexOf(pathItem) === -1)
                 {
                     const tile = this.getGroundTileAt(pathItem.x, pathItem.y);
-                    tile.setHighlighted(true);
+                    tile && tile.setHighlighted(true);
                 }
             }
         }

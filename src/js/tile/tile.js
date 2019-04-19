@@ -7,9 +7,7 @@ export default class Tile extends PIXI.Container {
         this.gridX = x;
         this.gridY = y;
 
-        if (options.primary) {
-
-        } else {
+        if (options.texture) {
 
             // 스프라이트 정보를 출력한다
             const texture = options.texture;
@@ -19,7 +17,6 @@ export default class Tile extends PIXI.Container {
             this.tileTexture = sprite;
 
             if (options.imageOffset) {
-                console.log(options.imageOffset);
                 this.tileTexture.position.x += options.imageOffset.x;
                 this.tileTexture.position.y += options.imageOffset.y;
             }
@@ -29,39 +26,39 @@ export default class Tile extends PIXI.Container {
                 sprite.anchor.x = 1;
                 sprite.scale.x = -1;
             }
-
-            // 타일 영역에 대한 버텍스를 만든다
-            const vertices = [
-                [0, -TILE_HEIGHT/2],
-                [TILE_WIDTH/2, -TILE_HEIGHT],
-                [TILE_WIDTH, -TILE_HEIGHT/2],
-                [TILE_WIDTH/2, 0]
-            ];
-            this.vertices = vertices;
-
-            // 하이라이트를 만든다
-            // TODO : 모든 타일에 대해서 하이라이트를 만들 필요가 있을까? 바닥타일만 하이라이트를 만들고 싶다
-            this.highlightedOverlay = new PIXI.Graphics();
-            this.highlightedOverlay.clear();
-            this.highlightedOverlay.lineStyle(2, 0xFFFFFF, 1);
-            this.highlightedOverlay.beginFill(0x80d7ff, 0.5);
-            this.highlightedOverlay.moveTo(vertices[0][0], vertices[0][1]);
-            for (let i = 1; i < vertices.length; i++)
-            {
-                this.highlightedOverlay.lineTo(vertices[i][0], vertices[i][1]);
-            }
-            this.highlightedOverlay.lineTo(vertices[0][0], vertices[0][1]);
-            this.highlightedOverlay.endFill();
-            this.addChild(this.highlightedOverlay);
-
-            this.highlightedOverlay.visible = false;
-            this.isHighlighted = false;
-            
-            this.movable = options.movable || false;
-            this.transperancy = options.transperancy;
-
-            this.isGroundTile = options.type === "groundtile";
         }
+
+        // 타일 영역에 대한 버텍스를 만든다
+        const vertices = [
+            [0, -TILE_HEIGHT/2],
+            [TILE_WIDTH/2, -TILE_HEIGHT],
+            [TILE_WIDTH, -TILE_HEIGHT/2],
+            [TILE_WIDTH/2, 0]
+        ];
+        this.vertices = vertices;
+
+        // 하이라이트를 만든다
+        // TODO : 모든 타일에 대해서 하이라이트를 만들 필요가 있을까? 바닥타일만 하이라이트를 만들고 싶다
+        this.highlightedOverlay = new PIXI.Graphics();
+        this.highlightedOverlay.clear();
+        this.highlightedOverlay.lineStyle(2, 0xFFFFFF, 1);
+        this.highlightedOverlay.beginFill(0x80d7ff, 0.5);
+        this.highlightedOverlay.moveTo(vertices[0][0], vertices[0][1]);
+        for (let i = 1; i < vertices.length; i++)
+        {
+            this.highlightedOverlay.lineTo(vertices[i][0], vertices[i][1]);
+        }
+        this.highlightedOverlay.lineTo(vertices[0][0], vertices[0][1]);
+        this.highlightedOverlay.endFill();
+        this.addChild(this.highlightedOverlay);
+
+        this.highlightedOverlay.visible = false;
+        this.isHighlighted = false;
+        
+        this.movable = options.movable || false;
+        this.transperancy = options.transperancy;
+
+        this.isGroundTile = options.type === "groundtile";
     }
 
     setTexture(texture) {

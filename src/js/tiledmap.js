@@ -38,21 +38,12 @@ export default class TileSet {
                     tileInfo.texture = new PIXI.Texture(baseTexture, new PIXI.Rectangle(xOffset, yOffset, tileWidth, tileHeight));
                     tileset[tileInfo.id] = tileInfo;
                 }
-            } else {
-                for (let i = 0; i < _tileset.tilecount; ++i) {
-                    const tileInfo = {};
-                    tileInfo.id = i + firstgid;
-                    tileset[tileInfo.id] = tileInfo;
-                }
-            }
-
+            } 
             
-          
-                        
             for (const src of (_tileset.tiles || [])) {
-                const dst = tileset[src.id + firstgid];
-                console.log(dst, src.id + firstgid, tileset);
-
+                const dstId = src.id + firstgid;
+                const dst = tileset[dstId] = tileset[dstId] || { id: dstId };
+ 
                 // 기본 타입을 복사
                 dst.type = src.type;
 
@@ -69,25 +60,9 @@ export default class TileSet {
                 }
                     
                 // 커스텀 프라퍼티 복사
-                for( const property of src.properties) {
+                for( const property of src.properties || []) {
                     dst[property.name] = property.value;
                 }
-
-                // 프라퍼티중에 가장 중요한 것이 x, y 의 폭이다.
-                // 기본은 1x1 이고 이 상태에서는 따로 그룹생성을 하지 않는다
-                // 이외의 것은 텍스쳐의 오프셋을 정하고, 그룹을 만들어야 한다.
-                const xsize = dst.xsize || 1;
-                const ysize = dst.ysize || 1;
-                if (ysize > 1) {
-                    // 오프셋을 정한다 
-                    dst.imageOffset = {
-                        x: -(ysize - 1) * mapData.tilewidth / 2 ,
-                        y: 0,
-                    };
-                }
-
-                dst.xsize = xsize;
-                dst.ysize = ysize;
             }
         }
 
@@ -115,18 +90,38 @@ export default class TileSet {
                         Object.assign(instance, tileset[tileId]);
                         instance.flipX = flipX;
 
+                        // 프라퍼티중에 가장 중요한 것이 x, y 의 폭이다.
+                        // 기본은 1x1 이고 이 상태에서는 따로 그룹생성을 하지 않는다
+                        // 이외의 것은 텍스쳐의 오프셋을 정하고, 그룹을 만들어야 한다.
+                        instance.xsize = instance.xsize || 1;
+                        instance.ysize = instance.ysize || 1;
+                        const ysize = instance.flipX ? instance.xsize : instance.ysize;
                         
+                        if (ysize > 1) {
+                            // 오프셋을 정한다 
+                            instance.imageOffset = {
+                                x: -(ysize - 1) * mapData.tilewidth / 2 ,
+                                y: 0,
+                            };
+                        }
+
                         // 그룹을 세팅한다
                         for(let j = 0; j < instance.ysize; ++j ) {
                             for(let i = 0; i < instance.xsize; ++i ) {
                                 if (i === 0 && j === 0) { continue; }
 
                                 // 타일의 데이터를 추가로 변경한다
-                                const gindex = (x + i) + (y - j) * this.width;
+                                const gindex = !flipX ? 
+                                    (x + i) + (y - j) * this.width :
+                                    (x + j) + (y - i) * this.width;
+                                
                                 tiledata[gindex] = tiledata[gindex] || [];
-                                tiledata[gindex].push({
-                                    primary: {x:x, y:y }
-                                });
+
+                                // 서브타일 정보를 생각한다
+                                const subtile = {};
+                                Object.assign(subtile,  instance);
+                                subtile.texture = null;
+                                tiledata[gindex].push(subtile);
                             }
                         }
 

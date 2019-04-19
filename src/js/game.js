@@ -159,9 +159,15 @@ export default class Game {
         this.resourceManager.add("stealBarR.png", "assets/mapdata/stealBarR.png");*/
 
         this.resourceManager.add("stage", "assets/mapdata/house.json");
-        this.resourceManager.add("house2x2.png", "assets/mapdata/house2x2.png");
-        this.resourceManager.add("house4x4.png", "assets/mapdata/house4x4.png");
+        this.resourceManager.add("house-tile.png", "assets/mapdata/house-tile.png");
         this.resourceManager.add("house-table.png", "assets/mapdata/house-table.png");
+        this.resourceManager.add("house-tile01.png", "assets/mapdata/house-tile01.png");
+        this.resourceManager.add("house-tile92.png", "assets/mapdata/house-tile92.png");
+        this.resourceManager.add("house4x4.png", "assets/mapdata/house4x4.png");
+        this.resourceManager.add("house-footpad.png", "assets/mapdata/house-footpad.png");
+        this.resourceManager.add("house-pillar.png", "assets/mapdata/house-pillar.png");
+        this.resourceManager.add("house-object01.png", "assets/mapdata/house-object01.png");
+        this.resourceManager.add("house-object02.png", "assets/mapdata/house-object02.png");
 
     
 

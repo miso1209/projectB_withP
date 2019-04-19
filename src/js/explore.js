@@ -18,7 +18,7 @@ export default class Explore {
             player.setUiVisible(this.game, false);
             
         } else {
-            const spawnPoint = { x: 3, y: 1 };
+            const spawnPoint = { x: 0, y: 0 };
 
             const stage = this.game.stage
             const player = this.game.player;
