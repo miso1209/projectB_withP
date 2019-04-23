@@ -170,16 +170,32 @@ export default class Stage extends PIXI.Container {
     }
 
     build() {
-
+        // 타일을 순회할때는 밖에 타일부터 안쪽으로 껍질을 깎듯이 내려와야 한다.
         const forEachTile = (callback) => {
-            for (let y = 0; y < this.mapHeight; y++ ) {
-                for (let x = this.mapWidth - 1; x >= 0; --x) {
+            let yoffset = 0
+            let xoffset = this.mapWidth - 1;
+
+            while(yoffset < this.mapHeight && xoffset >= 0) {
+                for (let y = yoffset; y <= this.mapHeight - 1; ++y) {
+                    const x =  xoffset;
                     const index = x + y * this.mapWidth;
                     const tileArray = this.tilemap[index] || [];
                     for(const tile of tileArray) {
                         callback(tile, x, y);
                     }
                 }
+                
+                for (let x = xoffset - 1; x >= 0; --x) {
+                    const y = yoffset;
+                    const index = x + y * this.mapWidth;
+                    const tileArray = this.tilemap[index] || [];
+                    for(const tile of tileArray) {
+                        callback(tile, x, y);
+                    }
+                }
+
+                ++yoffset;
+                --xoffset;
             }
         }
 
