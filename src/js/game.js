@@ -127,7 +127,9 @@ export default class Game {
     enterBattle() {
         if (this.currentMode === this.exploreMode) {
             // 기존 스테이지를 보이지 않게 한다 (스테이지를 떠날 필요는없다)
+            this.battleMode.prepare();
             this.gamelayer.removeChild(this.stage);
+            this.gamelayer.addChild(this.battleMode.stage);
             // 배틀을 사용한다
             this.currentMode = this.battleMode;
         }
@@ -136,6 +138,7 @@ export default class Game {
     leaveBattle() {
         if (this.currentMode === this.battleMode) {
             // 기존 스테이지를 보이지 않게 한다 (스테이지를 떠날 필요는없다)
+            this.gamelayer.removeChild(this.battleMode.stage);
             this.gamelayer.addChild(this.stage);
             // 배틀을 사용한다
             this.currentMode = this.exploreMode;

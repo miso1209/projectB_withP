@@ -59,6 +59,7 @@ function gameStart(pixi) {
   game.resourceManager.add("monster02_active.png", "assets/monster02_active.png");
   game.resourceManager.add("monster03_active.png", "assets/monster03_active.png");
   game.resourceManager.add("ending_victory.png", "assets/ending_victory.png");
+  game.resourceManager.add("battleMap1.png", "assets/battleMap1.png");
 
   game.resourceManager.load(() => {
       const ui = new UI(game);

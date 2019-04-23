@@ -8,11 +8,12 @@
     "stat": {
         "hp": 100,
         "maxHp": 100,
-        "damage": 100,
+        "damage": 20,
         "balance": 0.8,
         "criticalRate": 0.5,
         "criticalBalance": 2,
-        "defense": 0.3
+        "defense": 0.3,
+        "attackSpeed": 1.5
     },
     "animations": {
         "idle": { "texture": "miluda_idle", "length": 1},

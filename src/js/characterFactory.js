@@ -12,7 +12,9 @@ export default class CharacterFactory {
         if(!CharacterFactory.isLoaded) {
             const loader = new PIXI.loaders.Loader();
             const resources = [
-                'hector'
+                'hector',
+                'elid',
+                'miluda'
             ];
 
             CharacterFactory.isLoaded = true;

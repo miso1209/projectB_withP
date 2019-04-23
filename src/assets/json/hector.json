@@ -8,11 +8,14 @@
     "stat": {
         "hp": 300,
         "maxHp": 300,
-        "damage": 120,
+        "damage": 30,
         "balance": 0.85,
         "criticalRate": 0.3,
         "criticalBalance": 1.7,
-        "defense": 0.5
+        "defense": 0.5,
+        "attackSpeed": 2
+    },
+    "skill": {
     },
     "animations": {
         "idle": { "texture": "idle", "length": 2},
