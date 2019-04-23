@@ -100,17 +100,15 @@ export default class BattleCharacter extends PIXI.Container {
 
     update(battle) {
         this.tweens.update();
-        // 캐릭터가 사망하였거나, 전투가 끝났을 경우 skill 로직을 돌리지 않는다.
+        // 캐릭터가 사망하였거나, 전투가 끝났을 경우 로직을 돌리지 않는다.
         if (this.status === STATUS.DIE || battle.isBattleEnd()) {
             return;
         }
 
-        // 스킬이 준비 완료되었을 시 큐에 삽입한다.
         if (this.skillA.isReady()) {
             this.skillA.init();
             battle.basicQueue.enqueue(this.skillA);
         } else if (this.skillA.status === SKILL_STATUS.IDLE && battle.currentAction === null) {
-            // 전투 로직에 현재 액션이 없는 상태일 경우, 딜레이를 감소시킨다.
             this.skillA.delay();
         }
     }

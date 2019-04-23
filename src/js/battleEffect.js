@@ -1,9 +1,39 @@
 import MovieClip from './movieclip';
 
+function loadAniTexture(name, count) {
+    const frames = [];  
+    for (let i = 0; i < count; i++) {
+        frames.push(PIXI.Texture.fromFrame(name + i + '.png'));
+    }
+    return frames;
+}
+
 export default class BattleEffect extends PIXI.Container {
     constructor() {
         super();
         this.movies = [];
+    }
+
+    addEffect(target, options) {
+        const that = this;
+        const slash = { textures: loadAniTexture(`${options.name}_`, options.animationLength), flipX: false };
+        const anim = new PIXI.extras.AnimatedSprite(slash.textures);
+        anim.animationSpeed = options.speed;
+        anim.loop = false;
+        anim.blendMode = PIXI.BLEND_MODES.ADD;
+        anim.position.x = target.position.x - anim.width / 4;
+        anim.position.y = target.position.y - target.height / 2 - anim.height / 2;
+        this.addChild(anim);
+        anim.play();
+
+        const movieClip = new MovieClip(
+            MovieClip.Timeline(options.removeFrame, options.removeFrame + 1, null, () => {
+                that.removeChild(anim);
+            }),
+        );
+
+        this.movies.push(movieClip);
+        movieClip.playAndDestroy();
     }
 
     addDamageEffect(target, damage, color) {
@@ -27,7 +57,7 @@ export default class BattleEffect extends PIXI.Container {
             MovieClip.Timeline(1, 30, text, [["alpha", 0, 1, "outCubic"]]),
             MovieClip.Timeline(1, 30, text, [["y", text.position.y, text.position.y - 10, "outCubic"]]),
             MovieClip.Timeline(61, 91, text, [["alpha", 1, 0, "outCubic"]]),
-            MovieClip.Timeline(91, 91, null, () => {
+            MovieClip.Timeline(91, 92, null, () => {
                 that.removeChild(text);
             }),
         );

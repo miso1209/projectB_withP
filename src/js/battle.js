@@ -12,12 +12,6 @@ const BASE_POSITION = {
     CENTER_Y: -140
 }
 
-const SKILL_STATUS = {
-    IDLE: 1,
-    WAIT: 2,
-    ACTION: 3
-}
-
 class BattleQueue {
     constructor() {
         this.skillQueue = [];
@@ -81,9 +75,8 @@ export default class Battle {
             return;
         }
 
-        // 현재 액션을 선택되어있는 상태라면 큐의 액션을 수행
         if (this.currentAction) {
-            // 액션 완료되면 action 함수는 NUll 반환한다.
+            // 액션 완료되면 action 함수는 NUll 반환하여 currentAction을 null로 만듬.
             this.currentAction = this.currentAction.action(this);
         } else if (this.basicQueue.hasAction()) {
             this.currentAction = this.basicQueue.dequeue();

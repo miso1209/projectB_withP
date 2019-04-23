@@ -50,16 +50,15 @@ export default class Skill {
         return (this.currentDelay <= 0 && this.status === SKILL_STATUS.IDLE);
     }
 
-    // 스킬 사용 전 ( 큐 삽입할때 호출되어 WAIT 상태로 초기화 한다. )
     init() {
         this.currentFrame = 0;
         this.status = SKILL_STATUS.WAIT;
         
+        // Proponent 의 움직임, 애니메이션처리.
         const start = { x: this.proponent.x, y: this.proponent.y };
         const vector = this.proponent.currentDir === DIRECTIONS.SW? -1 : 1;
         const to = { x: this.proponent.x + 32 * vector, y: this.proponent.y - 16 * vector };
 
-        // Proponent 의 동작처리.
         const movieClip = new MovieClip(
             MovieClip.Timeline(1, 10, this.proponent, [
                 ["x", start.x, to.x, "outCubic"],
@@ -98,13 +97,12 @@ export default class Skill {
 
         if (this.currentFrame === this._delay.beforeAttack) {
             const target = this.getTarget(opponents);
-            if (target) {
-                battle.battleEffect.addDamageEffect(target, this.damage, "#ffffff");
-                target.onDamage(this.damage);
-            }
+            battle.battleEffect.addEffect(target, { name: 'slash', animationLength: 8, removeFrame: 60, speed: 0.5 });
+            battle.battleEffect.addDamageEffect(target, this.damage, "#ffffff");
+            target.onDamage(this.damage);
         } else if (this.currentFrame === this._delay.doneAttack) {
             this.currentFrame = 0;
-            // 임시로 공격 후 딜레이를 랜덤으로 주어 공격 순서가 뒤죽박죽이 되게 만들어 본다.
+            // 임시로 후딜을 랜덤으로 주어 공격 순서가 뒤죽박죽이 되게 만들어 본다.
             this.currentDelay = this._delay.afterAttack * Math.random();
             this.status = SKILL_STATUS.IDLE;
 
