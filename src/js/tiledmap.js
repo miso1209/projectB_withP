@@ -76,8 +76,6 @@ export default class TileSet {
                     // 타일셋 정보를 추가한다
                     dst.xsize = (src.imagewidth - (-tileoffset.x + baseTileWidth)) / (baseTileWidth/2) + 1;
                     dst.ysize = -tileoffset.x / (baseTileWidth/2) + 1;
-
-                    console.log(src.imagewidth, tileoffset, dst.xsize, dst.ysize);
                 }
             }
         }
