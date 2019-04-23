@@ -51,13 +51,19 @@ export default class TileSet {
             for (const src of (_tileset.tiles || [])) {
                 const dstId = src.id + firstgid;
                 const dst = tileset[dstId] = tileset[dstId] || { id: dstId };
+                
  
                 // 기본 타입을 복사
                 dst.type = src.type;
+                
 
                 // 타일 전용 이미지가 있는지?
                 if (src.image) {
                     dst.texture = PIXI.Texture.fromFrame(src.image);
+                    
+                    // 타일셋 정보를 추가한다
+                    dst.xsize = (src.imagewidth - (-tileoffset.x + baseTileWidth)) / (baseTileWidth/2) + 1;
+                    dst.ysize = -tileoffset.x / (baseTileWidth/2) + 1;
                 }
 
                 // 애니메이션 정보 복사
@@ -70,12 +76,6 @@ export default class TileSet {
                 // 커스텀 프라퍼티 복사
                 for( const property of src.properties || []) {
                     dst[property.name] = property.value;
-                }
-
-                if (src.image) {
-                    // 타일셋 정보를 추가한다
-                    dst.xsize = (src.imagewidth - (-tileoffset.x + baseTileWidth)) / (baseTileWidth/2) + 1;
-                    dst.ysize = -tileoffset.x / (baseTileWidth/2) + 1;
                 }
             }
         }
