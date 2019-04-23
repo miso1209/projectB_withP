@@ -52,7 +52,8 @@ export default class Explore {
             //=======================
             // 컷신 하드코딩
             // 스테이지 이름을 화면에 출력한다
-            this.game.ui.showStageTitle("어둠의 성탑 99층");
+            // this.game.ui.showStageTitle("어둠의 성탑 99층");
+            
             // 플레이어를 적당한 곳으로 이동시킨다
             this.game.stage.moveCharacter(this.game.player, 4,4);
             setTimeout(() => {

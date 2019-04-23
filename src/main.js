@@ -2,8 +2,15 @@ import Game from './js/game'
 import UI from './js/ui'
 import ResourceManager from './js/resource-manager'
 
+import DomUI from './js/domUI'
+
 function initApp() {
-  const pixi = new PIXI.Application(980, 500  , { backgroundColor : 0x6BACDE, forceCanvas: true });
+  const pixi = new PIXI.Application(980, 500, {
+    backgroundColor: 0x6BACDE,
+    forceCanvas: true
+  });
+
+  pixi.view.id = 'Game';
   document.body.appendChild(pixi.view);
 
   // 오프닝을 준비한다
@@ -12,16 +19,16 @@ function initApp() {
   loader.add('opening.png', 'assets/opening.png');
   loader.add('border.png', 'assets/border.png');
   loader.load(() => {
-      // 화면을 그린다
-      // 버튼을 클릭하면 게임을 시작한다
-      const sprite = new PIXI.Sprite(PIXI.Texture.fromFrame('opening.png'))
-      sprite.interactive = true;
-      pixi.stage.addChild(sprite);
-      sprite.mouseup = () => {
-          gameStart(pixi);
-      };
+    // 화면을 그린다
+    // 버튼을 클릭하면 게임을 시작한다
+    const sprite = new PIXI.Sprite(PIXI.Texture.fromFrame('opening.png'))
+    sprite.interactive = true;
+    pixi.stage.addChild(sprite);
+    sprite.mouseup = () => {
+      gameStart(pixi);
+    };
 
-      pixi.stage.addChild(new PIXI.Sprite(PIXI.Texture.fromFrame("border.png")));
+    pixi.stage.addChild(new PIXI.Sprite(PIXI.Texture.fromFrame("border.png")));
   });
 }
 
@@ -46,7 +53,7 @@ function gameStart(pixi) {
   game.resourceManager.add("combine.png", "assets/combine.png");
   game.resourceManager.add("combine_listitem.png", "assets/combine_listitem.png");
   game.resourceManager.add("combine_button.png", "assets/combine_button.png");
-  game.resourceManager.add("player1_active.png","assets/player1_active.png");
+  game.resourceManager.add("player1_active.png", "assets/player1_active.png");
   game.resourceManager.add("player2_active.png", "assets/player2_active.png");
   game.resourceManager.add("player3_active.png", "assets/player3_active.png");
   game.resourceManager.add("ch01_skill01_on.png", "assets/ch01_skill01_on.png");
@@ -62,41 +69,53 @@ function gameStart(pixi) {
   game.resourceManager.add("battleMap1.png", "assets/battleMap1.png");
 
   game.resourceManager.load(() => {
-      const ui = new UI(game);
-      game.ui = ui;
+    const ui = new UI(game);
+    game.ui = ui;
 
-      game.start({ stagePath: 'assets/mapdata/house.json' });
-      const game_update = () => {
-          game.update();
-          ui.update();
-          requestAnimationFrame(game_update);
+    //dom UI test
+    const domUI = new DomUI();
+    
+
+    game.start({
+      stagePath: 'assets/mapdata/house.json'
+    });
+    const game_update = () => {
+      game.update();
+      ui.update();
+      requestAnimationFrame(game_update);
+    }
+    game_update();
+    
+    domUI.showStageTitle('어둠의 타워 999층', 1500);
+
+    let toggle = true;
+
+    window.addEventListener("keydown", (e) => {
+      if (e.keyCode === 66) {
+        // 스테이지를 변경한다
+        toggle = !toggle;
+        if (toggle) {
+          game.enterBattle();
+        } else {
+          game.leaveBattle();
+        }
+      } else if (e.keyCode === 67) {
+        //ui.showDialog("테스트 다이얼로그입니다. 클릭하면 꺼집니다");
+        //ui.showItemAcquire();
+        //ui.showChatBallon(game.player, "테스트");
+
+        if (toggle) {
+          ui.showCombine();
+        } else {
+          ui.hideCombine();
+        }
+        toggle = !toggle;
+      } else if (e.keyCode === 68) {
+        //dom UI test
+        domUI.showItemAquire(1);
       }
-      game_update();
 
-
-      let toggle = true;
-
-      window.addEventListener("keydown", (e) => {
-          if (e.keyCode === 66) {
-              // 스테이지를 변경한다
-              toggle = !toggle;
-              if (toggle) {
-                  game.enterBattle();
-              } else {
-                  game.leaveBattle();
-              }
-          } else if (e.keyCode  === 67) {
-              //ui.showDialog("테스트 다이얼로그입니다. 클릭하면 꺼집니다");
-              //ui.showItemAcquire();
-              //ui.showChatBallon(game.player, "테스트");
-              if (toggle) {
-                  ui.showCombine();
-              } else {
-                  ui.hideCombine();
-              }
-              toggle = !toggle;
-          } 
-      }, true);
+    }, true);
   });
 }
 

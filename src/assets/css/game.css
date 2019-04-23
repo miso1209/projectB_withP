@@ -1,0 +1,130 @@
+@import './base.css';
+@import './modal.css';
+
+#Game, canvas {
+  position: relative;
+
+  display: block;
+  margin: 0 auto;
+}
+
+.project_header {
+  text-align: center;
+}
+
+.project_header h1 {
+  margin: 80px 0;
+
+
+  color: #ffffff;
+  font-size: 40px;
+  line-height: 1;
+}
+
+.uiContainer {
+  position: absolute;
+  z-index: 9999;
+  
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  
+  width: 980px;
+  height: 500px;
+  margin: 0 auto;
+
+  text-align: center;
+  overflow: hidden;
+
+  /* 클릭이벤트 막기. */
+  /* pointer-events: none; */
+}
+
+/* 클릭이벤트 열기. */
+.uiContainer * {
+  pointer-events: auto;
+}
+
+.modal {
+  top: 20px;
+  right: 20px;
+}
+
+.button {
+  width: 130px;
+  height: 33px;
+  padding: 8px 0;
+  color: #fff;
+  border: none;
+  background: url(../ui/button1.png) no-repeat;
+  transition: all 0.4s linear;
+}
+
+.button._small {
+  width: 79px;
+  padding: 8px 0;
+  background: url(../ui/button_s1.png) no-repeat;
+  background-size: contain;
+}
+
+/* 사용 미정 */
+.button._small.submit {
+  background: url(../ui/button_s2.png) no-repeat;
+}
+.button.submit {
+  background: url(../ui/button2.png) no-repeat;
+}
+
+.title {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  right: 0;
+
+  text-align: center;
+  font-size: 26px;
+  color: #ffd800;
+  text-align: center;
+}
+
+.stageTitle {
+  display: inline-block;
+  margin:15% auto;
+  
+  text-align: center;
+  font-size: 40px;
+  line-height: 50px;
+  color: #fff;
+  border-bottom: 3px solid #fff;
+
+  transform: scaleX(0);
+  opacity:0;
+  transition: all 0.5s;
+}
+
+.stageTitle.animate {
+  opacity:1;
+  transform: scaleX(1);
+  transition: all 0.3s;
+
+}
+
+.contents {
+  position: absolute;
+  top: 80px;
+  left: 0;
+  right: 0;
+
+  margin: 0 auto;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #fff;
+}
+
+.mainMenu {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  padding: 10px 20px;
+}

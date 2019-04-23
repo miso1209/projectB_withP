@@ -1,0 +1,144 @@
+
+@font-face {
+  font-family: 'PixelFont';
+  src:  local('PixelFont'),
+    url('../fonts/PixelFont-7.woff') format('woff'),
+    url('../fonts/PixelFont-7.eot') format('embedded-opentype'),
+    url('../fonts/PixelFont-7.ttf') format('truetype'),
+    url('../fonts/PixelFont-7.svg') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* style reset */
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-style:normal;
+	box-sizing: border-box;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1em;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-spacing: 0;
+}
+hr {
+	border: 0;
+	border-bottom: 1px solid rgba(0, 0, 0, .15);
+	margin: 0;
+}
+body, button, input, select, textarea {
+	font-family: 'PixelFont', 'Nanum Gothic', 'Malgun Gothic', '맑은 고딕', 'AppleSDGothicNeo', -apple-system, 'SF Pro Display', 'Roboto', 'Segoe UI', 'Helvetica Neue', sans-serif;
+	font-synthesis: none;
+	font-size:16px;
+	font-weight:400;
+	letter-spacing:-.015em;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	word-break:keep-all;
+	word-wrap:break-word;
+}
+button, input, select, textarea {
+	overflow:visible;
+	-moz-border-radius:0;
+	-webkit-border-radius:0;
+	-ms-border-radius:0;
+	border-radius:0;
+	padding: 0;
+	margin: 0;
+	border: none;
+}
+textarea {
+	line-height:1.5em;
+}
+
+strong, .title {
+	font-weight:500;
+}
+details {
+	cursor: pointer;
+}
+details summary::-webkit-details-marker {
+	display: none;
+}
+summary,
+input:focus {
+	outline: none;
+}
+:focus {
+	outline:none;
+}
+
+body.locked {
+    overflow:hidden;
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    bottom: 0;
+}
+
+/* 
+font, html
+*/
+
+
+html {
+  height: 100%;
+  cursor: url(/src/assets/ui/cursor.png), auto;
+}
+
+body {
+  position: relative;
+  max-width: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+
+  font-family: 'PixelFont', Helvetica, arial, sans-serif;
+
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+	background-color: #000000;
+}
