@@ -101,6 +101,10 @@ export default class Game {
         
         // 이펙트
         this.resourceManager.add("assets/slash_1.json");
+        this.resourceManager.add("assets/explosion.json");
+        this.resourceManager.add("assets/shoted.json");
+        this.resourceManager.add("fireBall.png", "assets/fireBall.png");
+        this.resourceManager.add("arrow.png", "assets/arrow.png");
 
         // Character JSON Load
         CharacterFactory.loadCharacterJson();

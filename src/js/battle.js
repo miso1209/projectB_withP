@@ -26,7 +26,7 @@ class BattleQueue {
     }
 
     dequeue() {
-        const result = this.skillQueue.shift();
+        let result = this.skillQueue.shift();
         return result;
     }
 }

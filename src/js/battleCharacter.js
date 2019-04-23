@@ -1,6 +1,6 @@
 import { DIRECTIONS } from './define';
 import Tweens from './tweens';
-import Skill from './skill';
+import { MeleeSkill, ProjectileSkill, ArrowShotingSkill } from './skill';
 
 function loadAniTexture(name, count) {
     const frames = [];  
@@ -43,7 +43,13 @@ export default class BattleCharacter extends PIXI.Container {
 
         this.status = STATUS.IDLE;
 
-        this.skillA = new Skill();
+        if (spec.name == 'Elid') {
+            this.skillA = new ProjectileSkill();
+        } else if (spec.name == 'Miluda') {
+            this.skillA = new ArrowShotingSkill();
+        } else {
+            this.skillA = new MeleeSkill();
+        }
         this.skillA.setProponent(this);
 
         const shadow = new PIXI.Sprite(PIXI.Texture.fromFrame("shadow.png"));
