@@ -156,10 +156,12 @@ export default class Game {
                     // 타일셋이 이미지 하나를 타일링 해서 쓰고 있는 경우이다
                     this.resourceManager.add(tileset.image, resourcePath + tileset.image);
                 }
-                // 타일마다 개별 이미지를 쓰는 경우도 있다
-                for(const tile of tileset.tiles) {
-                    if (tile.image) {
-                        this.resourceManager.add(tile.image, resourcePath + tile.image);
+                if (tileset.tiles) {
+                    // 타일마다 개별 이미지를 쓰는 경우도 있다
+                    for(const tile of tileset.tiles) {
+                        if (tile.image) {
+                            this.resourceManager.add(tile.image, resourcePath + tile.image);
+                        }
                     }
                 }
             }

@@ -62,16 +62,6 @@
                          "name":"movable",
                          "type":"bool",
                          "value":true
-                        }, 
-                        {
-                         "name":"xsize",
-                         "type":"int",
-                         "value":2
-                        }, 
-                        {
-                         "name":"ysize",
-                         "type":"int",
-                         "value":2
                         }],
                  "type":"groundtile"
                 }, 
@@ -85,16 +75,6 @@
                          "name":"movable",
                          "type":"bool",
                          "value":true
-                        }, 
-                        {
-                         "name":"xsize",
-                         "type":"int",
-                         "value":2
-                        }, 
-                        {
-                         "name":"ysize",
-                         "type":"int",
-                         "value":2
                         }],
                  "type":"groundtile"
                 }],
@@ -208,18 +188,7 @@
                  "id":0,
                  "image":"house-table.png",
                  "imageheight":96,
-                 "imagewidth":96,
-                 "properties":[
-                        {
-                         "name":"xsize",
-                         "type":"int",
-                         "value":3
-                        }, 
-                        {
-                         "name":"ysize",
-                         "type":"int",
-                         "value":3
-                        }]
+                 "imagewidth":96
                 }],
          "tilewidth":96
         }, 
@@ -234,57 +203,6 @@
          "spacing":2,
          "tilecount":9,
          "tileheight":136,
-         "tiles":[
-                {
-                 "id":0,
-                 "properties":[
-                        {
-                         "name":"xsize",
-                         "type":"int",
-                         "value":4
-                        }, 
-                        {
-                         "name":"ysize",
-                         "type":"int",
-                         "value":1
-                        }]
-                }, 
-                {
-                 "id":1,
-                 "properties":[
-                        {
-                         "name":"xsize",
-                         "type":"int",
-                         "value":4
-                        }]
-                }, 
-                {
-                 "id":2,
-                 "properties":[
-                        {
-                         "name":"xsize",
-                         "type":"int",
-                         "value":4
-                        }]
-                }, 
-                {
-                 "id":3,
-                 "properties":[
-                        {
-                         "name":"xsize",
-                         "type":"int",
-                         "value":4
-                        }]
-                }, 
-                {
-                 "id":4,
-                 "properties":[
-                        {
-                         "name":"xsize",
-                         "type":"int",
-                         "value":4
-                        }]
-                }],
          "tilewidth":80
         }, 
         {
