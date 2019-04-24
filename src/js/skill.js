@@ -226,7 +226,7 @@ export class ProjectileSkill extends BaseSkill {
             battle.battleEffect.addChild(projectile);
 
             const movieClip = new MovieClip(
-                MovieClip.Timeline(1, this._delay.doneAttack - this.currentFrame, projectile, [["alpha", 0, 1, "outCubic"]]),
+                MovieClip.Timeline(1, this._delay.doneAttack - this.currentFrame -10, projectile, [["alpha", 0, 1, "outCubic"]]),
                 MovieClip.Timeline(1, this._delay.doneAttack - this.currentFrame, projectile, [["x", projectile.position.x, this.target.position.x + this.target.width / 2, "outCubic"]]),
                 MovieClip.Timeline(1, this._delay.doneAttack - this.currentFrame, projectile, [["y", projectile.position.y, this.target.position.y - this.target.height / 2, "outCubic"]]),
                 MovieClip.Timeline(this._delay.doneAttack - this.currentFrame - 10, this._delay.doneAttack - this.currentFrame, projectile, [["alpha", 1, 0, "outCubic"]]),
@@ -259,8 +259,8 @@ export class ArrowShotingSkill extends BaseSkill {
     constructor() {
         super();
         this._delay = {
-            beforeAttack: 55,
-            doneAttack: 70,
+            beforeAttack: 50,
+            doneAttack: 85,
             afterAttack: 100
         };
 
@@ -318,14 +318,24 @@ export class ArrowShotingSkill extends BaseSkill {
             projectile.alpha = 0;
             projectile.blendMode = PIXI.BLEND_MODES.ADD;
             // 둘 사이의 좌표를 이용 atan 으로 rotation 돌려보자.
-            projectile.rotation = Math.atan2((this.target.y - this.target.height / 2) - (projectile.y - projectile.height / 2), (this.target.x - this.target.width / 2) - (projectile.x - projectile.width / 2));
+            // projectile.rotation = Math.atan2((this.target.y - this.target.height / 2) - (projectile.y - projectile.height / 2), (this.target.x - this.target.width / 2) - (projectile.x - projectile.width / 2));
             battle.battleEffect.addChild(projectile);
 
+            const totalFrame = this._delay.doneAttack - this.currentFrame;
+            let vecY = -6;
+            const gravity = -2 * vecY / (totalFrame + 1);
+            const sx = ((this.target.position.x + this.target.width / 2) - projectile.position.x) / totalFrame;
+            let sy = ((this.target.position.y - this.target.height / 2) - projectile.position.y) / totalFrame + vecY;
+
             const movieClip = new MovieClip(
-                MovieClip.Timeline(1, this._delay.doneAttack - this.currentFrame, projectile, [["alpha", 0, 1, "outCubic"]]),
-                MovieClip.Timeline(1, this._delay.doneAttack - this.currentFrame, projectile, [["x", projectile.position.x, this.target.position.x + this.target.width / 2, "outCubic"]]),
-                MovieClip.Timeline(1, this._delay.doneAttack - this.currentFrame, projectile, [["y", projectile.position.y, this.target.position.y - this.target.height / 2, "outCubic"]]),
-                MovieClip.Timeline(this._delay.doneAttack - this.currentFrame - 10, this._delay.doneAttack - this.currentFrame, projectile, [["alpha", 1, 0, "outCubic"]]),
+                MovieClip.Timeline(1, this._delay.doneAttack - this.currentFrame - 10, projectile, [["alpha", 0, 1, "outCubic"]]),
+                MovieClip.Timeline(1, this._delay.doneAttack - this.currentFrame, null, () => {
+                    sy += gravity;
+                    projectile.position.x += sx;
+                    projectile.position.y += sy;
+                    projectile.rotation = Math.atan2(sy, sx);
+                }),
+                // MovieClip.Timeline(this._delay.doneAttack - this.currentFrame - 5, this._delay.doneAttack - this.currentFrame, projectile, [["alpha", 1, 0, "outCubic"]]),
                 MovieClip.Timeline(this._delay.doneAttack - this.currentFrame, this._delay.doneAttack - this.currentFrame + 1, null, () => {
                     battle.battleEffect.removeChild(projectile);
                 }),
