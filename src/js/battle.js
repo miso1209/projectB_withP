@@ -2,6 +2,7 @@ import BattleCharacter from "./battleCharacter";
 import CharacterFactory from "./characterFactory";
 import { DIRECTIONS } from "./define";
 import BattleEffect from "./battleEffect";
+import MovieClip from './movieclip';
 
 const BASE_POSITION = {
     PLAYER_X: 182,
@@ -44,10 +45,11 @@ export default class Battle {
         this.stage = new PIXI.Container();
         this.stage.scale.x = 2;
         this.stage.scale.y = 2;
-
+        
         // 통짜 배틀 이미지를 박는다.. 추후 크기를 고정사이즈로 정의하든, 몇개의 사이즈(small, big, wide 같이..?)를 규격화하든 해야할 것 같다.
         const battleStageSprite = new PIXI.Sprite(PIXI.Texture.fromFrame("battleMap1.png"));
         this.stage.addChild(battleStageSprite);
+        this.movies = [];
 
         // 캐릭터 생성하여 배치한다.
         const hectorSpec = CharacterFactory.createCharacterSpec('hector');
@@ -68,6 +70,7 @@ export default class Battle {
     }
 
     update() {
+        this.movieClipsUpdate();
         this.battleEffect.update();
         this.charactersUpdate();
 
@@ -80,6 +83,7 @@ export default class Battle {
             this.currentAction = this.currentAction.action(this);
         } else if (this.basicQueue.hasAction()) {
             this.currentAction = this.basicQueue.dequeue();
+            this.currentAction.init(this);
         }
     }
 
@@ -123,5 +127,39 @@ export default class Battle {
     focusCenterPos() {
         this.stage.position.x = BASE_POSITION.CENTER_X;
         this.stage.position.y = BASE_POSITION.CENTER_Y;
+    }
+
+    // stage 의 position을 vibration중에 건드린다면 문제가 될 수 있다.
+    vibrationStage(scale) {
+        const x = this.stage.position.x;
+        const y = this.stage.position.y;
+        let vibrationScale = scale;
+
+        const movieClip = new MovieClip(
+            MovieClip.Timeline(1, 12, null, () => {
+                this.stage.position.x = x + vibrationScale;
+                this.stage.position.y = y + vibrationScale;
+                vibrationScale = vibrationScale / 6 * -5;
+            }),
+            MovieClip.Timeline(13, 13, null, () => {
+                this.stage.position.x = x;
+                this.stage.position.y = y;
+            })
+        );
+
+        this.movies.push(movieClip);
+        movieClip.playAndStop();
+    }
+
+    movieClipsUpdate() {
+        let len = this.movies.length;
+        for (let i = 0; i < len; i++) {
+            const movie = this.movies[i];
+            movie.update();
+            if (!movie._playing) {
+                this.movies.splice(i, 1);
+                i--; len--;
+            }
+        }
     }
 }

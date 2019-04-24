@@ -24,7 +24,7 @@ class BaseSkill {
         this.status = SKILL_STATUS.IDLE;
 
         // JSON을 받아서 각각의 정보를 넣는다. (지금은 하드코딩)
-        this.damage = 40 + Math.round(Math.random()*30);
+        this.damage = 80 + Math.round(Math.random()*30);
 
         // beforeAttack : Attack 전까지의 frame, doneAttack : Attack 액션이 모두 수행될때 까지의 frame, afterAttack 다음 공격까지의 delay frame
         this._delay = {
@@ -49,6 +49,10 @@ class BaseSkill {
 
     isReady() {
         return (this.currentDelay <= 0 && this.status === SKILL_STATUS.IDLE);
+    }
+
+    setWait() {
+        this.status = SKILL_STATUS.WAIT;
     }
 
     delay() {
@@ -92,9 +96,18 @@ export class MeleeSkill extends BaseSkill {
         super();
     }
 
-    init() {
+    init(battle) {
         this.currentFrame = 0;
         this.status = SKILL_STATUS.WAIT;
+        this.damage = 80 + Math.round(Math.random()*30);
+        
+        // 스킬의 사용자를 비교하여, 적군파티, 아군파티를 셋팅한다.
+        let proponents = battle.players;
+        let opponents = battle.enemies;
+        if (proponents.indexOf(this.proponent) < 0) {
+            [proponents, opponents] = [opponents, proponents];
+        }
+        this.target = this.getTarget(opponents);
         
         // Proponent 의 움직임, 애니메이션처리.
         const start = { x: this.proponent.x, y: this.proponent.y };
@@ -133,17 +146,6 @@ export class MeleeSkill extends BaseSkill {
 
         this.updateMovies();
         this.status = SKILL_STATUS.ACTION;
-        
-        // 스킬의 사용자를 비교하여, 적군파티, 아군파티를 셋팅한다.
-        let proponents = battle.players;
-        let opponents = battle.enemies;
-        if (proponents.indexOf(this.proponent) < 0) {
-            [proponents, opponents] = [opponents, proponents];
-        }
-
-        if (this.target === null || (this.target && this.target.hp <= 0)) {
-            this.target = this.getTarget(opponents);
-        }
 
         if (this.currentFrame === this._delay.beforeAttack) {
             battle.battleEffect.addEffect(this.target, { name: 'slash', animationLength: 8, removeFrame: 60, speed: 0.5 });
@@ -172,9 +174,18 @@ export class ProjectileSkill extends BaseSkill {
         this.damage = 80 + Math.round(Math.random()*30);
     }
 
-    init() {
+    init(battle) {
         this.currentFrame = 0;
         this.status = SKILL_STATUS.WAIT;
+        this.damage = 80 + Math.round(Math.random()*30);
+        
+        // 스킬의 사용자를 비교하여, 적군파티, 아군파티를 셋팅한다.
+        let proponents = battle.players;
+        let opponents = battle.enemies;
+        if (proponents.indexOf(this.proponent) < 0) {
+            [proponents, opponents] = [opponents, proponents];
+        }
+        this.target = this.getTarget(opponents);
 
         const movieClip = new MovieClip(
             MovieClip.Timeline(11, 25, null, () => {
@@ -200,17 +211,6 @@ export class ProjectileSkill extends BaseSkill {
 
         this.updateMovies();
         this.status = SKILL_STATUS.ACTION;
-        
-        // 스킬의 사용자를 비교하여, 적군파티, 아군파티를 셋팅한다.
-        let proponents = battle.players;
-        let opponents = battle.enemies;
-        if (proponents.indexOf(this.proponent) < 0) {
-            [proponents, opponents] = [opponents, proponents];
-        }
-
-        if (this.target === null || (this.target && this.target.hp <= 0)) {
-            this.target = this.getTarget(opponents);
-        }
 
         if (this.currentFrame === this._delay.beforeAttack) {
             // 투사체 설정 음.. 방향이 맞는지 모르겠다..
@@ -268,9 +268,18 @@ export class ArrowShotingSkill extends BaseSkill {
         this.damage = 80 + Math.round(Math.random()*30);
     }
 
-    init() {
+    init(battle) {
         this.currentFrame = 0;
         this.status = SKILL_STATUS.WAIT;
+        this.damage = 80 + Math.round(Math.random()*30);
+        
+        // 스킬의 사용자를 비교하여, 적군파티, 아군파티를 셋팅한다.
+        let proponents = battle.players;
+        let opponents = battle.enemies;
+        if (proponents.indexOf(this.proponent) < 0) {
+            [proponents, opponents] = [opponents, proponents];
+        }
+        this.target = this.getTarget(opponents);
 
         const movieClip = new MovieClip(
             MovieClip.Timeline(11, 25, null, () => {
@@ -296,17 +305,6 @@ export class ArrowShotingSkill extends BaseSkill {
 
         this.updateMovies();
         this.status = SKILL_STATUS.ACTION;
-        
-        // 스킬의 사용자를 비교하여, 적군파티, 아군파티를 셋팅한다.
-        let proponents = battle.players;
-        let opponents = battle.enemies;
-        if (proponents.indexOf(this.proponent) < 0) {
-            [proponents, opponents] = [opponents, proponents];
-        }
-
-        if (this.target === null || (this.target && this.target.hp <= 0)) {
-            this.target = this.getTarget(opponents);
-        }
 
         if (this.currentFrame === this._delay.beforeAttack) {
             // 투사체 설정 음.. 방향이 맞는지 모르겠다..
@@ -317,8 +315,6 @@ export class ArrowShotingSkill extends BaseSkill {
             projectile.position.y = this.proponent.position.y - this.proponent.height / 2;
             projectile.alpha = 0;
             projectile.blendMode = PIXI.BLEND_MODES.ADD;
-            // 둘 사이의 좌표를 이용 atan 으로 rotation 돌려보자.
-            // projectile.rotation = Math.atan2((this.target.y - this.target.height / 2) - (projectile.y - projectile.height / 2), (this.target.x - this.target.width / 2) - (projectile.x - projectile.width / 2));
             battle.battleEffect.addChild(projectile);
 
             const totalFrame = this._delay.doneAttack - this.currentFrame;
@@ -346,6 +342,8 @@ export class ArrowShotingSkill extends BaseSkill {
         } else if (this.currentFrame === this._delay.doneAttack) {
             battle.battleEffect.addEffect(this.target, { name: 'shoted', animationLength: 18, removeFrame: 60, speed: 0.5 });
             battle.battleEffect.addDamageEffect(this.target, this.damage, "#ffffff");
+            battle.battleEffect.flashScreen(0.2, 0.1);
+            battle.vibrationStage(8);
             this.target.onDamage(this.damage);
 
             this.currentFrame = 0;

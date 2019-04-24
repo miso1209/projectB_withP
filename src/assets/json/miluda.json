@@ -6,8 +6,8 @@
         "skillBIcon": "ch02_skill02.png"
     },
     "stat": {
-        "hp": 100,
-        "maxHp": 100,
+        "hp": 200,
+        "maxHp": 200,
         "damage": 20,
         "balance": 0.8,
         "criticalRate": 0.5,

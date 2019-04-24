@@ -1,3 +1,4 @@
+import Tweens from './tweens';
 import MovieClip from './movieclip';
 
 function loadAniTexture(name, count) {
@@ -11,7 +12,29 @@ function loadAniTexture(name, count) {
 export default class BattleEffect extends PIXI.Container {
     constructor() {
         super();
+        this.tweens = new Tweens();
+        this.detailEffectContainer = new PIXI.Container();
+        this.screenEffectContainer = new PIXI.Container();
+        this.screenEffectContainer.visible = false;
+
+        const graphics = new PIXI.Graphics();
+        graphics.beginFill(0xFFFFFF);
+        graphics.drawRect(0, 0, 980, 500);
+        graphics.endFill();
+        this.screenEffectContainer.addChild(graphics);
+
+        this.addChild(this.detailEffectContainer);
+        this.addChild(this.screenEffectContainer);
+
         this.movies = [];
+    }
+
+    flashScreen(alpha, duration) {
+        this.screenEffectContainer.visible = true;
+        this.screenEffectContainer.alpha = alpha;
+        this.tweens.addTween(this.screenEffectContainer, duration, { alpha: 0 }, 0, "linear", true, () => {
+            this.screenEffectContainer.visible = false;
+        });
     }
 
     addEffect(target, options) {
@@ -23,7 +46,7 @@ export default class BattleEffect extends PIXI.Container {
         anim.blendMode = PIXI.BLEND_MODES.ADD;
         anim.position.x = target.position.x - anim.width / 4;
         anim.position.y = target.position.y - target.height / 2 - anim.height / 2;
-        this.addChild(anim);
+        this.detailEffectContainer.addChild(anim);
         anim.play();
 
         const movieClip = new MovieClip(
@@ -51,7 +74,7 @@ export default class BattleEffect extends PIXI.Container {
         text.position.x = target.position.x + target.width / 2 - 5;
         text.position.y = target.position.y - target.height / 2 - 3;
         text.alpha = 0;
-        this.addChild(text);
+        this.detailEffectContainer.addChild(text);
 
         const movieClip = new MovieClip(
             MovieClip.Timeline(1, 30, text, [["alpha", 0, 1, "outCubic"]]),
@@ -67,6 +90,8 @@ export default class BattleEffect extends PIXI.Container {
     }
 
     update() {
+        this.tweens.update();
+
         let len = this.movies.length;
         for (let i = 0; i < len; i++) {
             const movie = this.movies[i];

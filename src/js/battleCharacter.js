@@ -1,6 +1,7 @@
 import { DIRECTIONS } from './define';
-import Tweens from './tweens';
+import MovieClip from './movieclip';
 import { MeleeSkill, ProjectileSkill, ArrowShotingSkill } from './skill';
+import Tweens from './tweens';
 
 function loadAniTexture(name, count) {
     const frames = [];  
@@ -32,7 +33,8 @@ const STATUS = {
     IDLE: 1,
     ATTACK: 2,
     DIE: 3,
-    WAIT: 4
+    WAIT: 4,
+    BE_ATTACKED: 5
 }
 
 export default class BattleCharacter extends PIXI.Container {
@@ -40,6 +42,7 @@ export default class BattleCharacter extends PIXI.Container {
         super();
         this.container = new PIXI.Container();
         this.tweens = new Tweens();
+        this.movies = [];
 
         this.status = STATUS.IDLE;
 
@@ -105,6 +108,7 @@ export default class BattleCharacter extends PIXI.Container {
     }
 
     update(battle) {
+        this.movieClipsUpdate();
         this.tweens.update();
         // 캐릭터가 사망하였거나, 전투가 끝났을 경우 로직을 돌리지 않는다.
         if (this.status === STATUS.DIE || battle.isBattleEnd()) {
@@ -112,10 +116,22 @@ export default class BattleCharacter extends PIXI.Container {
         }
 
         if (this.skillA.isReady()) {
-            this.skillA.init();
+            this.skillA.setWait();
             battle.basicQueue.enqueue(this.skillA);
         } else if (this.skillA.status === SKILL_STATUS.IDLE && battle.currentAction === null) {
             this.skillA.delay();
+        }
+    }
+
+    movieClipsUpdate() {
+        let len = this.movies.length;
+        for (let i = 0; i < len; i++) {
+            const movie = this.movies[i];
+            movie.update();
+            if (!movie._playing) {
+                this.movies.splice(i, 1);
+                i--; len--;
+            }
         }
     }
 
@@ -140,7 +156,54 @@ export default class BattleCharacter extends PIXI.Container {
         const hpWidth = (this.hp < 0 ? 0 : this.hp) / this.maxHp * 34;
 
         this.tweens.addTween(this.hpBar, 0.5, { width: hpWidth }, 0, "easeInOut", true);
+        this.softBackingTint(0xFF0000);
+        this.vibration(6);
+
         this.checkDie();
+    }
+
+    softBackingTint (tint) {
+        const startTint = tint? tint: 0xFFFFFF;
+        let [sR, sG, sB] = [(startTint & 0xFF0000) >>> 16, (startTint & 0x00FF00) >>> 8, startTint & 0x0000FF];
+        const [addR, addG, addB] = [(255 - sR) / 45, (255 - sG) / 45, (255 - sB) / 45];
+        this.anim.tint = Math.round(sR) << 16 | Math.round(sG) << 8 | Math.round(sB);
+
+        const movieClip = new MovieClip(
+            MovieClip.Timeline(1, 45, null, () => {
+                sR += addR;
+                sG += addG;
+                sB += addB;
+                this.anim.tint = (Math.round(sR) << 16 | Math.round(sG) << 8 | Math.round(sB));
+            }),
+            MovieClip.Timeline(46, 46, null, () => {
+                this.anim.tint = 0xFFFFFF;
+            })
+        );
+
+        this.movies.push(movieClip);
+        movieClip.playAndStop();
+    }
+
+    // 캐릭터 anim의 position 건드리는데.. anim x 건드리는 애랑 같이 사용할 경우 문제될 수 있다.
+    vibration(scale) {
+        const x = this.anim.position.x;
+        const y = this.anim.position.y;
+        let vibrationScale = scale;
+
+        const movieClip = new MovieClip(
+            MovieClip.Timeline(1, 12, null, () => {
+                this.anim.position.x = x + vibrationScale;
+                this.anim.position.y = y + vibrationScale;
+                vibrationScale = vibrationScale / 6 * -5;
+            }),
+            MovieClip.Timeline(13, 13, null, () => {
+                this.anim.position.x = x;
+                this.anim.position.y = y;
+            })
+        );
+
+        this.movies.push(movieClip);
+        movieClip.playAndStop();
     }
 
     checkDie() {
