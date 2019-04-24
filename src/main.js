@@ -75,17 +75,18 @@ function gameStart(pixi) {
     //dom UI test
     const domUI = new DomUI();
     
-
     game.start({
       stagePath: 'assets/mapdata/house.json'
     });
     const game_update = () => {
       game.update();
       ui.update();
-      requestAnimationFrame(game_update);
+      requestAnimationFrame(game_update);      
     }
     game_update();
-    
+
+
+    domUI.setProfile(1);
     domUI.showStageTitle('어둠의 타워 999층', 1500);
 
     let toggle = true;

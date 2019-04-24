@@ -5,18 +5,19 @@ export default class DomUI {
     this.screenWidth = this.gamePane.screenWidth;
     this.screenHeight = this.gamePane.screenHeight;
     
+    this.gnbContainer = document.createElement('div');
+    this.container = document.createElement('div');
+
     this.UIlayers = [];
   }
 
   createDom() {
     console.log('-- DomUI --');
-    const container = document.createElement('div');
-    container.className = 'uiContainer';
-    container.style.top = this.gamePane.offsetTop + 'px';
 
-    document.body.appendChild(container);
+    this.container.className = 'uiContainer';
+    this.container.style.top = this.gamePane.offsetTop + 'px';
 
-    this.container = container;
+    document.body.appendChild(this.container);
     this.UIlayers.push(this.container.node);
     this.container.style.pointerEvents = 'none'; // 클릭 이벤트 방지 해제.
     // this.container.style.pointerEvents = 'auto'; // 클릭 이벤트 방지.
@@ -28,38 +29,128 @@ export default class DomUI {
     }, delay);
   }
 
+  setProfile(playerId) {
+    const profile = new Profile(playerId);
+
+    this.gnbContainer.className = 'gnbContainer';
+    this.gnbContainer.style.top = this.gamePane.offsetTop + 'px';
+    // this.gnbContainer.style.left = this.gamePane.offsetLeft + 'px';
+    
+    profile.moveToLeft(20);
+
+    const btnInventory = new Button('', 'btnInventory');
+    btnInventory.dom.style.top = '20px';
+    btnInventory.dom.style.right = '20px';
+    btnInventory.onClick = null;
+    btnInventory.dom.addEventListener('click', this.showInventory);
+
+    this.gnbContainer.appendChild(profile.dom);
+    this.gnbContainer.appendChild(btnInventory.dom);
+
+    document.body.appendChild(this.gnbContainer);
+  }
+
   showItemAquire(itemId){
     const itemAcquire = new Modal(this.container, 400, 300);
     itemAcquire.addTitle('NEW ITEM');
 
     let acquireText;
-    const itemText = document.createElement('p');
+    const itemText = document.createElement('div');
     itemText.className = 'contents';
 
     if (itemId === 1) {
-        acquireText = "[열쇠조각A]를 얻었다";
+        acquireText = "[열쇠조각 A]를 얻었다";
     } else if (itemId === 2) {
-        acquireText = "[열쇠조각B]를 얻었다";
+        acquireText = "[열쇠조각 B]를 얻었다";
     } else if (itemId === 3) {
         acquireText = "[철문열쇠]를 얻었다";
     }
 
     itemText.innerHTML = acquireText;
+    itemAcquire.dom.appendChild(itemText);
 
     const itemSprite = document.createElement('img');
     itemSprite.src = '/src/assets/items/item' + itemId + '.png';
     itemSprite.style.position = 'absolute';
-    itemSprite.style.left = itemAcquire.dom.clientWidth/2 - itemSprite.clientWidth/2+ 'px'; 
+    itemSprite.style.left = (itemAcquire.dom.clientWidth/2 - 36) + 'px'; 
+    itemSprite.style.top = itemText.offsetTop + itemText.offsetHeight + 50 + 'px';
     
-    itemAcquire.dom.appendChild(itemSprite);
-    itemAcquire.dom.appendChild(itemText);
+    console.log(itemText.offsetTop + itemText.offsetHeight);
 
-    itemSprite.style.top = itemText.offsetTop + 80 + 'px';
+    itemAcquire.dom.appendChild(itemSprite);
   }
 
   showInventory() {
-    const inventory = new Modal(this.container, 240, 300);
+    const inventory = new Modal(this.container, 360, 340);
     inventory.addTitle('Inventory');
+
+    const contents = document.createElement('ul');
+    contents.classList.add('contents-list');
+    
+    let inventorySize = 4 * 4;
+    let slot;
+    let slotSize = 70;
+    
+    const itemSprite = document.createElement('img');
+    itemSprite.src = '/src/assets/items/item1.png';
+    itemSprite.style.width = '50px';
+
+    for (let i = 0; i < inventorySize; i++) {
+      slot = document.createElement('li');
+      slot.style.width = slotSize;
+      
+      if (i === 0) {
+        slot.appendChild(itemSprite);
+      }
+
+      contents.appendChild(slot);
+    }
+
+    inventory.dom.appendChild(contents);
+  }
+
+  showStatUI() {
+    const statUI = new Modal(this.container, 400, 250);
+    statUI.addTitle('Player Status');
+    statUI.moveToLeft(20);
+
+    let statData = [];
+
+    const contents = document.createElement('div');
+    contents.classList.add('contents');
+    contents.classList.add('column-2');
+    
+    // 임시
+    statData.push("HP : 33/100");
+    statData.push("MP : 3/100");
+    statData.push("STRENGTH : 1/100");
+    statData.push("DEFFENSE : 33/100");
+    statData.push("RANGE : 10/100");
+    statData.push("SPEED : 2/100");
+    
+    statData.forEach(text => {
+      let stat = document.createElement('p');
+      stat.innerText = text;
+      contents.appendChild(stat);
+    });
+
+    statUI.dom.appendChild(contents);
+  }
+
+  showStageTitle(text, delay) {
+    this.createDom();
+
+    const title = new SceneTitle(text);
+    this.container.appendChild(title.dom);
+    
+    title.dom.classList.add('stageTitle');
+    title.dom.classList.add('animate');
+    
+
+    setTimeout(() => {
+      title.dom.style.opacity = 0;
+      this.destroyDom(delay);
+    }, delay);
   }
 
   moveToCenter(){
@@ -69,14 +160,15 @@ export default class DomUI {
     this.dom.style.margin = '10% auto';
   }
 
-  moveToLeft(){
+  moveToLeft(_left){
     this.dom.style.position = 'absolute';
-    this.dom.style.left = 0 + 'px';
+    this.dom.style.left = `${_left}px`;
+    this.dom.style.top = `${_left}px`;
   }
 
-  moveToRight(){
+  moveToRight(_right){
     this.dom.style.position = 'absolute';
-    this.dom.style.right = '20px';
+    this.dom.style.right = `${_right}px`;
   }
 
   moveToBottom(){
@@ -99,46 +191,34 @@ export default class DomUI {
 
     this.dom.style.left = offsetX + x + 'px';
     this.dom.style.top = offsetY + y + 'px';
-    
-    console.dir(this.dom);
-  }
-
-  addChild(_dom){
-    this.container.appendChild(_dom);
-    document.body.appendChild(this.container);
-  }
-
-  showChatBallon(character, text, duration) {
-    const chat = new ChatBallon2(character, text);
-    this.container.appendChild(chat);
-    // this.chatBallons.push(chat);
-    duration = duration || 3;
-
-    setTimeout(() => {
-        this.removeChild(chat);
-        const index = this.chatBallons.indexOf(chat);
-        if (index >= 0) {
-            this.chatBallons.splice(index, 1);
-        }
-    }, duration * 1000);
-  }
-
-  showStageTitle(text, delay) {
-    this.createDom();
-
-    const title = new SceneTitle(text);
-    this.container.appendChild(title.dom);
-    
-    title.dom.classList.add('stageTitle');
-    title.dom.classList.add('animate');
-    
-    setTimeout(() => {
-      title.dom.style.opacity = 0;
-      this.destroyDom(delay);
-    }, delay);
   }
 }
 
+class Profile extends DomUI {
+  constructor(playerId) {
+    super();
+
+    this.profile = document.createElement('img');
+    let name;
+    
+    //일단 플레이어 캐릭터 3개..
+    if (playerId === 1) {
+      name = 'Hector';
+    } else if (playerId === 2) {
+      name = 'Elid';
+    } else {
+      name = 'Miluda';
+    }
+
+    this.name = name;
+
+    this.profile.src = `/src/assets/player${playerId}_active.png`;
+    this.profile.style.position = 'absolute';
+    
+    this.dom = this.profile;
+    this.dom.addEventListener('mouseup', this.showStatUI);
+  }
+}
 
 class SceneTitle extends DomUI {
   constructor(text) {
@@ -150,6 +230,7 @@ class SceneTitle extends DomUI {
     this.dom = title;
   }
 }
+
 
 class NineBox extends DomUI {
   constructor ( container, _width, _height) {
@@ -204,12 +285,12 @@ class Modal extends DomUI {
 
     const closeBtn = new Button('', 'closeBtn');
     
-    this.dom = modal.dom;
-    
     modal.dom.appendChild(closeBtn.dom);
-    this.container.appendChild(this.dom);
+    this.container.appendChild(modal.dom);
 
-    closeBtn.dom.addEventListener('click', function() {
+    this.dom = modal.dom;
+
+    closeBtn.dom.addEventListener('click', function(event) {
       modal.dom.parentNode.parentNode.removeChild(modal.dom.parentNode);
     });
   }
@@ -236,8 +317,8 @@ class Button extends DomUI {
     } else {
       button.className = 'button';
     }
-
+    
+    this.onclose = null;
     this.dom = button;
   }
-
 }

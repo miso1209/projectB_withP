@@ -3,27 +3,36 @@
 
 #Game, canvas {
   position: relative;
-
   display: block;
   margin: 0 auto;
 }
 
 .project_header {
-  text-align: center;
+  padding: 80px 0;
 }
 
 .project_header h1 {
-  margin: 80px 0;
-
-
-  color: #ffffff;
   font-size: 40px;
   line-height: 1;
+  text-align: center;
+  color: #fff;
+}
+
+.gnbContainer {
+  position: absolute;
+  z-index: 99;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 980px;
+  margin: 0 auto;
+
+  transition: all 0.3s;
 }
 
 .uiContainer {
   position: absolute;
-  z-index: 9999;
+  z-index: 999;
   
   top: 0;
   left: 0;
@@ -41,7 +50,6 @@
   /* pointer-events: none; */
 }
 
-/* 클릭이벤트 열기. */
 .uiContainer * {
   pointer-events: auto;
 }
@@ -58,6 +66,7 @@
   color: #fff;
   border: none;
   background: url(../ui/button1.png) no-repeat;
+
   transition: all 0.4s linear;
 }
 
@@ -68,7 +77,7 @@
   background-size: contain;
 }
 
-/* 사용 미정 */
+/* 작은버튼 */
 .button._small.submit {
   background: url(../ui/button_s2.png) no-repeat;
 }
@@ -82,19 +91,21 @@
   left: 0;
   right: 0;
 
-  text-align: center;
   font-size: 26px;
-  color: #ffd800;
+  line-height: 1.2;
   text-align: center;
+
+  color: #ffd800;
 }
 
 .stageTitle {
   display: inline-block;
   margin:15% auto;
   
-  text-align: center;
   font-size: 40px;
   line-height: 50px;
+  text-align: center;
+
   color: #fff;
   border-bottom: 3px solid #fff;
 
@@ -107,19 +118,6 @@
   opacity:1;
   transform: scaleX(1);
   transition: all 0.3s;
-
-}
-
-.contents {
-  position: absolute;
-  top: 80px;
-  left: 0;
-  right: 0;
-
-  margin: 0 auto;
-  font-size: 15px;
-  line-height: 1.5;
-  color: #fff;
 }
 
 .mainMenu {
@@ -127,4 +125,12 @@
   flex-wrap: wrap;
   width: 100%;
   padding: 10px 20px;
+}
+
+.btnInventory {
+  position: absolute;
+  width: 68px;
+  height: 67px;
+  background: url(/src/assets/btn_inventory.png) no-repeat;
+  background-size: contain;
 }
