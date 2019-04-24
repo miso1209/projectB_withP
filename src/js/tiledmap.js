@@ -80,13 +80,20 @@ export default class TileSet {
             }
         }
 
-        const tiledata = new Array(this.width * this.height);
+        //const tiledata = new Array(this.width * this.height);
 
         // 그라운드 타일과 오브젝트 타일을 구분한다
+        let isGroundLayer = true;
+        const groundLayer = new Array(this.width * this.height);
+        const objectLayer = new Array(this.width * this.height);
+
         for (const layer of mapData.layers) {
             if (mapData.width !== layer.width || mapData.height !== layer.height) {
                 throw new Error("map 과 layer 의 크기는 항상 일치하여야 합니다");
             }
+
+            const target = isGroundLayer ? groundLayer : objectLayer;
+            isGroundLayer = false;
             
             for (let y = 0; y < this.height;++y) {
                 for (let x = 0; x < this.width;++x) {
@@ -122,27 +129,31 @@ export default class TileSet {
 
                                 // 타일의 데이터를 추가로 변경한다
                                 const gindex = (x + i) + (y - j) * this.width;
-                                tiledata[gindex] = tiledata[gindex] || [];
+                                //tiledata[gindex] = tiledata[gindex] || [];
 
                                 // 서브타일 정보를 생각한다
                                 const subtile = {};
                                 Object.assign(subtile,  instance);
                                 subtile.texture = null;
-                                tiledata[gindex].push(subtile);
+                                //tiledata[gindex].push(subtile);
+                                target[gindex] = subtile;
                             }
                         }
 
                         // 타일이 배열로 들어가게 된다. 배열의 순서는 드로잉 순서이기 때문에 매우 중요하다
-                        tiledata[dstIndex] = tiledata[dstIndex] || [];
-                        tiledata[dstIndex].push(instance);
-                    }
+                        //tiledata[dstIndex] = tiledata[dstIndex] || [];
+                        //tiledata[dstIndex].push(instance);
+                        target[dstIndex] = instance;
+                    } 
                 }
             }
         }
 
         // 타일데이터와 타일 셋 정보를 클래스에 기록한다
         this.tileset = tileset;
-        this.tiledata = tiledata;
+        //this.tiledata = tiledata;
+        this.groundLayer = groundLayer;
+        this.objectLayer = objectLayer;
     }
 
     getTilesAt(x, y) {

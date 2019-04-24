@@ -53,11 +53,20 @@ export default class Stage extends PIXI.Container {
         this.TILE_HALF_W = tileWidth / 2;
         this.TILE_HALF_H = tileHeight / 2;
 
-        this.tilemap = new Array(height * width);
+        //this.tilemap = new Array(height * width);
+        this.groundMap = new Array(height * width);
+        this.objectMap = new Array(height * width);
         this.alphaTiles = [];
        
         this.mapContainer = new PIXI.Container();
-	    this.addChild(this.mapContainer);
+        this.addChild(this.mapContainer);
+        
+        // 레이어를 만든다
+        this.groundContainer = new PIXI.Container();
+        this.objectContainer = new PIXI.Container();
+
+        this.mapContainer.addChild(this.groundContainer);
+        this.mapContainer.addChild(this.objectContainer);
         
         this.interactive = true;
 
@@ -113,8 +122,18 @@ export default class Stage extends PIXI.Container {
             this.tweens.addTween(this.mapContainer.position, 0.5, { x: px, y: py }, 0, "easeInOut", true );
         }
     }
+
+    setGroundTile(x, y, src) {
+        const tile = this.newTile(x, y, src);
+        this.groundMap[x + y * this.mapWidth] = tile;
+    }
+
+    setObjectTile(x, y, src) {
+        const tile = this.newTile(x, y, src);
+        this.objectMap[x + y * this.mapWidth] = tile;
+    }
   
-    setTile(x, y, tileData) {
+    newTile(x, y, tileData) {
         let tile;
         if (tileData.objectType === "gate") {
             tile = new Gate(x, y, tileData);
@@ -128,14 +147,15 @@ export default class Stage extends PIXI.Container {
         }
         tile.position.x = this.getTilePosXFor(x, y) - this.TILE_HALF_W;
         tile.position.y = this.getTilePosYFor(x ,y) + this.TILE_HALF_H;
+        return tile;
 
-        // 맵에 추가한다
+        /*// 맵에 추가한다
         const index = x + y * this.mapWidth;
         if (this.tilemap[index]) {
             this.tilemap[index].push(tile);
         } else {
             this.tilemap[index] = [tile];
-        }
+        }*/
     }
 
    
@@ -148,30 +168,32 @@ export default class Stage extends PIXI.Container {
     }
     
     getGroundTileAt(x, y) {
-        const tilesArray = this.tilemap[x + y*this.mapWidth];
-        if (tilesArray) {
+        const tile = this.groundMap[x + y*this.mapWidth];
+        return tile;
+        /*if (tilesArray) {
             if (tilesArray.length > 0) {
                 return tilesArray[0];
             }
         }
-        return null;
+        return null;*/
     }
 
     // 이것은 나중에 특정 타입의 타일을  얻어오도록 바꾸어야 한다.
     getObjectAt(x, y) {
 
-        const tilesArray = this.tilemap[x + y*this.mapWidth];
-        if (tilesArray) {
+        const tile = this.objectMap[x + y*this.mapWidth];
+        /*if (tilesArray) {
             if (tilesArray.length > 0) {
                 return tilesArray[tilesArray.length - 1];
             }
         }
-        return null;
+        return null;*/
+        return tile;
     }
 
     build() {
         // 타일을 순회할때는 밖에 타일부터 안쪽으로 껍질을 깎듯이 내려와야 한다.
-        const forEachTile = (callback) => {
+        const forEachTile = (callback, layer) => {
             let yoffset = 0
             let xoffset = this.mapWidth - 1;
 
@@ -179,8 +201,9 @@ export default class Stage extends PIXI.Container {
                 for (let y = yoffset; y <= this.mapHeight - 1; ++y) {
                     const x =  xoffset;
                     const index = x + y * this.mapWidth;
-                    const tileArray = this.tilemap[index] || [];
-                    for(const tile of tileArray) {
+                    const tile = layer[index];// || [];
+                    if (tile) {
+                    //for(const tile of tileArray) {
                         callback(tile, x, y);
                     }
                 }
@@ -188,8 +211,9 @@ export default class Stage extends PIXI.Container {
                 for (let x = xoffset - 1; x >= 0; --x) {
                     const y = yoffset;
                     const index = x + y * this.mapWidth;
-                    const tileArray = this.tilemap[index] || [];
-                    for(const tile of tileArray) {
+                    const tile = layer[index];// || [];
+                    if (tile) {
+                    //for(const tile of tileArray) {
                         callback(tile, x, y);
                     }
                 }
@@ -204,14 +228,14 @@ export default class Stage extends PIXI.Container {
                 this.mapContainer.addChild(tile);
                 this.pathFinder.setCell(x, y, tile.movable);
             }
-        });
+        }, this.groundMap);
 
         forEachTile((tile, x, y) => {
             if (!tile.isGroundTile) {
                 this.mapContainer.addChild(tile);
                 this.pathFinder.setDynamicCell(x, y, tile.movable);
             }
-        });
+        }, this.objectMap);
     }
 
     onMouseUp(event) {
@@ -220,13 +244,16 @@ export default class Stage extends PIXI.Container {
 
     checkForTileClick(mdata) {
         const localPoint = this.mapContainer.toLocal(mdata.global);
-        const selectedTiles = this.getTileFromLocalPos(localPoint);
-        if (selectedTiles && selectedTiles.length > 0) {
+        const selectedTile = this.getTileFromLocalPos(localPoint);
+        if (selectedTile && this.onTileSelected) {
+            this.onTileSelected(selectedTile.gridX, selectedTile.gridY);
+        }
+        /*if (selectedTiles && selectedTiles.length > 0) {
            if (this.onTileSelected) {
                 const oneTile = selectedTiles[0];
                 this.onTileSelected(oneTile.gridX, oneTile.gridY);
            }
-        }
+        }*/
     }
 
     getTileFromLocalPos(point) {
@@ -248,7 +275,7 @@ export default class Stage extends PIXI.Container {
                     // 타일마름모 안에 있는지 확인한다
                     if (Math.abs(point.x - cx) * this.TILE_HALF_H / this.TILE_HALF_W + Math.abs(point.y - cy) <= this.TILE_HALF_H) {
                         const index = x + y * this.mapWidth;
-                        return this.tilemap[index];
+                        return this.groundMap[index];
                     }
                 }
             }
@@ -466,8 +493,9 @@ export default class Stage extends PIXI.Container {
 
         for (let j = y; j < this.mapHeight; ++j) {
             for (let i = 0; i <= x; ++i) {
-                const tiles = this.tilemap[i + j * this.mapWidth] || [];
-                for (const tile of tiles) {
+                const tile = this.objectMap[i + j * this.mapWidth];// || [];
+
+                //for (const tile of tiles) {
                     if (tile && tile !== obj && tile.transperancy) {
                         // 충돌체크를 한다
                         const hit = hitTestRectangle(tile.getBounds(true), obj.getBounds(true));
@@ -476,7 +504,7 @@ export default class Stage extends PIXI.Container {
                             this.alphaTiles.push(tile);
                         }
                     }
-                }
+                //}
             }
         }
     }
@@ -489,12 +517,12 @@ export default class Stage extends PIXI.Container {
     arrangeDepthsFromLocation(gridX, gridY) {
         for (let y = gridY; y < this.mapHeight; y++) {
             for (let x = gridX; x >= 0 ; x--) {
-                const tileArray = this.tilemap[x + y * this.mapWidth] || [];
-                for (const tile of tileArray) {
-                    if (!tile.isGroundTile) {
+                const tile = this.objectMap[x + y * this.mapWidth];
+                //for (const tile of tileArray) {
+                    if (tile && !tile.isGroundTile) {
                         this.mapContainer.addChild(tile);
                     }
-                }
+                //}
             }
         }
     }

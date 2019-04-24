@@ -187,10 +187,18 @@ export default class Game {
                 // 타일맵을 설정한다
                 for (let y = 0; y < tileset.height;++y) {
                     for (let x = 0; x < tileset.width;++x) {
-                        const tiles = tileset.getTilesAt(x, y);
-                        for(const tiledata of tiles)  {
-                            stage.setTile(x, y, tiledata);
+                        const gtile = tileset.groundLayer[x +y * tileset.width];
+                        if (gtile) {
+                            stage.setGroundTile(x, y, gtile);
                         }
+                        const otile = tileset.objectLayer[x +y * tileset.width];
+                        if (otile) {
+                            stage.setObjectTile(x, y, otile);
+                        }
+                        //const tiles = tileset.getTilesAt(x, y);
+                        //for(const tiledata of tiles)  {
+                        //    stage.setTile(x, y, tiledata);
+                        //}
                     }
                 }
                 
