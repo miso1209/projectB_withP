@@ -1,0 +1,26 @@
+{
+    "name": "Miluda",
+    "battleUi": {
+        "portrait": "player3_active.png",
+        "skillAIcon": "ch02_skill01_on.png",
+        "skillBIcon": "ch02_skill02.png"
+    },
+    "stat": {
+        "hp": 200,
+        "maxHp": 200,
+        "damage": 20,
+        "balance": 0.8,
+        "criticalRate": 0.5,
+        "criticalBalance": 2,
+        "defense": 0.3,
+        "attackSpeed": 1.5
+    },
+    "animations": {
+        "idle": { "texture": "miluda_idle", "length": 1},
+        "attack": { "texture": "miluda_atk", "length": 8}
+    },
+    "offset": {
+        "x": 0,
+        "y": -48
+    }
+}

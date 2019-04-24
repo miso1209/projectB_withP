@@ -1,0 +1,26 @@
+{
+    "name": "Elid",
+    "battleUi": {
+        "portrait": "player2_active.png",
+        "skillAIcon": "ch01_skill01_on.png",
+        "skillBIcon": "ch01_skill02.png"
+    },
+    "stat": {
+        "hp": 150,
+        "maxHp": 150,
+        "damage": 20,
+        "balance": 0.7,
+        "criticalRate": 0.2,
+        "criticalBalance": 1.5,
+        "defense": 0.4,
+        "attackSpeed": 1
+    },
+    "animations": {
+        "idle": { "texture": "elid_idle", "length": 1},
+        "attack": { "texture": "elid_atk", "length": 7}
+    },
+    "offset": {
+        "x": 0,
+        "y": -48
+    }
+}
