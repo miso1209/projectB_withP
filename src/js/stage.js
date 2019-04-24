@@ -61,12 +61,12 @@ export default class Stage extends PIXI.Container {
         this.mapContainer = new PIXI.Container();
         this.addChild(this.mapContainer);
         
-        // 레이어를 만든다
+        /*// 레이어를 만든다
         this.groundContainer = new PIXI.Container();
         this.objectContainer = new PIXI.Container();
 
         this.mapContainer.addChild(this.groundContainer);
-        this.mapContainer.addChild(this.objectContainer);
+        this.mapContainer.addChild(this.objectContainer);*/
         
         this.interactive = true;
 
@@ -192,6 +192,7 @@ export default class Stage extends PIXI.Container {
     }
 
     build() {
+
         // 타일을 순회할때는 밖에 타일부터 안쪽으로 껍질을 깎듯이 내려와야 한다.
         const forEachTile = (callback, layer) => {
             let yoffset = 0
@@ -223,16 +224,25 @@ export default class Stage extends PIXI.Container {
             }
         }
 
+        this.baseMap = new Array(this.mapWidth * this.mapHeight);
+        //console.log(this.baseMap.length, );
+        for (let i = 0; i < this.baseMap.length; ++i) {
+            this.baseMap[i] = new PIXI.Container();
+            this.mapContainer.addChild(this.baseMap[i]);
+        }
+
         forEachTile((tile, x, y) => {
             if (tile.isGroundTile) {
-                this.mapContainer.addChild(tile);
+                //this.mapContainer.addChild(tile);
+                this.baseMap[x + y*this.mapWidth].addChild(tile);
                 this.pathFinder.setCell(x, y, tile.movable);
             }
         }, this.groundMap);
 
         forEachTile((tile, x, y) => {
             if (!tile.isGroundTile) {
-                this.mapContainer.addChild(tile);
+                //this.mapContainer.addChild(tile);
+                this.baseMap[x + y*this.mapWidth].addChild(tile);
                 this.pathFinder.setDynamicCell(x, y, tile.movable);
             }
         }, this.objectMap);
