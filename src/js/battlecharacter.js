@@ -76,9 +76,6 @@ export default class BattleCharacter extends PIXI.Container {
             if (this.skills[1].isReady()) {
                 this.skills[1].setWait();
                 this.battle.activeQueue.enqueue(this.skills[1]);
-                console.log('Active Skill Eequeue!! : ', this.battle.activeQueue.skillQueue);
-            } else {
-                console.log('Active Skill has Delay!! : ', this.skills[1].getDelay());
             }
         });
     }
@@ -130,14 +127,14 @@ export default class BattleCharacter extends PIXI.Container {
         // Active Skill Test를 위한 임시. 제거할 것.
         this.battle = battle; // 지우자 UI 생기면 어떻게 매핑할지도 생각하자.
         
-        this.updateMovieclips();
         this.tweens.update();
+        this.updateMovieclips();
         this.updateSkills(battle);
         this.enqueueIdlePassiveSkill(battle);
     }
 
     enqueueIdlePassiveSkill(battle) {
-        // 캐릭터가 사망하였거나, 전투가 끝났을 경우 캐릭터 액션로직(스킬 큐에 올리기, 스킬 딜레이 감소) 돌리지 않는다.
+        // 캐릭터가 사망하였거나, 전투가 끝났을 경우 캐릭터 액션로직(스킬 큐에 올리기, 스킬 딜레이 감소) 돌리지 않는다. (좋지않다..)
         if (this.status === STATUS.DIE || battle.isBattleEnd()) {
             return;
         }
@@ -145,6 +142,8 @@ export default class BattleCharacter extends PIXI.Container {
         // 이 부분에 스킬 여러개가 레디상태 인 경우, 어떤 스킬을 Enqueue할지 정하는 로직 필요할듯 하다.
         let selectedPassiveSkill = null;
 
+        // 음.. 지금은 후딜을 공유하지 않게 작성하긴 했는데.. 후딜을 공유하지 않고 패시브 스킬을 여러개 가진다면? 연속적으로 enqueue로 공격한 후 딜레이를 할 것 같다.
+        // 맞기도하고 아닌것 같기도하고.. 정책적으로 정해야 할듯.
         this.skills.forEach((skill) => {
             if(skill.isReady() && skill.activeType === ACTIVE_TYPE.PASSIVE && selectedPassiveSkill === null) {
                 selectedPassiveSkill = skill;
@@ -158,7 +157,7 @@ export default class BattleCharacter extends PIXI.Container {
     }
 
     updateSkills(battle) {
-        // 캐릭터가 사망하였거나, 전투가 끝났을 경우 캐릭터 액션로직(스킬 큐에 올리기, 스킬 딜레이 감소) 돌리지 않는다.
+        // 캐릭터가 사망하였거나, 전투가 끝났을 경우 캐릭터 액션로직(스킬 큐에 올리기, 스킬 딜레이 감소) 돌리지 않는다. 좋지않다..
         if (this.status === STATUS.DIE || battle.isBattleEnd()) {
             return;
         }

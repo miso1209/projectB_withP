@@ -24,6 +24,9 @@ export const ACTIVE_TYPE = {
     ACTIVE: 2
 };
 
+// 스텟 계산 파둬야 하는데.. 이건 언제하지?.. 어렵다.. 스탯이랑, 에큅으로 능력치 계산 및 스킬에 적용.. 염두해두자.. 생각해두자.
+// 기본적으로 배틀캐릭터가 Stat 을 가진 BaseCharacter공유할텐데.. 이것도 조금 머리아프네.. 주말간 생각해볼것.
+// 스킬 클래스 엄청 더러움.. 깔끔하게 변경할 수 없을까?
 class BaseSkill {
     constructor() {
         this.status = SKILL_STATUS.IDLE;
