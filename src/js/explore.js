@@ -24,7 +24,6 @@ export default class Explore {
             const player = this.game.player;
             stage.addCharacter(player, spawnPoint.x, spawnPoint.y);
             stage.checkForFollowCharacter(player, true);
-            player.setUiVisible(this.game, false);
 
             // 캐릭터 방향을 돌린다
             this.game.player.changeVisualToDirection(DIRECTIONS.SE);

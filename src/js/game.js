@@ -9,6 +9,7 @@ import Battle  from "./battle";
 import Explore  from "./explore";
 
 import TileSet from "./tiledmap";
+import ItemFactory from './itemfactory';
 
 export default class Game {
     constructor(pixi) {
@@ -52,6 +53,7 @@ export default class Game {
         this.nextStageMode = null;
 
         this.resourceManager = new ResourceManager();
+        this.generator = new ItemFactory();
 
 
         // TODO :나중에 제거해야한다!!!
@@ -175,8 +177,13 @@ export default class Game {
 
             this.resourceManager.load((resources) => {
 
+                // 이렇게 하면 안된다!!!
+                // 플레이어는 스테이지보다 우선한다.
+                // 필드 캐릭터와 플레이어를 혼돈하지 않도록 주의하자
                 if (!this.player) {
                     this.player = CharacterFactory.createPlayer(CharacterFactory.createCharacterSpec('hector'));
+                    this.player.inventory.addItem(this.generator.item(1));
+                    this.player.inventory.addItem(this.generator.item(2));
                 }
 
                 const stage = new Stage(mapData.width, mapData.height, mapData.tilewidth, mapData.tileheight);

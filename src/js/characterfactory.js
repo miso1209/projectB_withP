@@ -1,7 +1,8 @@
-import Character from './character';
+import FieldCharacter from './fieldcharacter';
+import BattleCharacter from './battlecharacter';
 import CharacterSpec from './characterspec';
 import Player from './player';
-import BattleCharacter from './battlecharacter';
+
 
 export default class CharacterFactory {
     static resources;
@@ -41,8 +42,8 @@ export default class CharacterFactory {
         return new BattleCharacter(spec);
     }
 
-    static createCharacter(spec) {
-        return new Character(spec);
+    static createFieldCharacter(spec) {
+        return new FieldCharacter(spec);
     }
     
     // 음.. Player의 대펴 캐릭터( 걸어다니는 캐릭터 ) 는 변경 가능해야하지 않을까..?

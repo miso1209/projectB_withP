@@ -1,6 +1,7 @@
 
 export default class DomUI {
-  constructor() {
+  constructor(game) {
+    this.game = game;
     this.gamePane = document.getElementById('Game');
     this.screenWidth = this.gamePane.screenWidth;
     this.screenHeight = this.gamePane.screenHeight;
@@ -40,7 +41,7 @@ export default class DomUI {
     btnInventory.dom.style.top = '20px';
     btnInventory.dom.style.right = '20px';
     btnInventory.onClick = null;
-    btnInventory.dom.addEventListener('click', this.showInventory);
+    btnInventory.dom.addEventListener('click', this.showInventory.bind(this));
 
     this.gnbContainer.appendChild(profile.dom);
     this.gnbContainer.appendChild(btnInventory.dom);
@@ -95,50 +96,61 @@ export default class DomUI {
     // stat effect
     const statContent = document.createElement('div');
     statContent.classList.add('contents');
-    statContent.classList.add('column-2');
+    //statContent.classList.add('column-1');
     statContent.style.top = categoryWrap.clientHeight + 100 + 'px';
+    statContent.style.height = '64px';
     
-    let itemStatData = [];
+    /*let itemStatData = [];
     // 임시
-    itemStatData.push("HP  +33");
-    itemStatData.push("MP   -3");
-    itemStatData.push("STRENGTH  +10");
+    itemStatData.push(" ");
+    itemStatData.push(" ");
+    //itemStatData.push("");
     
     itemStatData.forEach(text => {
       let stat = document.createElement('p');
-      stat.innerText = text;
       statContent.appendChild(stat);
-    });
+    });*/
 
     inventory.dom.appendChild(statContent);
 
-    // inventory items
+    
     const storageContent = document.createElement('ul');
     storageContent.classList.add('contents-list');
     storageContent.style.top = statContent.clientHeight + 100 + 'px';
 
-    let inventorySize = 4 * 4;
-    let slot;
+    //let inventorySize = 4 * 4;
+    //let slot;
+    let selectedSlot = null;
     
-    const itemSprite = document.createElement('img');
-    itemSprite.src = '/src/assets/items/item1.png';
-    itemSprite.style.width = '50px';
+    // inventory items
+    this.game.player.inventory.eachItem((item) => {
+      const itemSprite = document.createElement('img');
+      itemSprite.src = '/src/assets/items/' + item.image;
+      itemSprite.style.width = '50px';
 
-    for (let i = 0; i < inventorySize; i++) {
-      slot = document.createElement('li');
 
-      // 일단 하드코딩.... 
-      if (i === 0) {
-        slot.appendChild(itemSprite);
-      }
-      
+      const slot = document.createElement('li');
+      slot.appendChild(itemSprite);
       storageContent.appendChild(slot);
-      
+      slot.style.height = '50px';
+
       slot.addEventListener('click', function(event){
-        // event.target.nextSibling.classList.remove('active');
-        event.target.classList.toggle('active');
+        if (selectedSlot) {
+          selectedSlot.classList.remove('active');
+        }
+        slot.classList.add('active');
+        selectedSlot = slot;
+
+        // 위에 도큐먼트를 추가한다
+        while(statContent.hasChildNodes()) {
+          statContent.removeChild(statContent.firstChild);
+        }
+        let stat = document.createElement('p');
+        stat.innerText = item.description;
+        statContent.appendChild(stat);
       });
-    }
+    });
+
     inventory.dom.appendChild(storageContent);
   }
 
