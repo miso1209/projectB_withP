@@ -141,6 +141,48 @@
 }
 
 
+.profile {
+  position: relative;
+  text-align: center;
+}
+
+.profile img {
+  display: block;
+  margin: 0 auto 5px;
+}
+
+.profile-level {
+  font-size: 14px;
+  margin-right: 5px;
+}
+
+.profile-name {
+  font-size: 16px;
+}
+
+.skillItems, .equipItems {
+  clear: both;
+  display: block;
+}
+
+.skillItems p, .equipItems p {
+  float: left;
+  margin-right: 10px;
+  overflow: visible;
+}
+
+.skillItems p span, .equipItems p span {
+  display: block;
+  margin-top: 35px;
+  font-size: 13px;
+  width: 42px;
+  color: #fff;
+}
+
+
+
+
+
 /* The typing effect */
 @keyframes typing {
   from { width: 0 }

@@ -8,12 +8,10 @@ export default class DomUI {
     
     this.gnbContainer = document.createElement('div');
     this.container = document.createElement('div');
-
   }
 
   createDom() {
     console.log('-- DomUI --');
-
     this.container.className = 'uiContainer';
     this.container.style.top = this.gamePane.offsetTop + 'px';
 
@@ -31,6 +29,8 @@ export default class DomUI {
   // 추가? lv, name
   setProfile(playerId) {
     const profile = new Profile(playerId);
+    profile.name.style.display = 'none';
+    profile.level.style.display = 'none';
 
     this.gnbContainer.className = 'gnbContainer';
     this.gnbContainer.style.top = this.gamePane.offsetTop + 'px';
@@ -74,52 +74,45 @@ export default class DomUI {
     itemSprite.style.left = (itemAcquire.dom.clientWidth/2 - 36) + 'px'; 
     itemSprite.style.top = itemText.offsetTop + itemText.offsetHeight + 50 + 'px';
     
-    console.log(itemText.offsetTop + itemText.offsetHeight);
-
     itemAcquire.dom.appendChild(itemSprite);
   }
 
-
   showCombineItemList(){
-    // todo 조합가능한 아이템 리스트 노출
+    // # TODO : 조합가능한 아이템 리스트 노출
   }
-
 
   showInventory() {
     const inventory = new Modal(this.container, 360, 460);
     inventory.addTitle('Inventory');
     
+    // # 인벤 탭 영역 작업예정
     const categoryWrap = document.createElement('div');
     categoryWrap.classList.add('contents');
     categoryWrap.classList.add('categoryWarp')
+
     
-    // stat effect
+    // # stat
     const statContent = document.createElement('div');
     statContent.classList.add('contents');
-    //statContent.classList.add('column-1');
+    statContent.style.textAlign = 'left';
     statContent.style.top = categoryWrap.clientHeight + 100 + 'px';
-    statContent.style.height = '64px';
+    // statContent.style.height = '64px';
     
-    /*let itemStatData = [];
-    // 임시
-    itemStatData.push(" ");
-    itemStatData.push(" ");
-    //itemStatData.push("");
-    
-    itemStatData.forEach(text => {
-      let stat = document.createElement('p');
-      statContent.appendChild(stat);
-    });*/
-
     inventory.dom.appendChild(statContent);
 
-    
+    // IE 스크롤바 이슈 대응
+    const scrollView = document.createElement('div');
+    scrollView.className = 'scrollView';
+
+    const scrollBlind = document.createElement('div');
+    scrollBlind.className = 'scrollBlind';
+
     const storageContent = document.createElement('ul');
     storageContent.classList.add('contents-list');
-    storageContent.style.top = statContent.clientHeight + 100 + 'px';
+    scrollView.style.top = statContent.clientHeight + 100 + 'px';
 
+    // # inventory size
     //let inventorySize = 4 * 4;
-    //let slot;
     let selectedSlot = null;
     
     // inventory items
@@ -150,21 +143,12 @@ export default class DomUI {
         statContent.appendChild(stat);
       });
     });
-
-    inventory.dom.appendChild(storageContent);
+    
+    scrollView.appendChild(scrollBlind);
+    scrollBlind.appendChild(storageContent);
+    inventory.dom.appendChild(scrollView);
   }
 
-  showGear (catID) {
-    let catText;
-
-    if (catID === 0) {
-      catText = 'Gear';
-    } else if (catID == 1) {
-      catText = 'Item';
-    } else {
-      catText = 'Item';
-    }
-  }
 
   showTooltip(container, text) {
     const tooltip = document.createElement('div');
@@ -173,41 +157,116 @@ export default class DomUI {
     container.appendChild(tooltip);
   }
 
-  // todo : 탭...? Stat / Gear / Items / Skills 
   showStatUI() {
-    const statUI = new Modal(this.container, 400, 250);
+    const statUI = new Modal(this.container, 360, 460);
     statUI.addTitle('Player Status');
+    statUI.className = 'statUI';
 
-    // stat data
+    // 캐릭터 정보
+    let playerId = 1;
+    const profile = new Profile(playerId);
+    profile.moveToCenter(80);
+    statUI.dom.appendChild(profile.dom);
+
+    
+    // 캐릭터 스탯 정보 - 임시..
     let statData = [];
-
     const contents = document.createElement('div');
     contents.classList.add('contents');
-    contents.classList.add('column-2');
-    
-    // 임시
-    statData.push("HP : 33/100");
-    statData.push("MP : 3/100");
-    statData.push("STRENGTH : 1/100");
-    statData.push("DEFFENSE : 33/100");
-    statData.push("RANGE : 10/100");
-    statData.push("SPEED : 2/100");
+    contents.classList.add('column-2'); // 3단으로 할 때는 column-3
+    contents.style.top = profile.dom.offsetTop + profile.dom.offsetHeight + 20 + 'px';
+
+    statData.push("HP : 33");
+    statData.push("MP : 3");
+    statData.push("STRENGTH : 10");
+    statData.push("DEFFENSE : 300");
+    statData.push("RANGE : 100");
+    statData.push("SPEED : 200");
     
     statData.forEach(text => {
       let stat = document.createElement('p');
       stat.innerText = text;
       contents.appendChild(stat);
     });
-    const skill = new Button('SKILL');
-    skill.moveToRight(20);
-    skill.moveToBottom(20);
-    skill.dom.classList.add('_small');
-    skill.dom.style.margin = '0 auto';
 
-    statUI.dom.appendChild(skill.dom);
-    
-    // skill / 
+
+    // 현재 캐릭터 장비정보
+    const equipItemsData = [{x:12, y:6, item:'wond'}, {x:20,y:2,item:'amor'}, {x:10, y:10,item:'bomb'}];
+    const equipItems = document.createElement('div');
+
+    equipItems.className = 'equipItems';
+    equipItems.style.position = 'absolute';
+    equipItems.style.bottom = contents.offsetTop + contents.offsetHeight + 20 + 'px';
+    equipItems.style.left = '30px';
+    equipItems.style.bottom = '100px';
+
+    equipItemsData.forEach(item => {
+      let itemIcon = document.createElement('p');
+      itemIcon.className = 'stat-item';
+
+      let itemName = document.createElement('span');
+      itemName.innerText = item.item;
+
+      itemIcon.style.backgroundImage = "url(./src/assets/items/items.png)";
+      itemIcon.style.display = 'inline-block';
+      itemIcon.style.width = '32px';
+      itemIcon.style.height = '32px';
+      itemIcon.style.backgroundPositionX = (item.x * 32) + 'px';
+      itemIcon.style.backgroundPositionY = (item.y * 32) + 'px';
+
+      itemIcon.append(itemName);
+      equipItems.appendChild(itemIcon);
+    });
+
+
+     // 현재 캐릭터 스킬정보
+  const skillItemData = [{x:1, y:6, skill:'Die'}, {x:4,y:6,skill:'Mad'}, {x:2, y:6, skill:'poison'}];
+  const skillItems = document.createElement('div');
+  skillItems.className = 'skillItems';
+  skillItems.style.position = 'absolute';
+  skillItems.style.bottom = contents.offsetTop + contents.offsetHeight + 20 + 'px';
+  skillItems.style.right = '30px';
+  skillItems.style.bottom = '100px';
+
+  skillItemData.forEach(item => {
+    let itemIcon = document.createElement('p');
+    itemIcon.className = 'stat-item';
+
+    let itemName = document.createElement('span');
+    itemName.innerText = item.skill;
+
+    itemIcon.style.backgroundImage = "url(./src/assets/items/items.png)";
+    itemIcon.style.display = 'inline-block';
+    itemIcon.style.width = '32px';
+    itemIcon.style.height = '32px';
+    itemIcon.style.backgroundPositionX = -(item.x * 32) + 'px';
+    itemIcon.style.backgroundPositionY = -(item.y * 32) + 'px';
+
+    itemIcon.append(itemName);
+    skillItems.appendChild(itemIcon);
+  });
+
+    statUI.dom.appendChild(equipItems);
+    statUI.dom.appendChild(skillItems);
+
+    // 버튼
+    const equip_btn = new Button('EQUIP');
+    equip_btn.moveToLeft(20);
+    equip_btn.moveToBottom(20);
+    equip_btn.dom.classList.add('_small');
+    equip_btn.dom.style.margin = '0 auto';
+
+
+    const skill_btn = new Button('SKILL');
+    skill_btn.moveToRight(20);
+    skill_btn.moveToBottom(20);
+    skill_btn.dom.classList.add('_small');
+    skill_btn.dom.style.margin = '0 auto';
+
+
     statUI.dom.appendChild(contents);
+    statUI.dom.appendChild(equip_btn.dom);
+    statUI.dom.appendChild(skill_btn.dom);
   }
 
   showStageTitle(text, delay) {
@@ -226,11 +285,11 @@ export default class DomUI {
     }, delay);
   }
 
-  moveToCenter(){
+  moveToCenter(_top){
     this.dom.style.position = 'absolute';
     this.dom.style.left = 0 + 'px';
     this.dom.style.right = 0 + 'px';
-    this.dom.style.margin = '10% auto';
+    this.dom.style.margin = `${_top}px auto 0`;
   }
 
   moveToLeft(_left){
@@ -267,14 +326,15 @@ export default class DomUI {
     this.dom.style.top = offsetY + y + 'px';
   }
 
+  setClass(dom, value) {
+    return dom.classList.add(value);
+  }
+
   showDialog(text) {
     const dialog = new Dialog(900, 140);
     dialog.setText(text);
   }
 
-  hideDialog() {
-    this.destroyDom();
-  }
 }
 
 class Dialog extends DomUI {
@@ -307,28 +367,49 @@ class Dialog extends DomUI {
 class Profile extends DomUI {
   constructor(playerId) {
     super();
-
-    this.profile = document.createElement('img');
-    let name;
     
+    let profile = document.createElement('div');
+    profile.className = 'profile';
+
+    let profileImg = document.createElement('img');
+    let name = document.createElement('strong');
+    let level = document.createElement('span');
+
+    name.className = 'profile-name';
+    level.className = 'profile-level';
+    
+    let lv_value = null;
     //일단 플레이어 캐릭터 3개..
     if (playerId === 1) {
-      name = 'Hector';
+      name.innerText = 'Hector';
+      lv_value = 1;
     } else if (playerId === 2) {
-      name = 'Elid';
+      name.innerText = 'Elid';
+      lv_value = 2;
     } else {
-      name = 'Miluda';
+      name.innerText = 'Miluda';
+      lv_value = 10;
     }
 
-    this.name = name;
+    level.innerText = 'LV.' + lv_value;
 
-    this.profile.src = `/src/assets/player${playerId}_active.png`;
-    this.profile.style.position = 'absolute';
-    
+    this.profile = profile;
+    this.name = name;
+    this.level = level;
+
+    profileImg.src = `/src/assets/player${playerId}_active.png`;
+    profile.style.position = 'absolute';
+
+    this.profile.append(profileImg);
+    this.profile.append(level);
+    this.profile.append(name);
+
     this.dom = this.profile;
     this.dom.addEventListener('mouseup', this.showStatUI);
   }
+  
 }
+
 
 class SceneTitle extends DomUI {
   constructor(text) {
