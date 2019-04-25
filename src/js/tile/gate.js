@@ -1,6 +1,6 @@
-import Tile from './tile';
+import Prop from './prop';
 
-export default class Gate extends Tile {
+export default class Gate extends Prop {
     constructor(x, y, tileData) {
         super(x, y, tileData);
 

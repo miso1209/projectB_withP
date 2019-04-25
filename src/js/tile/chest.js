@@ -1,6 +1,6 @@
-import Tile from './tile';
+import Prop from './prop';
 
-export default class Chest extends Tile {
+export default class Chest extends Prop {
     constructor(x, y, tileData) {
         super(x, y, tileData);
 

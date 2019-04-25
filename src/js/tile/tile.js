@@ -50,7 +50,7 @@ export default class Tile extends PIXI.Container {
         }
         this.highlightedOverlay.lineTo(vertices[0][0], vertices[0][1]);
         this.highlightedOverlay.endFill();
-        this.addChild(this.highlightedOverlay);
+        //this.addChild(this.highlightedOverlay);
 
         this.highlightedOverlay.visible = false;
         this.isHighlighted = false;

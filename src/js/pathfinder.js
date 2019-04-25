@@ -162,7 +162,7 @@ export default class PathFinder {
 
             for (let x = 0; x < width; x++)
             {
-                const node = new GridNode(x, y, 1);
+                const node = new GridNode(x, y, 0);
                 this.grid[y].push(node);
                 this.nodes.push(node);
             }
