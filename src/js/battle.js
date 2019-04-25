@@ -1,6 +1,6 @@
-import BattleCharacter from "./battleCharacter";
-import CharacterFactory from "./characterFactory";
-import BattleEffect from "./battleEffect";
+import BattleCharacter from "./battlecharacter";
+import CharacterFactory from "./characterfactory";
+import BattleEffect from "./battleeffect";
 import { DIRECTIONS } from "./define";
 import BattleStage, {BASE_POSITION} from "./battlestage";
 

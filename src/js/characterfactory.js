@@ -1,7 +1,7 @@
 import Character from './character';
-import CharacterSpec from './characterSpec';
+import CharacterSpec from './characterspec';
 import Player from './player';
-import BattleCharacter from './battleCharacter';
+import BattleCharacter from './battlecharacter';
 
 export default class CharacterFactory {
     static resources;

@@ -2,7 +2,7 @@ import path from 'path';
 import ResourceManager from "./resource-manager";
 import Tweens from "./tweens";
 import Stage  from "./stage";
-import CharacterFactory from "./characterFactory";
+import CharacterFactory from "./characterfactory";
 
 import Player  from "./player";
 import Battle  from "./battle";
