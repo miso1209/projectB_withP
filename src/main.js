@@ -89,6 +89,10 @@ function gameStart(pixi) {
     domUI.setProfile(1);
     domUI.showStageTitle('어둠의 타워 999층', 1500);
 
+    // 줄바꿈 / 길이가 길어졌을 때.. 
+    // 다음텍스트로 넘어가는 버튼
+    domUI.showDialog('테스트 다이얼로그입니다. 클릭하면 꺼집니다테스트 다이얼로그입니다. 클릭하면 꺼집니다테스트 다이얼로그입니다. 클릭하면 꺼집니다테스트 다이얼로그입니다. 클릭하면 꺼집니다');
+    
     let toggle = true;
 
     window.addEventListener("keydown", (e) => {
@@ -111,8 +115,8 @@ function gameStart(pixi) {
           ui.hideCombine();
         }
         toggle = !toggle;
-      } else if (e.keyCode === 68) {
-        //dom UI test
+      } else if (e.keyCode === 65) { // a 
+        //dom UI test : showItemAquire
         domUI.showItemAquire(1);
       }
 

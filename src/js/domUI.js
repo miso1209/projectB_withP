@@ -8,7 +8,6 @@ export default class DomUI {
     this.gnbContainer = document.createElement('div');
     this.container = document.createElement('div');
 
-    this.UIlayers = [];
   }
 
   createDom() {
@@ -18,23 +17,22 @@ export default class DomUI {
     this.container.style.top = this.gamePane.offsetTop + 'px';
 
     document.body.appendChild(this.container);
-    this.UIlayers.push(this.container.node);
     this.container.style.pointerEvents = 'none'; // 클릭 이벤트 방지 해제.
     // this.container.style.pointerEvents = 'auto'; // 클릭 이벤트 방지.
   }
 
-  destroyDom(delay){
+  destroyDom(delay) {
     setTimeout(() => {
       document.body.removeChild(this.container);
     }, delay);
   }
 
+  // 추가? lv, name
   setProfile(playerId) {
     const profile = new Profile(playerId);
 
     this.gnbContainer.className = 'gnbContainer';
     this.gnbContainer.style.top = this.gamePane.offsetTop + 'px';
-    // this.gnbContainer.style.left = this.gamePane.offsetLeft + 'px';
     
     profile.moveToLeft(20);
 
@@ -80,16 +78,47 @@ export default class DomUI {
     itemAcquire.dom.appendChild(itemSprite);
   }
 
-  showInventory() {
-    const inventory = new Modal(this.container, 360, 340);
-    inventory.addTitle('Inventory');
 
-    const contents = document.createElement('ul');
-    contents.classList.add('contents-list');
+  showCombineItemList(){
+    // todo 조합가능한 아이템 리스트 노출
+  }
+
+
+  showInventory() {
+    const inventory = new Modal(this.container, 360, 460);
+    inventory.addTitle('Inventory');
     
+    const categoryWrap = document.createElement('div');
+    categoryWrap.classList.add('contents');
+    categoryWrap.classList.add('categoryWarp')
+    
+    // stat effect
+    const statContent = document.createElement('div');
+    statContent.classList.add('contents');
+    statContent.classList.add('column-2');
+    statContent.style.top = categoryWrap.clientHeight + 100 + 'px';
+    
+    let itemStatData = [];
+    // 임시
+    itemStatData.push("HP  +33");
+    itemStatData.push("MP   -3");
+    itemStatData.push("STRENGTH  +10");
+    
+    itemStatData.forEach(text => {
+      let stat = document.createElement('p');
+      stat.innerText = text;
+      statContent.appendChild(stat);
+    });
+
+    inventory.dom.appendChild(statContent);
+
+    // inventory items
+    const storageContent = document.createElement('ul');
+    storageContent.classList.add('contents-list');
+    storageContent.style.top = statContent.clientHeight + 100 + 'px';
+
     let inventorySize = 4 * 4;
     let slot;
-    let slotSize = 70;
     
     const itemSprite = document.createElement('img');
     itemSprite.src = '/src/assets/items/item1.png';
@@ -97,23 +126,47 @@ export default class DomUI {
 
     for (let i = 0; i < inventorySize; i++) {
       slot = document.createElement('li');
-      slot.style.width = slotSize;
-      
+
+      // 일단 하드코딩.... 
       if (i === 0) {
         slot.appendChild(itemSprite);
       }
-
-      contents.appendChild(slot);
+      
+      storageContent.appendChild(slot);
+      
+      slot.addEventListener('click', function(event){
+        // event.target.nextSibling.classList.remove('active');
+        event.target.classList.toggle('active');
+      });
     }
-
-    inventory.dom.appendChild(contents);
+    inventory.dom.appendChild(storageContent);
   }
 
+  showGear (catID) {
+    let catText;
+
+    if (catID === 0) {
+      catText = 'Gear';
+    } else if (catID == 1) {
+      catText = 'Item';
+    } else {
+      catText = 'Item';
+    }
+  }
+
+  showTooltip(container, text) {
+    const tooltip = document.createElement('div');
+    tooltip.className = 'tooltip';
+
+    container.appendChild(tooltip);
+  }
+
+  // todo : 탭...? Stat / Gear / Items / Skills 
   showStatUI() {
     const statUI = new Modal(this.container, 400, 250);
     statUI.addTitle('Player Status');
-    statUI.moveToLeft(20);
 
+    // stat data
     let statData = [];
 
     const contents = document.createElement('div');
@@ -133,7 +186,15 @@ export default class DomUI {
       stat.innerText = text;
       contents.appendChild(stat);
     });
+    const skill = new Button('SKILL');
+    skill.moveToRight(20);
+    skill.moveToBottom(20);
+    skill.dom.classList.add('_small');
+    skill.dom.style.margin = '0 auto';
 
+    statUI.dom.appendChild(skill.dom);
+    
+    // skill / 
     statUI.dom.appendChild(contents);
   }
 
@@ -171,9 +232,10 @@ export default class DomUI {
     this.dom.style.right = `${_right}px`;
   }
 
-  moveToBottom(){
+  moveToBottom(_bottom){
     this.dom.style.position = 'absolute';
-    this.dom.style.bottom = 0 + 'px';
+    this.dom.style.bottom = `${_bottom}px`;
+    this.dom.style.top = 'auto';
   }
 
   setPosition(x, y) {
@@ -191,6 +253,42 @@ export default class DomUI {
 
     this.dom.style.left = offsetX + x + 'px';
     this.dom.style.top = offsetY + y + 'px';
+  }
+
+  showDialog(text) {
+    const dialog = new Dialog(900, 140);
+    dialog.setText(text);
+  }
+
+  hideDialog() {
+    this.destroyDom();
+  }
+}
+
+class Dialog extends DomUI {
+  constructor(width, height) {
+    super();
+   
+    this.createDom();
+
+    const dialog = new NineBox(this.container, width, height, 'dialog');
+    dialog.dom.className = 'dialog';
+    dialog.moveToBottom(20);
+    this.container.appendChild(dialog.dom);
+    this.dom = dialog.dom;
+
+    dialog.dom.addEventListener('click', function() {
+      dialog.dom.parentNode.parentNode.removeChild(dialog.dom.parentNode);
+    });
+  }
+
+  setText(text) {
+    const content = document.createElement('p');
+    content.classList.add('contents');
+    content.classList.add('typeWriter');
+    content.innerText = text;
+
+    this.dom.appendChild(content);
   }
 }
 
@@ -231,11 +329,10 @@ class SceneTitle extends DomUI {
   }
 }
 
-
 class NineBox extends DomUI {
-  constructor ( container, _width, _height) {
+  constructor ( container, _width, _height, _type ) {
     super();
-  
+    
     const nineBox = document.createElement('div');
     nineBox.innerHTML = this.render();
     nineBox.classList.add('pixelBox');
@@ -248,12 +345,20 @@ class NineBox extends DomUI {
     // modal background image path 변경
     for(let i = 0; i < nineBox.children.length; i++) {
       var pixel = nineBox.children[i];
-    
+      let gap;
+
+      if( _type === 'dialog' ) {
+        pixel.classList.add('dialog');
+        gap = 16;
+      } else {
+        gap = 26;
+      }
+
       if( pixel.classList.contains('_width')) {
-        pixel.style.width = (_width - 26)  + 'px';
+        pixel.style.width = (_width - gap)  + 'px';
       } 
       if ( pixel.classList.contains('_height') ) {
-        pixel.style.height = (_height - 26)  + 'px';
+        pixel.style.height = (_height - gap)  + 'px';
       }
     }
   }
@@ -280,8 +385,7 @@ class Modal extends DomUI {
     this.createDom();
 
     const modal = new NineBox(this.container, width, height);
-    modal.dom.className = 'modal';
-    modal.moveToRight();
+    modal.dom.classList.add('modal');
 
     const closeBtn = new Button('', 'closeBtn');
     
