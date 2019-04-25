@@ -13,20 +13,26 @@ function getDirectionName(dir) {
     }
 }
 
-const SKILL_STATUS = {
+export const SKILL_STATUS = {
     IDLE: 1,
     WAIT: 2,
     ACTION: 3
-}
+};
+
+export const ACTIVE_TYPE = {
+    PASSIVE: 1,
+    ACTIVE: 2
+};
 
 class BaseSkill {
     constructor() {
         this.status = SKILL_STATUS.IDLE;
+        this.activeType = ACTIVE_TYPE.PASSIVE;
 
         // JSON을 받아서 각각의 정보를 넣는다. (지금은 하드코딩)
         this.damage = 80 + Math.round(Math.random()*30);
 
-        // beforeAttack : Attack 전까지의 frame, doneAttack : Attack 액션이 모두 수행될때 까지의 frame, afterAttack 다음 공격까지의 delay frame
+        // beforeAttack : Attack 전까지의 frame, doneAttack : Attack 액션이 모두 수행될때 까지의 frame, afterAttack 다음 공격까지의 delay frame (쉽게말해 쿨타임)
         this._delay = {
             beforeAttack: 50,
             doneAttack: 78,
@@ -55,8 +61,15 @@ class BaseSkill {
         this.status = SKILL_STATUS.WAIT;
     }
 
+    getDelay() {
+        return this.currentDelay;
+    }
+
     delay() {
         this.currentDelay--;
+        if (this.currentDelay <= 0) {
+            this.currentDelay = 0;
+        }
     }
 
     // 타겟 선정알고리즘.. 지금은 우선 살아있는 랜덤 캐릭터 반환.
@@ -77,7 +90,7 @@ class BaseSkill {
         return target;
     }
 
-    updateMovies() {
+    updateMovieclips() {
         let len = this.movies.length;
         for (let i = 0; i < len; i++) {
             const movie = this.movies[i];
@@ -144,12 +157,12 @@ export class MeleeSkill extends BaseSkill {
             return null;
         }
 
-        this.updateMovies();
+        this.updateMovieclips();
         this.status = SKILL_STATUS.ACTION;
 
         if (this.currentFrame === this._delay.beforeAttack) {
-            battle.battleEffect.addEffect(this.target, { name: 'slash', animationLength: 8, removeFrame: 60, speed: 0.5 });
-            battle.battleEffect.addDamageEffect(this.target, this.damage, "#ffffff");
+            battle.effect.addEffect(this.target, { name: 'slash', animationLength: 8, removeFrame: 60, speed: 0.5 });
+            battle.effect.addDamageEffect(this.target, this.damage, "#ffffff");
             this.target.onDamage(this.damage);
         } else if (this.currentFrame === this._delay.doneAttack) {
             this.currentFrame = 0;
@@ -209,7 +222,7 @@ export class ProjectileSkill extends BaseSkill {
             return null;
         }
 
-        this.updateMovies();
+        this.updateMovieclips();
         this.status = SKILL_STATUS.ACTION;
 
         if (this.currentFrame === this._delay.beforeAttack) {
@@ -223,7 +236,7 @@ export class ProjectileSkill extends BaseSkill {
             projectile.blendMode = PIXI.BLEND_MODES.ADD;
             // 둘 사이의 좌표를 이용 atan 으로 rotation 돌려보자.
             projectile.rotation = Math.atan2((this.target.y - this.target.height / 2) - (projectile.y - projectile.height / 2), (this.target.x - this.target.width / 2) - (projectile.x - projectile.width / 2));
-            battle.battleEffect.addChild(projectile);
+            battle.effect.addChild(projectile);
 
             const movieClip = new MovieClip(
                 MovieClip.Timeline(1, this._delay.doneAttack - this.currentFrame -10, projectile, [["alpha", 0, 1, "outCubic"]]),
@@ -231,15 +244,15 @@ export class ProjectileSkill extends BaseSkill {
                 MovieClip.Timeline(1, this._delay.doneAttack - this.currentFrame, projectile, [["y", projectile.position.y, this.target.position.y - this.target.height / 2, "outCubic"]]),
                 MovieClip.Timeline(this._delay.doneAttack - this.currentFrame - 10, this._delay.doneAttack - this.currentFrame, projectile, [["alpha", 1, 0, "outCubic"]]),
                 MovieClip.Timeline(this._delay.doneAttack - this.currentFrame, this._delay.doneAttack - this.currentFrame + 1, null, () => {
-                    battle.battleEffect.removeChild(projectile);
+                    battle.effect.removeChild(projectile);
                 }),
             );
     
             this.movies.push(movieClip);
             movieClip.playAndStop();
         } else if (this.currentFrame === this._delay.doneAttack) {
-            battle.battleEffect.addEffect(this.target, { name: 'explosion', animationLength: 16, removeFrame: 60, speed: 0.5 });
-            battle.battleEffect.addDamageEffect(this.target, this.damage, "#ffffff");
+            battle.effect.addEffect(this.target, { name: 'explosion', animationLength: 16, removeFrame: 60, speed: 0.5 });
+            battle.effect.addDamageEffect(this.target, this.damage, "#ffffff");
             this.target.onDamage(this.damage);
 
             this.currentFrame = 0;
@@ -303,7 +316,7 @@ export class ArrowShotingSkill extends BaseSkill {
             return null;
         }
 
-        this.updateMovies();
+        this.updateMovieclips();
         this.status = SKILL_STATUS.ACTION;
 
         if (this.currentFrame === this._delay.beforeAttack) {
@@ -315,7 +328,7 @@ export class ArrowShotingSkill extends BaseSkill {
             projectile.position.y = this.proponent.position.y - this.proponent.height / 2;
             projectile.alpha = 0;
             projectile.blendMode = PIXI.BLEND_MODES.ADD;
-            battle.battleEffect.addChild(projectile);
+            battle.effect.addChild(projectile);
 
             const totalFrame = this._delay.doneAttack - this.currentFrame;
             let vecY = -6;
@@ -333,17 +346,17 @@ export class ArrowShotingSkill extends BaseSkill {
                 }),
                 // MovieClip.Timeline(this._delay.doneAttack - this.currentFrame - 5, this._delay.doneAttack - this.currentFrame, projectile, [["alpha", 1, 0, "outCubic"]]),
                 MovieClip.Timeline(this._delay.doneAttack - this.currentFrame, this._delay.doneAttack - this.currentFrame + 1, null, () => {
-                    battle.battleEffect.removeChild(projectile);
+                    battle.effect.removeChild(projectile);
                 }),
             );
     
             this.movies.push(movieClip);
             movieClip.playAndStop();
         } else if (this.currentFrame === this._delay.doneAttack) {
-            battle.battleEffect.addEffect(this.target, { name: 'shoted', animationLength: 18, removeFrame: 60, speed: 0.5 });
-            battle.battleEffect.addDamageEffect(this.target, this.damage, "#ffffff");
-            battle.battleEffect.flashScreen(0.2, 0.1);
-            battle.vibrationStage(8);
+            battle.effect.addEffect(this.target, { name: 'shoted', animationLength: 18, removeFrame: 60, speed: 0.5 });
+            battle.effect.addDamageEffect(this.target, this.damage, "#ffffff");
+            battle.effect.flashScreen(0.2, 0.1);
+            battle.stage.vibrationStage(8, 12);
             this.target.onDamage(this.damage);
 
             this.currentFrame = 0;

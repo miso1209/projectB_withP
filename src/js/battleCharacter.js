@@ -1,6 +1,6 @@
 import { DIRECTIONS } from './define';
 import MovieClip from './movieclip';
-import { MeleeSkill, ProjectileSkill, ArrowShotingSkill } from './skill';
+import { MeleeSkill, ProjectileSkill, ArrowShotingSkill, SKILL_STATUS, ACTIVE_TYPE } from './skill';
 import Tweens from './tweens';
 
 function loadAniTexture(name, count) {
@@ -11,7 +11,7 @@ function loadAniTexture(name, count) {
     return frames;
 }
 
-function getDirectionName(dir) {
+export function getDirectionName(dir) {
     if (dir === DIRECTIONS.SE) {
         return 'se';
     } else if (dir === DIRECTIONS.NW) {
@@ -23,19 +23,13 @@ function getDirectionName(dir) {
     }
 }
 
-const SKILL_STATUS = {
-    IDLE: 1,
-    WAIT: 2,
-    ACTION: 3
-}
-
 const STATUS = {
     IDLE: 1,
     ATTACK: 2,
     DIE: 3,
     WAIT: 4,
     BE_ATTACKED: 5
-}
+};
 
 export default class BattleCharacter extends PIXI.Container {
     constructor(spec) {
@@ -45,23 +39,48 @@ export default class BattleCharacter extends PIXI.Container {
         this.movies = [];
 
         this.status = STATUS.IDLE;
+        this.skills = [];
 
+        // 스킬을 가지는 것 우선 하드코딩..
         if (spec.name == 'Elid') {
-            this.skillA = new ProjectileSkill();
+            this.skills.push(new ProjectileSkill());
         } else if (spec.name == 'Miluda') {
-            this.skillA = new ArrowShotingSkill();
+            this.skills.push(new ArrowShotingSkill());
         } else {
-            this.skillA = new MeleeSkill();
+            this.skills.push(new MeleeSkill());
         }
-        this.skillA.setProponent(this);
+
+        // 스킬을 여러개 가질 수 있으며, 2번재 스킬로 Melee를 가지게 함. (임시로 엑티브로 사용할 것이기 때문.) 나중에 아래 세줄 제거.
+        this.skills.push(new MeleeSkill());
+        this.skills[1].currentDelay = 0;
+        this.skills[1].activeType = ACTIVE_TYPE.ACTIVE;
+        // 
+
+        this.skills.forEach((skill) => {
+            skill.setProponent(this);
+        });
 
         const shadow = new PIXI.Sprite(PIXI.Texture.fromFrame("shadow.png"));
         shadow.position.y = -shadow.height;
         this.container.addChild(shadow);
 
+        this.battle = null;
+
         this.loadSpec(spec);
         this.makeProgressBar();
         this.addChild(this.container);
+
+        // 임시로 캐릭터를 누르면 Active Queue에 본인의 스킬을 넣는다. 제거할 것.
+        this.container.interactive = true;
+        this.container.on('mouseup', (event) => {
+            if (this.skills[1].isReady()) {
+                this.skills[1].setWait();
+                this.battle.activeQueue.enqueue(this.skills[1]);
+                console.log('Active Skill Eequeue!! : ', this.battle.activeQueue.skillQueue);
+            } else {
+                console.log('Active Skill has Delay!! : ', this.skills[1].getDelay());
+            }
+        });
     }
 
     makeProgressBar() {
@@ -108,22 +127,50 @@ export default class BattleCharacter extends PIXI.Container {
     }
 
     update(battle) {
-        this.movieClipsUpdate();
+        // Active Skill Test를 위한 임시. 제거할 것.
+        this.battle = battle; // 지우자 UI 생기면 어떻게 매핑할지도 생각하자.
+        
+        this.updateMovieclips();
         this.tweens.update();
-        // 캐릭터가 사망하였거나, 전투가 끝났을 경우 로직을 돌리지 않는다.
+        this.updateSkills(battle);
+        this.enqueueIdlePassiveSkill(battle);
+    }
+
+    enqueueIdlePassiveSkill(battle) {
+        // 캐릭터가 사망하였거나, 전투가 끝났을 경우 캐릭터 액션로직(스킬 큐에 올리기, 스킬 딜레이 감소) 돌리지 않는다.
         if (this.status === STATUS.DIE || battle.isBattleEnd()) {
             return;
         }
 
-        if (this.skillA.isReady()) {
-            this.skillA.setWait();
-            battle.basicQueue.enqueue(this.skillA);
-        } else if (this.skillA.status === SKILL_STATUS.IDLE && battle.currentAction === null) {
-            this.skillA.delay();
+        // 이 부분에 스킬 여러개가 레디상태 인 경우, 어떤 스킬을 Enqueue할지 정하는 로직 필요할듯 하다.
+        let selectedPassiveSkill = null;
+
+        this.skills.forEach((skill) => {
+            if(skill.isReady() && skill.activeType === ACTIVE_TYPE.PASSIVE && selectedPassiveSkill === null) {
+                selectedPassiveSkill = skill;
+            }
+        });
+
+        if (selectedPassiveSkill) {
+            selectedPassiveSkill.setWait();
+            battle.basicQueue.enqueue(selectedPassiveSkill);
         }
     }
 
-    movieClipsUpdate() {
+    updateSkills(battle) {
+        // 캐릭터가 사망하였거나, 전투가 끝났을 경우 캐릭터 액션로직(스킬 큐에 올리기, 스킬 딜레이 감소) 돌리지 않는다.
+        if (this.status === STATUS.DIE || battle.isBattleEnd()) {
+            return;
+        }
+
+        this.skills.forEach((skill) => {
+            if (skill.status === SKILL_STATUS.IDLE && battle.currentAction === null) {
+                skill.delay();
+            }
+        });
+    }
+
+    updateMovieclips() {
         let len = this.movies.length;
         for (let i = 0; i < len; i++) {
             const movie = this.movies[i];
@@ -156,26 +203,27 @@ export default class BattleCharacter extends PIXI.Container {
         const hpWidth = (this.hp < 0 ? 0 : this.hp) / this.maxHp * 34;
 
         this.tweens.addTween(this.hpBar, 0.5, { width: hpWidth }, 0, "easeInOut", true);
-        this.softBackingTint(0xFF0000);
-        this.vibration(6);
+        this.softRollBackTint(0xFF0000, 45);
+        this.vibration(6, 12);
 
         this.checkDie();
     }
 
-    softBackingTint (tint) {
+    // 여러 softRollBackTint와 겹치면 문제될 수 있다. 단독, 중복없이 실행되야할듯.. 문제될 수 있다.
+    softRollBackTint (tint, duration) {
         const startTint = tint? tint: 0xFFFFFF;
         let [sR, sG, sB] = [(startTint & 0xFF0000) >>> 16, (startTint & 0x00FF00) >>> 8, startTint & 0x0000FF];
-        const [addR, addG, addB] = [(255 - sR) / 45, (255 - sG) / 45, (255 - sB) / 45];
+        const [addR, addG, addB] = [(255 - sR) / duration, (255 - sG) / duration, (255 - sB) / duration];
         this.anim.tint = Math.round(sR) << 16 | Math.round(sG) << 8 | Math.round(sB);
 
         const movieClip = new MovieClip(
-            MovieClip.Timeline(1, 45, null, () => {
+            MovieClip.Timeline(1, duration, null, () => {
                 sR += addR;
                 sG += addG;
                 sB += addB;
                 this.anim.tint = (Math.round(sR) << 16 | Math.round(sG) << 8 | Math.round(sB));
             }),
-            MovieClip.Timeline(46, 46, null, () => {
+            MovieClip.Timeline(duration + 1, duration + 1, null, () => {
                 this.anim.tint = 0xFFFFFF;
             })
         );
@@ -185,18 +233,18 @@ export default class BattleCharacter extends PIXI.Container {
     }
 
     // 캐릭터 anim의 position 건드리는데.. anim x 건드리는 애랑 같이 사용할 경우 문제될 수 있다.
-    vibration(scale) {
+    vibration(scale, duration) {
         const x = this.anim.position.x;
         const y = this.anim.position.y;
         let vibrationScale = scale;
 
         const movieClip = new MovieClip(
-            MovieClip.Timeline(1, 12, null, () => {
+            MovieClip.Timeline(1, duration, null, () => {
                 this.anim.position.x = x + vibrationScale;
                 this.anim.position.y = y + vibrationScale;
                 vibrationScale = vibrationScale / 6 * -5;
             }),
-            MovieClip.Timeline(13, 13, null, () => {
+            MovieClip.Timeline(duration + 1, duration + 1, null, () => {
                 this.anim.position.x = x;
                 this.anim.position.y = y;
             })

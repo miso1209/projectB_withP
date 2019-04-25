@@ -1,17 +1,8 @@
 import BattleCharacter from "./battleCharacter";
 import CharacterFactory from "./characterFactory";
-import { DIRECTIONS } from "./define";
 import BattleEffect from "./battleEffect";
-import MovieClip from './movieclip';
-
-const BASE_POSITION = {
-    PLAYER_X: 182,
-    PLAYER_Y: 243,
-    ENEMY_X: 321,
-    ENEMY_Y: 173,
-    CENTER_X: -54,
-    CENTER_Y: -140
-}
+import { DIRECTIONS } from "./define";
+import BattleStage, {BASE_POSITION} from "./battlestage";
 
 class BattleQueue {
     constructor() {
@@ -38,18 +29,13 @@ export default class Battle {
     }
 
     prepare() {
+        this.activeQueue = new BattleQueue();
         this.basicQueue = new BattleQueue();
-        this.battleEffect = new BattleEffect();
-        this.currentAction = null;
 
-        this.stage = new PIXI.Container();
-        this.stage.scale.x = 2;
-        this.stage.scale.y = 2;
-        
-        // 통짜 배틀 이미지를 박는다.. 추후 크기를 고정사이즈로 정의하든, 몇개의 사이즈(small, big, wide 같이..?)를 규격화하든 해야할 것 같다.
-        const battleStageSprite = new PIXI.Sprite(PIXI.Texture.fromFrame("battleMap1.png"));
-        this.stage.addChild(battleStageSprite);
-        this.movies = [];
+        this.stage = new BattleStage();
+        this.effect = new BattleEffect();
+
+        this.currentAction = null;
 
         // 캐릭터 생성하여 배치한다.
         const hectorSpec = CharacterFactory.createCharacterSpec('hector');
@@ -61,33 +47,45 @@ export default class Battle {
         this.setCharacters(this.players, BASE_POSITION.PLAYER_X, BASE_POSITION.PLAYER_Y, DIRECTIONS.NE);
         this.setCharacters(this.enemies, BASE_POSITION.ENEMY_X, BASE_POSITION.ENEMY_Y, DIRECTIONS.SW);
 
-        this.stage.addChild(this.battleEffect);
+        this.stage.addChild(this.effect);
 
-        this.focusCenterPos();
+        this.stage.focusCenterPos();
     }
 
     start() {
     }
 
+    /*
+    battle flow에 대해서 정의해보자.
+    BATTLE_FLOW.INTRO     전투 시작
+    BATTLE_FLOW.BATTLE    싸운다
+    BATTLE_FLOW.VICTORY   승리
+    BATTLE_FLOW.DEFEAT    패배
+    BATTLE_FLOW.OUTRO     전투 종료
+    */
     update() {
-        this.movieClipsUpdate();
-        this.battleEffect.update();
-        this.charactersUpdate();
-
+        this.effect.update();
+        this.stage.update();
+        this.updateCharacters();
+        
         if (this.isBattleEnd() && !this.currentAction) {
+            console.log('end');
             return;
         }
 
         if (this.currentAction) {
             // 액션 완료되면 action 함수는 NUll 반환하여 currentAction을 null로 만듬.
             this.currentAction = this.currentAction.action(this);
+        } else if (this.activeQueue.hasAction()) {
+            this.currentAction = this.activeQueue.dequeue();
+            this.currentAction.init(this);
         } else if (this.basicQueue.hasAction()) {
             this.currentAction = this.basicQueue.dequeue();
             this.currentAction.init(this);
         }
     }
 
-    charactersUpdate() {
+    updateCharacters() {
         this.players.forEach((player) => {
             player.update(this);
         });
@@ -121,45 +119,5 @@ export default class Battle {
             character.changeVisualToDirection(directions);
             this.stage.addChild(character);
         });
-    }
-    
-    // Stage 관련 코드 => 맵 흔들림, 맵 포지션 변경(사실상 카메라)는 따로 빼야하지 않을까?.. 여긴 전투로직 만들어야 할 것 같은데..? 
-    focusCenterPos() {
-        this.stage.position.x = BASE_POSITION.CENTER_X;
-        this.stage.position.y = BASE_POSITION.CENTER_Y;
-    }
-
-    // stage 의 position을 vibration중에 건드린다면 문제가 될 수 있다.
-    vibrationStage(scale) {
-        const x = this.stage.position.x;
-        const y = this.stage.position.y;
-        let vibrationScale = scale;
-
-        const movieClip = new MovieClip(
-            MovieClip.Timeline(1, 12, null, () => {
-                this.stage.position.x = x + vibrationScale;
-                this.stage.position.y = y + vibrationScale;
-                vibrationScale = vibrationScale / 6 * -5;
-            }),
-            MovieClip.Timeline(13, 13, null, () => {
-                this.stage.position.x = x;
-                this.stage.position.y = y;
-            })
-        );
-
-        this.movies.push(movieClip);
-        movieClip.playAndStop();
-    }
-
-    movieClipsUpdate() {
-        let len = this.movies.length;
-        for (let i = 0; i < len; i++) {
-            const movie = this.movies[i];
-            movie.update();
-            if (!movie._playing) {
-                this.movies.splice(i, 1);
-                i--; len--;
-            }
-        }
     }
 }
