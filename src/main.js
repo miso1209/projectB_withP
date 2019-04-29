@@ -3,6 +3,7 @@ import UI from './js/ui'
 import ResourceManager from './js/resource-manager'
 
 import DomUI from './js/domUI'
+import CharacterFactory from './js/characterfactory';
 
 function initApp() {
   const pixi = new PIXI.Application(980, 500, {
@@ -68,7 +69,41 @@ function gameStart(pixi) {
   game.resourceManager.add("ending_victory.png", "assets/ending_victory.png");
   game.resourceManager.add("battleMap1.png", "assets/battleMap1.png");
 
-  game.resourceManager.load(() => {
+  // 전투용 이미지. 나중에 모두 제거해야 한다
+  game.resourceManager.add("assets/night/atk_sw.json");
+  game.resourceManager.add("assets/night/atk_nw.json");
+  game.resourceManager.add("assets/night/idle_sw.json");
+  game.resourceManager.add("assets/night/idle_nw.json");
+  game.resourceManager.add("assets/night/walk_sw.json");
+  game.resourceManager.add("assets/night/walk_nw.json");
+  game.resourceManager.add("shadow.png", "assets/shadow.png");
+  game.resourceManager.add("pbar.png", "assets/pbar.png");
+  game.resourceManager.add("pbar_r.png", "assets/pbar_r.png");
+  game.resourceManager.add("pbar_g.png", "assets/pbar_g.png");
+  game.resourceManager.add("pbar_o.png", "assets/pbar_o.png");
+  game.resourceManager.add("assets/elid/elid_atk_nw.json");
+  game.resourceManager.add("assets/elid/elid_atk_sw.json");
+  game.resourceManager.add("assets/elid/elid_idle_nw.json");
+  game.resourceManager.add("assets/elid/elid_idle_sw.json");
+  game.resourceManager.add("assets/miluda/miluda_atk_sw.json");
+  game.resourceManager.add("assets/miluda/miluda_atk_nw.json");
+  game.resourceManager.add("assets/miluda/miluda_idle_sw.json");
+  game.resourceManager.add("assets/miluda/miluda_idle_nw.json");
+  game.resourceManager.add("assets/titan/monster2-atk_sw.json");
+  game.resourceManager.add("assets/titan/monster2-idle_sw.json");
+  game.resourceManager.add("assets/medusa/monster1-atk_sw.json");
+  game.resourceManager.add("assets/medusa/monster1_idle_sw.json");
+  game.resourceManager.add("assets/slash_1.json");
+  game.resourceManager.add("assets/explosion.json");
+  game.resourceManager.add("assets/shoted.json");
+  game.resourceManager.add("fireBall.png", "assets/fireBall.png");
+  game.resourceManager.add("arrow.png", "assets/arrow.png");
+
+  CharacterFactory.loadCharacterJson();
+
+
+
+  game.loadCommon(() => {
     const ui = new UI(game);
     game.ui = ui;
 

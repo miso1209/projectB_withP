@@ -1,0 +1,31 @@
+{
+    "1" : {
+        "name": "hector",
+        "displayname": "헥터",
+        "portrait": "player1_active.png",
+        "stat": {
+            "health": 300,
+            "strength": 6,
+            "intellect": 10,
+            "agility": 5,
+            "stamina": 6,
+            "speed": 0.5,
+            "critical": 0,
+            "regist": 0
+        },
+        "skills": {
+        },
+        "animations": {
+            "hector_idle_nw": { "length": 2 },
+            "hector_idle_sw": { "length": 2 },
+            "hector_atk_nw": { "length": 10 },
+            "hector_atk_sw": { "length": 10 },
+            "hector_walk_nw": { "length": 8 },
+            "hector_walk_sw": { "length": 8 }
+        },
+        "offset": {
+            "x": 0,
+            "y": -48
+        }
+    }
+}

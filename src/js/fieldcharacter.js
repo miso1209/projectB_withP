@@ -2,7 +2,7 @@ import { loadAniTexture, getDirectionName } from './utils';
 import { DIRECTIONS } from './define';
 
 export default class FieldCharacter extends PIXI.Container {
-    constructor(spec) {
+    constructor(character) {
         super();
 
         this.gridX = 0;
@@ -21,35 +21,27 @@ export default class FieldCharacter extends PIXI.Container {
         shadow.position.y = -shadow.height;
         this.container.addChild(shadow);
 
-        if(spec) {
-            this.name = spec.name;
+        // 모든 필드 캐릭터는 동일한 데이터를 사용한다
+        for(let key of ["idle", "atk", "walk"]) {
+            const keyA = character.name + "_" + key + "_nw";
+            this.animations[key + '_nw'] = { textures: loadAniTexture(keyA, character.data.animations[keyA].length), flipX: false };
+            this.animations[key + '_ne'] = { textures: this.animations[key + '_nw'].textures, flipX: true };
             
-            for(let key in spec.battleUi) {
-                this[key] = new PIXI.Sprite(PIXI.Texture.fromFrame(spec.battleUi[key]));
-            }
-    
-            for(let key in spec.stat) {
-                this[key] = spec.stat[key];
-            }
-    
-            for(let key in spec.animations) {
-                this.animations[key + '_nw'] = { textures: loadAniTexture(spec.animations[key].texture + "_nw", spec.animations[key].length), flipX: false };
-                this.animations[key + '_ne'] = { textures: this.animations[key + '_nw'].textures, flipX: true };
-                
-                this.animations[key + '_sw'] = { textures: loadAniTexture(spec.animations[key].texture + "_sw", spec.animations[key].length), flipX: false };
-                this.animations[key + '_se'] = { textures: this.animations[key + '_sw'].textures, flipX: true };
-            }
 
-            this.offset = spec.offset;
-        
-            const anim = new PIXI.extras.AnimatedSprite(this.animations.idle_sw.textures);
-            anim.animationSpeed = 0.1;
-            anim.play();
-            anim.position.x = this.offset.x;
-            anim.position.y = this.offset.y;
-            this.anim = anim;
-            this.container.addChild(anim);
+            const keyB = character.name + "_" + key + "_sw";
+            this.animations[key + '_sw'] = { textures: loadAniTexture(keyB, character.data.animations[keyB].length), flipX: false };
+            this.animations[key + '_se'] = { textures: this.animations[key + '_sw'].textures, flipX: true };
         }
+
+        this.offset = character.data.offset;
+    
+        const anim = new PIXI.extras.AnimatedSprite(this.animations.idle_sw.textures);
+        anim.animationSpeed = 0.1;
+        anim.play();
+        anim.position.x = this.offset.x;
+        anim.position.y = this.offset.y;
+        this.anim = anim;
+        this.container.addChild(anim);
 
         this.currentDir = DIRECTIONS.SW;
         this.addChild(this.container);

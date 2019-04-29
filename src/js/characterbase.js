@@ -4,7 +4,7 @@
 export default class CharacterBase {
     constructor(data) {
 
-        this.name = data.name;
+        this.data = data;
         
         this.health;
         
@@ -44,6 +44,10 @@ export default class CharacterBase {
 
         this.attackPotential = 0.5;
         this.magicPotential = 0.5;
+    }
+
+    get name() {
+        return this.data.name;
     }
 
     get maxHealth() {

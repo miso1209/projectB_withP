@@ -1,4 +1,3 @@
-import CharacterFactory from "./characterfactory";
 import FieldCharacter from './fieldcharacter';
 import { DIRECTIONS } from './define';
 
@@ -10,8 +9,7 @@ export default class Explore {
     prepare() {
         const spawnPoint = { x: 0, y: 0 };
 
-        const src = CharacterFactory.createCharacterSpec(this.game.player.controlCharacter);
-        this.controller = new FieldCharacter(src);
+        this.controller = new FieldCharacter(this.game.player.controlCharacter);
 
         this.game.stage.addCharacter(this.controller, spawnPoint.x, spawnPoint.y);
         this.game.stage.checkForFollowCharacter(this.controller, true);

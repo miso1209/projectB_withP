@@ -2,15 +2,13 @@ import path from 'path';
 import ResourceManager from "./resource-manager";
 import Tweens from "./tweens";
 import Stage  from "./stage";
-import CharacterFactory from "./characterfactory";
 
 import Player  from "./player";
 import Battle  from "./battle";
 import Explore  from "./explore";
 
 import TileSet from "./tiledmap";
-import ItemFactory from './itemfactory';
-import FieldCharacter from './fieldcharacter';
+import EntityFactory from './entityfactory';
 
 export default class Game {
     constructor(pixi) {
@@ -51,74 +49,47 @@ export default class Game {
         this.battleMode = new Battle(this);
         this.exploreMode = new Explore(this);
         this.currentMode = null;
-        this.nextStageMode = null;
-
+        
         this.resourceManager = new ResourceManager();
-        this.generator = new ItemFactory();
-
-
-        // TODO :나중에 제거해야한다!!!
-        // hitEffect or 화면 효과용 스크린을 설치. (다른곳으로 빼야할듯하다..)
-        const whiteScreen = new PIXI.Sprite(PIXI.Texture.WHITE);
-        whiteScreen.width = width + 128;
-        whiteScreen.height = height + 128;
-        whiteScreen.position.x = -64;
-        whiteScreen.position.y = -64;
-        whiteScreen.alpha = 0;
-        pixi.stage.addChild(whiteScreen);
-        this.whiteScreen = whiteScreen;
+        this.generator = new EntityFactory();
     }
+
+    // 아이템과 캐릭터 데이터등을 미리 로딩을 한다
+    loadCommon(next) {
+        this.resourceManager.add("items", "assets/json/items.json");
+        this.resourceManager.add("characters", "assets/json/characters.json");
+
+        this.resourceManager.load((resources) => {
+            this.generator.setItems(resources.items.data);
+            this.generator.setCharacters(resources.characters.data);
+
+            if (next) {
+                next();
+            }
+        });
+    }
+
 
     start(playerInfo) {
+        // 임시로 캐릭터데이터를 생성한다
         this.player = new Player();
+        // 플레이어가 가지고 있는 캐릭터를 하나 정의한다
+        this.player.characters.push(this.generator.character(1));
+        this.player.controlCharacter = this.player.characters[0];
 
-        // 플레이어 정보를 네트워크나 디스크로부터 읽어온 직후이다.
-        // 플레이어가 어디에 위치 했는지 확인한다.
-        // 플레이어 캐릭터를 만든다
-        this.resourceManager.add("assets/night/atk_sw.json");
-        this.resourceManager.add("assets/night/atk_nw.json");
-        this.resourceManager.add("assets/night/idle_sw.json");
-        this.resourceManager.add("assets/night/idle_nw.json");
-        this.resourceManager.add("assets/night/walk_sw.json");
-        this.resourceManager.add("assets/night/walk_nw.json");
+        // 필요한 필드 캐릭터 정보를 로딩한다
+        const anim_path = "assets/sprite/character/" + this.player.controlCharacter.name;
+        for (const ani in this.player.controlCharacter.data.animations) {
+            this.resourceManager.add(anim_path + "/" + ani + ".json");
+        }
         this.resourceManager.add("shadow.png", "assets/shadow.png");
-        // 전투용 라이프 바 (지금 로딩할필요가 있을까?)
-        this.resourceManager.add("pbar.png", "assets/pbar.png");
-        this.resourceManager.add("pbar_r.png", "assets/pbar_r.png");
-        this.resourceManager.add("pbar_g.png", "assets/pbar_g.png");
-        this.resourceManager.add("pbar_o.png", "assets/pbar_o.png");
-        // 몬스터용 데이터 (나중에 옮겨야 한다)
-        this.resourceManager.add("assets/elid/elid_atk_nw.json");
-        this.resourceManager.add("assets/elid/elid_atk_sw.json");
-        this.resourceManager.add("assets/elid/elid_idle_nw.json");
-        this.resourceManager.add("assets/elid/elid_idle_sw.json");
 
-        this.resourceManager.add("assets/miluda/miluda_atk_sw.json");
-        this.resourceManager.add("assets/miluda/miluda_atk_nw.json");
-        this.resourceManager.add("assets/miluda/miluda_idle_sw.json");
-        this.resourceManager.add("assets/miluda/miluda_idle_nw.json");
 
-        this.resourceManager.add("assets/titan/monster2-atk_sw.json");
-        this.resourceManager.add("assets/titan/monster2-idle_sw.json");
-
-        this.resourceManager.add("assets/medusa/monster1-atk_sw.json");
-        this.resourceManager.add("assets/medusa/monster1_idle_sw.json");
-        
-        // 이펙트
-        this.resourceManager.add("assets/slash_1.json");
-        this.resourceManager.add("assets/explosion.json");
-        this.resourceManager.add("assets/shoted.json");
-        this.resourceManager.add("fireBall.png", "assets/fireBall.png");
-        this.resourceManager.add("arrow.png", "assets/arrow.png");
-
-        // Character JSON Load
-        CharacterFactory.loadCharacterJson();
-
-        this.enterStage(playerInfo.stagePath, "explore");
+        // 필드에 들어간다
+        this.enterStage(playerInfo.stagePath);
     }
 
-    enterStage(stagePath, mode) {
-        this.nextStageMode = mode;
+    enterStage(stagePath) {
         if (this.currentStage) {
             // 기존 스테이지에서 나간다
             this.tweens.addTween(this.blackScreen, 1, { alpha: 1 }, 0, "easeIn", true, () => {
@@ -195,10 +166,6 @@ export default class Game {
                         if (otile) {
                             stage.setObjectTile(x, y, otile);
                         }
-                        //const tiles = tileset.getTilesAt(x, y);
-                        //for(const tiledata of tiles)  {
-                        //    stage.setTile(x, y, tiledata);
-                        //}
                     }
                 }
                 
@@ -221,13 +188,7 @@ export default class Game {
         this.gamelayer.addChild(stage);
 
         // 페이드 인이 끝나면 게임을 시작한다
-        if (this.nextStageMode === "battle") {
-            this.currentMode = this.battleMode;
-        } else {
-            this.currentMode = this.exploreMode;
-        }
-        this.nextStageMode = null;
-
+        this.currentMode = this.exploreMode;
         this.currentMode.prepare();
 
 
