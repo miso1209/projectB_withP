@@ -10,6 +10,7 @@ import Explore  from "./explore";
 
 import TileSet from "./tiledmap";
 import ItemFactory from './itemfactory';
+import FieldCharacter from './fieldcharacter';
 
 export default class Game {
     constructor(pixi) {
@@ -69,6 +70,8 @@ export default class Game {
     }
 
     start(playerInfo) {
+        this.player = new Player();
+
         // 플레이어 정보를 네트워크나 디스크로부터 읽어온 직후이다.
         // 플레이어가 어디에 위치 했는지 확인한다.
         // 플레이어 캐릭터를 만든다
@@ -176,16 +179,6 @@ export default class Game {
             }
 
             this.resourceManager.load((resources) => {
-
-                // 이렇게 하면 안된다!!!
-                // 플레이어는 스테이지보다 우선한다.
-                // 필드 캐릭터와 플레이어를 혼돈하지 않도록 주의하자
-                if (!this.player) {
-                    this.player = CharacterFactory.createPlayer(CharacterFactory.createCharacterSpec('hector'));
-                    this.player.inventory.addItem(this.generator.item(1));
-                    this.player.inventory.addItem(this.generator.item(2));
-                }
-
                 const stage = new Stage(mapData.width, mapData.height, mapData.tilewidth, mapData.tileheight);
 
                 // 여기에 데이터를 입력한다

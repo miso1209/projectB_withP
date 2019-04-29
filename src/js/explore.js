@@ -1,3 +1,5 @@
+import CharacterFactory from "./characterfactory";
+import FieldCharacter from './fieldcharacter';
 import { DIRECTIONS } from './define';
 
 export default class Explore {
@@ -6,69 +8,39 @@ export default class Explore {
     }
 
     prepare() {
-        // 플레이어를 맵에 추가한다
-        // 맵에 스타팅 포인트가 있어야 하는데? 
+        const spawnPoint = { x: 0, y: 0 };
 
-        if (this.fromBattle) {
-            // 전투에서 되돌아 올때는 따로 연출없이 바로 온다
-            const stage = this.game.stage
-            const player = this.game.player;
-            stage.addCharacter(player, this.backupX, this.backupY);
-            stage.checkForFollowCharacter(player, true);
-            player.setUiVisible(this.game, false);
-            
-        } else {
-            const spawnPoint = { x: 0, y: 0 };
+        const src = CharacterFactory.createCharacterSpec(this.game.player.controlCharacter);
+        this.controller = new FieldCharacter(src);
 
-            const stage = this.game.stage
-            const player = this.game.player;
-            stage.addCharacter(player, spawnPoint.x, spawnPoint.y);
-            stage.checkForFollowCharacter(player, true);
+        this.game.stage.addCharacter(this.controller, spawnPoint.x, spawnPoint.y);
+        this.game.stage.checkForFollowCharacter(this.controller, true);
 
-            // 캐릭터 방향을 돌린다
-            this.game.player.changeVisualToDirection(DIRECTIONS.SE);
+        // 캐릭터 방향을 돌린다
+        this.controller.changeVisualToDirection(DIRECTIONS.SE);
 
-            // 컷신준비를 한다
-            this.cutscene = true;
-            this.game.ui.showTheaterScreen(0);
-            this.game.stage.showPathHighlight = false;
+        // 컷신준비를 한다
+        this.cutscene = true;
+        this.game.ui.showTheaterScreen(0);
+        this.game.stage.showPathHighlight = false;
 
-            this.game.stage.onTouchObject = this.onTouchObject.bind(this);
-            this.game.stage.onTilePassing = this.onTilePassing.bind(this);
-
-            // 게이트를 열어놓는다
-            //const gate = this.game.stage.getObjectAt(3, 1);
-            //gate.open();
-        }
+        this.game.stage.onTouchObject = this.onTouchObject.bind(this);
+        this.game.stage.onTilePassing = this.onTilePassing.bind(this);
     }
 
     start() {
         this.game.stage.onTileSelected = this.onTileSelected.bind(this);
-
-        if (this.fromBattle) {
-            // 바로 컷신을 끝낸다
-        } else {
-            //=======================
-            // 컷신 하드코딩
-            // 스테이지 이름을 화면에 출력한다
-            // this.game.ui.showStageTitle("어둠의 성탑 99층");
             
-            // 플레이어를 적당한 곳으로 이동시킨다
-            this.game.stage.moveCharacter(this.game.player, 4,4);
-            setTimeout(() => {
-                // 게이트문을 찾아서 닫는다.
-                //const gate = this.game.stage.getObjectAt(3, 1);
-                //gate.close(this.game.tweens);
-            }, 2000);
+        // 플레이어를 적당한 곳으로 이동시킨다
+        this.game.stage.moveCharacter(this.controller, 4,4);
 
-            setTimeout(() => {
-                this.game.ui.showChatBallon(this.game.player, "큰일이다 문이 닫혔다!\n어떻게 하면 나갈 수 있을까 ...", 4);
-                // 컷신을 끝낸다
-                this.cutscene = false;
-                this.game.ui.hideTheaterScreen(1);
-                this.game.stage.showPathHighlight = true;
-            }, 3000);
-        }
+        setTimeout(() => {
+            this.game.ui.showChatBallon(this.controller, "큰일이다 문이 닫혔다!\n어떻게 하면 나갈 수 있을까 ...", 4);
+            // 컷신을 끝낸다
+            this.cutscene = false;
+            this.game.ui.hideTheaterScreen(1);
+            this.game.stage.showPathHighlight = true;
+        }, 3000);
     }
 
     onGameClick(event) {
@@ -90,18 +62,18 @@ export default class Explore {
     }
 
     onTilePassing(obj) {
-        if (obj === this.game.player) {
+        if (obj === this.controller) {
             if (obj.gridX === 18 && (obj.gridY === 15 || obj.gridY === 16)) {
                 // 컷신을 튼다
                 this.cutscene = true;
                 this.game.ui.showTheaterScreen(1);
                 this.game.stage.showPathHighlight = false;
 
-                this.game.player.changeVisualToDirection(DIRECTIONS.SE);
+                this.controller.changeVisualToDirection(DIRECTIONS.SE);
 
                 // 1초후에 대사를 하고 
                 setTimeout(() => {
-                    this.game.ui.showChatBallon(this.game.player, "이 게임에서 드디어 탈출이다. 집에가자", 4);
+                    this.game.ui.showChatBallon(this.controller, "이 게임에서 드디어 탈출이다. 집에가자", 4);
                 }, 500)
                 
                 
@@ -137,7 +109,7 @@ export default class Explore {
         // 이동 루틴을 다시 만들어야 한다
         // 타겟이 있을때에는 타겟을 제외한 패스가 만들어졌을때 마지막 패스끝에 타겟 인터랙션을 달아야 한다.
         // 패스가 만들어지지 않으면, 타겟팅을 지정하지 않고 근접한 곳까지 이동한다
-        this.game.stage.moveCharacter(this.game.player, x, y);
+        this.game.stage.moveCharacter(this.controller, x, y);
     }
 
     update() {

@@ -3,6 +3,8 @@
 // 캐릭터의 스탯과 장비에 대한 부분만 처리한다 
 export default class CharacterBase {
     constructor(data) {
+
+        this.name = data.name;
         
         this.health;
         
@@ -36,11 +38,11 @@ export default class CharacterBase {
             accessory: null,
         };
 
-        this.plusPower = 0;
+        this.plusAttack = 0;
         this.plusMagic = 0;
         this.plusArmomr = 0;
 
-        this.powerPotential = 0.5;
+        this.attackPotential = 0.5;
         this.magicPotential = 0.5;
     }
 
@@ -56,8 +58,8 @@ export default class CharacterBase {
         return this.baseIntellect + this.plusIntellect;
     }
 
-    get power() {
-        return Math.floor(this.strength * this.powerPotential) + this.plusPower;
+    get attack() {
+        return Math.floor(this.strength * this.attackPotential) + this.attackPower;
     }
 
     get magic() {
@@ -67,8 +69,8 @@ export default class CharacterBase {
     equip(slot, item) {
         this.equipments[slot] = item;
         
-        this.plusPower += item.power;
-        this.plusMagic += item.magic;
+        this.plusAttack += item.attack || 0;
+        this.plusMagic += item.magic || 0;
         // 기타 필요에 따라 추가
     }
 
@@ -76,8 +78,8 @@ export default class CharacterBase {
         const item = this.equipments[slot];
         this.equipments[slot] = null;
         
-        this.plusPower -= item.power;
-        this.plusMagic -= item.magic;
+        this.plusAttack -= item.attack || 0;
+        this.plusMagic -= item.magic || 0;
     }
     
 }
