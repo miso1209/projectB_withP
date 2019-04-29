@@ -24,6 +24,19 @@ export const ACTIVE_TYPE = {
     ACTIVE: 2
 };
 
+const TARGETING_TYPE = {
+    ENEMY_FRONT_TANK: 1,
+    ENEMY_BACK_CARRY: 2,
+    ENEMY_FRONT_ALL: 3,
+    ENEMY_BACK_ALL: 4,
+    ENEMY_ALL: 5,
+    ALLY_FRONT_TANK: 6,
+    ALLY_BACK_CARRY: 7,
+    ALLY_FRONT_ALL: 8,
+    ALLY_BACK_ALL: 9,
+    ALLY_ALL: 10,
+}
+
 // 스텟 계산 파둬야 하는데.. 이건 언제하지?.. 어렵다.. 스탯이랑, 에큅으로 능력치 계산 및 스킬에 적용.. 염두해두자.. 생각해두자.
 // 기본적으로 배틀캐릭터가 Stat 을 가진 BaseCharacter공유할텐데.. 이것도 조금 머리아프네.. 주말간 생각해볼것.
 // 스킬 클래스 엄청 더러움.. 깔끔하게 변경할 수 없을까?
@@ -76,15 +89,34 @@ class BaseSkill {
     }
 
     // 타겟 선정알고리즘.. 지금은 우선 살아있는 랜덤 캐릭터 반환.
-    getTarget(opponents) {
+    getTarget(opponents, targeting) {
         let target = null;
         let enemies = [];
-        
-        opponents.forEach((opponent) => {
-            if (target === null && opponent.hp > 0) {
-                enemies.push(opponent);
-            }
-        });
+
+        switch(targeting) {
+            case TARGETING_TYPE.ENEMY_FRONT_TANK:
+                opponents.getFrontCharacters().forEach((opponent) => {
+                    if (target === null && opponent.hp > 0) {
+                        enemies.push(opponent);
+                    }
+                });
+                break;
+            case TARGETING_TYPE.ENEMY_BACK_CARRY:
+            opponents.getBackCharacters().forEach((opponent) => {
+                if (target === null && opponent.hp > 0) {
+                    enemies.push(opponent);
+                }
+            });
+                break;
+        }
+
+        if (enemies.length === 0) {
+            opponents.getCharacters().forEach((opponent) => {
+                if (target === null && opponent.hp > 0) {
+                    enemies.push(opponent);
+                }
+            });
+        }
 
         if (enemies.length > 0) {
             target = enemies[Math.round((enemies.length-1) * Math.random())];
@@ -118,12 +150,12 @@ export class MeleeSkill extends BaseSkill {
         this.damage = 80 + Math.round(Math.random()*30);
         
         // 스킬의 사용자를 비교하여, 적군파티, 아군파티를 셋팅한다.
-        let proponents = battle.players;
-        let opponents = battle.enemies;
-        if (proponents.indexOf(this.proponent) < 0) {
+        let proponents = battle.playerParty;
+        let opponents = battle.enemyParty;
+        if (opponents.isParty(this.proponent)) {
             [proponents, opponents] = [opponents, proponents];
         }
-        this.target = this.getTarget(opponents);
+        this.target = this.getTarget(opponents, TARGETING_TYPE.ENEMY_FRONT_TANK);
         
         // Proponent 의 움직임, 애니메이션처리.
         const start = { x: this.proponent.x, y: this.proponent.y };
@@ -196,12 +228,12 @@ export class ProjectileSkill extends BaseSkill {
         this.damage = 80 + Math.round(Math.random()*30);
         
         // 스킬의 사용자를 비교하여, 적군파티, 아군파티를 셋팅한다.
-        let proponents = battle.players;
-        let opponents = battle.enemies;
-        if (proponents.indexOf(this.proponent) < 0) {
+        let proponents = battle.playerParty;
+        let opponents = battle.enemyParty;
+        if (opponents.isParty(this.proponent)) {
             [proponents, opponents] = [opponents, proponents];
         }
-        this.target = this.getTarget(opponents);
+        this.target = this.getTarget(opponents, TARGETING_TYPE.ENEMY_FRONT_TANK);
 
         const movieClip = new MovieClip(
             MovieClip.Timeline(11, 25, null, () => {
@@ -290,12 +322,12 @@ export class ArrowShotingSkill extends BaseSkill {
         this.damage = 80 + Math.round(Math.random()*30);
         
         // 스킬의 사용자를 비교하여, 적군파티, 아군파티를 셋팅한다.
-        let proponents = battle.players;
-        let opponents = battle.enemies;
-        if (proponents.indexOf(this.proponent) < 0) {
+        let proponents = battle.playerParty;
+        let opponents = battle.enemyParty;
+        if (opponents.isParty(this.proponent)) {
             [proponents, opponents] = [opponents, proponents];
         }
-        this.target = this.getTarget(opponents);
+        this.target = this.getTarget(opponents, TARGETING_TYPE.ENEMY_BACK_CARRY);
 
         const movieClip = new MovieClip(
             MovieClip.Timeline(11, 25, null, () => {
