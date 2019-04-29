@@ -1,7 +1,7 @@
 // 이 클래스에서는 캐릭터의 보여지는 부분은 표현하지 않는다
 // 위치나 현재 애니메이션 상태등도 처리하지 않는다
 // 캐릭터의 스탯과 장비에 대한 부분만 처리한다 
-export default class CharacterBase {
+export default class Character {
     constructor(data) {
 
         this.data = data;

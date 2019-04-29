@@ -1,5 +1,5 @@
 import Item from './item';
-import CharacterBase from './characterbase';
+import Character from './character';
 
 export default class EntityFactory {
     constructor() {
@@ -27,7 +27,7 @@ export default class EntityFactory {
     character(id) {
         const data = this.characters[id];
         if (data) {
-            return new CharacterBase(data);
+            return new Character(data);
         }
     }
 }
