@@ -31,6 +31,153 @@ const STATUS = {
     BE_ATTACKED: 5
 };
 
+class StatusManager {
+    constructor(opponent) {
+        this.opponent = opponent;
+
+        this.stat = Object.assign({}, this.opponent.stat);
+
+        // 스탯 관련
+        this.buffs = [];
+        // 상태 관련
+        this.conditionErrors = [];
+    }
+    // 움직일 수 있는가? 에 대한 flag 받는 것
+    // 전투 가능한가? 에 대한 flag 받는 것
+
+    canAction() {
+        let result = true;
+        
+        for (let i=0; i<this.conditionErrors.length;i++) {
+            result = result && this.conditionErrors[i].canAction();
+        }
+
+        return result;
+    }
+
+    update() {
+        this.stat = Object.assign({}, this.opponent.stat);
+
+        this.buffs.forEach((buff) => {
+            this.stat = buff.update(this.stat);
+        });
+
+        this.conditionErrors.forEach((conditionError) => {
+            conditionError.update(this.opponent);
+        });
+    }
+
+    addBuf(buff, overwrite, overlap) {
+        let buffIndex = null;
+
+        this.buffs.forEach((compareBuff, index) => {
+            if (buff.constructor === compareBuff.constructor) {
+                buffIndex = index;
+            }
+        });
+
+        if (overwrite && buffIndex !== null) {
+            this.buffs[buffIndex].overwrite(buff.options);
+        } else if (overlap && buffIndex !== null) {
+            this.buffs[buffIndex].overlap(buff.options);
+        } else if (buffIndex === null) {
+            this.buffs.push(buff);
+        }
+    }
+
+    addConditionError(conditionError, overwrite, overlap) {
+        let conditionIndex = null;
+
+        this.conditionErrors.forEach((compareConditionError, index) => {
+            if (conditionError.constructor === compareConditionError.constructor) {
+                conditionIndex = index;
+            }
+        });
+
+        if (overwrite && conditionIndex !== null) {
+            this.conditionErrors[conditionIndex].overwrite(conditionError.options);
+        } else if (overlap && conditionIndex !== null) {
+            this.conditionErrors[conditionIndex].overlap(conditionError.options);
+        } else if (conditionIndex === null) {
+            this.conditionErrors.push(conditionError);
+        }
+    }
+}
+
+class BaseBuff {
+    constructor(options) {
+        this.options = options;
+    }
+
+    overwrite(options) {
+        this.options = options;
+    }
+
+    overlap(options) {
+        for (let key in options) {
+            this.options[key] += options[key];
+        }
+    }
+}
+
+class BaseConditionError {
+    constructor(options) {
+        this.options = options;
+    }
+
+    overwrite(options) {
+        this.options = options;
+    }
+
+    overlap(options) {
+        for (let key in options) {
+            this.options[key] += options[key];
+        }
+    }
+}
+
+class Poison extends BaseConditionError {
+    constructor(options) {
+        super(options);
+    }
+
+    update(opponent) {
+        if (this.options.retensionTime > 0) {
+            if(this.options.retensionTime % 120 === 0) {
+                opponent.onDamage(5);
+            }
+            this.options.retensionTime--;
+        }
+    }
+
+    canAction() {
+        return true;
+    }
+}
+
+class Stun extends BaseConditionError {
+    constructor(options) {
+        super(options);
+    }
+
+    update(opponent) {
+        if (this.options.retensionTime > 0) {
+            opponent.anim.tint = 0x00FF00;
+            this.options.retensionTime--;
+        } else if(opponent.anim.tint === 0x00FF00) {
+            opponent.anim.tint = 0xFFFFFF;
+        }
+    }
+
+    canAction() {
+        if (this.options.retensionTime > 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
 export default class BattleCharacter extends PIXI.Container {
     constructor(spec) {
         super();
@@ -39,6 +186,7 @@ export default class BattleCharacter extends PIXI.Container {
         this.movies = [];
 
         this.status = STATUS.IDLE;
+        this.statusManager = new StatusManager(this);
         this.skills = [];
 
         // 스킬을 가지는 것 우선 하드코딩..
@@ -73,10 +221,13 @@ export default class BattleCharacter extends PIXI.Container {
         // 임시로 캐릭터를 누르면 Active Queue에 본인의 스킬을 넣는다. 제거할 것.
         this.container.interactive = true;
         this.container.on('mouseup', (event) => {
-            if (this.skills[1].isReady()) {
-                this.skills[1].setWait();
-                this.battle.activeQueue.enqueue(this.skills[1]);
-            }
+            // if (this.skills[1].isReady()) {
+            //     this.skills[1].setWait();
+            //     this.battle.activeQueue.enqueue(this.skills[1]);
+            // }
+
+            this.statusManager.addConditionError(new Stun({ retensionTime: 3000 }), true, false);
+            this.statusManager.addConditionError(new Poison({ retensionTime: 3000 }), true, false);
         });
     }
 
@@ -100,8 +251,9 @@ export default class BattleCharacter extends PIXI.Container {
             this[key] = new PIXI.Sprite(PIXI.Texture.fromFrame(spec.battleUi[key]));
         }
 
+        this.stat = {};
         for(let key in spec.stat) {
-            this[key] = spec.stat[key];
+            this.stat[key] = spec.stat[key];
         }
 
         this.animations = {};
@@ -129,13 +281,15 @@ export default class BattleCharacter extends PIXI.Container {
         
         this.tweens.update();
         this.updateMovieclips();
+        this.statusManager.update();
+
         this.updateSkills(battle);
         this.enqueueIdlePassiveSkill(battle);
     }
 
     enqueueIdlePassiveSkill(battle) {
         // 캐릭터가 사망하였거나, 전투가 끝났을 경우 캐릭터 액션로직(스킬 큐에 올리기, 스킬 딜레이 감소) 돌리지 않는다. (좋지않다..)
-        if (this.status === STATUS.DIE || battle.isBattleEnd()) {
+        if (this.status === STATUS.DIE || battle.isBattleEnd() || !this.statusManager.canAction()) {
             return;
         }
 
@@ -151,6 +305,7 @@ export default class BattleCharacter extends PIXI.Container {
         });
 
         if (selectedPassiveSkill) {
+            console.log('EnQueue!!');
             selectedPassiveSkill.setWait();
             battle.basicQueue.enqueue(selectedPassiveSkill);
         }
@@ -158,7 +313,7 @@ export default class BattleCharacter extends PIXI.Container {
 
     updateSkills(battle) {
         // 캐릭터가 사망하였거나, 전투가 끝났을 경우 캐릭터 액션로직(스킬 큐에 올리기, 스킬 딜레이 감소) 돌리지 않는다. 좋지않다..
-        if (this.status === STATUS.DIE || battle.isBattleEnd()) {
+        if (this.status === STATUS.DIE || battle.isBattleEnd() || !this.statusManager.canAction()) {
             return;
         }
 
@@ -198,8 +353,8 @@ export default class BattleCharacter extends PIXI.Container {
     }
 
     onDamage(damage) {
-        this.hp -= damage;
-        const hpWidth = (this.hp < 0 ? 0 : this.hp) / this.maxHp * 34;
+        this.stat.hp-= damage;
+        const hpWidth = (this.stat.hp< 0 ? 0 : this.stat.hp) / this.stat.maxHp * 34;
 
         this.tweens.addTween(this.hpBar, 0.5, { width: hpWidth }, 0, "easeInOut", true);
         this.softRollBackTint(0xFF0000, 45);
@@ -254,7 +409,7 @@ export default class BattleCharacter extends PIXI.Container {
     }
 
     checkDie() {
-        if (this.hp <= 0) {
+        if (this.stat.hp<= 0) {
             this.status = STATUS.DIE;
             this.tweens.addTween(this.container, 0.5, { alpha: 0 }, 0, "easeInOut", true);
         }

@@ -96,14 +96,14 @@ class BaseSkill {
         switch(targeting) {
             case TARGETING_TYPE.ENEMY_FRONT_TANK:
                 opponents.getFrontCharacters().forEach((opponent) => {
-                    if (target === null && opponent.hp > 0) {
+                    if (target === null && opponent.stat.hp> 0) {
                         enemies.push(opponent);
                     }
                 });
                 break;
             case TARGETING_TYPE.ENEMY_BACK_CARRY:
             opponents.getBackCharacters().forEach((opponent) => {
-                if (target === null && opponent.hp > 0) {
+                if (target === null && opponent.stat.hp> 0) {
                     enemies.push(opponent);
                 }
             });
@@ -112,7 +112,7 @@ class BaseSkill {
 
         if (enemies.length === 0) {
             opponents.getCharacters().forEach((opponent) => {
-                if (target === null && opponent.hp > 0) {
+                if (target === null && opponent.stat.hp> 0) {
                     enemies.push(opponent);
                 }
             });
@@ -147,7 +147,7 @@ export class MeleeSkill extends BaseSkill {
     init(battle) {
         this.currentFrame = 0;
         this.status = SKILL_STATUS.WAIT;
-        this.damage = 80 + Math.round(Math.random()*30);
+        this.damage = 40 + Math.round(Math.random()*15);
         
         // 스킬의 사용자를 비교하여, 적군파티, 아군파티를 셋팅한다.
         let proponents = battle.playerParty;
@@ -160,7 +160,7 @@ export class MeleeSkill extends BaseSkill {
         // Proponent 의 움직임, 애니메이션처리.
         const start = { x: this.proponent.x, y: this.proponent.y };
         const vector = this.proponent.currentDir === DIRECTIONS.SW? -1 : 1;
-        const to = { x: this.proponent.x + 32 * vector, y: this.proponent.y - 16 * vector };
+        const to = { x: this.proponent.x + 16 * vector, y: this.proponent.y - 8 * vector };
 
         const movieClip = new MovieClip(
             MovieClip.Timeline(1, 10, this.proponent, [
@@ -188,7 +188,7 @@ export class MeleeSkill extends BaseSkill {
     }
 
     action(battle) {
-        if (this.proponent.hp <= 0) {
+        if (this.proponent.stat.hp<= 0) {
             return null;
         }
 
@@ -253,7 +253,7 @@ export class ProjectileSkill extends BaseSkill {
     }
 
     action(battle) {
-        if (this.proponent.hp <= 0) {
+        if (this.proponent.stat.hp<= 0) {
             return null;
         }
 
@@ -347,7 +347,7 @@ export class ArrowShotingSkill extends BaseSkill {
     }
 
     action(battle) {
-        if (this.proponent.hp <= 0) {
+        if (this.proponent.stat.hp<= 0) {
             return null;
         }
 

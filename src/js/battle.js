@@ -24,6 +24,7 @@ class BattleQueue {
     }
 
     enqueue(skill) {
+        console.log(this.skillQueue);
         this.skillQueue.push(skill);
     }
 
@@ -80,8 +81,8 @@ export default class Battle {
         const elidSpec = CharacterFactory.createCharacterSpec('elid');
 
         this.playerParty = new BattleParty(
-            [null, new BattleCharacter(hectorSpec), new BattleCharacter(hectorSpec)],
-            [new BattleCharacter(miludaSpec), new BattleCharacter(miludaSpec), new BattleCharacter(elidSpec)]
+            [new BattleCharacter(hectorSpec), new BattleCharacter(hectorSpec), new BattleCharacter(hectorSpec)],
+            [new BattleCharacter(miludaSpec), new BattleCharacter(miludaSpec), new BattleCharacter(miludaSpec)]
         );
         this.playerParty.getCharacters().forEach((character) => {
             character.alpha = 0;
@@ -89,7 +90,7 @@ export default class Battle {
 
         this.enemyParty = new BattleParty(
             [new BattleCharacter(hectorSpec), new BattleCharacter(hectorSpec), new BattleCharacter(hectorSpec)],
-            [new BattleCharacter(miludaSpec), null, new BattleCharacter(elidSpec)]
+            [new BattleCharacter(elidSpec), new BattleCharacter(elidSpec), new BattleCharacter(elidSpec)]
         );
         this.enemyParty.getCharacters().forEach((character) => {
             character.alpha = 0;
@@ -105,7 +106,6 @@ export default class Battle {
         // 기본적으로 stage, 이펙트처리, 캐릭터는 업데이트를 시켜준다
         this.effect.update();
         this.stage.update();
-        this.updateCharacters();
 
         // 상태에 맞는 씬을 업데이트 시킨다.
         switch (this.nextScene) { 
@@ -145,26 +145,26 @@ export default class Battle {
     }
 
     updateVictory() {
-        // 승리시 생각해둔 모션은 Victory 위에 뜨고, 캐릭터들 점프 방방 뛴다. 그 뒤 경험치, 골드등을 머리 위에 표기하고, outro 진행. (전형적인 옛 게임 떠올리면 쉬움.)
-        // 어렵지 않을 것 같다. 승리 bgm 도 있으면 좋겠다.
+        this.updateCharacters();
+
         if (this.currentScene !== this.nextScene) {
             this.currentScene = this.nextScene;
 
-            let gravity = -10;
+            let gravity = -5;
 
             const movieClip = new MovieClip(
                 MovieClip.Timeline(61, 81, null, () => {
                     this.playerParty.getCharacters().forEach((player) => {
                         player.anim.position.y += gravity;
                     });
-                    gravity++;
+                    gravity += 0.5;
                 }),
-                MovieClip.Timeline(82, 82, null, () => { gravity = -10; }),
+                MovieClip.Timeline(82, 82, null, () => { gravity = -5; }),
                 MovieClip.Timeline(91, 111, null, () => {
                     this.playerParty.getCharacters().forEach((player) => {
                         player.anim.position.y += gravity;
                     });
-                    gravity++;
+                    gravity += 0.5;
                 }),
                 MovieClip.Timeline(312, 312, null, () => { this.nextScene = BATTLE_STATUS.OUTRO; })
             );
@@ -177,6 +177,8 @@ export default class Battle {
     }
 
     updateDefeat() {
+        this.updateCharacters();
+
         // 패배했을경우는 뭐.. stage tween으로 붉게 alpha 0.3정도 이펙트 주고, 심플하게 Defeat 위에 뜨고.. 검게 암전 트윈으로 진행한 후 outro진행.
         if (this.currentScene !== this.nextScene) {
             this.currentScene = this.nextScene;
@@ -190,6 +192,8 @@ export default class Battle {
     }
 
     updateOutro() {
+        this.updateCharacters();
+        
         // 심플하다 game에서 모드를 변경하며 battle 날린다.
         if (this.currentScene !== this.nextScene) {
             this.currentScene = this.nextScene;
@@ -206,6 +210,8 @@ export default class Battle {
             this.nextScene = BATTLE_STATUS.VICTORY;
             return;
         }
+
+        this.updateCharacters();
 
         if (this.currentAction) {
             this.currentAction = this.currentAction.action(this);
@@ -264,14 +270,14 @@ export default class Battle {
     isBattleEnd() {
         let playerCount = 0;
         this.playerParty.getCharacters().forEach((player) => {
-            if (player.hp > 0) {
+            if (player.stat.hp> 0) {
                 playerCount++;
             }
         });
 
         let enemyCount = 0;
         this.enemyParty.getCharacters().forEach((enemy) => {
-            if (enemy.hp > 0) {
+            if (enemy.stat.hp> 0) {
                 enemyCount++;
             }
         });

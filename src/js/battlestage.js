@@ -56,17 +56,24 @@ export default class BattleStage extends PIXI.Container {
             [front, back] = [back, front];
         }
 
-        front.concat(back).forEach((character, index) => {
+        front.forEach((character, index) => {
             if (character) {
-                character.position.x = baseX - 36 + (index % 3) * 36;
-                character.position.y = baseY - 20 + (index % 3) * 20;
+                character.position.x = baseX - 36 + index * 36;
+                character.position.y = baseY - 20 + index * 20;
                 character.changeVisualToDirection(directions);
                 this.addChild(character);
             }
+        });
 
-            if (index === 2) {
-                baseX -= 36;
-                baseY += 20;
+        baseX -= 36;
+        baseY += 20;
+
+        back.forEach((character, index) => {
+            if (character) {
+                character.position.x = baseX - 36 + index * 36;
+                character.position.y = baseY - 20 + index * 20;
+                character.changeVisualToDirection(directions);
+                this.addChild(character);
             }
         });
     }
