@@ -8,6 +8,8 @@ import Anvil from './tile/anvil';
 import Gate from './tile/gate';
 import Chest from './tile/chest';
 import Prop from './tile/prop';
+import InventoryProp from './tile/inventory-prop';
+import Stove from './tile/stove';
 
 function hitTestRectangle(rect1, rect2) {
     return  (rect1.x < rect2.x + rect2.width &&
@@ -151,7 +153,12 @@ export default class Stage extends PIXI.Container {
             tile = new Chest(x, y, tileData);
         }  else if (tileData.objectType === "anvil") {
             tile = new Anvil(x, y, tileData);
-        } else if (tileData.type !== "groundtile") {
+        } else if (tileData.type === "inventory") {
+            tile = new InventoryProp(x, y, tileData);
+        }  else if (tileData.type === "stove") {
+            tile = new Stove(x, y, tileData);
+        } 
+        else if (tileData.type !== "groundtile") {
             tile = new Prop(x, y, tileData);
         } else {
             tile = new Tile(x, y, tileData);
@@ -297,9 +304,18 @@ export default class Stage extends PIXI.Container {
         const path  = this.pathFinder.solve(startX, startY, x, y, ignoreTarget);
 
         if (path) {
+            // 아웃라인을 제거한다
+            if (this.interactTarget instanceof Prop) {
+                this.interactTarget.hideOutline();
+            }
+
             if (path[0].x === x && path[0].y === y) {
                 // 타겟을 설정한다
                 this.interactTarget = target;
+                // 아웃라인을 그린다
+                if (target instanceof Prop) {
+                    target.showOutline();
+                }
             } else {
                 this.interactTarget = null;
             }
@@ -332,6 +348,10 @@ export default class Stage extends PIXI.Container {
         }
 
         if (path.length == 0) {
+            this.onObjMoveStepEnd(obj);
+            return;
+        }
+        if (this.interactTarget && path.length === 1) {
             this.onObjMoveStepEnd(obj);
             return;
         }
@@ -402,6 +422,10 @@ export default class Stage extends PIXI.Container {
                 this.interactTarget = null; // 먼저 null 로 만들어주어야 한다
                 if (this.onTouchObject) {
                     this.onTouchObject(interactTarget);
+                }
+
+                if (interactTarget instanceof Prop) {
+                    interactTarget.hideOutline();
                 }
             }
         }

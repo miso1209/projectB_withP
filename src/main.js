@@ -8,7 +8,7 @@ import CharacterFactory from './js/characterfactory';
 function initApp() {
   const pixi = new PIXI.Application(980, 500, {
     backgroundColor: 0x6BACDE,
-    forceCanvas: true
+    
   });
 
   pixi.view.id = 'Game';
