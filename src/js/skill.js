@@ -1,4 +1,5 @@
 import MovieClip from './movieclip';
+import {Stun, Poison} from './battlecharacter';
 import {DIRECTIONS} from './define';
 
 function getDirectionName(dir) {
@@ -199,6 +200,7 @@ export class MeleeSkill extends BaseSkill {
             battle.effect.addEffect(this.target, { name: 'slash', animationLength: 8, removeFrame: 60, speed: 0.5 });
             battle.effect.addDamageEffect(this.target, this.damage, "#ffffff");
             this.target.onDamage(this.damage);
+            this.target.statusManager.addConditionError(new Stun({ retensionTime: 300 }), true, false);
         } else if (this.currentFrame === this._delay.doneAttack) {
             this.currentFrame = 0;
             // 임시로 후딜을 랜덤으로 주어 공격 순서가 뒤죽박죽이 되게 만들어 본다.
@@ -393,6 +395,9 @@ export class ArrowShotingSkill extends BaseSkill {
             battle.effect.flashScreen(0.2, 0.1);
             battle.stage.vibrationStage(8, 12);
             this.target.onDamage(this.damage);
+            
+            // 임시로 독화살 구현
+            this.target.statusManager.addConditionError(new Poison({ retensionTime: 300 }), true, false);
 
             this.currentFrame = 0;
             this.currentDelay = this._delay.afterAttack * Math.random();

@@ -136,17 +136,20 @@ class BaseConditionError {
     }
 }
 
-class Poison extends BaseConditionError {
+export class Poison extends BaseConditionError {
     constructor(options) {
         super(options);
     }
 
     update(opponent) {
         if (this.options.retensionTime > 0) {
+            opponent.anim.tint = 0x00FF00;
             if(this.options.retensionTime % 120 === 0) {
                 opponent.onDamage(5);
             }
             this.options.retensionTime--;
+        } else if(opponent.anim.tint === 0x00FF00) {
+            opponent.anim.tint = 0xFFFFFF;
         }
     }
 
@@ -155,16 +158,16 @@ class Poison extends BaseConditionError {
     }
 }
 
-class Stun extends BaseConditionError {
+export class Stun extends BaseConditionError {
     constructor(options) {
         super(options);
     }
 
     update(opponent) {
         if (this.options.retensionTime > 0) {
-            opponent.anim.tint = 0x00FF00;
+            opponent.anim.tint = 0x999999;
             this.options.retensionTime--;
-        } else if(opponent.anim.tint === 0x00FF00) {
+        } else if(opponent.anim.tint === 0x999999) {
             opponent.anim.tint = 0xFFFFFF;
         }
     }
@@ -219,16 +222,13 @@ export default class BattleCharacter extends PIXI.Container {
         this.addChild(this.container);
 
         // 임시로 캐릭터를 누르면 Active Queue에 본인의 스킬을 넣는다. 제거할 것.
-        this.container.interactive = true;
-        this.container.on('mouseup', (event) => {
+        // this.container.interactive = true;
+        // this.container.on('mouseup', (event) => {
             // if (this.skills[1].isReady()) {
             //     this.skills[1].setWait();
             //     this.battle.activeQueue.enqueue(this.skills[1]);
             // }
-
-            this.statusManager.addConditionError(new Stun({ retensionTime: 3000 }), true, false);
-            this.statusManager.addConditionError(new Poison({ retensionTime: 3000 }), true, false);
-        });
+        // });
     }
 
     makeProgressBar() {
