@@ -11,4 +11,8 @@ export default class Stove extends Prop {
     touch(game) {
        console.log('open stove')
     }
+
+    getName() {
+        return "스토브";
+    }
 }

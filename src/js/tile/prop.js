@@ -58,4 +58,53 @@ export default class Prop extends PIXI.Container {
             this.outline.visible = false;
         }       
     }
+
+    showName() {
+        if (!this.getName()) { 
+            return; 
+        }
+
+        if (!this.nametag) {
+
+            const style = new PIXI.TextStyle({fontSize: 1, fill : 0xffffff, align : 'center' });
+            const text = new PIXI.Text(this.getName(), style);
+            const textMetrics = PIXI.TextMetrics.measureText(this.getName(), style);
+            text.position.x = this.tileTexture.width / 2;
+            text.position.y = this.tileTexture.height / 4;
+            text.anchor.x = 0.5;
+            text.anchor.y = 0.5;
+
+
+            // 배경이 되는 반투명 박스를 만든다
+            const box = new PIXI.Sprite(PIXI.Texture.WHITE);
+            box.tint = 0;
+            box.alpha = 0.3;
+            box.anchor.x = 0.5;
+            box.anchor.y = 0.5;
+            box.width = textMetrics.width + 1;
+            box.height = textMetrics.height + 1;
+            box.position.x = this.tileTexture.width / 2;
+            box.position.y = this.tileTexture.height / 4;
+
+            this.nametag = new PIXI.Container();
+
+            this.nametag.addChild(box);
+            this.nametag.addChild(text);
+            this.tileTexture.addChild(this.nametag);
+            this.nametag.visible = false;
+        }
+
+        this.nametag.visible = true;
+    }
+
+    hideName() {
+        if (this.nametag) {
+            this.nametag.visible = false;
+        }
+    }
+
+    getName() {
+        // override 
+        return null;
+    }
 }

@@ -11,4 +11,8 @@ export default class InventoryProp extends Prop {
     touch(game) {
        console.log('open inventory')
     }
+
+    getName() {
+        return "보관함";
+    }
 }

@@ -60,6 +60,7 @@ export default class Stage extends PIXI.Container {
         this.groundMap = new Array(height * width);
         this.objectMap = new Array(height * width);
         this.alphaTiles = [];
+        this.nameTiles = [];
        
         this.mapContainer = new PIXI.Container();
         this.addChild(this.mapContainer);
@@ -395,6 +396,23 @@ export default class Stage extends PIXI.Container {
         const pathEnded = (0 > obj.currentPathStep);
         this.moveEngine.removeMovable(obj);
         let forceStop = false;
+
+        // 기존이름프랍들을 제거한다
+        for(const prop of this.nameTiles) {
+            prop.hideName();
+        }
+        this.nameTiles = [];
+        // 주변에 프랍들을 검색해서 이름표를 띄운다
+        const distance = 2;
+        for (let j = Math.max(0, obj.gridY - distance); j <= Math.min(this.mapHeight-1, obj.gridY+distance); j++) {
+            for (let i = Math.max(0, obj.gridX - distance); i <= Math.min(this.mapWidth-1, obj.gridX+distance); i++) {
+                const obj = this.getObjectAt(i, j);
+                if (obj instanceof Prop) {
+                    obj.showName();
+                    this.nameTiles.push(obj);
+                }
+            }
+        }
 
         // 현재 지나고 있는 타일에 이벤트가 있는지 확인한다
         // 하드코딩으로 이벤트를 지나게 한다
