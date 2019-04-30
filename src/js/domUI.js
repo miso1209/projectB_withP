@@ -12,6 +12,7 @@ export default class DomUI {
 
   createDom() {
     console.log('-- DomUI --');
+    
     this.container.className = 'uiContainer';
     this.container.style.top = this.gamePane.offsetTop + 'px';
 
@@ -26,7 +27,6 @@ export default class DomUI {
     }, delay);
   }
 
-  // 추가? lv, name
   setProfile(playerId) {
     const profile = new Profile(playerId);
     profile.name.style.display = 'none';
@@ -40,13 +40,13 @@ export default class DomUI {
     const btnInventory = new Button('', 'btnInventory');
     btnInventory.dom.style.top = '20px';
     btnInventory.dom.style.right = '20px';
-    btnInventory.onClick = null;
     btnInventory.dom.addEventListener('click', this.showInventory.bind(this));
 
     this.gnbContainer.appendChild(profile.dom);
     this.gnbContainer.appendChild(btnInventory.dom);
 
     document.body.appendChild(this.gnbContainer);
+    profile.dom.addEventListener('mouseup', this.showStatUI);
   }
 
   showItemAquire(itemId){
@@ -165,21 +165,24 @@ export default class DomUI {
     // 캐릭터 정보
     let playerId = 1;
     const profile = new Profile(playerId);
-    profile.moveToCenter(80);
+    profile.moveToCenter(50);
     statUI.dom.appendChild(profile.dom);
 
-    
     // 캐릭터 스탯 정보 - 임시..
     let statData = [];
     const contents = document.createElement('div');
     contents.classList.add('contents');
     contents.classList.add('column-2'); // 3단으로 할 때는 column-3
-    contents.style.top = profile.dom.offsetTop + profile.dom.offsetHeight + 20 + 'px';
+    contents.style.top = profile.dom.offsetTop + profile.dom.offsetHeight + 110 + 'px';
 
     statData.push("HP : 33");
     statData.push("MP : 3");
     statData.push("STRENGTH : 10");
     statData.push("DEFFENSE : 300");
+    statData.push("RANGE : 100");
+    statData.push("SPEED : 200");
+    statData.push("RANGE : 100");
+    statData.push("SPEED : 200");
     statData.push("RANGE : 100");
     statData.push("SPEED : 200");
     
@@ -191,7 +194,7 @@ export default class DomUI {
 
 
     // 현재 캐릭터 장비정보
-    const equipItemsData = [{x:12, y:6, item:'wond'}, {x:20,y:2,item:'amor'}, {x:10, y:10,item:'bomb'}];
+    const equipItemsData = [{x:12, y:6, item:'Wond'}, {x:20,y:2,item:'Armor'}, {x:10, y:10,item:'Ring'}];
     const equipItems = document.createElement('div');
 
     equipItems.className = 'equipItems';
@@ -218,8 +221,7 @@ export default class DomUI {
       equipItems.appendChild(itemIcon);
     });
 
-
-     // 현재 캐릭터 스킬정보
+  // 현재 캐릭터 스킬정보
   const skillItemData = [{x:1, y:6, skill:'Die'}, {x:4,y:6,skill:'Mad'}, {x:2, y:6, skill:'poison'}];
   const skillItems = document.createElement('div');
   skillItems.className = 'skillItems';
@@ -278,7 +280,6 @@ export default class DomUI {
     title.dom.classList.add('stageTitle');
     title.dom.classList.add('animate');
     
-
     setTimeout(() => {
       title.dom.style.opacity = 0;
       this.destroyDom(delay);
@@ -334,7 +335,6 @@ export default class DomUI {
     const dialog = new Dialog(900, 140);
     dialog.setText(text);
   }
-
 }
 
 class Dialog extends DomUI {
@@ -379,7 +379,7 @@ class Profile extends DomUI {
     level.className = 'profile-level';
     
     let lv_value = null;
-    //일단 플레이어 캐릭터 3개..
+    
     if (playerId === 1) {
       name.innerText = 'Hector';
       lv_value = 1;
@@ -390,7 +390,6 @@ class Profile extends DomUI {
       name.innerText = 'Miluda';
       lv_value = 10;
     }
-
     level.innerText = 'LV.' + lv_value;
 
     this.profile = profile;
@@ -405,11 +404,8 @@ class Profile extends DomUI {
     this.profile.append(name);
 
     this.dom = this.profile;
-    this.dom.addEventListener('mouseup', this.showStatUI);
   }
-  
 }
-
 
 class SceneTitle extends DomUI {
   constructor(text) {
@@ -429,28 +425,26 @@ class NineBox extends DomUI {
     const nineBox = document.createElement('div');
     nineBox.innerHTML = this.render();
     nineBox.classList.add('pixelBox');
-
     nineBox.style.width = _width + 'px';
     nineBox.style.height = _height + 'px';
 
     this.dom = nineBox;
 
-    // modal background image path 변경
-    for(let i = 0; i < nineBox.children.length; i++) {
+    for (let i = 0; i < nineBox.children.length; i++) {
       var pixel = nineBox.children[i];
       let gap;
 
-      if( _type === 'dialog' ) {
+      if (_type === 'dialog') {
         pixel.classList.add('dialog');
         gap = 16;
       } else {
         gap = 26;
       }
 
-      if( pixel.classList.contains('_width')) {
+      if (pixel.classList.contains('_width')) {
         pixel.style.width = (_width - gap)  + 'px';
       } 
-      if ( pixel.classList.contains('_height') ) {
+      if (pixel.classList.contains('_height')) {
         pixel.style.height = (_height - gap)  + 'px';
       }
     }
@@ -474,18 +468,16 @@ class NineBox extends DomUI {
 class Modal extends DomUI {
   constructor(container, width, height) {
     super();
-
     this.createDom();
 
     const modal = new NineBox(this.container, width, height);
     modal.dom.classList.add('modal');
 
     const closeBtn = new Button('', 'closeBtn');
-    
     modal.dom.appendChild(closeBtn.dom);
-    this.container.appendChild(modal.dom);
 
     this.dom = modal.dom;
+    this.container.appendChild(modal.dom);
 
     closeBtn.dom.addEventListener('click', function(event) {
       modal.dom.parentNode.parentNode.removeChild(modal.dom.parentNode);
@@ -496,7 +488,7 @@ class Modal extends DomUI {
     const title = document.createElement('h1');
     title.innerText = text;
     title.className = 'title';
-
+    this.dom.id = text;
     this.dom.appendChild(title);
   }
 }
@@ -506,7 +498,11 @@ class Button extends DomUI {
     super();
 
     const button = document.createElement('button');
-    button.innerHTML = value;
+    const btnText = document.createElement('span');
+    btnText.innerText = value;
+    btnText.style.textShadow = '1px 2px 2px #444'
+
+    button.appendChild(btnText);
     button.style.position = 'absolute';
 
     if( type !== undefined ) {
@@ -514,6 +510,7 @@ class Button extends DomUI {
     } else {
       button.className = 'button';
     }
+
     
     this.onclose = null;
     this.dom = button;

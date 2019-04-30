@@ -21,7 +21,6 @@
 .gnbContainer {
   position: absolute;
   z-index: 99;
-  top: 0;
   left: 0;
   right: 0;
   width: 980px;
@@ -85,26 +84,31 @@
 
 .title {
   position: absolute;
-  top: 30px;
-  left: 0;
-  right: 0;
+  top: 20px;
+  left: 30px;
+  right: 30px;
 
   font-size: 26px;
   line-height: 1.2;
   text-align: center;
 
   color: #ffd800;
+  overflow: hidden;
 }
 
 .stageTitle {
   display: inline-block;
   margin:15% auto;
-  
+
   font-size: 40px;
   line-height: 50px;
   text-align: center;
 
   color: #fff;
+
+  /* offset-x | offset-y | blur-radius | color */
+  text-shadow: 2px 2px 2px #333; 
+
   border-bottom: 3px solid #fff;
 
   transform: scaleX(0);
@@ -146,9 +150,13 @@
   text-align: center;
 }
 
+.profile * {
+  color: #fff;
+}
+
 .profile img {
   display: block;
-  margin: 0 auto 5px;
+  margin: 0 auto 2px;
 }
 
 .profile-level {
