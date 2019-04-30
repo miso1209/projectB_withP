@@ -18,6 +18,13 @@ function hitTestRectangle(rect1, rect2) {
     rect1.y + rect1.height > rect2.y);
 };
 
+function hitTestPoint(point, rect) {
+    return (rect.x < point.x && 
+    point.x < rect.x + rect.width &&
+    rect.y < point.y && 
+    point.y < rect.y + rect.height);
+}
+
 function getDirection(x1, y1, x2, y2) {
     if (x1 === x2) {
         if (y1 < y2) { return DIRECTIONS.SE; }
@@ -244,11 +251,41 @@ export default class Stage extends PIXI.Container {
     }
 
     checkForTileClick(mdata) {
-        const localPoint = this.mapContainer.toLocal(mdata.global);
-        const selectedTile = this.getTileFromLocalPos(localPoint);
-        if (selectedTile && this.onTileSelected) {
-            this.onTileSelected(selectedTile.gridX, selectedTile.gridY);
+        // 오브젝트가 클릭되었는지 확인한다
+        let selected = this.getObjectFromLocalPos(mdata.global);
+        if (!selected) {
+            // 오브젝트가 아니면 타일이 클릭된 것이다
+            const localPoint = this.mapContainer.toLocal(mdata.global);
+            selected = this.getTileFromLocalPos(localPoint);
         }
+
+        if (selected && this.onTileSelected) {
+            this.onTileSelected(selected.gridX, selected.gridY);
+        }
+    }
+
+    getObjectFromLocalPos(point) {
+        const props = [];
+        // TODO : 오브젝트들중에 프랍들을 정렬시킨다
+        // 이것을 하는 이유는 프랍이 겹쳤을때 위에 있는 프랍을 찾기 위해서 ..
+        // 여기에 컨테이너에 추가된 순서로 정렬이 되어야 하는데 ... 이건 초기에 만들어두는것이 좋지 않을까?
+        // --- 현재는 인터랙티브 프랍만 찾아서 필터링하고 있다
+        for (const obj of this.objectMap) {
+            if (obj instanceof Prop && obj.isInteractive && props.indexOf(obj) < 0 ) {
+                props.push(obj);
+            }
+        }
+
+        // 주어진 프랍의 위치 체크를 한다
+        // TODO : 이미지의 픽셀 투명 체크를 해야하는데... 일단 프랍중에 투명체크가 필요할 정도로 투명영역이 큰 프랍이 없다.
+        // 나중에 생기면 해야한다.
+        for (const obj of props) {
+            if (hitTestPoint(point, obj.getBounds())) {
+                return obj;
+            }
+        }
+        
+        return null;
     }
 
     getTileFromLocalPos(point) {
