@@ -760,6 +760,7 @@
                 {
                  "id":5,
                  "image":"house-inventory.png",
+                 "type":"inventory",
                  "imageheight":45,
                  "imagewidth":47,
                  "properties":[
@@ -777,6 +778,7 @@
                 {
                  "id":6,
                  "image":"house-brazier.png",
+                 "type":"stove",
                  "imageheight":77,
                  "imagewidth":48,
                  "properties":[

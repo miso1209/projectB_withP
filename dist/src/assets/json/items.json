@@ -1,0 +1,16 @@
+{
+    "1": {
+        "id": 1,
+        "name": "기본검",
+        "image": "item1.png",
+        "attack": 10,
+        "description": "흔히 볼 수 있는 평범한 무기"
+    },
+    "2":{
+        "id": 2,
+        "name": "기본갑옷",
+        "image": "item2.png",
+        "defense": 5,
+        "description": "흔히 볼 수 있는 평범한 갑옷"
+    }
+}
