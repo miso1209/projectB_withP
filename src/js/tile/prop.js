@@ -88,6 +88,9 @@ export default class Prop extends PIXI.Container {
 
             this.nametag = new PIXI.Container();
 
+            text.scale.set(0.5);
+            box.scale.set(0.5);
+            
             this.nametag.addChild(box);
             this.nametag.addChild(text);
             this.tileTexture.addChild(this.nametag);
