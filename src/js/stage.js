@@ -606,14 +606,11 @@ export default class Stage extends PIXI.Container {
                 if (tile) {
                     const i = this.objectContainer.getChildIndex(tile);
                     targetIndex = targetIndex !== null ? Math.min(i, targetIndex) : i;
-                    console.log(i, targetIndex, tile);
                 }
             }
         }
         if (targetIndex !== null) {
-            console.log('selected', targetIndex);
-            this.objectContainer.setChildIndex(obj, targetIndex);
-            //console.log(targetIndex, this.objectContainer.children, this.objectContainer.getChildIndex(obj));
+            this.objectContainer.addChildAt(obj, targetIndex);
         } else {
             this.objectContainer.addChild(obj);
         }
