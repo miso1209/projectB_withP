@@ -599,18 +599,21 @@ export default class Stage extends PIXI.Container {
     }
     
     arrangeDepthsFromLocation(obj, gridX, gridY) {
-        let targetIndex;
+        let targetIndex = null;
         for (let y = gridY; y < this.mapHeight; y++) {
             for (let x = gridX; x >= 0 ; x--) {
                 const tile = this.objectMap[x + y * this.mapWidth];
                 if (tile) {
                     const i = this.objectContainer.getChildIndex(tile);
-                    targetIndex = targetIndex ? Math.min(i, targetIndex) : i;
+                    targetIndex = targetIndex !== null ? Math.min(i, targetIndex) : i;
+                    console.log(i, targetIndex, tile);
                 }
             }
         }
-        if (targetIndex) {
-            this.objectContainer.addChildAt(obj, targetIndex);
+        if (targetIndex !== null) {
+            console.log('selected', targetIndex);
+            this.objectContainer.setChildIndex(obj, targetIndex);
+            //console.log(targetIndex, this.objectContainer.children, this.objectContainer.getChildIndex(obj));
         } else {
             this.objectContainer.addChild(obj);
         }
