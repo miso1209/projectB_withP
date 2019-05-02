@@ -2,12 +2,15 @@ import EntranceDoor from "../field/cutscene/entrace-door";
 
 // 포탈 이벤트
 export default class Portal {
-    constructor(game, stage, gridX, gridY, direction) {
+    constructor(game, stage, gridX, gridY, direction, margin) {
         this.game = game;
         this.targetStage = stage;
         this.targetX = gridX;
         this.targetY = gridY;
         this.targetDirection = direction;
+        this.margin = margin;
+
+        this.forceStop = true;
     }
 
     call() {
@@ -20,7 +23,7 @@ export default class Portal {
 
         
         // 월드 진입컷신을 만들어서 넣어준다.
-        const enterCutscene = new EntranceDoor(this.game, this.targetX, this.targetY, this.targetDirection);
+        const enterCutscene = new EntranceDoor(this.game, this.targetX, this.targetY, this.targetDirection, this.margin);
         this.game.enterStage("assets/mapdata/" + this.targetStage + ".json", enterCutscene);
     }
 }

@@ -9,10 +9,12 @@ export default class Explore {
     constructor(game) {
         this.game = game;
         this.cutscene = null;
+        this.interactive = false;
     }
 
     prepare() {
         this.controller = new FieldCharacter(this.game.player.controlCharacter);
+        this.setInteractive(false);
 
         // 컷신준비를 한다
         if (this.cutscene) {
@@ -31,19 +33,19 @@ export default class Explore {
         this.game.stage.onTileSelected = this.onTileSelected.bind(this);
 
         //=====================================================================
-        // 이벤트 강제 설치
+        // 포탈을 하드코딩으로 설치한다
         if (this.game.stage.name === "house") {
-            
-            // 포탈을 하드코딩으로 설치한다
-            this.game.stage.events[250] = new Portal(this.game, "house-room", 0, 1, DIRECTIONS.SE);;
-            this.game.stage.events[251] = new Portal(this.game, "house-room", 1, 1, DIRECTIONS.SE);;
+            this.game.stage.events[250] = new Portal(this.game, "house-room", 0, 1, DIRECTIONS.SE, 2);
+            this.game.stage.events[251] = new Portal(this.game, "house-room", 1, 1, DIRECTIONS.SE, 2);
 
-            // 
+            this.game.stage.events[0] = new Portal(this.game, "open_road_1", 44, 23, DIRECTIONS.SW, 1);
+            this.game.stage.events[1] = new Portal(this.game, "open_road_1", 44, 22, DIRECTIONS.SW, 1);
         } else if (this.game.stage.name === "house-room") {
-
-            // 포탈을 하드코딩으로 설치한다
-            this.game.stage.events[0] = new Portal(this.game, "house", 10, 14, DIRECTIONS.NW);;
-            this.game.stage.events[1] = new Portal(this.game, "house", 11, 14, DIRECTIONS.NW);;
+            this.game.stage.events[0] = new Portal(this.game, "house", 10, 14, DIRECTIONS.NW, 2);
+            this.game.stage.events[1] = new Portal(this.game, "house", 11, 14, DIRECTIONS.NW, 2);
+        } else if (this.game.stage.name === "open_road_1") {
+            this.game.stage.events[1145] = new Portal(this.game, "house", 1, 1, DIRECTIONS.SE, 2);
+            this.game.stage.events[1195] = new Portal(this.game, "house", 0, 1, DIRECTIONS.SE, 2);
         }
         //=====================================================================
     }
@@ -72,14 +74,13 @@ export default class Explore {
         this.cutscene = null;
         this.game.ui.hideTheaterScreen(0.5);
         this.game.stage.showPathHighlight = true;
+        this.setInteractive(true);
     }
 
     onGameClick(event) {
         // ui 가 클릭되었는지 확인
 
-        if (this.cutscene) {
-            // 컷신중에는 입력을 막는다.
-        } else {
+        if (this.interactive) {
             if (this.game.stage) {
                 this.game.stage.checkForTileClick(event.data);
             }
@@ -111,5 +112,8 @@ export default class Explore {
 
     update() {
     }
-    
+
+    setInteractive(flag) {
+        this.interactive = flag;
+    }
 }

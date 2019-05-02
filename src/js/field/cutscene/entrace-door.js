@@ -1,14 +1,14 @@
 import { DIRECTIONS } from './../../define';
-import { getDirectionName } from '../../utils';
 
 // 일반 문을 열고 들어왔을때를 위한 연출
 // 현재 필드에서의 들어오는 문과 진입 방향을 찾는다
 // 문에서 들어오는 방향으로 살짝 
 
 export default class EntranceDoor {
-    constructor(game, x , y, direction) {
+    constructor(game, x , y, direction, margin) {
         this.game = game;
         this.spawn = { x: x, y: y, direction: direction };
+        this.margin = margin;
     }
 
     setCharacter(character) {
@@ -31,11 +31,17 @@ export default class EntranceDoor {
         const targetX = character.position.x;
 
         if (this.spawn.direction === DIRECTIONS.SE) {
-            character.position.x = stage.getTilePosXFor(this.spawn.x, this.spawn.y-2);
-            character.position.y = stage.getTilePosYFor(this.spawn.x, this.spawn.y-2);
-        } if (this.spawn.direction === DIRECTIONS.NW) {
-            character.position.x = stage.getTilePosXFor(this.spawn.x, this.spawn.y + 2);
-            character.position.y = stage.getTilePosYFor(this.spawn.x, this.spawn.y + 2);
+            character.position.x = stage.getTilePosXFor(this.spawn.x, this.spawn.y-this.margin);
+            character.position.y = stage.getTilePosYFor(this.spawn.x, this.spawn.y-this.margin);
+        } else if (this.spawn.direction === DIRECTIONS.NW) {
+            character.position.x = stage.getTilePosXFor(this.spawn.x, this.spawn.y + this.margin);
+            character.position.y = stage.getTilePosYFor(this.spawn.x, this.spawn.y + this.margin);
+        } else if (this.spawn.direction === DIRECTIONS.SW) {
+            character.position.x = stage.getTilePosXFor(this.spawn.x + this.margin, this.spawn.y);
+            character.position.y = stage.getTilePosYFor(this.spawn.x + this.margin, this.spawn.y);
+        } else {
+            character.position.x = stage.getTilePosXFor(this.spawn.x - this.margin, this.spawn.y);
+            character.position.y = stage.getTilePosYFor(this.spawn.x - this.margin, this.spawn.y);
         }
 
         

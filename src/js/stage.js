@@ -465,7 +465,6 @@ export default class Stage extends PIXI.Container {
             }
         }
         
-        
 
         // 만약에 인터랙티브 타겟이 있고, 길이가 하나 남았으면 정지시킨다.
         if (this.interactTarget && obj.currentPathStep === 0) {

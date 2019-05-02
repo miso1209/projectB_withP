@@ -14,7 +14,6 @@ export default class TiledMap {
         const tileset = this.createTileSet(mapData);
 
         // 그라운드 타일과 오브젝트 타일을 구분한다
-        let isGroundLayer = true;
         const groundLayer = new Array(this.width * this.height);
         const objectLayer = new Array(this.width * this.height);
 
@@ -23,6 +22,7 @@ export default class TiledMap {
                 throw new Error("map 과 layer 의 크기는 항상 일치하여야 합니다");
             }
 
+            const isGroundLayer = layer.name.startsWith("ground");
             const target = isGroundLayer ? groundLayer : objectLayer;
             isGroundLayer = false;
             let nextGroupId = 0;

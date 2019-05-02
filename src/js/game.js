@@ -88,11 +88,12 @@ export default class Game {
 
 
         // 필드에 들어간다
-        this.enterStage(playerInfo.stagePath, new EntranceDoor(this, 0,1, DIRECTIONS.SE));
+        this.enterStage(playerInfo.stagePath, new EntranceDoor(this, 0,1, DIRECTIONS.SE, 2));
     }
 
     enterStage(stagePath, enterCutscene) {
         if (this.stage) {
+            this.currentMode.setInteractive(false);
             // 기존 스테이지에서 나간다
             this.tweens.addTween(this.blackScreen, 1, { alpha: 1 }, 0, "easeIn", true, () => {
                 this.gamelayer.removeChildren();
