@@ -1,5 +1,7 @@
 import FieldCharacter from './fieldcharacter';
 import { DIRECTIONS } from './define';
+import EntranceDoor from './field/cutscene/entrace-door';
+
 
 export default class Explore {
     constructor(game) {
@@ -7,18 +9,11 @@ export default class Explore {
     }
 
     prepare() {
-        const spawnPoint = { x: 0, y: 0 };
-
         this.controller = new FieldCharacter(this.game.player.controlCharacter);
-
-        this.game.stage.addCharacter(this.controller, spawnPoint.x, spawnPoint.y);
-        this.game.stage.checkForFollowCharacter(this.controller, true);
-
-        // 캐릭터 방향을 돌린다
-        this.controller.changeVisualToDirection(DIRECTIONS.SE);
+        this.cutscene = new EntranceDoor(this.game.stage);
+        this.cutscene.prepare(this.controller);
 
         // 컷신준비를 한다
-        this.cutscene = true;
         this.game.ui.showTheaterScreen(0);
         this.game.stage.showPathHighlight = false;
 
@@ -27,18 +22,15 @@ export default class Explore {
     }
 
     start() {
+
         this.game.stage.onTileSelected = this.onTileSelected.bind(this);
             
-        // 플레이어를 적당한 곳으로 이동시킨다
-        this.game.stage.moveCharacter(this.controller, 4,4);
-
-        setTimeout(() => {
-            this.game.ui.showChatBallon(this.controller, "큰일이다 문이 닫혔다!\n어떻게 하면 나갈 수 있을까 ...", 4);
-            // 컷신을 끝낸다
-            this.cutscene = false;
-            this.game.ui.hideTheaterScreen(1);
+        // 플레이어 컷
+        this.cutscene.start(() => {
+            this.game.ui.hideTheaterScreen(0.5);
             this.game.stage.showPathHighlight = true;
-        }, 3000);
+            this.cutscene = null
+        })
     }
 
     onGameClick(event) {
@@ -111,7 +103,6 @@ export default class Explore {
     }
 
     update() {
-        
     }
     
 }

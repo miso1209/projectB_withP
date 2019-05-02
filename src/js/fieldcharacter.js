@@ -36,7 +36,7 @@ export default class FieldCharacter extends PIXI.Container {
         this.offset = character.data.offset;
     
         const anim = new PIXI.extras.AnimatedSprite(this.animations.idle_sw.textures);
-        anim.animationSpeed = 0.1;
+        anim.animationSpeed = 0.2;
         anim.play();
         anim.position.x = this.offset.x;
         anim.position.y = this.offset.y;
