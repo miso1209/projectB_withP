@@ -53,8 +53,10 @@ function isInPolygon(gp, vertices) {
 };
 
 export default class Stage extends PIXI.Container {
-    constructor(width, height, tileWidth, tileHeight) {
+    constructor(name, width, height, tileWidth, tileHeight) {
         super();
+
+        this.name = name;
 
         this.mapWidth = width;
         this.mapHeight = height;
@@ -99,7 +101,10 @@ export default class Stage extends PIXI.Container {
 	    this.mapVisualHeightReal = this.getTilePosYFor(this.mapWidth - 1,0) - this.getTilePosYFor(0,this.mapHeight - 1);
 
         this.currentFocusLocation = { x: this.mapWidth >> 1, y: this.mapHeight >> 1 };
-		this.centralizeToPoint(this.externalCenter.x, this.externalCenter.y, true);
+        this.centralizeToPoint(this.externalCenter.x, this.externalCenter.y, true);
+        
+        // 맵에 따라서 이벤트를 바꾸어야 한다
+        this.events = {};
     }
 
     zoomTo(scale, instantZoom) {
@@ -452,10 +457,15 @@ export default class Stage extends PIXI.Container {
         }
 
         // 현재 지나고 있는 타일에 이벤트가 있는지 확인한다
-        // 하드코딩으로 이벤트를 지나게 한다
-        if (this.onTilePassing) {
-            forceStop = this.onTilePassing(obj);
+        const tileEvent = this.events[obj.gridX + obj.gridY * this.mapWidth];
+        if (tileEvent) {
+            tileEvent.call();
+            if (tileEvent.forceStop) {
+                return;
+            }
         }
+        
+        
 
         // 만약에 인터랙티브 타겟이 있고, 길이가 하나 남았으면 정지시킨다.
         if (this.interactTarget && obj.currentPathStep === 0) {

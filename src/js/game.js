@@ -9,6 +9,8 @@ import Explore  from "./explore";
 
 import TileSet from "./tiledmap";
 import EntityFactory from './entityfactory';
+import EntranceDoor from './field/cutscene/entrace-door';
+import { DIRECTIONS } from './define';
 
 export default class Game {
     constructor(pixi) {
@@ -86,21 +88,21 @@ export default class Game {
 
 
         // 필드에 들어간다
-        this.enterStage(playerInfo.stagePath);
+        this.enterStage(playerInfo.stagePath, new EntranceDoor(this, 0,1, DIRECTIONS.SE));
     }
 
-    enterStage(stagePath) {
-        if (this.currentStage) {
+    enterStage(stagePath, enterCutscene) {
+        if (this.stage) {
             // 기존 스테이지에서 나간다
             this.tweens.addTween(this.blackScreen, 1, { alpha: 1 }, 0, "easeIn", true, () => {
                 this.gamelayer.removeChildren();
 
                 // 화면 암전이 끝나면 로딩을 시작한다
-                this.loadStage(stagePath, this.onStageLoadCompleted.bind(this));
+                this.loadStage(stagePath, enterCutscene);
             });
         } else {
             // 바로 로딩을 한다
-            this.loadStage(stagePath, this.onStageLoadCompleted.bind(this));
+            this.loadStage(stagePath, enterCutscene);
         }
     }
 
@@ -125,7 +127,7 @@ export default class Game {
         }
     }
 
-    loadStage(stagePath, onLoadComplete) {
+    loadStage(stagePath, enterCutscene) {
 
         this.resourceManager.add("stage", stagePath);
         this.resourceManager.load((resources) => {
@@ -150,7 +152,9 @@ export default class Game {
             }
 
             this.resourceManager.load((resources) => {
-                const stage = new Stage(mapData.width, mapData.height, mapData.tilewidth, mapData.tileheight);
+                const stageName = path.basename(stagePath, ".json");
+                const stage = new Stage(stageName, mapData.width, mapData.height, mapData.tilewidth, mapData.tileheight);
+
 
                 // 여기에 데이터를 입력한다
                 const tileset = new TileSet(mapData);
@@ -174,14 +178,12 @@ export default class Game {
                 stage.build();
 
                 // 로딩 완료 콜백
-                if (onLoadComplete) {
-                    onLoadComplete(stage);
-                }
+                this.onStageLoadCompleted(stage, enterCutscene);
             });
         });
     }
 
-    onStageLoadCompleted(stage) {
+    onStageLoadCompleted(stage, enterCutscene) {
         // 스테이지의 줌레벨을 결정한다
         stage.zoomTo(2, true);
         this.stage = stage;
@@ -189,8 +191,8 @@ export default class Game {
 
         // 페이드 인이 끝나면 게임을 시작한다
         this.currentMode = this.exploreMode;
+        this.currentMode.cutscene = enterCutscene;
         this.currentMode.prepare();
-
 
         // 다시 암전을 밝힌다
         this.tweens.addTween(this.blackScreen, 1, { alpha: 0 }, 0, "easeOut", true, () => {

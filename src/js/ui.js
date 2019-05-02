@@ -116,7 +116,7 @@ class Dialog extends PIXI.Container {
 
         const plane = new PIXI.mesh.NineSlicePlane(PIXI.Texture.from('dialog.png'), 12, 10, 12, 10);
         plane.position.x = (ui.screenWidth - width) / 2;
-        plane.position.y = (ui.screenHeight - height) - 12;
+        plane.position.y = (ui.screenHeight - height) - 12 - 42; // 컷신
         plane.width = width;
         plane.height = height;
         this.plane = plane;
@@ -612,7 +612,6 @@ export default class UI extends PIXI.Container {
         theater.visible = true;
 
         if (duration > 0) {
-            theater.alpha = 0;
             this.game.tweens.addTween(theater, duration, { alpha: 1 }, 0, "easeInOut", true);
         } else {
             theater.alpha = 1;
