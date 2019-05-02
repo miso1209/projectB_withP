@@ -65,7 +65,8 @@ export default class Stage extends PIXI.Container {
         this.TILE_HALF_W = tileWidth / 2;
         this.TILE_HALF_H = tileHeight / 2;
 
-        //this.tilemap = new Array(height * width);
+        
+        this.bottomMap = new Array(height * width);
         this.groundMap = new Array(height * width);
         this.objectMap = new Array(height * width);
         this.alphaTiles = [];
@@ -139,6 +140,11 @@ export default class Stage extends PIXI.Container {
         else {
             this.tweens.addTween(this.mapContainer.position, 0.5, { x: px, y: py }, 0, "easeInOut", true );
         }
+    }
+
+    setBottomTile(x, y, src) {
+        const tile = this.newTile(x, y, src);
+        this.bottomMap[x + y * this.mapWidth] = tile;
     }
 
     setGroundTile(x, y, src) {
@@ -231,6 +237,10 @@ export default class Stage extends PIXI.Container {
                 --xoffset;
             }
         }
+
+        forEachTile((tile, x, y) => {
+            this.groundContainer.addChild(tile);
+        }, this.bottomMap);
 
         forEachTile((tile, x, y) => {
             this.groundContainer.addChild(tile);
