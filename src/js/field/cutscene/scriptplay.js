@@ -72,6 +72,7 @@ export default class ScriptPlay extends EventEmitter {
             const x = script.arguments[0];  
             const y = script.arguments[1];  
 
+            game.stage.once('moveend', () => { this.next(game); });
             game.stage.moveCharacter(game.currentMode.controller, x, y);
         }
     }

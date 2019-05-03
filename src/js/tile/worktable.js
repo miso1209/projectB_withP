@@ -40,6 +40,18 @@ export default class WorkTable extends Prop {
                         }, {
                             command: "goto",
                             arguments: [2, 5],
+                        }, {
+                            command: "dialog",
+                            arguments: ["으아아아!!!!!!"],
+                        }, {
+                            command: "dialog",
+                            arguments: ["피.. 피가 엄청나다."],
+                        }, {
+                            command: "dialog",
+                            arguments: ["..."],
+                        }, {
+                            command: "dialog",
+                            arguments: ["살려주면 바닥.. 닦아놓겠지?"],
                         }
                     ]);
 

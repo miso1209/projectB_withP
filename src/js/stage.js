@@ -11,6 +11,7 @@ import Prop from './tile/prop';
 import InventoryProp from './tile/inventory-prop';
 import Stove from './tile/stove';
 import WorkTable from './tile/worktable';
+import EventEmitter from 'events';
 
 function hitTestRectangle(rect1, rect2) {
     return  (rect1.x < rect2.x + rect2.width &&
@@ -107,6 +108,8 @@ export default class Stage extends PIXI.Container {
         
         // 맵에 따라서 이벤트를 바꾸어야 한다
         this.events = {};
+
+        Object.assign(this, new EventEmitter());
     }
 
     zoomTo(scale, instantZoom) {
@@ -505,6 +508,8 @@ export default class Stage extends PIXI.Container {
                     interactTarget.hideOutline();
                 }
             }
+
+            this.emit('moveend');
         }
     }
 

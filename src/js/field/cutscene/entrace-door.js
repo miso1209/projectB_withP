@@ -47,19 +47,16 @@ export default class EntranceDoor extends EventEmitter {
         }
 
         
-        stage.tweens.addTween(character.position, 1, { x: targetX, y: targetY }, 0, "linear", true);
-        stage.tweens.addTween(character, 0.5, { alpha: 1 }, 0, "linear", true);
-
-        // 애니메이션을 넣는다
-
         character.isMoving = true;
         character.changeVisualToDirection(this.spawn.direction);
 
-        // 끝나면 이벤트를 넣는다.
-        setTimeout(() => {
+
+        stage.tweens.addTween(character, 0.5, { alpha: 1 }, 0, "linear", true);
+        stage.tweens.addTween(character.position, 1, { x: targetX, y: targetY }, 0, "linear", true, () => {
             character.isMoving = false;
             character.changeVisualToDirection(this.spawn.direction);
             this.emit('complete');
-        },1000);
+        });
+
     }
 }
