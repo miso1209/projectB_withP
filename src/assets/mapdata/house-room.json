@@ -79,7 +79,7 @@
          "margin":0,
          "name":"object3x3",
          "spacing":0,
-         "tilecount":1,
+         "tilecount":2,
          "tileheight":96,
          "tileoffset":
             {
@@ -89,7 +89,7 @@
          "tiles":[
                 {
                  "id":0,
-                 "image":"house-table2.png",
+                 "image":"house-worktable.png",
                  "imageheight":96,
                  "imagewidth":96,
                  "properties":[
@@ -104,6 +104,12 @@
                          "value":3
                         }],
                  "type":"worktable"
+                }, 
+                {
+                 "id":1,
+                 "image":"house-worktable-upgrade.png",
+                 "imageheight":96,
+                 "imagewidth":96
                 }],
          "tilewidth":96
         }],

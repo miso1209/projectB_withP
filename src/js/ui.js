@@ -59,6 +59,69 @@ class BaseModal extends PIXI.Container {
     }
 }
 
+class ConfirmModal extends BaseModal {
+    constructor(ui, width, height, text) {
+        super(ui, width, height);
+
+        // 텍스트를 만든다
+        const style = new PIXI.TextStyle({fontFamily : 'Arial', fontSize: 24, fill : 0xffffff, align : 'center' });
+        const titleText = new PIXI.Text(text, style);
+        const textMetrics = PIXI.TextMetrics.measureText(text, style);
+
+        titleText.position.x = (width - textMetrics.width) / 2;
+        titleText.position.y = (height - textMetrics.height - 50) / 2;
+
+        this.plane.addChild(titleText);
+
+        // 확인취소를 버튼을 만든다
+        const okButton = new PIXI.mesh.NineSlicePlane(PIXI.Texture.from('dialog.png'), 12, 10, 12, 10);
+        okButton.width = 100;
+        okButton.height = 40;
+        okButton.position.set(width / 2 - okButton.width - 10 , height - 50);
+        this.plane.addChild(okButton);
+
+        const okText = new PIXI.Text("확인", style);;
+        okText.position.set(24, 8);
+        okButton.addChild(okText);
+
+        const cancelButton = new PIXI.mesh.NineSlicePlane(PIXI.Texture.from('dialog.png'), 12, 10, 12, 10);
+        cancelButton.width = 100;
+        cancelButton.height = 40;
+        cancelButton.position.set(width /2  + 10, height - 50);
+        this.plane.addChild(cancelButton);
+
+        const cancelText = new PIXI.Text("취소", style);;
+        cancelText.position.set(24, 8);
+        cancelButton.addChild(cancelText);
+
+        okButton.interactive = true;
+        okButton.mouseup = this.onOk.bind(this);
+        cancelButton.interactive = true;
+        cancelButton.mouseup = this.onCancel.bind(this);
+
+        this.onConfirm = null;
+    }
+
+    onClick(event) {
+        // 오버라이드 한다.
+        event.stopped = true;
+    }
+
+    onOk(event) {
+        this.parent.removeChild(this);
+        if (this.onConfirm) {
+            this.onConfirm(true);
+        }
+    }
+
+    onCancel(event) {
+        this.parent.removeChild(this);
+        if (this.onConfirm) {
+            this.onConfirm(false);
+        }
+    }
+}
+
 class ChatBallon extends PIXI.Container {
     constructor(character, chatText) {
         super(); 
@@ -543,6 +606,46 @@ class BattleUI extends PIXI.Container {
     }
 }
 
+class Progress extends  BaseModal {
+    constructor(ui, width, height) {
+        super(ui, width, height);
+
+        // 0~100까지 적을 숫자를 가져온다
+        this.isProgressing = false;
+
+        // 프로그레시브 바를 그린다
+        const bar = new PIXI.Sprite(PIXI.Texture.WHITE);
+        bar.tint = 0x4040FF;
+        bar.width = 0;
+        bar.height = 15;
+        bar.position.x = (width - 100) / 2;
+        bar.position.y = (height - bar.height) / 2;
+        this.addChild(bar);
+
+        this.bar = bar;
+    }
+
+    start(onComplete) {
+        // 프로그레스를 시작한다
+        this.isProgressing = true;
+        this.bar.width = 0;
+        this.onComplete = onComplete;
+    }
+
+    update() {
+        if (this.isProgressing) {
+            this.bar.width ++;
+            if (this.bar.width >= 100) {
+                this.isProgressing = false;
+                if (this.onComplete) {
+                    this.onComplete();
+                    this.onComplete = null;
+                }
+            }
+        }
+    }
+}
+
 export default class UI extends PIXI.Container {
     constructor(game) {
         super();
@@ -574,6 +677,10 @@ export default class UI extends PIXI.Container {
         
         this.battleUi = new BattleUI(this);
         this.addChild(this.battleUi);
+
+        this.progressbar = new Progress(this, 200, 80);
+        this.progressbar.visible = false;
+        this.addChild(this.progressbar);
     }
     
     showDialog(text, closeCallback) {
@@ -693,6 +800,9 @@ export default class UI extends PIXI.Container {
         for (const chat of this.chatBallons) {
             chat.updatePosition();
         }
+
+        // 업데이트 추가
+        this.progressbar.update();
     }
 
     showInventory() {
@@ -712,4 +822,17 @@ export default class UI extends PIXI.Container {
     hideCombine() {
         this.combine.visible = false;
     }
+
+    progressStart() {
+        this.progressbar.start(() => {
+            this.progressbar.visible = false;
+        })
+    }
+
+    createConfirmModal(text) {
+        const ui = new ConfirmModal(this, 300, 150, text);
+        this.addChild(ui);
+        return ui;
+    }
+    
 }

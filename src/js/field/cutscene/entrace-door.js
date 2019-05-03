@@ -1,11 +1,13 @@
+import EventEmitter from 'events';
 import { DIRECTIONS } from './../../define';
 
 // 일반 문을 열고 들어왔을때를 위한 연출
 // 현재 필드에서의 들어오는 문과 진입 방향을 찾는다
 // 문에서 들어오는 방향으로 살짝 
 
-export default class EntranceDoor {
+export default class EntranceDoor extends EventEmitter {
     constructor(game, x , y, direction, margin) {
+        super();
         this.game = game;
         this.spawn = { x: x, y: y, direction: direction };
         this.margin = margin;
@@ -22,7 +24,7 @@ export default class EntranceDoor {
         
     }
 
-    start(onComplete) {
+    play() {
         const character = this.character;
         const stage = this.game.stage;
         
@@ -57,9 +59,7 @@ export default class EntranceDoor {
         setTimeout(() => {
             character.isMoving = false;
             character.changeVisualToDirection(this.spawn.direction);
-            if (onComplete) {
-                onComplete();
-            }
+            this.emit('complete');
         },1000);
     }
 }

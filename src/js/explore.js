@@ -1,6 +1,5 @@
 import FieldCharacter from './fieldcharacter';
 import { DIRECTIONS } from './define';
-import EntranceDoor from './field/cutscene/entrace-door';
 import ScriptPlay from './field/cutscene/scriptplay';
 import Portal from './event/portal';
 
@@ -54,20 +53,36 @@ export default class Explore {
         // 진입 컷신이 없을 수 있다.
         if (this.cutscene) {
             // 플레이어 컷
-            this.cutscene.start(() => {
+            this.cutscene.once('complete', () => {
                 if (this.game.player.hasTag("tutorial")) {
                     this.endCutscene();
                 } else {
                     this.game.player.addTag("tutorial")
                     this.cutscene = new ScriptPlay();
-                    this.cutscene.play(this.game, () => {
-                        this.endCutscene();
-                    });
+                    this.cutscene.once('complete', () => { this.endCutscene(); });
+                    this.cutscene.play(this.game);
                 }
             });
+            this.cutscene.play();
         } else {
             
         }
+    }
+
+    startCutscene(cutscene) {
+        if (this.cutscene) {
+            this.endCutscene();
+        }
+
+        this.cutscene = cutscene;
+        this.game.ui.showTheaterScreen(0.5);
+        this.game.stage.showPathHighlight = false;
+
+        this.cutscene.once('complete', () => {
+            this.endCutscene();
+        });
+        this.cutscene.play();
+
     }
 
     endCutscene() {

@@ -140,16 +140,7 @@ function gameStart(pixi) {
           game.leaveBattle();
         }
       } else if (e.keyCode === 67) {
-        //ui.showDialog("테스트 다이얼로그입니다. 클릭하면 꺼집니다");
-        //ui.showItemAcquire();
-        //ui.showChatBallon(game.player, "테스트");
-
-        if (toggle) {
-          ui.showCombine();
-        } else {
-          ui.hideCombine();
-        }
-        toggle = !toggle;
+        const confirm = ui.createConfirmModal("테스트");
       } else if (e.keyCode === 65) { // a 
         //dom UI test : showItemAquire
         domUI.showItemAquire(1);

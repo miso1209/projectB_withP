@@ -10,6 +10,7 @@ import Chest from './tile/chest';
 import Prop from './tile/prop';
 import InventoryProp from './tile/inventory-prop';
 import Stove from './tile/stove';
+import WorkTable from './tile/worktable';
 
 function hitTestRectangle(rect1, rect2) {
     return  (rect1.x < rect2.x + rect2.width &&
@@ -174,8 +175,10 @@ export default class Stage extends PIXI.Container {
             tile = new Anvil(x, y, tileData);
         } else if (tileData.type === "inventory") {
             tile = new InventoryProp(x, y, tileData);
-        }  else if (tileData.type === "stove") {
+        } else if (tileData.type === "stove") {
             tile = new Stove(x, y, tileData);
+        } else if (tileData.type === "worktable") {
+            tile = new WorkTable(x, y, tileData);
         } 
         else if (tileData.type !== "groundtile") {
             tile = new Prop(x, y, tileData);
