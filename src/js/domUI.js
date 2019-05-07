@@ -371,7 +371,8 @@ class Dialog extends DomUI {
     super();
    
     this.createDom();
-
+    this.container.style.pointerEvents = 'auto'; // 클릭 이벤트 방지.
+    
     const dialog = new NineBox(this.container, width, height, 'dialog');
     dialog.dom.className = 'dialog';
     dialog.moveToBottom(20);
@@ -449,6 +450,7 @@ class Dialog extends DomUI {
   }
 
   hideDialog(){
+    this.container.style.pointerEvents = 'none'; // 클릭 이벤트 방지.
     this.dom.parentNode.parentNode.removeChild(this.dom.parentNode);
   }
 }
