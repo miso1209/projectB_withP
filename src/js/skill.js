@@ -1,5 +1,5 @@
 import MovieClip from './movieclip';
-import {Stun, Poison} from './battlecharacter';
+import {Stun, Poison, BaseBuff, STATUS} from './battlecharacter';
 import {DIRECTIONS} from './define';
 
 function getDirectionName(dir) {
@@ -36,6 +36,7 @@ const TARGETING_TYPE = {
     ALLY_FRONT_ALL: 8,
     ALLY_BACK_ALL: 9,
     ALLY_ALL: 10,
+    SELF: 11
 }
 
 // 스텟 계산 파둬야 하는데.. 이건 언제하지?.. 어렵다.. 스탯이랑, 에큅으로 능력치 계산 및 스킬에 적용.. 염두해두자.. 생각해두자.
@@ -139,6 +140,125 @@ class BaseSkill {
     }
 }
 
+export class RunAwaySkill extends BaseSkill {
+    constructor() {
+        super();
+        this.currentDelay = 300;
+    }
+
+    init(battle) {
+        this.currentFrame = 0;
+        this.status = SKILL_STATUS.WAIT;
+        
+        // 스킬의 사용자를 비교하여, 적군파티, 아군파티를 셋팅한다.
+        let proponents = battle.playerParty;
+        let opponents = battle.enemyParty;
+        if (opponents.isParty(this.proponent)) {
+            [proponents, opponents] = [opponents, proponents];
+        }
+        this.target = this.getTarget(opponents, TARGETING_TYPE.ENEMY_FRONT_TANK);
+        
+        const movieClip = new MovieClip(
+            MovieClip.Timeline(1, 1, null, () => {
+                // battle.showChatBallon(this.proponent, "제가 조금 바빠서 이만..", 0.5);
+                this.proponent.setAnimation('idle_' + getDirectionName(this.proponent.currentDir));
+                this.proponent.anim.loop = true;
+            }),
+            MovieClip.Timeline(31, 61, null, () => {
+                this.proponent.alpha -= 0.05;
+                this.proponent.x += 1;
+                this.proponent.y -= 0.5;
+                this.proponent.setAnimation('walk_' + getDirectionName(this.proponent.currentDir));
+                this.proponent.anim.loop = true;
+            }),
+            MovieClip.Timeline(62, 62, null, () => {
+                console.log(this.proponent.stat);
+                this.proponent.stat.hp = 0;
+                this.proponent.status = STATUS.DIE;
+            })
+        );
+
+        this.movies.push(movieClip);
+        movieClip.playAndStop();
+    }
+
+    action(battle) {
+        if (this.proponent.stat.hp<= 0 || !this.proponent.statusManager.canAction()) {
+            return null;
+        }
+
+        this.updateMovieclips();
+        this.status = SKILL_STATUS.ACTION;
+        
+        if (this.currentFrame === 63) {
+            this.currentFrame = 0;
+            // 임시로 후딜을 랜덤으로 주어 공격 순서가 뒤죽박죽이 되게 만들어 본다.
+            this.currentDelay = this._delay.afterAttack * Math.random() * 5;
+            this.status = SKILL_STATUS.IDLE;
+
+            return null;
+        }
+        this.currentFrame++;
+        
+        return this;
+    }
+}
+
+export class CrouchSkill extends BaseSkill {
+    constructor() {
+        super();
+    }
+
+    init(battle) {
+        this.currentFrame = 0;
+        this.status = SKILL_STATUS.WAIT;
+        
+        // 스킬의 사용자를 비교하여, 적군파티, 아군파티를 셋팅한다.
+        let proponents = battle.playerParty;
+        let opponents = battle.enemyParty;
+        if (opponents.isParty(this.proponent)) {
+            [proponents, opponents] = [opponents, proponents];
+        }
+        this.target = this.getTarget(opponents, TARGETING_TYPE.ENEMY_FRONT_TANK);
+        
+        const movieClip = new MovieClip(
+            MovieClip.Timeline(1, 1, null, () => {
+                this.proponent.setAnimation('idle_' + getDirectionName(this.proponent.currentDir));
+                this.proponent.anim.loop = true;
+            }),
+            MovieClip.Timeline(30, 31, null, () => {
+                this.proponent.statusManager.addBuff(new BaseBuff({ retensionFrames: 6000, multiBuffs:{defense:1.5}}), true, false);
+                this.proponent.setAnimation('crouch_' + getDirectionName(this.proponent.currentDir));
+                this.proponent.anim.loop = true;
+            })
+        );
+
+        this.movies.push(movieClip);
+        movieClip.playAndStop();
+    }
+
+    action(battle) {
+        if (this.proponent.stat.hp<= 0 || !this.proponent.statusManager.canAction()) {
+            return null;
+        }
+
+        this.updateMovieclips();
+        this.status = SKILL_STATUS.ACTION;
+        
+        if (this.currentFrame === 50) {
+            this.currentFrame = 0;
+            // 임시로 후딜을 랜덤으로 주어 공격 순서가 뒤죽박죽이 되게 만들어 본다.
+            this.currentDelay = this._delay.afterAttack * Math.random() * 5;
+            this.status = SKILL_STATUS.IDLE;
+
+            return null;
+        }
+        this.currentFrame++;
+        
+        return this;
+    }
+}
+
 // MELEE SKILL
 export class MeleeSkill extends BaseSkill {
     constructor() {
@@ -148,7 +268,7 @@ export class MeleeSkill extends BaseSkill {
     init(battle) {
         this.currentFrame = 0;
         this.status = SKILL_STATUS.WAIT;
-        this.damage = 40 + Math.round(Math.random()*15);
+        this.damage = 80 + Math.round(Math.random()*15);
         
         // 스킬의 사용자를 비교하여, 적군파티, 아군파티를 셋팅한다.
         let proponents = battle.playerParty;
@@ -189,7 +309,7 @@ export class MeleeSkill extends BaseSkill {
     }
 
     action(battle) {
-        if (this.proponent.stat.hp<= 0) {
+        if (this.proponent.stat.hp<= 0 || !this.proponent.statusManager.canAction()) {
             return null;
         }
 
@@ -197,6 +317,8 @@ export class MeleeSkill extends BaseSkill {
         this.status = SKILL_STATUS.ACTION;
 
         if (this.currentFrame === this._delay.beforeAttack) {
+            this.damage = Math.round((1 - this.target.stat.defense) * this.damage);
+
             battle.effect.addEffect(this.target, { name: 'slash', animationLength: 8, removeFrame: 60, speed: 0.5 });
             battle.effect.addDamageEffect(this.target, this.damage, "#ffffff");
             this.target.onDamage(this.damage);
@@ -221,13 +343,13 @@ export class ProjectileSkill extends BaseSkill {
         super();
 
         // JSON을 받아서 각각의 정보를 넣는다. (지금은 하드코딩)
-        this.damage = 80 + Math.round(Math.random()*30);
+        this.damage = 90 + Math.round(Math.random()*30);
     }
 
     init(battle) {
         this.currentFrame = 0;
         this.status = SKILL_STATUS.WAIT;
-        this.damage = 80 + Math.round(Math.random()*30);
+        this.damage = 90 + Math.round(Math.random()*30);
         
         // 스킬의 사용자를 비교하여, 적군파티, 아군파티를 셋팅한다.
         let proponents = battle.playerParty;
@@ -288,6 +410,8 @@ export class ProjectileSkill extends BaseSkill {
             this.movies.push(movieClip);
             movieClip.playAndStop();
         } else if (this.currentFrame === this._delay.doneAttack) {
+            this.damage = Math.round((1 - this.target.stat.defense) * this.damage);
+
             battle.effect.addEffect(this.target, { name: 'explosion', animationLength: 16, removeFrame: 60, speed: 0.5 });
             battle.effect.addDamageEffect(this.target, this.damage, "#ffffff");
             this.target.onDamage(this.damage);
@@ -315,13 +439,13 @@ export class ArrowShotingSkill extends BaseSkill {
         };
 
         // JSON을 받아서 각각의 정보를 넣는다. (지금은 하드코딩)
-        this.damage = 80 + Math.round(Math.random()*30);
+        this.damage = 150 + Math.round(Math.random()*30);
     }
 
     init(battle) {
         this.currentFrame = 0;
         this.status = SKILL_STATUS.WAIT;
-        this.damage = 80 + Math.round(Math.random()*30);
+        this.damage = 150 + Math.round(Math.random()*30);
         
         // 스킬의 사용자를 비교하여, 적군파티, 아군파티를 셋팅한다.
         let proponents = battle.playerParty;
@@ -390,6 +514,8 @@ export class ArrowShotingSkill extends BaseSkill {
             this.movies.push(movieClip);
             movieClip.playAndStop();
         } else if (this.currentFrame === this._delay.doneAttack) {
+            this.damage = Math.round((1 - this.target.stat.defense) * this.damage);
+
             battle.effect.addEffect(this.target, { name: 'shoted', animationLength: 18, removeFrame: 60, speed: 0.5 });
             battle.effect.addDamageEffect(this.target, this.damage, "#ffffff");
             battle.effect.flashScreen(0.2, 0.1);
@@ -397,7 +523,7 @@ export class ArrowShotingSkill extends BaseSkill {
             this.target.onDamage(this.damage);
             
             // 임시로 독화살 구현
-            this.target.statusManager.addConditionError(new Poison({ retensionTime: 300 }), true, false);
+            // this.target.statusManager.addConditionError(new Poison({ retensionTime: 300 }), true, false);
 
             this.currentFrame = 0;
             this.currentDelay = this._delay.afterAttack * Math.random();

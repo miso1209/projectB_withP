@@ -1,6 +1,6 @@
 import { DIRECTIONS } from './define';
 import MovieClip from './movieclip';
-import { MeleeSkill, ProjectileSkill, ArrowShotingSkill, SKILL_STATUS, ACTIVE_TYPE } from './skill';
+import { MeleeSkill, ProjectileSkill, ArrowShotingSkill, SKILL_STATUS, ACTIVE_TYPE, CrouchSkill, RunAwaySkill } from './skill';
 import Tweens from './tweens';
 
 function loadAniTexture(name, count) {
@@ -23,7 +23,7 @@ export function getDirectionName(dir) {
     }
 }
 
-const STATUS = {
+export const STATUS = {
     IDLE: 1,
     ATTACK: 2,
     DIE: 3,
@@ -37,13 +37,9 @@ class StatusManager {
 
         this.stat = Object.assign({}, this.opponent.stat);
 
-        // 스탯 관련
         this.buffs = [];
-        // 상태 관련
         this.conditionErrors = [];
     }
-    // 움직일 수 있는가? 에 대한 flag 받는 것
-    // 전투 가능한가? 에 대한 flag 받는 것
 
     canAction() {
         let result = true;
@@ -56,18 +52,24 @@ class StatusManager {
     }
 
     update() {
-        this.stat = Object.assign({}, this.opponent.stat);
+        let flag = false;
+        let stat = Object.assign({}, this.stat);
 
         this.buffs.forEach((buff) => {
-            this.stat = buff.update(this.stat);
+            stat = buff.update(stat);
+            flag = true;
         });
+
+        if(flag) {
+            this.opponent.stat = Object.assign(this.opponent.stat, stat);
+        }
 
         this.conditionErrors.forEach((conditionError) => {
             conditionError.update(this.opponent);
         });
     }
 
-    addBuf(buff, overwrite, overlap) {
+    addBuff(buff, overwrite, overlap) {
         let buffIndex = null;
 
         this.buffs.forEach((compareBuff, index) => {
@@ -104,9 +106,35 @@ class StatusManager {
     }
 }
 
-class BaseBuff {
-    constructor(options) {
-        this.options = options;
+export class BaseBuff {
+    constructor (options) {
+        const basicOptions = {
+            retensionFrames: 0,
+            addBuffs: {},
+            multiBuffs: {}
+        }
+        this.options = Object.assign(basicOptions, options);
+        this.target = null;
+    }
+
+    update(stat) {
+        let resultStat = {};
+        if (this.options.retensionFrames > 0) {
+            for (let buff in this.options.addBuffs) {
+                resultStat[buff] = stat[buff] + this.options.addBuffs[buff];
+            }
+
+            for (let buff in this.options.multiBuffs) {
+                resultStat[buff] = stat[buff] * this.options.multiBuffs[buff];
+            }
+            this.options.retensionFrames--;
+            this.action(this.target);
+        }
+
+        return resultStat;
+    }
+
+    action() {
     }
 
     overwrite(options) {
@@ -189,7 +217,6 @@ export default class BattleCharacter extends PIXI.Container {
         this.movies = [];
 
         this.status = STATUS.IDLE;
-        this.statusManager = new StatusManager(this);
         this.skills = [];
 
         // 스킬을 가지는 것 우선 하드코딩..
@@ -198,11 +225,11 @@ export default class BattleCharacter extends PIXI.Container {
         } else if (spec.name == 'Miluda') {
             this.skills.push(new ArrowShotingSkill());
         } else {
-            this.skills.push(new MeleeSkill());
+            this.skills.push(new CrouchSkill());
         }
 
         // 스킬을 여러개 가질 수 있으며, 2번재 스킬로 Melee를 가지게 함. (임시로 엑티브로 사용할 것이기 때문.) 나중에 아래 세줄 제거.
-        this.skills.push(new MeleeSkill());
+        this.skills.push(new RunAwaySkill());
         this.skills[1].currentDelay = 0;
         this.skills[1].activeType = ACTIVE_TYPE.ACTIVE;
         // 
@@ -218,17 +245,18 @@ export default class BattleCharacter extends PIXI.Container {
         this.battle = null;
 
         this.loadSpec(spec);
+        this.statusManager = new StatusManager(this);
         this.makeProgressBar();
         this.addChild(this.container);
 
         // 임시로 캐릭터를 누르면 Active Queue에 본인의 스킬을 넣는다. 제거할 것.
-        // this.container.interactive = true;
-        // this.container.on('mouseup', (event) => {
-            // if (this.skills[1].isReady()) {
-            //     this.skills[1].setWait();
-            //     this.battle.activeQueue.enqueue(this.skills[1]);
-            // }
-        // });
+        this.container.interactive = true;
+        this.container.on('mouseup', (event) => {
+            if (this.skills[1].isReady()) {
+                this.skills[1].setWait();
+                this.battle.activeQueue.enqueue(this.skills[1]);
+            }
+        });
     }
 
     makeProgressBar() {
@@ -305,7 +333,6 @@ export default class BattleCharacter extends PIXI.Container {
         });
 
         if (selectedPassiveSkill) {
-            console.log('EnQueue!!');
             selectedPassiveSkill.setWait();
             battle.basicQueue.enqueue(selectedPassiveSkill);
         }

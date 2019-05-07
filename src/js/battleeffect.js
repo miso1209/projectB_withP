@@ -76,7 +76,7 @@ export default class BattleEffect extends PIXI.Container {
 
         const movieClip = new MovieClip(
             MovieClip.Timeline(options.removeFrame, options.removeFrame + 1, null, () => {
-                that.removeChild(anim);
+                that.detailEffectContainer.removeChild(anim);
             }),
         );
 
@@ -106,7 +106,7 @@ export default class BattleEffect extends PIXI.Container {
             MovieClip.Timeline(1, 30, text, [["y", text.position.y, text.position.y - 10, "outCubic"]]),
             MovieClip.Timeline(61, 91, text, [["alpha", 1, 0, "outCubic"]]),
             MovieClip.Timeline(91, 92, null, () => {
-                that.removeChild(text);
+                that.detailEffectContainer.removeChild(text);
             }),
         );
         this.movies.push(movieClip);
@@ -114,9 +114,9 @@ export default class BattleEffect extends PIXI.Container {
     }
 
     sceneOut(callback) {
-        this.screenEffect.tint = 0x000000;
         this.screenEffectContainer.visible = true;
         this.screenEffectContainer.alpha = 0;
+        this.screenEffect.tint = 0x0F0F0F;
         this.tweens.addTween(this.screenEffectContainer, 2, { alpha: 1 }, 0, "linear", true, () => {
             this.tint = 0xFFFFFF;
             if (callback) {
@@ -126,9 +126,9 @@ export default class BattleEffect extends PIXI.Container {
     }
 
     sceneIn(callback) {
-        this.screenEffect.tint = 0x000000;
         this.screenEffectContainer.visible = true;
         this.screenEffectContainer.alpha = 1;
+        this.screenEffect.tint = 0x0F0F0F;
         this.tweens.addTween(this.screenEffectContainer, 1, { alpha: 0 }, 0, "linear", true, () => {
             this.tint = 0xFFFFFF;
             this.screenEffectContainer.visible = false;
@@ -160,7 +160,7 @@ export default class BattleEffect extends PIXI.Container {
             MovieClip.Timeline(1, 30, text, [["y", text.position.y, text.position.y - 15, "outCubic"]]),
             MovieClip.Timeline(61, 91, text, [["alpha", 1, 0, "outCubic"]]),
             MovieClip.Timeline(91, 92, null, () => {
-                that.removeChild(text);
+                that.detailEffectContainer.removeChild(text);
                 if (callback) {
                     callback();
                 }

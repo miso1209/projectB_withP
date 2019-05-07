@@ -30,6 +30,9 @@ export default class BattleStage extends PIXI.Container {
 
         this.movies = [];
         this.tweens = new Tweens();
+
+        this.focusMapAbsolutePos({x: 1000}, true, null);
+        this.focusCenterPos();
     }
 
     update() {
