@@ -15,7 +15,8 @@ export default class CharacterFactory {
             const resources = [
                 'hector',
                 'elid',
-                'miluda'
+                'miluda',
+                'warrior'
             ];
 
             CharacterFactory.isLoaded = true;

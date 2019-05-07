@@ -1,6 +1,6 @@
 import { DIRECTIONS } from './define';
 import MovieClip from './movieclip';
-import { MeleeSkill, ProjectileSkill, ArrowShotingSkill, SKILL_STATUS, ACTIVE_TYPE, CrouchSkill, RunAwaySkill } from './skill';
+import { MeleeSkill, ProjectileSkill, ArrowShotingSkill, SKILL_STATUS, ACTIVE_TYPE, CrouchSkill, RunAwaySkill, DoubleMeleeSkill } from './skill';
 import Tweens from './tweens';
 
 function loadAniTexture(name, count) {
@@ -129,6 +129,14 @@ export class BaseBuff {
             }
             this.options.retensionFrames--;
             this.action(this.target);
+        } else {
+            for (let buff in this.options.addBuffs) {
+                resultStat[buff] = stat[buff];
+            }
+
+            for (let buff in this.options.multiBuffs) {
+                resultStat[buff] = stat[buff];
+            }
         }
 
         return resultStat;
@@ -224,15 +232,17 @@ export default class BattleCharacter extends PIXI.Container {
             this.skills.push(new ProjectileSkill());
         } else if (spec.name == 'Miluda') {
             this.skills.push(new ArrowShotingSkill());
+        } else if (spec.name == 'Warrior') {
+            this.skills.push(new MeleeSkill());
+            this.skills.push(new DoubleMeleeSkill());
+            this.skills[1].currentDelay = 0;
+            this.skills[1].activeType = ACTIVE_TYPE.ACTIVE;
         } else {
             this.skills.push(new CrouchSkill());
+            this.skills.push(new RunAwaySkill());
+            this.skills[1].currentDelay = 0;
+            this.skills[1].activeType = ACTIVE_TYPE.ACTIVE;
         }
-
-        // 스킬을 여러개 가질 수 있으며, 2번재 스킬로 Melee를 가지게 함. (임시로 엑티브로 사용할 것이기 때문.) 나중에 아래 세줄 제거.
-        this.skills.push(new RunAwaySkill());
-        this.skills[1].currentDelay = 0;
-        this.skills[1].activeType = ACTIVE_TYPE.ACTIVE;
-        // 
 
         this.skills.forEach((skill) => {
             skill.setProponent(this);

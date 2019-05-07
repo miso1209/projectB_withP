@@ -78,6 +78,16 @@ function gameStart(pixi) {
   game.resourceManager.add("assets/night/walk_nw.json");
   game.resourceManager.add("assets/night/crouch_nw.json");
   game.resourceManager.add("assets/night/crouch_sw.json");
+
+  game.resourceManager.add("assets/warrior/warrior_atk_sw.json");
+  game.resourceManager.add("assets/warrior/warrior_atk_nw.json");
+  game.resourceManager.add("assets/warrior/warrior_atk_2_sw.json");
+  game.resourceManager.add("assets/warrior/warrior_atk_2_nw.json");
+  game.resourceManager.add("assets/warrior/warrior_idle_sw.json");
+  game.resourceManager.add("assets/warrior/warrior_idle_nw.json");
+  game.resourceManager.add("assets/warrior/warrior_walk_sw.json");
+  game.resourceManager.add("assets/warrior/warrior_walk_nw.json");
+
   game.resourceManager.add("shadow.png", "assets/shadow.png");
   game.resourceManager.add("pbar.png", "assets/pbar.png");
   game.resourceManager.add("pbar_r.png", "assets/pbar_r.png");

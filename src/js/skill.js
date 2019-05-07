@@ -227,7 +227,7 @@ export class CrouchSkill extends BaseSkill {
                 this.proponent.anim.loop = true;
             }),
             MovieClip.Timeline(30, 31, null, () => {
-                this.proponent.statusManager.addBuff(new BaseBuff({ retensionFrames: 6000, multiBuffs:{defense:1.5}}), true, false);
+                this.proponent.statusManager.addBuff(new BaseBuff({ retensionFrames: 6000, addBuffs:{defense:0.4}}), true, false);
                 this.proponent.setAnimation('crouch_' + getDirectionName(this.proponent.currentDir));
                 this.proponent.anim.loop = true;
             })
@@ -260,9 +260,109 @@ export class CrouchSkill extends BaseSkill {
 }
 
 // MELEE SKILL
+export class DoubleMeleeSkill extends BaseSkill {
+    constructor() {
+        super();
+        this._delay = {
+            beforeAttack: [50, 96],
+            doneAttack: 137,
+            afterAttack: 100
+        };
+    }
+
+    init(battle) {
+        this.currentFrame = 0;
+        this.status = SKILL_STATUS.WAIT;
+        this.damage = 80 + Math.round(Math.random()*15);
+        
+        // 스킬의 사용자를 비교하여, 적군파티, 아군파티를 셋팅한다.
+        let proponents = battle.playerParty;
+        let opponents = battle.enemyParty;
+        if (opponents.isParty(this.proponent)) {
+            [proponents, opponents] = [opponents, proponents];
+        }
+        this.target = this.getTarget(opponents, TARGETING_TYPE.ENEMY_FRONT_TANK);
+        
+        // Proponent 의 움직임, 애니메이션처리.
+        const start = { x: this.proponent.x, y: this.proponent.y };
+        const vector = this.proponent.currentDir === DIRECTIONS.SW? -1 : 1;
+        const to = { x: this.proponent.x + 16 * vector, y: this.proponent.y - 8 * vector };
+
+        const movieClip = new MovieClip(
+            MovieClip.Timeline(1, 10, this.proponent, [
+                ["x", start.x, to.x, "outCubic"],
+                ["y", start.y, to.y, "outCubic"]
+            ]),
+            MovieClip.Timeline(11, 23, null, () => {
+                this.proponent.setAnimation('attack2_' + getDirectionName(this.proponent.currentDir));
+                this.proponent.anim.loop = false;
+            }),
+            MovieClip.Timeline(63, 64, null, () => {
+                this.proponent.setAnimation('attack_' + getDirectionName(this.proponent.currentDir));
+                this.proponent.anim.loop = false;
+            }),
+            MovieClip.Timeline(125, 126, null, () => {
+                this.proponent.setAnimation('idle_' + getDirectionName(this.proponent.currentDir));
+                this.proponent.anim.loop = true;
+            }),
+            MovieClip.Timeline(127, 136, this.proponent, [
+                ["x", to.x, start.x, "outCubic"],
+                ["y", to.y, start.y, "outCubic"]
+            ]),
+            MovieClip.Timeline(137, 137, null, () => {
+                this.proponent.statusManager.addBuff(new BaseBuff({ retensionFrames: 900, multiBuffs:{defense:1.5}}), true, false);
+            }),
+        );
+
+        this.movies.push(movieClip);
+        movieClip.playAndStop();
+    }
+
+    action(battle) {
+        if (this.proponent.stat.hp<= 0 || !this.proponent.statusManager.canAction()) {
+            return null;
+        }
+
+        this.updateMovieclips();
+        this.status = SKILL_STATUS.ACTION;
+
+        if (this.currentFrame === this._delay.beforeAttack[0]) {
+            this.damage = 80 + Math.round(Math.random()*15);
+            this.damage = Math.round((1 - this.target.stat.defense) * this.damage);
+
+            battle.effect.addEffect(this.target, { name: 'slash', animationLength: 8, removeFrame: 60, speed: 0.5 });
+            battle.effect.addDamageEffect(this.target, this.damage, "#ffffff");
+            this.target.onDamage(this.damage);
+        } else if (this.currentFrame === this._delay.beforeAttack[1]) {
+            this.damage = 80 + Math.round(Math.random()*15);
+            this.damage = Math.round((1 - this.target.stat.defense) * this.damage);
+
+            battle.effect.addEffect(this.target, { name: 'slash', animationLength: 8, removeFrame: 60, speed: 0.5 });
+            battle.effect.addDamageEffect(this.target, this.damage, "#ffffff");
+            this.target.onDamage(this.damage);
+        } else if (this.currentFrame === this._delay.doneAttack) {
+            this.currentFrame = 0;
+            // 임시로 후딜을 랜덤으로 주어 공격 순서가 뒤죽박죽이 되게 만들어 본다.
+            this.currentDelay = this._delay.afterAttack * Math.random();
+            this.status = SKILL_STATUS.IDLE;
+
+            return null;
+        }
+        this.currentFrame++;
+        
+        return this;
+    }
+}
+
+// MELEE SKILL
 export class MeleeSkill extends BaseSkill {
     constructor() {
         super();
+        this._delay = {
+            beforeAttack: 50,
+            doneAttack: 92,
+            afterAttack: 100
+        };
     }
 
     init(battle) {
@@ -292,15 +392,15 @@ export class MeleeSkill extends BaseSkill {
                 this.proponent.setAnimation('attack_' + getDirectionName(this.proponent.currentDir));
                 this.proponent.anim.loop = false;
             }),
-            MovieClip.Timeline(63, 65, null, () => {
+            MovieClip.Timeline(78, 80, null, () => {
                 this.proponent.setAnimation('idle_' + getDirectionName(this.proponent.currentDir));
                 this.proponent.anim.loop = true;
             }),
-            MovieClip.Timeline(68, 77, this.proponent, [
+            MovieClip.Timeline(81, 90, this.proponent, [
                 ["x", to.x, start.x, "outCubic"],
                 ["y", to.y, start.y, "outCubic"]
             ]),
-            MovieClip.Timeline(78, 78, null, () => {
+            MovieClip.Timeline(91, 91, null, () => {
             }),
         );
 
@@ -322,7 +422,6 @@ export class MeleeSkill extends BaseSkill {
             battle.effect.addEffect(this.target, { name: 'slash', animationLength: 8, removeFrame: 60, speed: 0.5 });
             battle.effect.addDamageEffect(this.target, this.damage, "#ffffff");
             this.target.onDamage(this.damage);
-            this.target.statusManager.addConditionError(new Stun({ retensionTime: 300 }), true, false);
         } else if (this.currentFrame === this._delay.doneAttack) {
             this.currentFrame = 0;
             // 임시로 후딜을 랜덤으로 주어 공격 순서가 뒤죽박죽이 되게 만들어 본다.
