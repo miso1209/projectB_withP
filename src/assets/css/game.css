@@ -1,5 +1,6 @@
 @import './base.css';
 @import './modal.css';
+@import './animate.css';
 
 #Game, canvas {
   position: relative;
@@ -64,23 +65,37 @@
   padding: 8px 0;
   color: #fff;
   border: none;
-  background: url(../ui/button1.png) no-repeat;
+  background: url(~assets/ui/button1.png) no-repeat;
 
   transition: all 0.4s linear;
 }
 
 .button.submit {
-  background: url(../ui/button2.png) no-repeat;
+  background: url(~assets/ui/button2.png) no-repeat;
 }
-
 
 .button._small {
   width: 75px;
   height: 35px;
   padding: 5px 0;
-  background: url(../ui/btn_1.png) no-repeat;
+  background: url(~assets/ui/btn_1.png) no-repeat;
   background-size: contain;
 }
+
+.button.category span{
+  font-size: 14px;
+}
+
+.categoryWarp{
+  position: absolute;
+  display: flex;
+  flex-wrap: wrap;
+
+  width: 100%;
+  padding: 20px 30px;
+  text-align: center;
+}
+
 
 .title {
   position: absolute;
@@ -133,14 +148,14 @@
   position: absolute;
   width: 68px;
   height: 67px;
-  background: url(/src/assets/btn_inventory.png) no-repeat;
+  background: url(~assets/btn_inventory.png) no-repeat;
   background-size: contain;
 }
 
 .tooltip {
   position: absolute;
   z-index: 111;
-  background: url(/src/assets/ui/tooltip_box.png) no-repeat;
+  background: url(~assets/ui/tooltip_box.png) no-repeat;
   background-size: contain;
 }
 
@@ -188,32 +203,76 @@
 }
 
 
-
-
-
-/* The typing effect */
-@keyframes typing {
-  from { width: 0 }
-  to { width: 100% }
-}
-
-/* The typewriter cursor effect */
-@keyframes blink-caret {
-  from, to { border-color: transparent }
-  50% { border-color: #fff; }
+@keyframes blink {
+  from { opacity: 0 }
+  to { opacity: 1 }
 }
 
 .typeWriter {
-  border-radius: 0;
-  padding: 5px 0;
-
-  overflow: hidden; /* Ensures the content is not revealed until the animation */
-  /* border-right: .05em solid #fff;  */
-  white-space: nowrap; 
-  margin: 0 auto; /* Gives that scrolling effect as the typing happens */
-  letter-spacing: .15em; /* Adjust as needed */
-  animation: 
-    typing 3.5s steps(40, end),
-    blink-caret .75s step-end infinite;
+  animation: blink .5s steps(30, end) .3s 1 normal both;
+  -webkit-animation: blink .5s steps(30, end) .3s 1 normal both;
 }
 
+.dialog {
+  position: relative;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+}
+
+.dialog .dialog-speaker {
+  display: none;
+}
+
+.dialog .contents {
+  top: 20px;
+  left: 20px;
+  right: 20px;
+
+  max-height: 90px;
+  margin: 10px 0;
+
+  font-size: 20px;
+  letter-spacing: .15em;
+
+  text-align: left;
+  overflow: hidden;
+  background-color: transparent;
+}
+
+.dialog.portrait .contents {
+  left: 90px;
+}
+
+.dialog.portrait .dialog-speaker {
+  display: block;
+}
+
+.dialog-speaker {
+  position: absolute;
+  left: -5px;
+  top: -30px;
+}
+
+.dialog.portrait .name{
+  display: block;
+  position: absolute;
+  left: 15px;
+  top: 65px;
+
+  font-size: 18px;
+  color: #ffd800;
+}
+.dialog-prompt {
+  position: absolute;
+  right: 15px;
+  bottom: 15px;
+
+  width: 15px;
+  height: 15px;
+  background: url(~assets/ui/prompt.png) no-repeat;
+  background-size: contain;
+
+	-webkit-animation: flash 2.2s infinite both;
+	animation: flash 2.2s infinite both;
+}

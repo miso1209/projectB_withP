@@ -6,7 +6,7 @@
   width: 26px;
   height: 26px;
   
-  background: url('/src/assets/ui/btn_close.png') no-repeat;
+  background: url('~assets/ui/btn_close.png') no-repeat;
   background-size: contain;
   border: none;
 
@@ -15,14 +15,6 @@
 
 .modal {
   position: relative;
-}
-
-
-.dialog {
-  position: relative;
-  left: 0;
-  right: 0;
-  margin: 0 auto;
 }
 
 .contents {
@@ -117,8 +109,8 @@ div[class*='column-'] p {
   width: 320px;
   height: 260px;
 
-  overflow-y: scroll;
-
+  /* overflow-y: scroll; */
+  overflow: hidden;
   margin: 0 auto;
 }
 
@@ -142,20 +134,9 @@ div[class*='column-'] p {
   margin: 10px 0 0 0;
 }
 
-.dialog .contents {
-  top: 20px;
-  left: 20px;
-  right: 20px;
-
-  text-align: left;
-  margin: 10px auto;
-  background-color: transparent;
-}
-
 .statUI {
   position: relative;
 }
-
 
 .statUI .equipItems {
   position: absolute;
@@ -193,33 +174,32 @@ div[class*='column-'] p {
 }
 
 .pixel:nth-child(1) {
-  background:url('/src/assets/ui/modal/nineBox_01.png') no-repeat;
+  background:url('~assets/ui/modal/nineBox_01.png') no-repeat;
 }
 .pixel:nth-child(2) {
-  background:url('/src/assets/ui/modal/nineBox_02.png') repeat-x;
+  background:url('~assets/ui/modal/nineBox_02.png') repeat-x;
 }
 .pixel:nth-child(3) {
-  background:url('/src/assets/ui/modal/nineBox_03.png') no-repeat;
+  background:url('~assets/ui/modal/nineBox_03.png') no-repeat;
 }
 .pixel:nth-child(4) {
-  background:url('/src/assets/ui/modal/nineBox_04.png') repeat-y;
+  background:url('~assets/ui/modal/nineBox_04.png') repeat-y;
 }
 .pixel:nth-child(5) {
-  background:url('/src/assets/ui/modal/nineBox_05.png') repeat;
+  background:url('~assets/ui/modal/nineBox_05.png') repeat;
 }
 .pixel:nth-child(6) {
-  background:url('/src/assets/ui/modal/nineBox_06.png') repeat-y;
+  background:url('~assets/ui/modal/nineBox_06.png') repeat-y;
 }
 .pixel:nth-child(7) {
-  background:url('/src/assets/ui/modal/nineBox_07.png') no-repeat;
+  background:url('~assets/ui/modal/nineBox_07.png') no-repeat;
 }
 .pixel:nth-child(8) {
-  background:url('/src/assets/ui/modal/nineBox_08.png') repeat-x;
+  background:url('~assets/ui/modal/nineBox_08.png') repeat-x;
 }
 .pixel:nth-child(9) {
-  background:url('/src/assets/ui/modal/nineBox_09.png') no-repeat;
+  background:url('~assets/ui/modal/nineBox_09.png') no-repeat;
 }
-
 
 .pixel.dialog {
   width: 8px;
@@ -228,29 +208,90 @@ div[class*='column-'] p {
   background-size: cover;
 }
 .pixel.dialog:nth-child(1) {
-  background:url('/src/assets/ui/dialog/nineBox_01.png') no-repeat;
+  background:url('~assets/ui/dialog/nineBox_01.png') no-repeat;
 }
 .pixel.dialog:nth-child(2) {
-  background:url('/src/assets/ui/dialog/nineBox_02.png') repeat-x;
+  background:url('~assets/ui/dialog/nineBox_02.png') repeat-x;
 }
 .pixel.dialog:nth-child(3) {
-  background:url('/src/assets/ui/dialog/nineBox_03.png') no-repeat;
+  background:url('~assets/ui/dialog/nineBox_03.png') no-repeat;
 }
 .pixel.dialog:nth-child(4) {
-  background:url('/src/assets/ui/dialog/nineBox_04.png') repeat-y;
+  background:url('~assets/ui/dialog/nineBox_04.png') repeat-y;
 }
 .pixel.dialog:nth-child(5) {
-  background:url('/src/assets/ui/dialog/nineBox_05.png') repeat;
+  background:url('~assets/ui/dialog/nineBox_05.png') repeat;
 }
 .pixel.dialog:nth-child(6) {
-  background:url('/src/assets/ui/dialog/nineBox_06.png') repeat-y;
+  background:url('~assets/ui/dialog/nineBox_06.png') repeat-y;
 }
 .pixel.dialog:nth-child(7) {
-  background:url('/src/assets/ui/dialog/nineBox_07.png') no-repeat;
+  background:url('~assets/ui/dialog/nineBox_07.png') no-repeat;
 }
 .pixel.dialog:nth-child(8) {
-  background:url('/src/assets/ui/dialog/nineBox_08.png') repeat-x;
+  background:url('~assets/ui/dialog/nineBox_08.png') repeat-x;
 }
 .pixel.dialog:nth-child(9) {
-  background:url('/src/assets/ui/dialog/nineBox_09.png') no-repeat;
+  background:url('~assets/ui/dialog/nineBox_09.png') no-repeat;
+}
+
+
+/* listbox */
+.scrollbox {
+  position: absolute;
+  top: 0px;
+  left: 20px;
+  right: 20px;
+
+  width: 320px;
+  height: 260px;
+  margin-top: 10px;
+  padding: 0;
+
+  overflow: hidden;
+}
+
+.scrollBlind {
+  width: 340px;
+  height: 260px;
+  padding: 0;
+  
+  -webkit-overflow-scrolling: touch;
+  /* overflow-x: hidden;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch; */
+}
+
+.list-box {
+  width: 320px;
+  height: 100%;
+
+  overflow-x: hidden;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+}
+
+.list-box::-webkit-scrollbar {
+  width:4px;
+  height:0;
+}	
+.list-box::-webkit-scrollbar-thumb {
+  background: #ffd800;
+  border-radius:4px;
+}
+.list-box::-webkit-scrollbar-track {
+  background-color:transparent;
+}
+
+.list-box li {
+  width: calc(100% - 10px);
+  min-height: 32px;
+  height: 42px;
+  border-radius: 10px;
+  margin: 0 0 5px 0;
+  line-height: 32px;
+
+  box-sizing: border-box;
+  background: url('~assets/ui/listCell.png') no-repeat;
+  background-size: 100% auto;
 }

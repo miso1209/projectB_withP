@@ -122,14 +122,9 @@ function gameStart(pixi) {
     }
     game_update();
 
-
     domUI.setProfile(1);
     domUI.showStageTitle('어둠의 타워 999층', 1500);
 
-    // 줄바꿈 / 길이가 길어졌을 때.. 
-    // 다음텍스트로 넘어가는 버튼
-    // domUI.showDialog('테스트 다이얼로그입니다. 클릭하면 꺼집니다테스트 다이얼로그입니다.클릭하면 꺼집니다.');
-    
     let toggle = true;
 
     window.addEventListener("keydown", (e) => {
@@ -144,8 +139,17 @@ function gameStart(pixi) {
       } else if (e.keyCode === 67) {
         const confirm = ui.createConfirmModal("테스트");
       } else if (e.keyCode === 65) { // a 
-        //dom UI test : showItemAquire
         domUI.showItemAquire(1);
+      } else if (e.keyCode === 77) { // m
+        const scriptData = [
+          {text: '돈이 없다고 이런곳에서 살아야 하나 ...', speaker: 1}, 
+          {text:'난 어제 내집에서 잘 수 있을까', speaker: 1},
+          {text:'... 우울해지네', speaker: 1},
+          {text:'아 모르겠다! 일단 작업용 탁자나 찾아보자', speaker: 1}
+        ];
+        domUI.showDialog(scriptData[0].text);
+      } else if (e.keyCode === 68) { // d
+        domUI.showCombineItemList();
       }
 
     }, true);

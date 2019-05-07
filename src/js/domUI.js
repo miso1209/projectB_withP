@@ -15,7 +15,7 @@ export default class DomUI {
     
     this.container.className = 'uiContainer';
     this.container.style.top = this.gamePane.offsetTop + 'px';
-
+    
     document.body.appendChild(this.container);
     this.container.style.pointerEvents = 'none'; // 클릭 이벤트 방지 해제.
     // this.container.style.pointerEvents = 'auto'; // 클릭 이벤트 방지.
@@ -49,6 +49,12 @@ export default class DomUI {
     profile.dom.addEventListener('mouseup', this.showStatUI);
   }
 
+  // gnb 메뉴 배치 / 파티, 인벤토리, 레시피 
+  setGNB() {
+    const gnb_party = new Button('', 'gnb-party');
+    
+  }
+
   showItemAquire(itemId){
     const itemAcquire = new Modal(this.container, 400, 300);
     itemAcquire.addTitle('NEW ITEM');
@@ -79,6 +85,18 @@ export default class DomUI {
 
   showCombineItemList(){
     // # TODO : 조합가능한 아이템 리스트 노출
+
+    // list box test
+    const wrapper = new Modal(this.container, 360, 460);
+    wrapper.addTitle('List Box');
+    const items = [{name:'열쇠', image:'item1.png'}, {name:'열쇠', image:'item1.png'}, {name:'열쇠2', image:'item2.png'}, {name:'열쇠3', image:'item3.png'},
+    {name:'열쇠', image:'item1.png'}, {name:'열쇠', image:'item1.png'}, {name:'열쇠2', image:'item2.png'}, {name:'열쇠3', image:'item3.png'},
+    {name:'열쇠', image:'item1.png'}, {name:'열쇠', image:'item1.png'}, {name:'열쇠2', image:'item2.png'}, {name:'열쇠3', image:'item3.png'}];
+
+    const itemList = new ListBox(items, null, 320, 320);
+    itemList.dom.style.top = '80px';
+
+    wrapper.dom.appendChild(itemList.dom);
   }
 
   showInventory() {
@@ -86,16 +104,23 @@ export default class DomUI {
     inventory.addTitle('Inventory');
     
     // # 인벤 탭 영역 작업예정
-    const categoryWrap = document.createElement('div');
-    categoryWrap.classList.add('contents');
-    categoryWrap.classList.add('categoryWarp')
+    const wrapper = document.createElement('div');
+    wrapper.classList.add('categoryWarp');
+    const category = [{catName:'전체', catID: 0 }, {catName:'갑옷', catID: 1}, {catName:'무기', catID: 2}, {catName:'악세사리', catID: 3}];
+    category.forEach((cat) => {
+      const catBtn = new Button(cat.catName, 'category');
+      catBtn.dom.style.left = 90*cat.catID + 10 + 'px';
+      wrapper.appendChild(catBtn.dom);
+    })
 
-    
+    inventory.dom.appendChild(wrapper);
+    wrapper.style.top = '80px';
+
     // # stat
     const statContent = document.createElement('div');
     statContent.classList.add('contents');
     statContent.style.textAlign = 'left';
-    statContent.style.top = categoryWrap.clientHeight + 100 + 'px';
+    statContent.style.top = wrapper.clientHeight + 100 + 'px';
     // statContent.style.height = '64px';
     
     inventory.dom.appendChild(statContent);
@@ -120,7 +145,6 @@ export default class DomUI {
       const itemSprite = document.createElement('img');
       itemSprite.src = '/src/assets/items/' + item.image;
       itemSprite.style.width = '50px';
-
 
       const slot = document.createElement('li');
       slot.appendChild(itemSprite);
@@ -149,12 +173,13 @@ export default class DomUI {
     inventory.dom.appendChild(scrollView);
   }
 
-
-  showTooltip(container, text) {
+  showTooltip(target, text) {
     const tooltip = document.createElement('div');
     tooltip.className = 'tooltip';
-
-    container.appendChild(tooltip);
+    target.appendChild(tooltip);
+    setTimeout(() => {
+      target.removeChild(tooltip);
+    }, 1000);
   }
 
   showStatUI() {
@@ -167,13 +192,14 @@ export default class DomUI {
     const profile = new Profile(playerId);
     profile.moveToCenter(50);
     statUI.dom.appendChild(profile.dom);
+    
 
     // 캐릭터 스탯 정보 - 임시..
     let statData = [];
     const contents = document.createElement('div');
     contents.classList.add('contents');
     contents.classList.add('column-2'); // 3단으로 할 때는 column-3
-    contents.style.top = profile.dom.offsetTop + profile.dom.offsetHeight + 110 + 'px';
+    contents.style.top = profile.dom.offsetTop + 130 + 'px';
 
     statData.push("HP : 33");
     statData.push("MP : 3");
@@ -191,7 +217,6 @@ export default class DomUI {
       stat.innerText = text;
       contents.appendChild(stat);
     });
-
 
     // 현재 캐릭터 장비정보
     const equipItemsData = [{x:12, y:6, item:'Wond'}, {x:20,y:2,item:'Armor'}, {x:10, y:10,item:'Ring'}];
@@ -288,8 +313,8 @@ export default class DomUI {
 
   moveToCenter(_top){
     this.dom.style.position = 'absolute';
-    this.dom.style.left = 0 + 'px';
-    this.dom.style.right = 0 + 'px';
+    this.dom.style.left = '0px';
+    this.dom.style.right = '0px';
     this.dom.style.margin = `${_top}px auto 0`;
   }
 
@@ -331,14 +356,23 @@ export default class DomUI {
     return dom.classList.add(value);
   }
 
-  showDialog(text) {
-    const dialog = new Dialog(900, 140);
-    dialog.setText(text);
+  showDialog(script, callback) {
+    // width, height, playerid
+    const dialog = new Dialog(700, 140, 1);
+    dialog.setText(script);
+    dialog.callback = callback;
+    dialog.showPrompt();
+  }
+
+  showScriptDialog(arg) {
+    const dialog = new Dialog(700, 140, 2);
+    // 다음 내용이 있는 경우
+    dialog.showPrompt();
   }
 }
 
 class Dialog extends DomUI {
-  constructor(width, height) {
+  constructor(width, height, type) {
     super();
    
     this.createDom();
@@ -348,21 +382,81 @@ class Dialog extends DomUI {
     dialog.moveToBottom(20);
     this.container.appendChild(dialog.dom);
     this.dom = dialog.dom;
+    this.callback = null;
 
-    dialog.dom.addEventListener('click', function() {
-      dialog.dom.parentNode.parentNode.removeChild(dialog.dom.parentNode);
+    // dialogText
+    const dialogText = document.createElement('p');
+    this.dialogText = dialogText;
+    this.dialogText.classList.add('contents');
+    this.dom.appendChild(this.dialogText);
+
+    // 캐릭터
+    const speaker = document.createElement('img');
+    speaker.className = 'dialog-speaker';
+    dialog.dom.appendChild(speaker);
+    this.speaker = speaker;
+
+    // 캐릭터이름
+    const speakerName = document.createElement('span');
+    speakerName.className = 'name';
+    dialog.dom.appendChild(speakerName);
+    this.speakerName = speakerName;
+    
+    // 프람프트 
+    const prompt = document.createElement('div');
+    prompt.className = 'dialog-prompt';
+    dialog.dom.appendChild(prompt);
+    this.prompt = prompt;
+    this.prompt.style.display = 'none';
+
+    if (type !== null) {
+      // character
+      dialog.dom.classList.add('portrait');
+      this.showSpeaker(type);
+    } else {
+      // system or npc
+      dialog.dom.classList.remove('portrait')
+    }
+    
+    dialog.dom.addEventListener('click', () => {
+      if (this.dialogText.classList.contains('typeWriter')) {
+        this.stopText();
+
+        // 다음 dialog로 넘기기
+        this.setText('난 어제 내집에서 잘 수 있을까');
+      } else {
+        this.hideDialog();
+      }
     });
   }
 
-  setText(text) {
-    const content = document.createElement('p');
-    content.classList.add('contents');
-    content.classList.add('typeWriter');
-    content.innerText = text;
+  showPrompt() {
+    this.prompt.style.display = 'block';
+  }
 
-    this.dom.appendChild(content);
+  showSpeaker(id) {
+    this.speaker.src = `/src/assets/player${id}_active2.png`;
+    this.speakerName.innerText = 'Hector'; // todo - player name
+  }
+
+  setText(text) {
+    if (this.dialogText.innerText !== '') {
+      this.dialogText.innerText = '';
+    } 
+    this.dialogText.innerText = text;
+    this.dialogText.classList.add('typeWriter');
+    // console.dir(this.dom);
+  }
+
+  stopText() {
+    this.dialogText.classList.remove('typeWriter');
+  }
+
+  hideDialog(){
+    this.dom.parentNode.parentNode.removeChild(this.dom.parentNode);
   }
 }
+
 
 class Profile extends DomUI {
   constructor(playerId) {
@@ -511,8 +605,49 @@ class Button extends DomUI {
       button.className = 'button';
     }
 
-    
-    this.onclose = null;
     this.dom = button;
   }
+}
+
+class ListBox extends DomUI {
+  constructor(data, listCallback, _viewWidth, _viewHeight) {
+    super();
+    
+    let viewHeight = _viewHeight + 'px';
+    let viewWidth = _viewWidth + 'px';
+
+    // IE 스크롤바 이슈 대응
+    const scrollView = document.createElement('div');
+    scrollView.className = 'scrollView';
+    
+
+    const scrollBlind = document.createElement('div');
+    scrollBlind.className = 'scrollBlind';
+    scrollBlind.style.height = viewHeight;
+    scrollBlind.style.width = viewWidth + '20px';
+
+    scrollView.style.height = viewHeight;
+    scrollView.style.width = viewWidth;
+
+    const listBox = document.createElement('ul');
+    listBox.classList.add('list-box');
+    listBox.style.height = viewHeight;
+    listBox.style.width = viewWidth;
+
+    data.forEach((listCell) => {
+      listCell = document.createElement('li');
+      listBox.appendChild(listCell);
+
+      if (listCallback!== null) {
+        listCell.addEventListener('click', listCallback);
+      }
+    });
+    
+    scrollView.appendChild(scrollBlind);
+    scrollBlind.appendChild(listBox);
+
+    this.dom = scrollView;
+  }
+// todo list-cell 스타일도 변경되도록.
+  
 }
