@@ -48,10 +48,19 @@
 
   /* 클릭이벤트 막기. */
   /* pointer-events: none; */
+  
+  background:none;
+  transition: all 0.3s;
 }
 
 .uiContainer * {
   pointer-events: auto;
+}
+
+.uiContainer.loadingScene{
+  background: rgba(1,1,1,.8);
+  position: fixed;
+  pointer-events: none;
 }
 
 .modal {
@@ -218,8 +227,6 @@
   left: 0;
   right: 0;
   margin: 0 auto;
-
-  transition: all 0.3s;
 }
 
 .dialog .dialog-speaker {
@@ -243,7 +250,7 @@
 }
 
 .dialog.portrait .contents {
-  left: 90px;
+  left: 100px;
 }
 
 .dialog.portrait .dialog-speaker {
@@ -281,4 +288,45 @@
   
   display: none;
   transition: all 0.8s;
+}
+
+.loading {
+  position: absolute;
+  
+  width: 48px;
+  height: 48px;
+  background-image: url(~assets/ui/loading.png);
+  
+  -webkit-animation: play .8s steps(4) infinite;
+     -moz-animation: play .8s steps(4) infinite;
+      -ms-animation: play .8s steps(4) infinite;
+       -o-animation: play .8s steps(4) infinite;
+          animation: play .8s steps(4) infinite;
+
+  
+}
+
+@-webkit-keyframes play {
+ from { background-position:    0px; }
+   to { background-position: -192px; }
+}
+
+@-moz-keyframes play {
+ from { background-position:    0px; }
+   to { background-position: -192px; }
+}
+
+@-ms-keyframes play {
+ from { background-position:    0px; }
+   to { background-position: -192px; }
+}
+
+@-o-keyframes play {
+ from { background-position:    0px; }
+   to { background-position: -192px; }
+}
+
+@keyframes play {
+ from { background-position:    0px; }
+   to { background-position: -192px; }
 }

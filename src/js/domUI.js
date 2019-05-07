@@ -363,6 +363,11 @@ export default class DomUI {
     dialog.showSpeaker(script[0].speaker);
     dialog.onComplete = callback;
   }
+
+  showLoading() {
+    const loading = new LoadingScene(1500);
+    loading.moveToCenter(200);
+  }
 }
 
 
@@ -371,7 +376,7 @@ class Dialog extends DomUI {
     super();
    
     this.createDom();
-    this.container.style.pointerEvents = 'auto'; // 클릭 이벤트 방지.
+    this.container.style.pointerEvents = 'auto'; // UI컨테이너영역 클릭 이벤트 방지.
     
     const dialog = new NineBox(this.container, width, height, 'dialog');
     dialog.dom.className = 'dialog';
@@ -404,9 +409,8 @@ class Dialog extends DomUI {
     this.prompt = prompt;
 
     this.delay = 0.5;
-
-    // 종료시 호출될 함수
     this.onComplete = null;
+    this.isTyping = false;
 
     if (script !== null) {
       this.data = script;
@@ -419,24 +423,27 @@ class Dialog extends DomUI {
 
   nextDialog() {
     if (this.currentIndex === this.endIndex) {
-      this.hideDialog();
-      
-      // 다이얼로그 종료 함수!
       if (this.onComplete) {
         this.onComplete();
+        this.hideDialog();
       }
       return;
-    } 
+    }
+
+    if (this.isTyping) {
+      setTimeout(() => {
+        this.isTyping = !this.isTyping;
+      }, 600);
+
+      return;
+    }
 
     ++this.currentIndex;
 
     this.dialogText.classList.remove('blinkAnim');
     this.hidePrompt();
-
-    setTimeout(() => {
-      this.setText(this.data[this.currentIndex].text);
-      this.showSpeaker(this.data[this.currentIndex].speaker);
-    }, this.delay*1000);
+    this.setText(this.data[this.currentIndex].text);
+    this.showSpeaker(this.data[this.currentIndex].speaker);
   }
 
   hidePrompt() {
@@ -459,12 +466,14 @@ class Dialog extends DomUI {
   }
 
   setText(text) {
-    if (this.dialogText.innerText !== '') {
+    if (this.dialogText.innerText !== '' ) {
       this.dialogText.innerText = '';
     }
+
     this.dialogText.classList.add('blinkAnim');
     this.dialogText.innerText = text;
     this.showPrompt();
+    this.isTyping = true;
   }
 
   hideDialog(){
@@ -472,7 +481,6 @@ class Dialog extends DomUI {
     this.dom.parentNode.parentNode.removeChild(this.dom.parentNode);
   }
 }
-
 
 class Profile extends DomUI {
   constructor(playerId) {
@@ -665,5 +673,29 @@ class ListBox extends DomUI {
     this.dom = scrollView;
   }
 // todo list-cell 스타일도 변경되도록.
-  
+}
+
+class LoadingScene extends DomUI {
+  constructor(delayTime) {
+    super();
+
+    this.createDom();
+    this.container.classList.add('loadingScene');
+
+    const loadingBox = document.createElement('div');
+    loadingBox.classList.add('loading');
+    this.container.appendChild(loadingBox);
+    this.dom = loadingBox;
+    this.delayTime = delayTime;
+
+    this.onComplete();
+  }
+
+  onComplete() {
+    setTimeout(() => {
+      this.container.classList.remove('loadingScene');
+      this.container.removeChild(this.dom);
+      this.destroyDom(this.delayTime);
+    }, this.delayTime);
+  }
 }

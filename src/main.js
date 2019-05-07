@@ -169,7 +169,8 @@ function gameStart(pixi) {
         domUI.showDialog(scriptData, closeCallback);
 
       } else if (e.keyCode === 68) { // d
-        domUI.showCombineItemList();
+        // domUI.showCombineItemList();d
+        domUI.showLoading();
       }
 
     }, true);
