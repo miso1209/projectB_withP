@@ -18,6 +18,7 @@ export default class TiledMap {
         const groundLayer = new Array(this.width * this.height);
         const objectLayer = new Array(this.width * this.height);
 
+        let nextGroupId = 0;
         for (const layer of mapData.layers) {
             if (mapData.width !== layer.width || mapData.height !== layer.height) {
                 throw new Error("map 과 layer 의 크기는 항상 일치하여야 합니다");
@@ -31,8 +32,6 @@ export default class TiledMap {
             } else {
                 target = objectLayer;
             }
-
-            let nextGroupId = 0;
             
             for (let y = 0; y < this.height;++y) {
                 for (let x = 0; x < this.width;++x) {
@@ -68,7 +67,6 @@ export default class TiledMap {
                             for(let j = 0; j < ysize; ++j ) {
                                 for(let i = 0; i < xsize; ++i ) {
                                     if (i === 0 && j === 0) { continue; }
-
                                     // 타일의 데이터를 추가로 변경한다
                                     const gindex = (x + i) + (y - j) * this.width;
                                     //tiledata[gindex] = tiledata[gindex] || [];

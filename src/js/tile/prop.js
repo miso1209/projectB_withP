@@ -5,6 +5,8 @@ export default class Prop extends PIXI.Container {
         this.gridX = x;
         this.gridY = y;
 
+        this.groupId = options.groupId;
+
         if (options.texture) {
 
             // 스프라이트 정보를 출력한다

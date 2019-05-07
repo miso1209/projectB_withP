@@ -163,7 +163,9 @@ export default class Stage extends PIXI.Container {
 
         for(let j = 0; j < ysize; ++j ) {
             for(let i = 0; i < xsize; ++i ) {
-                this.objectMap[(x + i) + (y - j) * this.mapWidth] = tile;
+                if (x + i < this.mapWidth && y - j >= 0) {
+                    this.objectMap[(x + i) + (y - j) * this.mapWidth] = tile;
+                }
             }
         }
     }
@@ -213,36 +215,33 @@ export default class Stage extends PIXI.Container {
 
     build() {
 
-        // 타일순서를 빌드한다
+        const isBoxInFront = function (box1, box2) {
+            // test for intersection x-axis
+            // (lower x value is in front)
+            if (box1.xmin > box2.xmax) { return false; }
+            else if (box2.xmin > box1.xmax) { return true; }
+        
+            // test for intersection y-axis
+            // (lower y value is in front)
+            if (box1.ymin > box2.ymax) { return true; }
+            else if (box2.ymin > box1.ymax) { return false; }
+        };
 
+        // 타일순서를 빌드한다
         // 타일을 순회할때는 밖에 타일부터 안쪽으로 껍질을 깎듯이 내려와야 한다.
         const forEachTile = (callback, layer) => {
-            let yoffset = 0
-            let xoffset = this.mapWidth - 1;
-
-            while(yoffset < this.mapHeight && xoffset >= 0) {
-                for (let y = yoffset; y <= this.mapHeight - 1; ++y) {
-                    const x =  xoffset;
+            // (width-1, 0) 에서부터 드로잉을 시작한다
+            for (let x = this.mapWidth - 1; x >= 0; --x) {
+                for (let y = 0; y < this.mapHeight; ++y) {
                     const index = x + y * this.mapWidth;
                     const tile = layer[index];
                     if (tile) {
                         callback(tile, x, y);
                     }
                 }
-                
-                for (let x = xoffset - 1; x >= 0; --x) {
-                    const y = yoffset;
-                    const index = x + y * this.mapWidth;
-                    const tile = layer[index];
-                    if (tile) {
-                        callback(tile, x, y);
-                    }
-                }
-
-                ++yoffset;
-                --xoffset;
             }
         }
+
 
         forEachTile((tile, x, y) => {
             this.groundContainer.addChild(tile);
@@ -256,15 +255,42 @@ export default class Stage extends PIXI.Container {
             this.pathFinder.setCell(x, y, tile.movable);
         }, this.groundMap);
 
-        const added = [];
-
+        const objects = {};
         forEachTile((tile, x, y) => {
-            if (added.indexOf(tile) < 0) {
-                added.push(tile);
-                this.objectContainer.addChild(tile);
+            if (objects[tile.groupId]) {
+                tile.xmin = Math.min(tile.xmin, x);
+                tile.xmax = Math.max(tile.xmax, x);
+                tile.ymin = Math.min(tile.ymin, y);
+                tile.ymax = Math.max(tile.ymax, y);
+            } else {
+                objects[tile.groupId] = tile;
+                tile.xmin = tile.xmax = x;
+                tile.ymin = tile.ymax = y;
             }
             this.pathFinder.setDynamicCell(x, y, tile.movable);
         }, this.objectMap);
+
+        const sortedObjects = [];
+        for (const groupId in objects) {
+            const obj = objects[groupId];
+            for (let i = 0; i < sortedObjects.length; ++i) {
+                if (isBoxInFront(obj, sortedObjects[i])) {
+                    sortedObjects.splice(i, 0, obj)
+                    break;
+                } 
+            }
+
+            // 마지막까지 왔는데 추가되지 못했다
+            if (sortedObjects.indexOf(obj) < 0) {
+                sortedObjects.push(obj);
+            }
+        }
+
+        for (const obj of sortedObjects.reverse()) {
+            // 역순으로 뒤에 있는 것을 먼저 추가한다
+            this.objectContainer.addChild(obj);
+            
+        }
     }
 
     onMouseUp(event) {
@@ -608,10 +634,10 @@ export default class Stage extends PIXI.Container {
     
     arrangeDepthsFromLocation(obj, gridX, gridY) {
         let targetIndex = null;
-        for (let y = gridY; y < this.mapHeight; y++) {
-            for (let x = gridX; x >= 0 ; x--) {
+        for (let x = gridX; x >= 0 ; x--) {
+            for (let y = gridY; y < this.mapHeight; y++) {
                 const tile = this.objectMap[x + y * this.mapWidth];
-                if (tile) {
+                if (tile instanceof Prop) {
                     const i = this.objectContainer.getChildIndex(tile);
                     targetIndex = targetIndex !== null ? Math.min(i, targetIndex) : i;
                 }
