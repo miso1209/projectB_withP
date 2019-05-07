@@ -356,23 +356,18 @@ export default class DomUI {
     return dom.classList.add(value);
   }
 
-  showDialog(script, callback) {
-    // width, height, playerid
-    const dialog = new Dialog(700, 140, 1);
-    dialog.setText(script);
-    dialog.callback = callback;
-    dialog.showPrompt();
-  }
+  showDialog(script) {
+    const dialog = new Dialog(700, 140, script);
 
-  showScriptDialog(arg) {
-    const dialog = new Dialog(700, 140, 2);
-    // 다음 내용이 있는 경우
+    dialog.setText(script[0].text);
+    dialog.showSpeaker(script[0].speaker);
     dialog.showPrompt();
   }
 }
 
+
 class Dialog extends DomUI {
-  constructor(width, height, type) {
+  constructor(width, height, script) {
     super();
    
     this.createDom();
@@ -409,25 +404,25 @@ class Dialog extends DomUI {
     this.prompt = prompt;
     this.prompt.style.display = 'none';
 
-    if (type !== null) {
-      // character
-      dialog.dom.classList.add('portrait');
-      this.showSpeaker(type);
-    } else {
-      // system or npc
-      dialog.dom.classList.remove('portrait')
+    if (script !== null) {
+      this.data = script;
+      this.endIndex = this.data.length-1;
+      this.currentIndex = 0;
     }
-    
-    dialog.dom.addEventListener('click', () => {
-      if (this.dialogText.classList.contains('typeWriter')) {
-        this.stopText();
+    dialog.dom.addEventListener('click', this.nextDialog.bind(this));
+  }
 
-        // 다음 dialog로 넘기기
-        this.setText('난 어제 내집에서 잘 수 있을까');
-      } else {
-        this.hideDialog();
-      }
-    });
+  nextDialog() {
+    if (this.currentIndex === this.endIndex) {
+      // 다이얼로그 종료
+      this.hideDialog();
+      return;
+    } 
+
+    ++this.currentIndex;
+
+    this.setText(this.data[this.currentIndex].text);
+    this.showSpeaker(this.data[this.currentIndex].speaker);
   }
 
   showPrompt() {
@@ -435,7 +430,13 @@ class Dialog extends DomUI {
   }
 
   showSpeaker(id) {
-    this.speaker.src = `/src/assets/player${id}_active2.png`;
+    if (id === 0) {
+      this.dom.classList.remove('portrait');
+      return;
+    }
+
+    this.dom.classList.add('portrait');
+    this.speaker.src = `/src/assets/player${id}.png`;
     this.speakerName.innerText = 'Hector'; // todo - player name
   }
 
@@ -444,12 +445,7 @@ class Dialog extends DomUI {
       this.dialogText.innerText = '';
     } 
     this.dialogText.innerText = text;
-    this.dialogText.classList.add('typeWriter');
-    // console.dir(this.dom);
-  }
-
-  stopText() {
-    this.dialogText.classList.remove('typeWriter');
+    this.dialogText.classList.add('blinkAnim');
   }
 
   hideDialog(){

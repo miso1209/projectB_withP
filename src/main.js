@@ -141,13 +141,18 @@ function gameStart(pixi) {
       } else if (e.keyCode === 65) { // a 
         domUI.showItemAquire(1);
       } else if (e.keyCode === 77) { // m
+
+        // 인자값 - dialog text, 말하는 대상 (캐릭터 : 1~ , 시스템 : 0 ) 
         const scriptData = [
           {text: '돈이 없다고 이런곳에서 살아야 하나 ...', speaker: 1}, 
-          {text:'난 어제 내집에서 잘 수 있을까', speaker: 1},
+          {text:'난 어제 내집에서 잘 수 있을까', speaker: 2},
           {text:'... 우울해지네', speaker: 1},
+          {text:'힘내힘내', speaker: 3},
           {text:'아 모르겠다! 일단 작업용 탁자나 찾아보자', speaker: 1}
         ];
-        domUI.showDialog(scriptData[0].text);
+        
+        domUI.showDialog(scriptData);
+
       } else if (e.keyCode === 68) { // d
         domUI.showCombineItemList();
       }
