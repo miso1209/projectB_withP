@@ -209,8 +209,8 @@
 }
 
 .blinkAnim {
-  animation: blink .5s steps(30, end) .3s 1 normal both;
-  -webkit-animation: blink .5s steps(30, end) .3s 1 normal both;
+  animation: blink .3s steps(30, end) .3s 1 normal both;
+  -webkit-animation: blink .3s steps(30, end) .3s 1 normal both;
 }
 
 .dialog {
@@ -265,6 +265,7 @@
   font-size: 18px;
   color: #ffd800;
 }
+
 .dialog-prompt {
   position: absolute;
   right: 15px;
@@ -276,5 +277,8 @@
   background-size: contain;
 
 	-webkit-animation: flash 2.2s infinite both;
-	animation: flash 2.2s infinite both;
+  animation: flash 2.2s infinite both;
+  
+  display: none;
+  transition: all 0.8s;
 }

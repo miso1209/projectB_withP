@@ -356,12 +356,12 @@ export default class DomUI {
     return dom.classList.add(value);
   }
 
-  showDialog(script) {
+  showDialog(script, callback) {
     const dialog = new Dialog(700, 140, script);
 
     dialog.setText(script[0].text);
     dialog.showSpeaker(script[0].speaker);
-    dialog.showPrompt();
+    dialog.onComplete = callback;
   }
 }
 
@@ -378,7 +378,6 @@ class Dialog extends DomUI {
     dialog.moveToBottom(20);
     this.container.appendChild(dialog.dom);
     this.dom = dialog.dom;
-    this.callback = null;
 
     // dialogText
     const dialogText = document.createElement('p');
@@ -403,27 +402,45 @@ class Dialog extends DomUI {
     prompt.className = 'dialog-prompt';
     dialog.dom.appendChild(prompt);
     this.prompt = prompt;
-    this.prompt.style.display = 'none';
+
+    this.delay = 0.5;
+
+    // 종료시 호출될 함수
+    this.onComplete = null;
 
     if (script !== null) {
       this.data = script;
       this.endIndex = this.data.length-1;
       this.currentIndex = 0;
     }
+
     dialog.dom.addEventListener('click', this.nextDialog.bind(this));
   }
 
   nextDialog() {
     if (this.currentIndex === this.endIndex) {
-      // 다이얼로그 종료
       this.hideDialog();
+      
+      // 다이얼로그 종료 함수!
+      if (this.onComplete) {
+        this.onComplete();
+      }
       return;
     } 
 
     ++this.currentIndex;
 
-    this.setText(this.data[this.currentIndex].text);
-    this.showSpeaker(this.data[this.currentIndex].speaker);
+    this.dialogText.classList.remove('blinkAnim');
+    this.hidePrompt();
+
+    setTimeout(() => {
+      this.setText(this.data[this.currentIndex].text);
+      this.showSpeaker(this.data[this.currentIndex].speaker);
+    }, this.delay*1000);
+  }
+
+  hidePrompt() {
+    this.prompt.style.display = 'none';
   }
 
   showPrompt() {
@@ -444,9 +461,10 @@ class Dialog extends DomUI {
   setText(text) {
     if (this.dialogText.innerText !== '') {
       this.dialogText.innerText = '';
-    } 
-    this.dialogText.innerText = text;
+    }
     this.dialogText.classList.add('blinkAnim');
+    this.dialogText.innerText = text;
+    this.showPrompt();
   }
 
   hideDialog(){

@@ -33,6 +33,9 @@ function initApp() {
   });
 }
 
+function closeCallback(){
+  console.log('dialog finished');
+}
 
 function gameStart(pixi) {
   // 나중에 스테이지 데이터와 캐릭터 데이터를 자동으로 추출할수 있게 해야한다
@@ -155,13 +158,14 @@ function gameStart(pixi) {
         // 인자값 - dialog text, 말하는 대상 (캐릭터 : 1~ , 시스템 : 0 ) 
         const scriptData = [
           {text: '돈이 없다고 이런곳에서 살아야 하나 ...', speaker: 1}, 
-          {text:'난 어제 내집에서 잘 수 있을까', speaker: 2},
+          {text:'난 언제 내집에서 잘 수 있을까', speaker: 2},
           {text:'... 우울해지네', speaker: 1},
           {text:'힘내힘내', speaker: 3},
           {text:'아 모르겠다! 일단 작업용 탁자나 찾아보자', speaker: 1}
         ];
         
-        domUI.showDialog(scriptData);
+        // 종료 함수 인자로 넘겨주세요.
+        domUI.showDialog(scriptData, closeCallback);
 
       } else if (e.keyCode === 68) { // d
         domUI.showCombineItemList();
