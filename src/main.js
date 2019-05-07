@@ -112,6 +112,7 @@ function gameStart(pixi) {
   game.resourceManager.add("assets/explosion.json");
   game.resourceManager.add("assets/shoted.json");
   game.resourceManager.add("fireBall.png", "assets/fireBall.png");
+  game.resourceManager.add("shield.png", "assets/shield.png");
   game.resourceManager.add("arrow.png", "assets/arrow.png");
 
   CharacterFactory.loadCharacterJson();

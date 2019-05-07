@@ -61,6 +61,8 @@ export default class Battle {
         const warriorSpec = CharacterFactory.createCharacterSpec('warrior');
 
         this.playerParty = new BattleParty(
+            // [null, new BattleCharacter(hectorSpec), null],
+            // [null, null, null]
             [null, new BattleCharacter(hectorSpec), new BattleCharacter(warriorSpec)],
             [null, new BattleCharacter(miludaSpec), new BattleCharacter(elidSpec)]
         );
@@ -69,6 +71,8 @@ export default class Battle {
         });
 
         this.enemyParty = new BattleParty(
+            // [null, null, null],
+            // [null, new BattleCharacter(miludaSpec), null]
             [null, new BattleCharacter(hectorSpec), new BattleCharacter(warriorSpec)],
             [null, new BattleCharacter(miludaSpec), new BattleCharacter(elidSpec)]
         );
@@ -115,7 +119,6 @@ export default class Battle {
                 this.setPartyIntro(this.playerParty.getFrontCharacters(), 0, DIRECTIONS.NE, null);
                 this.setPartyIntro(this.playerParty.getBackCharacters(), 63, DIRECTIONS.NE, null);
                 this.setPartyIntro(this.enemyParty.getFrontCharacters(), 126, DIRECTIONS.SW, () => {
-                    this.nextScene = BATTLE_STATUS.BATTLE;
                 });
                 this.setPartyIntro(this.enemyParty.getBackCharacters(), 189, DIRECTIONS.SW, () => {
                     this.nextScene = BATTLE_STATUS.BATTLE;

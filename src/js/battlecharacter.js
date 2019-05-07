@@ -129,6 +129,10 @@ export class BaseBuff {
             }
             this.options.retensionFrames--;
             this.action(this.target);
+
+            if(this.options.effect) {
+                this.options.effect.update();
+            }
         } else {
             for (let buff in this.options.addBuffs) {
                 resultStat[buff] = stat[buff];
@@ -136,6 +140,9 @@ export class BaseBuff {
 
             for (let buff in this.options.multiBuffs) {
                 resultStat[buff] = stat[buff];
+            }
+            if(this.options.effect) {
+                this.options.effect.removeSelf();
             }
         }
 
@@ -146,6 +153,10 @@ export class BaseBuff {
     }
 
     overwrite(options) {
+        if(this.options.effect) {
+            this.options.effect.removeSelf();
+        }
+
         this.options = options;
     }
 

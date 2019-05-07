@@ -194,6 +194,7 @@ export class RunAwaySkill extends BaseSkill {
             this.currentFrame = 0;
             // 임시로 후딜을 랜덤으로 주어 공격 순서가 뒤죽박죽이 되게 만들어 본다.
             this.currentDelay = this._delay.afterAttack * Math.random() * 5;
+            this.proponent.stat.hp = 0;
             this.status = SKILL_STATUS.IDLE;
 
             return null;
@@ -227,7 +228,7 @@ export class CrouchSkill extends BaseSkill {
                 this.proponent.anim.loop = true;
             }),
             MovieClip.Timeline(30, 31, null, () => {
-                this.proponent.statusManager.addBuff(new BaseBuff({ retensionFrames: 6000, addBuffs:{defense:0.4}}), true, false);
+                this.proponent.statusManager.addBuff(new BaseBuff({ retensionFrames: 6000, addBuffs:{defense:0.4}, effect: new Shield(battle.effect, this.proponent)}), true, false);
                 this.proponent.setAnimation('crouch_' + getDirectionName(this.proponent.currentDir));
                 this.proponent.anim.loop = true;
             })
@@ -310,7 +311,7 @@ export class DoubleMeleeSkill extends BaseSkill {
                 ["y", to.y, start.y, "outCubic"]
             ]),
             MovieClip.Timeline(137, 137, null, () => {
-                this.proponent.statusManager.addBuff(new BaseBuff({ retensionFrames: 900, multiBuffs:{defense:1.5}}), true, false);
+                this.proponent.statusManager.addBuff(new BaseBuff({ retensionFrames: 900, multiBuffs:{defense:1.5}, effect: new Shield(battle.effect, this.proponent)}), true, false);
             }),
         );
 
@@ -335,11 +336,13 @@ export class DoubleMeleeSkill extends BaseSkill {
             this.target.onDamage(this.damage);
         } else if (this.currentFrame === this._delay.beforeAttack[1]) {
             this.damage = 80 + Math.round(Math.random()*15);
-            this.damage = Math.round((1 - this.target.stat.defense) * this.damage);
-
-            battle.effect.addEffect(this.target, { name: 'slash', animationLength: 8, removeFrame: 60, speed: 0.5 });
-            battle.effect.addDamageEffect(this.target, this.damage, "#ffffff");
-            this.target.onDamage(this.damage);
+            if (this.target) {
+                this.damage = Math.round((1 - this.target.stat.defense) * this.damage);
+    
+                battle.effect.addEffect(this.target, { name: 'slash', animationLength: 8, removeFrame: 60, speed: 0.5 });
+                battle.effect.addDamageEffect(this.target, this.damage, "#ffffff");
+                this.target.onDamage(this.damage);
+            }
         } else if (this.currentFrame === this._delay.doneAttack) {
             this.currentFrame = 0;
             // 임시로 후딜을 랜덤으로 주어 공격 순서가 뒤죽박죽이 되게 만들어 본다.
@@ -538,13 +541,13 @@ export class ArrowShotingSkill extends BaseSkill {
         };
 
         // JSON을 받아서 각각의 정보를 넣는다. (지금은 하드코딩)
-        this.damage = 150 + Math.round(Math.random()*30);
+        this.damage = 130 + Math.round(Math.random()*30);
     }
 
     init(battle) {
         this.currentFrame = 0;
         this.status = SKILL_STATUS.WAIT;
-        this.damage = 150 + Math.round(Math.random()*30);
+        this.damage = 130 + Math.round(Math.random()*30);
         
         // 스킬의 사용자를 비교하여, 적군파티, 아군파티를 셋팅한다.
         let proponents = battle.playerParty;
@@ -633,5 +636,49 @@ export class ArrowShotingSkill extends BaseSkill {
         this.currentFrame++;
         
         return this;
+    }
+}
+
+class Shield {
+    constructor(container, proponent) {
+        // 투사체 설정 음.. 방향이 맞는지 모르겠다..
+        this.proponent = proponent;
+        this.container = container;
+        this.shieldEffect = new PIXI.Sprite(PIXI.Texture.fromFrame("shield.png"));
+        this.shieldEffect.position.x = proponent.position.x - this.shieldEffect.width / 2 + 14;
+        this.shieldEffect.position.y = proponent.position.y - this.shieldEffect.height / 2 - 24;
+        this.shieldEffect.blendMode = PIXI.BLEND_MODES.ADD;
+        this.shieldEffect.alpha = 0.4;
+        this.container.addChild(this.shieldEffect);
+
+        this.alphaFlag = false;
+    }
+
+    update() {
+        if (this.proponent.stat.hp <= 0) {
+            this.removeSelf();
+        }
+
+        if (this.alphaFlag) {
+            if (this.shieldEffect.alpha < 0.39) {
+                this.shieldEffect.alpha += 0.01;
+            } else {
+                this.shieldEffect.alpha = 0.4;
+                this.alphaFlag = !this.alphaFlag;
+            }
+        } else {
+            if (this.shieldEffect.alpha > 0.11) {
+                this.shieldEffect.alpha -= 0.01;
+            } else {
+                this.shieldEffect.alpha = 0.1;
+                this.alphaFlag = !this.alphaFlag;
+            }
+        }
+        this.shieldEffect.position.x = this.proponent.position.x - this.shieldEffect.width / 2 + 14;
+        this.shieldEffect.position.y = this.proponent.position.y - this.shieldEffect.height / 2 - 24;
+    }
+
+    removeSelf() {
+        this.container.removeChild(this.shieldEffect);
     }
 }
