@@ -153,7 +153,10 @@ function gameStart(pixi) {
       } else if (e.keyCode === 67) {
         const confirm = ui.createConfirmModal("테스트");
       } else if (e.keyCode === 65) { // a 
-        domUI.showItemAquire(1);
+        // domUI.showItemAquire(1);
+
+        domUI.showConfirmModal('testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest');
+        
       } else if (e.keyCode === 77) { // m
 
         // 인자값 - dialog text, 말하는 대상 (캐릭터 : 1~ , 시스템 : 0 ) 

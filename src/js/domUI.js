@@ -20,10 +20,11 @@ export default class DomUI {
     // this.container.style.pointerEvents = 'auto'; // 클릭 이벤트 방지.
   }
 
-  destroyDom(delay) {
-    setTimeout(() => {
-      document.body.removeChild(this.container);
-    }, delay);
+  destroyDom() {
+    document.body.removeChild(this.container);
+    // setTimeout(() => {
+    //   document.body.removeChild(this.container);
+    // }, delay);
   }
 
   setProfile(playerId) {
@@ -51,7 +52,6 @@ export default class DomUI {
   // gnb 메뉴 배치 / 파티, 인벤토리, 레시피 
   setGNB() {
     const gnb_party = new Button('', 'gnb-party');
-
   }
 
   showItemAquire(itemId) {
@@ -70,7 +70,7 @@ export default class DomUI {
       acquireText = "[철문열쇠]를 얻었다";
     }
 
-    itemText.innerHTML = acquireText;
+    itemText.innerText = acquireText;
     itemAcquire.dom.appendChild(itemText);
 
     const itemSprite = document.createElement('img');
@@ -380,7 +380,7 @@ export default class DomUI {
 
     setTimeout(() => {
       title.dom.style.opacity = 0;
-      this.destroyDom(delay);
+      this.destroyDom();
     }, delay);
   }
 
@@ -443,25 +443,60 @@ export default class DomUI {
   }
 
   showConfirmModal(text) {
-    const confirmModal = new Modal(this.container, 300, 200);
-    confirmModal.addTitle('systemModal');
-    confirmModal.dom.querySelector('.title').style.display = 'none';
-    this.container.appendChild(confirmModal.dom);
+    const confirmModal = new SystemModal(300, 200, text);
+    confirmModal.dom.style.top = '50%';
+    confirmModal.dom.style.marginTop = 200 * -0.5 + 'px';
+    confirmModal.contents.style.fontSize = '1.2rem';
+  }
+}
+//. DomUI
+
+
+class SystemModal extends DomUI {
+  constructor(width, height, text) {
+    super();
+
+    const confirmModal = new Modal(this.container, width, height);
+    confirmModal.dom.id = 'SYSTEM';
+    confirmModal.dom.removeChild(confirmModal.closeBtn.dom);
 
     const descText = document.createElement('p');
     descText.className = 'contents';
     descText.innerText = text;
     confirmModal.dom.appendChild(descText);
+    
+    this.contents = descText;
 
-    const btnOK = new Button('OK');
-    const btnCANCEL = new Button('CANCEL');
+    const okButton = new Button('OK', 'submit');
+    const cancelButton = new Button('CANCEL');
 
-    confirmModal.dom.appendChild(btnOK.dom);
-    confirmModal.dom.appendChild(btnCANCEL.dom);
+    confirmModal.dom.appendChild(okButton.dom);
+    confirmModal.dom.appendChild(cancelButton.dom);
+    
+    okButton.moveToLeft(20);
+    cancelButton.moveToRight(20);
+    okButton.moveToBottom(20);
+    cancelButton.moveToBottom(20);
+
+    okButton.dom.addEventListener('click', this.onSubmit.bind(this));
+    cancelButton.dom.addEventListener('click', this.onCancel.bind(this));
 
     this.dom = confirmModal.dom;
   }
+
+  onSubmit() {
+    this.onclose();
+  }
+
+  onCancel() {
+    this.onclose();
+  }
+
+  onclose() {
+    this.dom.parentNode.parentNode.removeChild(this.dom.parentNode);
+  }
 }
+
 
 class Dialog extends DomUI {
   constructor(width, height, script) {
@@ -574,6 +609,30 @@ class Dialog extends DomUI {
   }
 }
 
+// class TimerEvent {
+//   constructor(text, delayCount) {
+//     const timer = null;
+//     this.tick = 0;
+//     this.startTimer();
+//   }
+
+//   startTimer() {
+//     this.timer = setInterval(() => {
+//       ++this.tick;
+//       console.log('tick-------- ' + this.tick);
+//       this.removeTimer(this.tick);
+//     }, 100);
+//   }
+
+//   removeTimer(cnt) {
+//     if (cnt > delayCount) {
+//       clearInterval(this.timer);
+//       console.log('remove tick');
+//     } else {
+//       return;
+//     }
+//   }
+// }
 
 class Profile extends DomUI {
   constructor(playerId) {
@@ -688,6 +747,7 @@ class Modal extends DomUI {
     const closeBtn = new Button('', 'closeBtn');
     modal.dom.appendChild(closeBtn.dom);
 
+    this.closeBtn = closeBtn;
     this.dom = modal.dom;
     this.container.appendChild(modal.dom);
 
@@ -789,7 +849,7 @@ class LoadingScene extends DomUI {
     setTimeout(() => {
       this.container.classList.remove('loadingScene');
       this.container.removeChild(this.dom);
-      this.destroyDom(this.delayTime);
+      this.destroyDom();
     }, this.delayTime);
   }
 }

@@ -68,22 +68,26 @@
   /* right: 20px; */
 }
 
-.button {
-  width: 130px;
-  height: 33px;
+button, .button {
+  /* width: 130px;
+  height: 33px; */
+
+  width: 118px;
+  height: 44px;
   padding: 8px 0;
   color: #fff;
   border: none;
-  background: url(~assets/ui/button1.png) no-repeat;
+  background: url(~assets/ui/button_s1.png) no-repeat;
 
   transition: all 0.4s linear;
 }
 
-.button.submit {
-  background: url(~assets/ui/button2.png) no-repeat;
+.submit {
+  background: url(~assets/ui/button_s2.png) no-repeat;
 }
 
-.button._small {
+.button._small, 
+button.category {
   width: 75px;
   height: 35px;
   padding: 5px 0;
@@ -91,7 +95,7 @@
   background-size: contain;
 }
 
-.button.category span{
+button.category span{
   font-size: 14px;
 }
 
@@ -330,3 +334,17 @@
  from { background-position:    0px; }
    to { background-position: -192px; }
 }
+
+/* #SYSTEM {
+  top: 50%;
+  margin-top: -120px;
+}
+*/
+
+#SYSTEM .contents{
+  top: 20px;
+  max-height: 50%;
+  padding: 5px 15px;
+  overflow: hidden;
+  background-color: transparent;
+} 

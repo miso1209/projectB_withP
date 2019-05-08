@@ -22,16 +22,15 @@
   top: 70px;
   left: 15px;
   right: 15px;
+  z-index: 1;
 
   min-height: 70px;
-  
-  z-index: 1;
+
+  padding: 10px 20px;
   margin: 0 auto;
   font-size: 15px;
   line-height: 1.5;
   color: #fff;
-  padding: 10px 20px;
-  
   background-color: #1f130a;
   border-radius: 10px;
 }
@@ -295,3 +294,5 @@ div[class*='column-'] p {
   background: url('~assets/ui/listCell.png') no-repeat;
   background-size: 100% auto;
 }
+
+
