@@ -296,3 +296,31 @@ div[class*='column-'] p {
 }
 
 
+/* loading - progress bar */
+.ProgressHolder {
+  position: relative;
+  width: 600px;
+  height: 95px; 
+  text-align: left; 
+  background: url(~assets/ui/progressbar.png) no-repeat;
+} 
+
+.progressBar { 
+  margin: 34px 22px 0;
+  max-width: 556px;
+  width: 1%; 
+  height: 40px; 
+  background: url(~assets/ui/bar.png) no-repeat;
+  background-size: cover;
+  transition: all 0.3s linear;
+} 
+
+.progressRate{
+  position: absolute;
+  right: 40px;
+  top: 45px;
+
+  font-size: 20px;
+  line-height: 1;
+  color: #ffd800;
+}

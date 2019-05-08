@@ -57,11 +57,13 @@
   pointer-events: auto;
 }
 
-.uiContainer.loadingScene{
+.uiContainer.loadingScene {
   background: rgba(1,1,1,.8);
+  z-index: 1111;
   position: fixed;
   pointer-events: none;
 }
+
 
 .modal {
   top: 20px;
@@ -287,30 +289,6 @@ button.category span{
   display: none;
   transition: all 0.8s;
 }
-
-/* .loading {
-  position: absolute;
-  
-  width: 48px;
-  height: 48px;
-  background-image: url(~assets/ui/loading.png);
-  
-  -webkit-animation: play .8s steps(4) infinite;
-     -moz-animation: play .8s steps(4) infinite;
-      -ms-animation: play .8s steps(4) infinite;
-       -o-animation: play .8s steps(4) infinite;
-          animation: play .8s steps(4) infinite;
-} */
-
-
-
-
-
-/* #SYSTEM {
-  top: 50%;
-  margin-top: -120px;
-}
-*/
 
 #SYSTEM .contents{
   top: 0;

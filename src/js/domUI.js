@@ -444,8 +444,9 @@ export default class DomUI {
     dialog.onComplete = callback;
   }
 
-  showLoading() {
-    const loading = new LoadingScene(1500);
+  showLoading(time, onComplete) {
+    // 로딩속도(interval 함수 호출 시간)
+    const loading = new LoadingScene(time, onComplete);
     loading.moveToCenter(200);
   }
 
@@ -818,26 +819,59 @@ class ListBox extends DomUI {
 }
 
 class LoadingScene extends DomUI {
-  constructor(delayTime) {
+  constructor(time, onComplete) {
     super();
-
     this.createDom();
     this.container.classList.add('loadingScene');
+    
+    const statusHolder = document.createElement('div');
+    statusHolder.classList.add('ProgressHolder');
+    statusHolder.id = 'ProgressHolder';
 
-    const loadingBox = document.createElement('div');
-    loadingBox.classList.add('loading');
-    this.container.appendChild(loadingBox);
-    this.dom = loadingBox;
-    this.delayTime = delayTime;
+    const bar = document.createElement('div');
+    bar.classList.add('progressBar');
+    statusHolder.appendChild(bar);
+    this.progressBar = bar;
+    
+    const percentage = document.createElement('p');
+    percentage.className = 'progressRate'
+    bar.appendChild(percentage);
 
-    this.onComplete();
+    this.progress = 1;
+    this.interval = 5;
+
+    this.timer = null;
+    this.percentage = percentage;
+    this.container.appendChild(statusHolder);
+    this.dom = statusHolder;
+    
+    this.update(time);
+    this.onComplete = onComplete;
   }
 
-  onComplete() {
+  update(time) {
+    this.timer = setInterval(() => {
+      ++this.progress;
+
+      this.progressBar.style.width = this.progress * this.interval + '%';
+      this.percentage.innerText = this.progress * this.interval  + '%'; 
+      this.clearTimer();
+    }, time);
+  }
+
+  clearTimer() {
+    if ( this.progress * this.interval === 100 ) {
+      clearInterval(this.timer);
+      this.onComplete('onComplete');
+      this.hideLoading();
+    } 
+  }
+
+  hideLoading() {
     setTimeout(() => {
       this.container.classList.remove('loadingScene');
       this.container.removeChild(this.dom);
       this.destroyDom();
-    }, this.delayTime);
+    }, 600);
   }
 }
