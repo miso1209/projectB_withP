@@ -155,8 +155,7 @@ function gameStart(pixi) {
         const confirm = ui.createConfirmModal("테스트");
       } else if (e.keyCode === 65) { // a 
         // domUI.showItemAquire(1);
-
-        domUI.showConfirmModal('testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest');
+        domUI.showConfirmModal('업그레이드를 진행하시겠습니까?', (isOk) => { console.log(isOk); });
         
       } else if (e.keyCode === 77) { // m
 

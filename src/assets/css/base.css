@@ -10,11 +10,27 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'DungGeunMoFont';
+  src:  local('DungGeunMo'),
+    url('~assets/fonts/DungGeunMo.woff') format('woff'),
+    url('~assets/fonts/DungGeunMo.eot') format('embedded-opentype'),
+    url('~assets/fonts/DungGeunMo.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+
+
+
+
 /* style reset */
 /* http://meyerweb.com/eric/tools/css/reset/
    v2.0 | 20110126
    License: none (public domain)
 */
+
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -62,7 +78,7 @@ hr {
 	margin: 0;
 }
 body, button, input, select, textarea {
-	font-family: 'PixelFont', 'Nanum Gothic', 'Malgun Gothic', '맑은 고딕', 'AppleSDGothicNeo', -apple-system, 'SF Pro Display', 'Roboto', 'Segoe UI', 'Helvetica Neue', sans-serif;
+	font-family: 'DungGeunMoFont', 'PixelFont', 'Nanum Gothic', 'Malgun Gothic', '맑은 고딕', 'AppleSDGothicNeo', -apple-system, 'SF Pro Display', 'Roboto', 'Helvetica Neue', sans-serif;
 	font-synthesis: none;
 	font-size:16px;
 	font-weight:400;
@@ -128,9 +144,6 @@ body {
   margin: 0;
   padding: 0;
   overflow: hidden;
-
-  font-family: 'PixelFont', Helvetica, arial, sans-serif;
-
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;

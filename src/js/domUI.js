@@ -14,17 +14,24 @@ export default class DomUI {
 
     this.container.className = 'uiContainer';
     this.container.style.top = this.gamePane.offsetTop + 'px';
+    this.preventEvent(true);
 
     document.body.appendChild(this.container);
-    this.container.style.pointerEvents = 'none'; // 클릭 이벤트 방지 해제.
-    // this.container.style.pointerEvents = 'auto'; // 클릭 이벤트 방지.
+  }
+  
+  preventEvent(clickable) {
+    let iscClickable;
+
+    if (clickable === false) {
+      iscClickable = 'auto'; // 타일클릭 방지 
+    } else {
+      iscClickable = 'none'; // 타일클릭 가능
+    }
+    this.container.style.pointerEvents = iscClickable; // 클릭 이벤트.
   }
 
   destroyDom() {
     document.body.removeChild(this.container);
-    // setTimeout(() => {
-    //   document.body.removeChild(this.container);
-    // }, delay);
   }
 
   setProfile(playerId) {
@@ -442,18 +449,19 @@ export default class DomUI {
     loading.moveToCenter(200);
   }
 
-  showConfirmModal(text) {
-    const confirmModal = new SystemModal(300, 200, text);
+  showConfirmModal(text, result) {
+    const confirmModal = new SystemModal(300, 200, text, result);
     confirmModal.dom.style.top = '50%';
     confirmModal.dom.style.marginTop = 200 * -0.5 + 'px';
-    confirmModal.contents.style.fontSize = '1.2rem';
+    confirmModal.contents.style.fontSize = '1.1rem';
+    confirmModal.contents.style.margin = '10% auto 0';
   }
 }
 //. DomUI
 
 
 class SystemModal extends DomUI {
-  constructor(width, height, text) {
+  constructor(width, height, text, callback) {
     super();
 
     const confirmModal = new Modal(this.container, width, height);
@@ -466,7 +474,8 @@ class SystemModal extends DomUI {
     confirmModal.dom.appendChild(descText);
     
     this.contents = descText;
-
+    this.callback = callback;
+    
     const okButton = new Button('OK', 'submit');
     const cancelButton = new Button('CANCEL');
 
@@ -480,16 +489,19 @@ class SystemModal extends DomUI {
 
     okButton.dom.addEventListener('click', this.onSubmit.bind(this));
     cancelButton.dom.addEventListener('click', this.onCancel.bind(this));
-
+    
+    this.response = null;
     this.dom = confirmModal.dom;
   }
 
   onSubmit() {
     this.onclose();
+    this.callback('ok');
   }
 
   onCancel() {
     this.onclose();
+    this.callback('cancel');
   }
 
   onclose() {
@@ -604,35 +616,10 @@ class Dialog extends DomUI {
   }
 
   hideDialog() {
-    this.container.style.pointerEvents = 'none'; // 클릭 이벤트 방지.
+    this.preventEvent(true);
     this.dom.parentNode.parentNode.removeChild(this.dom.parentNode);
   }
 }
-
-// class TimerEvent {
-//   constructor(text, delayCount) {
-//     const timer = null;
-//     this.tick = 0;
-//     this.startTimer();
-//   }
-
-//   startTimer() {
-//     this.timer = setInterval(() => {
-//       ++this.tick;
-//       console.log('tick-------- ' + this.tick);
-//       this.removeTimer(this.tick);
-//     }, 100);
-//   }
-
-//   removeTimer(cnt) {
-//     if (cnt > delayCount) {
-//       clearInterval(this.timer);
-//       console.log('remove tick');
-//     } else {
-//       return;
-//     }
-//   }
-// }
 
 class Profile extends DomUI {
   constructor(playerId) {
@@ -750,6 +737,7 @@ class Modal extends DomUI {
     this.closeBtn = closeBtn;
     this.dom = modal.dom;
     this.container.appendChild(modal.dom);
+    this.preventEvent(false);
 
     closeBtn.dom.addEventListener('click', function (event) {
       modal.dom.parentNode.parentNode.removeChild(modal.dom.parentNode);
