@@ -46,7 +46,7 @@ export default class DomUI {
     this.gnbContainer.appendChild(btnInventory.dom);
 
     document.body.appendChild(this.gnbContainer);
-    profile.dom.addEventListener('mouseup', this.showStatUI);
+    profile.dom.addEventListener('click', this.showStatUI);
   }
 
   // gnb 메뉴 배치 / 파티, 인벤토리, 레시피 
@@ -106,6 +106,7 @@ export default class DomUI {
     // # 인벤 탭 영역 작업예정
     const wrapper = document.createElement('div');
     wrapper.classList.add('categoryWarp');
+    
     const category = [{catName:'전체', catID: 0 }, {catName:'갑옷', catID: 1}, {catName:'무기', catID: 2}, {catName:'악세사리', catID: 3}];
     category.forEach((cat) => {
       const catBtn = new Button(cat.catName, 'category');
@@ -368,6 +369,26 @@ export default class DomUI {
     const loading = new LoadingScene(1500);
     loading.moveToCenter(200);
   }
+
+  showConfirmModal(text) {
+    const confirmModal = new Modal(this.container, 300, 200);
+    confirmModal.addTitle('systemModal');
+    confirmModal.dom.querySelector('.title').style.display = 'none';
+    this.container.appendChild(confirmModal.dom);
+
+    const descText = document.createElement('p');
+    descText.className = 'contents';
+    descText.innerText = text;
+    confirmModal.dom.appendChild(descText);
+
+    const btnOK = new Button('OK');
+    const btnCANCEL = new Button('CANCEL');
+
+    confirmModal.dom.appendChild(btnOK.dom);
+    confirmModal.dom.appendChild(btnCANCEL.dom);
+
+    this.dom = confirmModal.dom;
+  }
 }
 
 
@@ -410,38 +431,42 @@ class Dialog extends DomUI {
 
     this.delay = 0.5;
     this.onComplete = null;
-    this.isTyping = false;
+    
 
     if (script !== null) {
       this.data = script;
       this.endIndex = this.data.length-1;
       this.currentIndex = 0;
     }
-
-    dialog.dom.addEventListener('click', this.nextDialog.bind(this));
+    this.dom.addEventListener('click', this.nextDialog.bind(this));
   }
 
-  nextDialog() {
-    if (this.currentIndex === this.endIndex) {
-      if (this.onComplete) {
-        this.onComplete();
+  nextDialog(event) {
+    event.preventDefault();
+
+    if (this.currentIndex === this.endIndex && this.currentIndex !== -1) {
+      if (this.onComplete !== null) {
         this.hideDialog();
+        this.onComplete();
+        this.onComplete = null;
+        return;
       }
+      this.currentIndex = -1;
       return;
     }
+    
+    if (this.dialogText.classList.contains('blinkAnim')) {
+      this.hidePrompt();
 
-    if (this.isTyping) {
       setTimeout(() => {
-        this.isTyping = !this.isTyping;
-      }, 600);
-
+        this.dialogText.classList.remove('blinkAnim');
+        this.showPrompt()
+      }, 700);
       return;
     }
-
+    
     ++this.currentIndex;
 
-    this.dialogText.classList.remove('blinkAnim');
-    this.hidePrompt();
     this.setText(this.data[this.currentIndex].text);
     this.showSpeaker(this.data[this.currentIndex].speaker);
   }
@@ -472,15 +497,43 @@ class Dialog extends DomUI {
 
     this.dialogText.classList.add('blinkAnim');
     this.dialogText.innerText = text;
-    this.showPrompt();
-    this.isTyping = true;
   }
-
+  
   hideDialog(){
-    this.container.style.pointerEvents = 'none'; // 클릭 이벤트 방지.
-    this.dom.parentNode.parentNode.removeChild(this.dom.parentNode);
+    setTimeout(() => {
+      this.container.style.pointerEvents = 'none'; // 클릭 이벤트 방지.
+      this.dom.parentNode.parentNode.removeChild(this.dom.parentNode);
+    }, 1000);
   }
 }
+
+class TimerEvent {
+  constructor(text, delayCount) {
+    const timer = null;
+    this.tick = 0;
+    this.startTimer();
+  }
+  
+  startTimer() {
+    this.timer = setInterval(() => {
+      ++this.tick;
+
+      console.log('tick-------- ' + this.tick);
+
+      this.removeTimer(this.tick);
+    }, 100);
+  }
+
+  removeTimer(cnt) {
+    if (cnt > delayCount) {
+      clearInterval(this.timer);
+      console.log('remove tick');
+    } else {
+      return;
+    }
+  }
+}
+
 
 class Profile extends DomUI {
   constructor(playerId) {
@@ -586,6 +639,7 @@ class NineBox extends DomUI {
 class Modal extends DomUI {
   constructor(container, width, height) {
     super();
+
     this.createDom();
 
     const modal = new NineBox(this.container, width, height);
