@@ -71,6 +71,18 @@ export default class BattleEffect extends PIXI.Container {
         anim.blendMode = PIXI.BLEND_MODES.ADD;
         anim.position.x = target.position.x - anim.width / 4;
         anim.position.y = target.position.y - target.height / 2 - anim.height / 2;
+
+        if (options.flipX) {
+            anim.scale.x = options.flipX ? -1 : 1;
+            anim.position.x += anim.width;
+        }
+        if (options.flipY) {
+            anim.scale.y = options.flipY ? -1 : 1;
+            anim.position.x += anim.height;
+        }
+        if (options.rotation) {
+            anim.rotation = Math.PI * options.rotation / 180;
+        }
         this.detailEffectContainer.addChild(anim);
         anim.play();
 
@@ -82,6 +94,8 @@ export default class BattleEffect extends PIXI.Container {
 
         this.movies.push(movieClip);
         movieClip.playAndDestroy();
+
+        return anim;
     }
 
     addDamageEffect(target, damage, color) {

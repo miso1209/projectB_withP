@@ -91,6 +91,15 @@ function gameStart(pixi) {
   game.resourceManager.add("assets/warrior/warrior_walk_sw.json");
   game.resourceManager.add("assets/warrior/warrior_walk_nw.json");
 
+  game.resourceManager.add("assets/healer/healer_atk_sw.json");
+  game.resourceManager.add("assets/healer/healer_atk_nw.json");
+  game.resourceManager.add("assets/healer/healer_magic_sw.json");
+  game.resourceManager.add("assets/healer/healer_magic_nw.json");
+  game.resourceManager.add("assets/healer/healer_idle_sw.json");
+  game.resourceManager.add("assets/healer/healer_idle_nw.json");
+  game.resourceManager.add("assets/healer/healer_walk_sw.json");
+  game.resourceManager.add("assets/healer/healer_walk_nw.json");
+
   game.resourceManager.add("shadow.png", "assets/shadow.png");
   game.resourceManager.add("pbar.png", "assets/pbar.png");
   game.resourceManager.add("pbar_r.png", "assets/pbar_r.png");
@@ -109,6 +118,9 @@ function gameStart(pixi) {
   game.resourceManager.add("assets/medusa/monster1-atk_sw.json");
   game.resourceManager.add("assets/medusa/monster1_idle_sw.json");
   game.resourceManager.add("assets/slash_1.json");
+  game.resourceManager.add("assets/shotingeffect.json");
+  game.resourceManager.add("assets/healeffect.json");
+  game.resourceManager.add("assets/firerainprop.json");
   game.resourceManager.add("assets/explosion.json");
   game.resourceManager.add("assets/shoted.json");
   game.resourceManager.add("fireBall.png", "assets/fireBall.png");

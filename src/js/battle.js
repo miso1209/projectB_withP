@@ -59,12 +59,13 @@ export default class Battle {
         const miludaSpec = CharacterFactory.createCharacterSpec('miluda');
         const elidSpec = CharacterFactory.createCharacterSpec('elid');
         const warriorSpec = CharacterFactory.createCharacterSpec('warrior');
+        const healerSpec = CharacterFactory.createCharacterSpec('healer');
 
         this.playerParty = new BattleParty(
             // [null, new BattleCharacter(hectorSpec), null],
             // [null, null, null]
-            [null, new BattleCharacter(hectorSpec), new BattleCharacter(warriorSpec)],
-            [null, new BattleCharacter(miludaSpec), new BattleCharacter(elidSpec)]
+            [new BattleCharacter(hectorSpec), new BattleCharacter(warriorSpec), null],
+            [new BattleCharacter(healerSpec), new BattleCharacter(miludaSpec), new BattleCharacter(elidSpec)]
         );
         this.playerParty.getCharacters().forEach((character) => {
             character.alpha = 0;
@@ -73,8 +74,8 @@ export default class Battle {
         this.enemyParty = new BattleParty(
             // [null, null, null],
             // [null, new BattleCharacter(miludaSpec), null]
-            [null, new BattleCharacter(hectorSpec), new BattleCharacter(warriorSpec)],
-            [null, new BattleCharacter(miludaSpec), new BattleCharacter(elidSpec)]
+            [null, new BattleCharacter(warriorSpec), new BattleCharacter(hectorSpec)],
+            [new BattleCharacter(healerSpec), new BattleCharacter(miludaSpec), new BattleCharacter(elidSpec)]
         );
         this.enemyParty.getCharacters().forEach((character) => {
             character.alpha = 0;

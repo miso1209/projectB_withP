@@ -1,6 +1,6 @@
 import { DIRECTIONS } from './define';
 import MovieClip from './movieclip';
-import { MeleeSkill, ProjectileSkill, ArrowShotingSkill, SKILL_STATUS, ACTIVE_TYPE, CrouchSkill, RunAwaySkill, DoubleMeleeSkill } from './skill';
+import { MeleeSkill, ProjectileSkill, ArrowShotingSkill, SKILL_STATUS, ACTIVE_TYPE, CrouchSkill, RunAwaySkill, DoubleMeleeSkill, ArrowHighShotingSkill, HealSkill, FireRainSkill } from './skill';
 import Tweens from './tweens';
 
 function loadAniTexture(name, count) {
@@ -181,6 +181,10 @@ class BaseConditionError {
             this.options[key] += options[key];
         }
     }
+
+    canAction() {
+        return true;
+    }
 }
 
 export class Poison extends BaseConditionError {
@@ -198,10 +202,6 @@ export class Poison extends BaseConditionError {
         } else if(opponent.anim.tint === 0x00FF00) {
             opponent.anim.tint = 0xFFFFFF;
         }
-    }
-
-    canAction() {
-        return true;
     }
 }
 
@@ -241,19 +241,22 @@ export default class BattleCharacter extends PIXI.Container {
         // 스킬을 가지는 것 우선 하드코딩..
         if (spec.name == 'Elid') {
             this.skills.push(new ProjectileSkill());
+            this.skills.push(new FireRainSkill());
         } else if (spec.name == 'Miluda') {
             this.skills.push(new ArrowShotingSkill());
+            this.skills.push(new ArrowHighShotingSkill());
         } else if (spec.name == 'Warrior') {
             this.skills.push(new MeleeSkill());
             this.skills.push(new DoubleMeleeSkill());
-            this.skills[1].currentDelay = 0;
-            this.skills[1].activeType = ACTIVE_TYPE.ACTIVE;
+        } else if (spec.name == 'Healer') {
+            this.skills.push(new MeleeSkill());
+            this.skills.push(new HealSkill());
         } else {
             this.skills.push(new CrouchSkill());
             this.skills.push(new RunAwaySkill());
-            this.skills[1].currentDelay = 0;
-            this.skills[1].activeType = ACTIVE_TYPE.ACTIVE;
         }
+        this.skills[1].currentDelay = 0;
+        this.skills[1].activeType = ACTIVE_TYPE.ACTIVE;
 
         this.skills.forEach((skill) => {
             skill.setProponent(this);
@@ -400,11 +403,14 @@ export default class BattleCharacter extends PIXI.Container {
         });
     }
 
+    refreshProgressBar() {
+        const hpWidth = (this.stat.hp< 0 ? 0 : this.stat.hp) / this.stat.maxHp * 34;
+        this.tweens.addTween(this.hpBar, 0.5, { width: hpWidth }, 0, "easeInOut", true);
+    }
+
     onDamage(damage) {
         this.stat.hp-= damage;
-        const hpWidth = (this.stat.hp< 0 ? 0 : this.stat.hp) / this.stat.maxHp * 34;
-
-        this.tweens.addTween(this.hpBar, 0.5, { width: hpWidth }, 0, "easeInOut", true);
+        this.refreshProgressBar();
         this.softRollBackTint(0xFF0000, 45);
         this.vibration(6, 12);
 

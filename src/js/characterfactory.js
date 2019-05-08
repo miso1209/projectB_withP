@@ -16,7 +16,8 @@ export default class CharacterFactory {
                 'hector',
                 'elid',
                 'miluda',
-                'warrior'
+                'warrior',
+                'healer'
             ];
 
             CharacterFactory.isLoaded = true;
