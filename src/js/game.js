@@ -9,11 +9,16 @@ import Explore  from "./explore";
 
 import TileSet from "./tiledmap";
 import EntityFactory from './entityfactory';
-import EntranceDoor from './field/cutscene/entrace-door';
+import { doorIn, doorOut } from './cutscene/door';
 import { DIRECTIONS } from './define';
+import ScriptPlay from './cutscene/scriptplay';
+import { EventEmitter } from 'events';
+import idle from './cutscene/idle';
 
-export default class Game {
+export default class Game extends EventEmitter {
     constructor(pixi) {
+
+        super();
 
         const width = pixi.renderer.width;
         const height = pixi.renderer.height;
@@ -71,7 +76,6 @@ export default class Game {
         });
     }
 
-
     start(playerInfo) {
         // 임시로 캐릭터데이터를 생성한다
         this.player = new Player();
@@ -88,47 +92,37 @@ export default class Game {
 
 
         // 필드에 들어간다
-        this.enterStage(playerInfo.stagePath, new EntranceDoor(this, 0,1, DIRECTIONS.SE, 2));
+        //this.enterStage(playerInfo.stagePath, new EntranceDoor(this, 0,1, DIRECTIONS.SE, 2));
+        this.playCutscene();
     }
 
-    enterStage(stagePath, enterCutscene) {
-        if (this.stage) {
-            this.currentMode.setInteractive(false);
-            // 기존 스테이지에서 나간다
-            this.tweens.addTween(this.blackScreen, 1, { alpha: 1 }, 0, "easeIn", true, () => {
-                this.gamelayer.removeChildren();
+    playCutscene(script) {
+        if (this.cutscene) {
+            this.cutscene.stop();
+        }
 
-                // 화면 암전이 끝나면 로딩을 시작한다
-                this.loadStage(stagePath, enterCutscene);
-            });
+        this.cutscene = new ScriptPlay(script);
+        this.cutscene.once('complete', () => {
+            this.cutscene = null;
+        })
+        this.cutscene.play(this);
+    }
+
+    buildStageEnterCutscene(options) {
+        // 현재는 door 만 있다
+        return new doorIn(this, options.x, options.y, options.direction, options.margin);
+    }
+
+    buildStageLeaveCutscene(options) {
+        if (options) {
+            // 현재는 door 만 있다
+            return new doorOut(this, options.x, options.y, options.direction, options.margin);
         } else {
-            // 바로 로딩을 한다
-            this.loadStage(stagePath, enterCutscene);
+            return new idle();
         }
     }
 
-    enterBattle() {
-        if (this.currentMode === this.exploreMode) {
-            // 기존 스테이지를 보이지 않게 한다 (스테이지를 떠날 필요는없다)
-            this.battleMode.prepare();
-            this.gamelayer.removeChild(this.stage);
-            this.gamelayer.addChild(this.battleMode.stage);
-            // 배틀을 사용한다
-            this.currentMode = this.battleMode;
-        }
-    }
-
-    leaveBattle() {
-        if (this.currentMode === this.battleMode) {
-            // 기존 스테이지를 보이지 않게 한다 (스테이지를 떠날 필요는없다)
-            this.gamelayer.removeChild(this.battleMode.stage);
-            this.gamelayer.addChild(this.stage);
-            // 배틀을 사용한다
-            this.currentMode = this.exploreMode;
-        }
-    }
-
-    loadStage(stagePath, enterCutscene) {
+    enterStage(stagePath, options) {
 
         this.resourceManager.add("stage", stagePath);
         this.resourceManager.load((resources) => {
@@ -156,7 +150,8 @@ export default class Game {
                 const stageName = path.basename(stagePath, ".json");
                 const stage = new Stage(stageName, mapData.width, mapData.height, mapData.tilewidth, mapData.tileheight);
 
-
+                //---------------------------------------------------------
+                // TODO : 나중에 stage 안쪽으로 옮긴다
                 // 여기에 데이터를 입력한다
                 const tileset = new TileSet(mapData);
 
@@ -177,32 +172,66 @@ export default class Game {
                         }
                     }
                 }
-                
-
                 // 렌더링 데이터를 빌드한다
                 stage.build();
+                //---------------------------------------------------------
 
-                // 로딩 완료 콜백
-                this.onStageLoadCompleted(stage, enterCutscene);
+                 // 스테이지의 줌레벨을 결정한다
+                stage.zoomTo(2, true);
+                this.stage = stage;
+                this.gamelayer.addChild(stage);
+
+                // 페이드 인이 끝나면 게임을 시작한다
+                this.currentMode = this.exploreMode;
+                this.currentMode.prepare(options.x, options.y);
+
+                // 진입 컷신을 사용한다
+                this.tweens.addTween(this.blackScreen, 0.5, { alpha: 0 }, 0, "easeOut", true, () => {
+                    const cutscene = this.buildStageEnterCutscene(options)
+                    cutscene.once('complete', () => { 
+                        this.currentMode.start();
+                        this.emit('stageentercomplete');
+                    });
+                    cutscene.play();
+                });
             });
         });
     }
 
-    onStageLoadCompleted(stage, enterCutscene) {
-        // 스테이지의 줌레벨을 결정한다
-        stage.zoomTo(2, true);
-        this.stage = stage;
-        this.gamelayer.addChild(stage);
+    leaveStage(options) {
+        if (this.stage) {
+            this.currentMode.setInteractive(false);
+            const cutscene = this.buildStageLeaveCutscene(options);
+            cutscene.play();
+            cutscene.once('complete', () => {
+                this.tweens.addTween(this.blackScreen, 0.5, { alpha: 1 }, 0, "easeIn", true, () => {
+                    // 바로 제거한다.
+                    this.gamelayer.removeChild(this.stage);
+                    this.emit('stageleavecomplete');
+                });
+            });
+        }
+    }
 
-        // 페이드 인이 끝나면 게임을 시작한다
-        this.currentMode = this.exploreMode;
-        this.currentMode.cutscene = enterCutscene;
-        this.currentMode.prepare();
+    enterBattle() {
+        if (this.currentMode === this.exploreMode) {
+            // 기존 스테이지를 보이지 않게 한다 (스테이지를 떠날 필요는없다)
+            this.battleMode.prepare();
+            this.gamelayer.removeChild(this.stage);
+            this.gamelayer.addChild(this.battleMode.stage);
+            // 배틀을 사용한다
+            this.currentMode = this.battleMode;
+        }
+    }
 
-        // 다시 암전을 밝힌다
-        this.tweens.addTween(this.blackScreen, 1, { alpha: 0 }, 0, "easeOut", true, () => {
-            this.currentMode.start();
-        });
+    leaveBattle() {
+        if (this.currentMode === this.battleMode) {
+            // 기존 스테이지를 보이지 않게 한다 (스테이지를 떠날 필요는없다)
+            this.gamelayer.removeChild(this.battleMode.stage);
+            this.gamelayer.addChild(this.stage);
+            // 배틀을 사용한다
+            this.currentMode = this.exploreMode;
+        }
     }
 
     onGameClick(event) {

@@ -503,6 +503,8 @@ export default class Stage extends PIXI.Container {
         if (tileEvent) {
             tileEvent.call();
             if (tileEvent.forceStop) {
+                // 마지막 타일의 선택을 지운다
+                this.highlightPath(obj.currentPath, null);
                 return;
             }
         }
@@ -535,6 +537,8 @@ export default class Stage extends PIXI.Container {
                 }
             }
 
+            // 마지막 타일의 선택을 지운다
+            this.highlightPath(obj.currentPath, null);
             this.emit('moveend');
         }
     }

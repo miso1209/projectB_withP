@@ -1,6 +1,6 @@
 import FieldCharacter from './fieldcharacter';
 import { DIRECTIONS } from './define';
-import ScriptPlay from './field/cutscene/scriptplay';
+import ScriptPlay from './cutscene/scriptplay';
 import Portal from './event/portal';
 
 
@@ -11,40 +11,46 @@ export default class Explore {
         this.interactive = false;
     }
 
-    prepare() {
+    prepare(x, y) {
         this.controller = new FieldCharacter(this.game.player.controlCharacter);
-        this.setInteractive(false);
+        //this.setInteractive(false);
 
         // 컷신준비를 한다
-        if (this.cutscene) {
-            this.controller.alpha = 0;
-            this.cutscene.setCharacter(this.controller);
+        //if (this.cutscene) 
+        {
+            //this.controller.alpha = 0;
+            //this.cutscene.setCharacter(this.controller);
             
-            this.game.ui.showTheaterScreen(0);
-            this.game.stage.showPathHighlight = false;
-        }  else {
+            //this.game.ui.showTheaterScreen(0);
+            //this.game.stage.showPathHighlight = false;
+        }  /*else {
             // 스테이지의 기본 스폰 포인트를 찾아야 한다!!
             this.game.stage.addCharacter(this.controller, 4, 4);
             this.game.stage.checkForFollowCharacter(this.controller, true);
-        }
+        }*/
+
+        this.controller.alpha = 0;
+        this.game.stage.addCharacter(this.controller, x, y);
+        this.game.stage.checkForFollowCharacter(this.controller, true);
 
         this.game.stage.onTouchObject = this.onTouchObject.bind(this);
         this.game.stage.onTileSelected = this.onTileSelected.bind(this);
 
         //=====================================================================
         // 포탈을 하드코딩으로 설치한다
+        // 나중에 데이터로 빼자
         if (this.game.stage.name === "house") {
-            this.game.stage.events[250] = new Portal(this.game, "house-room", 0, 1, DIRECTIONS.SE, 2);
-            this.game.stage.events[251] = new Portal(this.game, "house-room", 1, 1, DIRECTIONS.SE, 2);
+            this.game.stage.events[250] = new Portal(this.game, {x:10, y: 15, direction: DIRECTIONS.SE, margin:2}, {stage: "house-room", x: 0, y: 1, direction: DIRECTIONS.SE, margin: 2});
+            this.game.stage.events[251] = new Portal(this.game, {x:11, y: 15, direction: DIRECTIONS.SE, margin:2}, {stage: "house-room", x: 1, y: 1, direction: DIRECTIONS.SE, margin: 2});
 
-            this.game.stage.events[0] = new Portal(this.game, "open_road_1", 44, 23, DIRECTIONS.SW, 1);
-            this.game.stage.events[1] = new Portal(this.game, "open_road_1", 44, 22, DIRECTIONS.SW, 1);
+            this.game.stage.events[0] = new Portal(this.game, {x:0, y:0, direction:DIRECTIONS.NW, margin: 2}, {stage: "open_road_1", x:44, y:23, direction:DIRECTIONS.SW, margin:1});
+            this.game.stage.events[1] = new Portal(this.game, {x:1, y:0, direction:DIRECTIONS.NW, margin: 2}, {stage: "open_road_1", x:44, y:22, direction:DIRECTIONS.SW, margin:1});
         } else if (this.game.stage.name === "house-room") {
-            this.game.stage.events[0] = new Portal(this.game, "house", 10, 14, DIRECTIONS.NW, 2);
-            this.game.stage.events[1] = new Portal(this.game, "house", 11, 14, DIRECTIONS.NW, 2);
+            this.game.stage.events[0] = new Portal(this.game, {x:0, y:0, direction: DIRECTIONS.NW, margin:2 }, {stage: "house", x:10, y:14, direction: DIRECTIONS.NW, margin:2});
+            this.game.stage.events[1] = new Portal(this.game, {x:1, y:0, direction: DIRECTIONS.NW, margin:2 }, {stage: "house", x:11, y:14, direction: DIRECTIONS.NW, margin:2});
         } else if (this.game.stage.name === "open_road_1") {
-            this.game.stage.events[1145] = new Portal(this.game, "house", 1, 1, DIRECTIONS.SE, 2);
-            this.game.stage.events[1195] = new Portal(this.game, "house", 0, 1, DIRECTIONS.SE, 2);
+            this.game.stage.events[1145] = new Portal(this.game, {x: 45, y:22, direction:DIRECTIONS.NE, margin:1}, {stage: "house", x:1, y:1, direction:DIRECTIONS.SE, margin:2});
+            this.game.stage.events[1195] = new Portal(this.game, {x: 45, y:23, direction:DIRECTIONS.NE, margin:1}, {stage: "house", x:0, y:1, direction:DIRECTIONS.SE, margin:2});
         }
         //=====================================================================
     }
@@ -69,25 +75,12 @@ export default class Explore {
         }
     }
 
-    startCutscene(cutscene) {
-        if (this.cutscene) {
-            this.endCutscene();
-        }
-
-        this.cutscene = cutscene;
-        this.game.ui.showTheaterScreen(0.5);
+    startCutscene() {
+        this.setInteractive(false);
         this.game.stage.showPathHighlight = false;
-
-        this.cutscene.once('complete', () => {
-            this.endCutscene();
-        });
-        this.cutscene.play();
-
     }
 
     endCutscene() {
-        this.cutscene = null;
-        this.game.ui.hideTheaterScreen(0.5);
         this.game.stage.showPathHighlight = true;
         this.setInteractive(true);
     }

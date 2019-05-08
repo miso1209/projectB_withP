@@ -1,5 +1,5 @@
 import Prop from './prop';
-import ScriptPlay from '../field/cutscene/scriptplay';
+import ScriptPlay from '../cutscene/scriptplay';
 import { DIRECTIONS } from '../define';
 
 export default class WorkTable extends Prop {
@@ -30,7 +30,8 @@ export default class WorkTable extends Prop {
                     // 여기서 다음 컷신을 플레이한다.
                     // 슈퍼 울트라 하드코딩
                     // TODO : 이벤트를 써서 별도로 처리하도록 변경해야한다
-                    const nextScene = new ScriptPlay([
+                    game.playCutscene([
+                        { command: "leavestage",arguments: [] },
                         {
                             command: "enterstage",
                             arguments: ["house", { x: 10, y: 14, direction: DIRECTIONS.NW, margin: 2}],
@@ -54,9 +55,6 @@ export default class WorkTable extends Prop {
                             arguments: ["살려주면 바닥.. 닦아놓겠지?"],
                         }
                     ]);
-
-                    game.currentMode.cutscene = nextScene;
-                    nextScene.play(game);
                 }
             }
         }
