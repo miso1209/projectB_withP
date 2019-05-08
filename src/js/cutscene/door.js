@@ -42,8 +42,8 @@ export class doorIn extends EventEmitter {
         character.changeVisualToDirection(this.direction);
 
 
-        stage.tweens.addTween(character, 0.5, { alpha: 1 }, 0, "linear", true);
-        stage.tweens.addTween(character.position, 1, { x: targetX, y: targetY }, 0, "linear", true, () => {
+        stage.tweens.addTween(character, this.margin/4, { alpha: 1 }, 0, "linear", true);
+        stage.tweens.addTween(character.position, this.margin/2, { x: targetX, y: targetY }, 0, "linear", true, () => {
             character.isMoving = false;
             character.changeVisualToDirection(this.direction);
             this.emit('complete');
@@ -90,8 +90,8 @@ export class doorOut extends EventEmitter {
         character.changeVisualToDirection(this.direction);
 
 
-        stage.tweens.addTween(character, 0.5, { alpha: 0 }, 0, "linear", true);
-        stage.tweens.addTween(character.position, 1, { x: targetX, y: targetY }, 0, "linear", true, () => {
+        stage.tweens.addTween(character, this.margin/4, { alpha: 0 }, this.margin/4, "linear", true);
+        stage.tweens.addTween(character.position, this.margin/2, { x: targetX, y: targetY }, 0, "linear", true, () => {
             character.isMoving = false;
             character.changeVisualToDirection(this.direction);
             this.emit('complete');

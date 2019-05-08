@@ -12,6 +12,7 @@ import InventoryProp from './tile/inventory-prop';
 import Stove from './tile/stove';
 import WorkTable from './tile/worktable';
 import EventEmitter from 'events';
+import TileSet from "./tiledmap";
 
 function hitTestRectangle(rect1, rect2) {
     return  (rect1.x < rect2.x + rect2.width &&
@@ -110,6 +111,30 @@ export default class Stage extends PIXI.Container {
         this.events = {};
 
         Object.assign(this, new EventEmitter());
+    }
+
+    load(mapData) {
+        const tileset = new TileSet(mapData);
+
+        // 타일맵을 설정한다
+        for (let y = 0; y < tileset.height;++y) {
+            for (let x = 0; x < tileset.width;++x) {
+                const btile = tileset.bottomLayer[x +y * tileset.width];
+                if (btile) {
+                    this.setBottomTile(x, y, btile);
+                }
+                const gtile = tileset.groundLayer[x +y * tileset.width];
+                if (gtile) {
+                    this.setGroundTile(x, y, gtile);
+                }
+                const otile = tileset.objectLayer[x +y * tileset.width];
+                if (otile) {
+                    this.setObjectTile(x, y, otile);
+                }
+            }
+        }
+        // 렌더링 데이터를 빌드한다
+        this.build();
     }
 
     zoomTo(scale, instantZoom) {

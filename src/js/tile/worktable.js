@@ -30,31 +30,28 @@ export default class WorkTable extends Prop {
                     // 여기서 다음 컷신을 플레이한다.
                     // 슈퍼 울트라 하드코딩
                     // TODO : 이벤트를 써서 별도로 처리하도록 변경해야한다
-                    game.playCutscene([
+                    const script = [
                         { command: "leavestage",arguments: [] },
                         {
                             command: "enterstage",
                             arguments: ["house", { x: 10, y: 14, direction: DIRECTIONS.NW, margin: 2}],
                         }, {
                             command: "dialog",
-                            arguments: ["이런, 누군가가 쓰러져있잖아"],
+                            arguments: [ {text:"이런, 누군가가 쓰러져있잖아", speaker: 1}]
                         }, {
                             command: "goto",
                             arguments: [2, 5],
                         }, {
                             command: "dialog",
-                            arguments: ["으아아아!!!!!!"],
-                        }, {
-                            command: "dialog",
-                            arguments: ["피.. 피가 엄청나다."],
-                        }, {
-                            command: "dialog",
-                            arguments: ["..."],
-                        }, {
-                            command: "dialog",
-                            arguments: ["살려주면 바닥.. 닦아놓겠지?"],
+                            arguments: [
+                                {text: "으아아아!!!!!!", speaker: 1},
+                                {text: "피.. 피가 엄청나다.", speaker: 1},
+                                {text: "...", speaker: 1},
+                                {text: "살려주면 바닥.. 닦아놓겠지?", speaker: 1}
+                            ]
                         }
-                    ]);
+                    ]
+                    game.playCutscene(script);
                 }
             }
         }

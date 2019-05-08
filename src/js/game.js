@@ -7,10 +7,8 @@ import Player  from "./player";
 import Battle  from "./battle";
 import Explore  from "./explore";
 
-import TileSet from "./tiledmap";
 import EntityFactory from './entityfactory';
 import { doorIn, doorOut } from './cutscene/door';
-import { DIRECTIONS } from './define';
 import ScriptPlay from './cutscene/scriptplay';
 import { EventEmitter } from 'events';
 import idle from './cutscene/idle';
@@ -90,9 +88,7 @@ export default class Game extends EventEmitter {
         }
         this.resourceManager.add("shadow.png", "assets/shadow.png");
 
-
         // 필드에 들어간다
-        //this.enterStage(playerInfo.stagePath, new EntranceDoor(this, 0,1, DIRECTIONS.SE, 2));
         this.playCutscene();
     }
 
@@ -149,33 +145,8 @@ export default class Game extends EventEmitter {
             this.resourceManager.load((resources) => {
                 const stageName = path.basename(stagePath, ".json");
                 const stage = new Stage(stageName, mapData.width, mapData.height, mapData.tilewidth, mapData.tileheight);
-
-                //---------------------------------------------------------
-                // TODO : 나중에 stage 안쪽으로 옮긴다
-                // 여기에 데이터를 입력한다
-                const tileset = new TileSet(mapData);
-
-                // 타일맵을 설정한다
-                for (let y = 0; y < tileset.height;++y) {
-                    for (let x = 0; x < tileset.width;++x) {
-                        const btile = tileset.bottomLayer[x +y * tileset.width];
-                        if (btile) {
-                            stage.setBottomTile(x, y, btile);
-                        }
-                        const gtile = tileset.groundLayer[x +y * tileset.width];
-                        if (gtile) {
-                            stage.setGroundTile(x, y, gtile);
-                        }
-                        const otile = tileset.objectLayer[x +y * tileset.width];
-                        if (otile) {
-                            stage.setObjectTile(x, y, otile);
-                        }
-                    }
-                }
-                // 렌더링 데이터를 빌드한다
-                stage.build();
-                //---------------------------------------------------------
-
+                stage.load(mapData);
+                
                  // 스테이지의 줌레벨을 결정한다
                 stage.zoomTo(2, true);
                 this.stage = stage;

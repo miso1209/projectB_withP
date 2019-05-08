@@ -13,16 +13,11 @@ const sampleScript = [
         arguments: [0.5],
     }, {
         command: "dialog",
-        arguments: ["돈이 없다고 이런곳에서 살아야 하나 ..."]
-    }, {
-        command: "dialog",
-        arguments: ["난 어제 내집에서 잘 수 있을까"]
-    }, {
-        command: "dialog",
-        arguments: ["... 우울해지네"]
-    }, {
-        command: "dialog",
-        arguments: ["아 모르겠다! 일단 작업용 탁자나 찾아보자"]
+        arguments: [
+            { text: "돈이 없다고 이런곳에서 살아야 하나 ...", speaker: 1},
+            { text: "난 어제 내집에서 잘 수 있을까", speaker: 1},
+            { text: "... 우울해지네", speaker: 1},
+            { text: "아 모르겠다! 일단 작업용 탁자나 찾아보자", speaker: 1}]
     },
 ];
 
@@ -68,9 +63,8 @@ export default class ScriptPlay extends EventEmitter {
         const script = this.script[this.currentIndex];
         ++this.currentIndex;
         if (script.command === COMMAND_DIALOG) {
-            const text = script.arguments[0];
             // 다이얼로그를 띄운다
-            game.ui.showDialog(text, () => {
+            game.ui2.showDialog(script.arguments, () => {
                 this.next(game);
             })
         } else if (script.command === COMMAND_DELAY) { 

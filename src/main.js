@@ -125,6 +125,7 @@ function gameStart(pixi) {
 
     //dom UI test
     const domUI = new DomUI(game);
+    game.ui2 = domUI;
     
     game.start({
       stagePath: 'assets/mapdata/house.json'
