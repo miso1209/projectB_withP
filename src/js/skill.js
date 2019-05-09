@@ -59,7 +59,7 @@ class BaseSkill {
         };
 
         // 현재 남아있는 후딜을 계산하기 위함..
-        this.currentDelay = this._delay.afterAttack * Math.random();
+                     this.currentDelay = Math.round(60 + this._delay.afterAttack * Math.random());
 
         // 타겟팅 만들어야 한다..
         this.targeting = null;
@@ -268,7 +268,7 @@ export class RunAwaySkill extends BaseSkill {
         if (this.currentFrame === 63) {
             this.currentFrame = 0;
             // 임시로 후딜을 랜덤으로 주어 공격 순서가 뒤죽박죽이 되게 만들어 본다.
-            this.currentDelay = this._delay.afterAttack * Math.random() * 5;
+            this.currentDelay = Math.round(60 + this._delay.afterAttack * Math.random());
             this.proponent.stat.hp = 0;
             this.status = SKILL_STATUS.IDLE;
 
@@ -324,7 +324,7 @@ export class CrouchSkill extends BaseSkill {
         if (this.currentFrame === 50) {
             this.currentFrame = 0;
             // 임시로 후딜을 랜덤으로 주어 공격 순서가 뒤죽박죽이 되게 만들어 본다.
-            this.currentDelay = this._delay.afterAttack * Math.random() * 5;
+            this.currentDelay = Math.round(60 + this._delay.afterAttack * Math.random());
             this.status = SKILL_STATUS.IDLE;
 
             return null;
@@ -423,7 +423,7 @@ export class DoubleMeleeSkill extends BaseSkill {
         } else if (this.currentFrame === this._delay.doneAttack) {
             this.currentFrame = 0;
             // 임시로 후딜을 랜덤으로 주어 공격 순서가 뒤죽박죽이 되게 만들어 본다.
-            this.currentDelay = this._delay.afterAttack * Math.random();
+            this.currentDelay = Math.round(60 + this._delay.afterAttack * Math.random());
             this.status = SKILL_STATUS.IDLE;
 
             return null;
@@ -505,7 +505,7 @@ export class MeleeSkill extends BaseSkill {
         } else if (this.currentFrame === this._delay.doneAttack) {
             this.currentFrame = 0;
             // 임시로 후딜을 랜덤으로 주어 공격 순서가 뒤죽박죽이 되게 만들어 본다.
-            this.currentDelay = this._delay.afterAttack * Math.random();
+            this.currentDelay = Math.round(60 + this._delay.afterAttack * Math.random());
             this.status = SKILL_STATUS.IDLE;
 
             return null;
@@ -596,7 +596,7 @@ export class ProjectileSkill extends BaseSkill {
             this.target.onDamage(this.damage);
 
             this.currentFrame = 0;
-            this.currentDelay = this._delay.afterAttack * Math.random();
+            this.currentDelay = Math.round(60 + this._delay.afterAttack * Math.random());
             this.status = SKILL_STATUS.IDLE;
 
             return null;
@@ -705,7 +705,7 @@ export class ArrowShotingSkill extends BaseSkill {
             // this.target.statusManager.addConditionError(new Poison({ retensionTime: 300 }), true, false);
 
             this.currentFrame = 0;
-            this.currentDelay = this._delay.afterAttack * Math.random();
+            this.currentDelay = Math.round(60 + this._delay.afterAttack * Math.random());
             this.status = SKILL_STATUS.IDLE;
 
             return null;
@@ -825,7 +825,7 @@ export class ArrowHighShotingSkill extends BaseSkill {
             // this.target.statusManager.addConditionError(new Poison({ retensionTime: 300 }), true, false);
 
             this.currentFrame = 0;
-            this.currentDelay = this._delay.afterAttack * Math.random();
+            this.currentDelay = Math.round(60 + this._delay.afterAttack * Math.random());
             this.status = SKILL_STATUS.IDLE;
 
             return null;
@@ -940,7 +940,7 @@ export class FireRainSkill extends BaseSkill {
         } else if (this.currentFrame === this._delay.doneAttack) {
             this.currentFrame = 0;
             // 임시로 후딜을 랜덤으로 주어 공격 순서가 뒤죽박죽이 되게 만들어 본다.
-            this.currentDelay = this._delay.afterAttack * Math.random();
+            this.currentDelay = Math.round(60 + this._delay.afterAttack * Math.random());
             this.status = SKILL_STATUS.IDLE;
 
             return null;
@@ -1027,7 +1027,7 @@ export class HealSkill extends BaseSkill {
         } else if (this.currentFrame === this._delay.doneAttack) {
             this.currentFrame = 0;
             // 임시로 후딜을 랜덤으로 주어 공격 순서가 뒤죽박죽이 되게 만들어 본다.
-            this.currentDelay = this._delay.afterAttack * Math.random();
+            this.currentDelay = Math.round(60 + this._delay.afterAttack * Math.random());
             this.status = SKILL_STATUS.IDLE;
 
             return null;

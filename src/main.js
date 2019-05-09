@@ -60,6 +60,8 @@ function gameStart(pixi) {
   game.resourceManager.add("player1_active.png", "assets/player1_active.png");
   game.resourceManager.add("player2_active.png", "assets/player2_active.png");
   game.resourceManager.add("player3_active.png", "assets/player3_active.png");
+  game.resourceManager.add("player4_active.png", "assets/player4_active.png");
+  game.resourceManager.add("player5_active.png", "assets/player5_active.png");
   game.resourceManager.add("ch01_skill01_on.png", "assets/ch01_skill01_on.png");
   game.resourceManager.add("ch01_skill02.png", "assets/ch01_skill02.png");
   game.resourceManager.add("ch02_skill01_on.png", "assets/ch02_skill01_on.png");
@@ -149,7 +151,7 @@ function gameStart(pixi) {
     }
     game_update();
 
-    domUI.setProfile(1);
+    // domUI.setProfile(1);
     domUI.showStageTitle('어둠의 타워 999층', 1500);
 
     let toggle = true;

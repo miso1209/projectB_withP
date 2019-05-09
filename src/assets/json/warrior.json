@@ -1,5 +1,8 @@
 {
     "name": "Warrior",
+    "battleUi": {
+        "portrait": "player5_active.png"
+    },
     "stat": {
         "hp": 300,
         "maxHp": 300,

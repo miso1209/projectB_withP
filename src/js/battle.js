@@ -5,6 +5,7 @@ import { DIRECTIONS } from "./define";
 import MovieClip from './movieclip';
 import BattleStage, {BASE_POSITION} from "./battlestage";
 import BattleParty from "./battleparty";
+import BattleUi from "./battleui";
 
 const BATTLE_STATUS = {
     INTRO: 1,
@@ -84,13 +85,15 @@ export default class Battle {
         this.stage.setParty(this.playerParty, BASE_POSITION.PLAYER_X, BASE_POSITION.PLAYER_Y, DIRECTIONS.NE);
         this.stage.setParty(this.enemyParty, BASE_POSITION.ENEMY_X, BASE_POSITION.ENEMY_Y, DIRECTIONS.SW);
 
+        this.battleUi = new BattleUi(this);
+        this.stage.addChild(this.battleUi);
         this.stage.addChild(this.effect);
     }
 
     update() {
         this.effect.update();
         this.stage.update();
-        this.updateCharacters();
+        this.battleUi.update();
         this.updateMovieclips();
 
         switch (this.nextScene) { 
@@ -123,12 +126,14 @@ export default class Battle {
                 });
                 this.setPartyIntro(this.enemyParty.getBackCharacters(), 189, DIRECTIONS.SW, () => {
                     this.nextScene = BATTLE_STATUS.BATTLE;
+                    this.battleUi.battleQueueUi.showBattleQueue();
                 });
             });
         }
     }
 
     updateBattle() {
+        this.updateCharacters();
         if (this.isBattleEnd() && !this.currentAction) {
             this.nextScene = BATTLE_STATUS.VICTORY;
             return;
@@ -146,6 +151,7 @@ export default class Battle {
     }
 
     updateVictory() {
+        this.updateCharacters();
         if (this.currentScene !== this.nextScene) {
             this.currentScene = this.nextScene;
 
@@ -184,6 +190,7 @@ export default class Battle {
     }
 
     updateDefeat() {
+        this.updateCharacters();
         if (this.currentScene !== this.nextScene) {
             this.currentScene = this.nextScene;
 
@@ -196,6 +203,7 @@ export default class Battle {
     }
 
     updateOutro() {
+        this.updateCharacters();
         if (this.currentScene !== this.nextScene) {
             this.currentScene = this.nextScene;
 

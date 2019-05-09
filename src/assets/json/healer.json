@@ -1,5 +1,8 @@
 {
     "name": "Healer",
+    "battleUi": {
+        "portrait": "player4_active.png"
+    },
     "stat": {
         "hp": 180,
         "maxHp": 180,
