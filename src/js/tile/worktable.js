@@ -21,18 +21,18 @@ export default class WorkTable extends Prop {
             console.log("open worktable")
         } else {
             // 업그레이드 하시겠습니까 모달.을 띄운다
-            const modal = game.ui.createConfirmModal("업그레이드 하시겠습니까?");
-            modal.onConfirm = (confirmed) => {
-                modal.onConfirm = null;
-                if (confirmed) {
+            game.ui2.showConfirmModal("업그레이드 하시겠습니까?", (confirmed) => {
+                if (confirmed === "ok") {
                     this.upgrade();
 
                     // 여기서 다음 컷신을 플레이한다.
                     // 슈퍼 울트라 하드코딩
                     // TODO : 이벤트를 써서 별도로 처리하도록 변경해야한다
                     const script = [
-                        { command: "leavestage",arguments: [] },
-                        {
+                        { 
+                            command: "leavestage",
+                            arguments: [] 
+                        }, {
                             command: "enterstage",
                             arguments: ["house", { x: 10, y: 14, direction: DIRECTIONS.NW, margin: 2}],
                         }, {
@@ -53,7 +53,7 @@ export default class WorkTable extends Prop {
                     ]
                     game.playCutscene(script);
                 }
-            }
+            });
         }
     }
 }
