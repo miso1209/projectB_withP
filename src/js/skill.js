@@ -219,7 +219,8 @@ class BaseSkill {
 export class RunAwaySkill extends BaseSkill {
     constructor() {
         super();
-        this.currentDelay = 300;
+        this._delay.afterAttack = 200;
+        this.currentDelay = 200;
     }
 
     init(battle) {
@@ -248,8 +249,6 @@ export class RunAwaySkill extends BaseSkill {
                 this.proponent.anim.loop = true;
             }),
             MovieClip.Timeline(62, 62, null, () => {
-                this.proponent.stat.hp = 0;
-                this.proponent.status = STATUS.DIE;
             })
         );
 
@@ -265,10 +264,10 @@ export class RunAwaySkill extends BaseSkill {
         this.updateMovieclips();
         this.status = SKILL_STATUS.ACTION;
         
-        if (this.currentFrame === 63) {
+        if (this.currentFrame === 62) {
             this.currentFrame = 0;
             // 임시로 후딜을 랜덤으로 주어 공격 순서가 뒤죽박죽이 되게 만들어 본다.
-            this.currentDelay = Math.round(60 + this._delay.afterAttack * Math.random());
+            this.currentDelay = this._delay.afterAttack;
             this.proponent.stat.hp = 0;
             this.status = SKILL_STATUS.IDLE;
 
@@ -342,7 +341,7 @@ export class DoubleMeleeSkill extends BaseSkill {
         this._delay = {
             beforeAttack: [50, 96],
             doneAttack: 137,
-            afterAttack: 100
+            afterAttack: 200
         };
     }
 
@@ -423,7 +422,7 @@ export class DoubleMeleeSkill extends BaseSkill {
         } else if (this.currentFrame === this._delay.doneAttack) {
             this.currentFrame = 0;
             // 임시로 후딜을 랜덤으로 주어 공격 순서가 뒤죽박죽이 되게 만들어 본다.
-            this.currentDelay = Math.round(60 + this._delay.afterAttack * Math.random());
+            this.currentDelay = this._delay.afterAttack;
             this.status = SKILL_STATUS.IDLE;
 
             return null;
@@ -723,7 +722,7 @@ export class ArrowHighShotingSkill extends BaseSkill {
         this._delay = {
             beforeAttack: 50,
             doneAttack: 130,
-            afterAttack: 100
+            afterAttack: 200
         };
 
         // JSON을 받아서 각각의 정보를 넣는다. (지금은 하드코딩)
@@ -825,7 +824,7 @@ export class ArrowHighShotingSkill extends BaseSkill {
             // this.target.statusManager.addConditionError(new Poison({ retensionTime: 300 }), true, false);
 
             this.currentFrame = 0;
-            this.currentDelay = Math.round(60 + this._delay.afterAttack * Math.random());
+            this.currentDelay = this._delay.afterAttack;
             this.status = SKILL_STATUS.IDLE;
 
             return null;
@@ -842,7 +841,7 @@ export class FireRainSkill extends BaseSkill {
         this._delay = {
             beforeAttack: 50,
             doneAttack: 252,
-            afterAttack: 100
+            afterAttack: 200
         };
     }
 
@@ -940,7 +939,7 @@ export class FireRainSkill extends BaseSkill {
         } else if (this.currentFrame === this._delay.doneAttack) {
             this.currentFrame = 0;
             // 임시로 후딜을 랜덤으로 주어 공격 순서가 뒤죽박죽이 되게 만들어 본다.
-            this.currentDelay = Math.round(60 + this._delay.afterAttack * Math.random());
+            this.currentDelay = this._delay.afterAttack;
             this.status = SKILL_STATUS.IDLE;
 
             return null;
@@ -957,7 +956,7 @@ export class HealSkill extends BaseSkill {
         this._delay = {
             beforeAttack: 50,
             doneAttack: 92,
-            afterAttack: 100
+            afterAttack: 200
         };
     }
 
@@ -1027,7 +1026,7 @@ export class HealSkill extends BaseSkill {
         } else if (this.currentFrame === this._delay.doneAttack) {
             this.currentFrame = 0;
             // 임시로 후딜을 랜덤으로 주어 공격 순서가 뒤죽박죽이 되게 만들어 본다.
-            this.currentDelay = Math.round(60 + this._delay.afterAttack * Math.random());
+            this.currentDelay = this._delay.afterAttack;
             this.status = SKILL_STATUS.IDLE;
 
             return null;

@@ -7,7 +7,7 @@ export default class BattleUi extends PIXI.Container{
         this.battle = battle;
 
         this.activeUi = new BattlePartyActiveUi(this.battle.playerParty);
-        this.activeUi.setPosition({x: 310, y: 210});
+        this.activeUi.setPosition({x: 200, y: 255});
         this.addChild(this.activeUi);
         this.battleQueueUi = new BattleQueueUi(battle);
         this.addChild(this.battleQueueUi);
@@ -47,25 +47,13 @@ class BattlePartyActiveUi extends PIXI.Container {
     }
 
     init() {
-        const portraitSize = 47;
+        const portraitSize = 52;
         const position = {
             x: 0,
             y: 0,
         }
 
-        this.party.front.forEach((character) => {
-            position.x += portraitSize;
-            if (character) {
-                const portrait = new BattleActivePortraitUi(character);
-                portrait.setPosition(position);
-                this.portraits.push(portrait);
-            }
-        });
-        
-        position.x = 0;
-        position.y += 47;
-
-        this.party.back.forEach((character) => {
+        this.party.getCharacters().forEach((character) => {
             position.x += portraitSize;
             if (character) {
                 const portrait = new BattleActivePortraitUi(character);
@@ -103,6 +91,16 @@ class BattleActivePortraitUi extends PIXI.Container {
         this.portrait = new PIXI.Sprite(PIXI.Texture.fromFrame(character.battleUi.portrait));
         this.addChild(this.portrait);
 
+        this.hpProgressBar = new BattleProgressBar();
+        this.hpProgressBar.setScale({x: 2, y: 2});
+        this.hpProgressBar.setPosition({x: 13, y: 98});
+        this.addChild(this.hpProgressBar);
+
+        this.activeProgressBar = new BattleProgressBar("pbar_o.png");
+        this.activeProgressBar.setScale({x: 2, y: 2});
+        this.activeProgressBar.setPosition({x: 13, y: 110});
+        this.addChild(this.activeProgressBar);
+
         this.portrait.interactive = true;
         this.portrait.on('mouseup', () => {
             if (this.character.skills[1].isReady()) {
@@ -121,6 +119,15 @@ class BattleActivePortraitUi extends PIXI.Container {
         } else {
             this.portrait.tint = 0x555555;
         }
+
+        const hpWidth = (this.character.stat.hp< 0 ? 0 : this.character.stat.hp) / this.character.stat.maxHp * 34;
+        this.hpProgressBar.setWidth(hpWidth);
+
+        const activeWidth = (this.character.skills[1]._delay.afterAttack - (this.character.skills[1].currentDelay< 0 ? 0 : this.character.skills[1].currentDelay)) / this.character.skills[1]._delay.afterAttack * 34;
+        this.activeProgressBar.setWidth(activeWidth);
+
+        this.hpProgressBar.update();
+        this.activeProgressBar.update();
     }
 
     setScale(scale) {
@@ -138,6 +145,53 @@ class BattleActivePortraitUi extends PIXI.Container {
 
     enable() {
         this.portrait.interactive = true;
+    }
+}
+
+const PROGRESSBAR_STATUS = {
+    IS_UPDATE: 1,
+    DONE: 0
+}
+class BattleProgressBar extends PIXI.Container {
+    constructor(skin) {
+        super();
+        this.tweens = new Tweens();
+        const hpHolder = new PIXI.Sprite(PIXI.Texture.fromFrame("pbar.png"));
+        const hpBar = new PIXI.Sprite(PIXI.Texture.fromFrame(skin?skin:"pbar_r.png"));
+        this.hpHolder = hpHolder;
+        this.hpBar = hpBar;
+        this.hpHolder.position.y = -3;
+        this.hpHolder.position.x = 16 - this.hpHolder.width / 2;
+        this.hpBar.position.y = -2;
+        this.hpBar.position.x = 16 - this.hpHolder.width / 2 + 1;
+        this.addChild(hpHolder);
+        this.addChild(hpBar);
+        this.scale.x = 2;
+        this.scale.y = 2;
+        this.width = 34;
+        this.status = PROGRESSBAR_STATUS.DONE;
+    }
+
+    update() {
+        this.tweens.update();
+    }
+
+    setWidth(width) {
+        if (this.width.toFixed(2) !== width.toFixed(2) && this.status === PROGRESSBAR_STATUS.DONE) {
+            this.status = PROGRESSBAR_STATUS.IS_UPDATE;
+
+            this.tweens.addTween(this.hpBar, 0.2, { width: width }, 0, 'easeInOut', false, () => {
+                this.status = PROGRESSBAR_STATUS.DONE;
+            });
+        }
+    }
+    
+    setPosition(position) {
+        this.position = position;
+    }
+
+    setScale(scale) {
+        this.scale = scale;
     }
 }
 
