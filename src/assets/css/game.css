@@ -2,6 +2,8 @@
 @import './base.css';
 @import './modal.css';
 
+
+
 #Game, canvas {
   position: relative;
   display: block;
@@ -20,14 +22,26 @@
 }
 
 .gnbContainer {
+  display: block;
+
   position: absolute;
   z-index: 99;
+  
   left: 0;
   right: 0;
   width: 980px;
   margin: 0 auto;
+  /* opacity: 0; */
+  transition: all 0.8s;
+}
 
-  transition: all 0.3s;
+/* 배틀모드 */
+body.battle .gnbContainer {
+  display: none;
+}
+
+body.battle .gnbContainer.battleMode {
+  display: block;
 }
 
 .uiContainer {
@@ -45,7 +59,7 @@
 
   text-align: center;
   overflow: hidden;
-
+  
   /* 클릭이벤트 막기. */
   /* pointer-events: none; */
   
@@ -57,7 +71,7 @@
   pointer-events: auto;
 }
 
-.uiContainer.loadingScene {
+.uiContainer.bScene {
   background: rgba(1,1,1,.8);
   z-index: 1111;
   position: fixed;
@@ -73,7 +87,6 @@
 button, .button {
   /* width: 130px;
   height: 33px; */
-
   width: 118px;
   height: 44px;
   padding: 8px 0;
@@ -105,12 +118,9 @@ button.category span{
   position: absolute;
   display: flex;
   flex-wrap: wrap;
-
-  width: 100%;
-  padding: 0 30px;
+  margin: 0 20px;
   text-align: center;
 }
-
 
 .title {
   position: absolute;
@@ -297,3 +307,37 @@ button.category span{
   overflow: hidden;
   background-color: transparent;
 } 
+
+
+/* loading - progress bar */
+.ProgressHolder {
+  position: relative;
+  width: 273px;
+  height: 44px;
+  padding: 10px;
+  text-align: left; 
+  background: url(~assets/ui/progressHolder.png) no-repeat;
+} 
+
+.progressBar { 
+  /* margin: 34px 22px 0; */
+  max-width: 253px;
+  width: 1%; 
+  height: 23px; 
+  background: url(~assets/ui/progressBar.png) no-repeat;
+  background-size: cover;
+  transition: all 0.3s linear;
+} 
+
+.progressRate{
+  position: absolute;
+  top: 10px;
+  left: 0;
+  right: 0;
+
+  text-align: center;
+  font-size: 20px;
+  line-height: 1;
+  color: #ffd800;
+  text-shadow: 2px 0px 0px #333; 
+}

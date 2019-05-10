@@ -131,9 +131,8 @@ body.locked {
 /* 
 font, html
 */
-html{
+html {
   height: 100%;
-  cursor: url(~assets/ui/cursor.png), auto;
 }
 
 body {

@@ -4,22 +4,22 @@ export default class DomUI {
     this.gamePane = document.getElementById('Game');
     this.screenWidth = this.gamePane.screenWidth;
     this.screenHeight = this.gamePane.screenHeight;
-
-    this.gnbContainer = document.createElement('div');
-    this.container = document.createElement('div');
+    this.stageMode = 'normal';
   }
 
-  createDom() {
+  create() {
     console.log('-- DomUI --');
 
-    this.container.className = 'uiContainer';
-    this.container.style.top = this.gamePane.offsetTop + 'px';
-    this.preventEvent(true);
+    const container = document.createElement('div');
+    container.className = 'uiContainer';
+    container.style.top = this.gamePane.offsetTop + 'px';
+    document.body.appendChild(container);
+    this.preventEvent(container, true);
 
-    document.body.appendChild(this.container);
+    return container;
   }
-  
-  preventEvent(clickable) {
+
+  preventEvent(container, clickable) {
     let iscClickable;
 
     if (clickable === false) {
@@ -27,43 +27,52 @@ export default class DomUI {
     } else {
       iscClickable = 'none'; // 타일클릭 가능
     }
-    this.container.style.pointerEvents = iscClickable; // 클릭 이벤트.
+    container.style.pointerEvents = iscClickable; // 클릭 이벤트.
   }
 
-  destroyDom() {
-    document.body.removeChild(this.container);
+  setStageMode(stage) {
+    document.body.className = stage;
+    this.stageMode = stage;
+
+    console.log('current stage mode: ' + this.stageMode);
   }
 
   setProfile(playerId) {
     const profile = new Profile(playerId);
     profile.name.style.display = 'none';
     profile.level.style.display = 'none';
-
-    this.gnbContainer.className = 'gnbContainer';
-    this.gnbContainer.style.top = this.gamePane.offsetTop + 'px';
-
     profile.moveToLeft(20);
+    profile.dom.style.top = '20px';
 
     const btnInventory = new Button('', 'btnInventory');
     btnInventory.dom.style.top = '20px';
     btnInventory.dom.style.right = '20px';
-    btnInventory.dom.addEventListener('click', this.showInventory.bind(this));
 
     this.gnbContainer.appendChild(profile.dom);
     this.gnbContainer.appendChild(btnInventory.dom);
 
-    document.body.appendChild(this.gnbContainer);
-    profile.dom.addEventListener('click', this.showStatUI);
+    profile.dom.addEventListener('click', this.showStatUI.bind(this));
+    btnInventory.dom.addEventListener('click', this.showInventory.bind(this));
   }
 
   // gnb 메뉴 배치 / 파티, 인벤토리, 레시피 
-  setGNB() {
+  setGNB(stage) {
     const gnb_party = new Button('', 'gnb-party');
+
+    this.gnbContainer = document.createElement('div');
+    this.gnbContainer.className = 'gnbContainer';
+    this.gnbContainer.style.top = this.gamePane.offsetTop + 'px';
+    this.gnbContainer.style.opacity = '1';
+    document.body.appendChild(this.gnbContainer);
+
+    this.setProfile(1);
   }
 
   showItemAquire(itemId) {
-    const itemAcquire = new Modal(this.container, 400, 300);
+    const pane = this.create();
+    const itemAcquire = new Modal(pane, 400, 300);
     itemAcquire.addTitle('NEW ITEM');
+    itemAcquire.addCloseButton();
 
     let acquireText;
     const itemText = document.createElement('div');
@@ -89,94 +98,43 @@ export default class DomUI {
     itemAcquire.dom.appendChild(itemSprite);
   }
 
-  showCombineItemList() {
-    // # TODO : 조합가능한 아이템 리스트 노출
-
-    // list box test
-    const wrapper = new Modal(this.container, 360, 460);
-    wrapper.addTitle('List Box');
-    const items = [{
-        name: '열쇠',
-        image: 'item1.png'
-      }, {
-        name: '열쇠',
-        image: 'item1.png'
-      }, {
-        name: '열쇠2',
-        image: 'item2.png'
-      }, {
-        name: '열쇠3',
-        image: 'item3.png'
-      },
-      {
-        name: '열쇠',
-        image: 'item1.png'
-      }, {
-        name: '열쇠',
-        image: 'item1.png'
-      }, {
-        name: '열쇠2',
-        image: 'item2.png'
-      }, {
-        name: '열쇠3',
-        image: 'item3.png'
-      },
-      {
-        name: '열쇠',
-        image: 'item1.png'
-      }, {
-        name: '열쇠',
-        image: 'item1.png'
-      }, {
-        name: '열쇠2',
-        image: 'item2.png'
-      }, {
-        name: '열쇠3',
-        image: 'item3.png'
-      }
-    ];
-
-    const itemList = new ListBox(items, null, 320, 320);
-    itemList.dom.style.top = '80px';
-
-    wrapper.dom.appendChild(itemList.dom);
-  }
 
   showInventory() {
-    const inventory = new Modal(this.container, 360, 460);
+    const pane = this.create();
+    const inventory = new Modal(pane, 360, 460);
     inventory.addTitle('Inventory');
-
+    inventory.addCloseButton();
     // # 인벤 탭 영역 작업예정
-    const wrapper = document.createElement('div');
-    wrapper.classList.add('categoryWarp');
+    const categoryWrap = document.createElement('div');
+    categoryWrap.classList.add('categoryWarp');
+    categoryWrap.style.top = '70px';
+    inventory.dom.appendChild(categoryWrap);
 
-    const category = [{
-      catName: '전체',
-      catID: 0
+    const tab = [{
+      category: '전체',
+      id: 0
     }, {
-      catName: '갑옷',
-      catID: 1
+      category: '갑옷',
+      id: 1
     }, {
-      catName: '무기',
-      catID: 2
+      category: '무기',
+      id: 2
     }, {
-      catName: '악세사리',
-      catID: 3
+      category: '악세사리',
+      id: 3
     }];
-    category.forEach((cat) => {
-      const catBtn = new Button(cat.catName, 'category');
-      catBtn.dom.style.left = 90 * cat.catID + 10 + 'px';
-      wrapper.appendChild(catBtn.dom);
-    })
 
-    inventory.dom.appendChild(wrapper);
-    wrapper.style.top = '80px';
+    tab.forEach((category) => {
+      const tabButton = new Button(category.category, 'category');
+      tabButton.dom.style.left = 90 * category.id + 10 + 'px';
+      categoryWrap.appendChild(tabButton.dom);
+    });
 
     // # stat
     const statContent = document.createElement('div');
     statContent.classList.add('contents');
     statContent.style.textAlign = 'left';
-    statContent.style.top = wrapper.clientHeight + 100 + 'px';
+    statContent.style.top = categoryWrap.clientHeight + 120 + 'px';
     // statContent.style.height = '64px';
 
     inventory.dom.appendChild(statContent);
@@ -239,8 +197,10 @@ export default class DomUI {
   }
 
   showStatUI() {
-    const statUI = new Modal(this.container, 360, 460);
+    const pane = this.create();
+    const statUI = new Modal(pane, 360, 460);
     statUI.addTitle('Player Status');
+    statUI.addCloseButton();
     statUI.className = 'statUI';
 
     // 캐릭터 정보
@@ -377,17 +337,17 @@ export default class DomUI {
   }
 
   showStageTitle(text, delay) {
-    this.createDom();
-
+    const pane = this.create();
     const title = new SceneTitle(text);
-    this.container.appendChild(title.dom);
+    pane.appendChild(title.dom);
 
     title.dom.classList.add('stageTitle');
     title.dom.classList.add('animate');
 
     setTimeout(() => {
       title.dom.style.opacity = 0;
-      this.destroyDom();
+      // this.pane.removeChild(title.dom);
+      this.remove(pane);
     }, delay);
   }
 
@@ -401,7 +361,7 @@ export default class DomUI {
   moveToLeft(_left) {
     this.dom.style.position = 'absolute';
     this.dom.style.left = `${_left}px`;
-    this.dom.style.top = `${_left}px`;
+    // this.dom.style.top = `${_left}px`;
   }
 
   moveToRight(_right) {
@@ -436,18 +396,16 @@ export default class DomUI {
     return dom.classList.add(value);
   }
 
+  remove(dom) {
+    dom.parentNode.removeChild(dom);
+  }
+
   showDialog(script, callback) {
     const dialog = new Dialog(700, 140, script);
 
     dialog.setText(script[0].text);
     dialog.showSpeaker(script[0].speaker);
     dialog.onComplete = callback;
-  }
-
-  showLoading(time, onComplete) {
-    // 로딩속도(interval 함수 호출 시간)
-    const loading = new LoadingScene(time, onComplete);
-    loading.moveToCenter(200);
   }
 
   showConfirmModal(text, result) {
@@ -457,32 +415,178 @@ export default class DomUI {
     confirmModal.contents.style.fontSize = '1.1rem';
     confirmModal.contents.style.margin = '10% auto 0';
   }
+
+  showLoading(time, onComplete) {
+    // 로딩속도(interval 함수 호출 시간)
+    const pane = this.create();
+    const loading = new ProgressUI(pane, time, onComplete);
+    loading.moveToCenter(200);
+  }
+
+  // todo : 테스트용임. 삭제 
+  showProgressModal(time, onComplete) {
+    const modal = new SystemModal(300, 200, null, null);
+    modal.dom.style.top = '50%';
+    modal.dom.style.marginTop = 200 * -0.5 + 'px';
+    modal.contents.style.fontSize = '1.1rem';
+    modal.contents.style.margin = '10% auto 0';
+    modal.dom.style.position = 'ralitive';
+
+    const loading = new ProgressUI(modal.dom, time, onComplete);
+    loading.dom.style.transform = 'scale(0.7)';
+    loading.moveToCenter(50);
+  }
+
+  showCombineItemList() {
+    // # TODO : 조합가능한 아이템 리스트 노출
+    const pane = this.create();
+    pane.classList.add('bScene');
+
+    this.recipeUI = new RecipeUI(pane);
+    this.combinerUI = new CombinerUI(pane);
+    
+    this.recipeUI.moveToLeft(130);
+    this.combinerUI.moveToRight(130);
+  }
 }
 //. DomUI
+
+class RecipeUI extends DomUI {
+  constructor(pane) {
+    super();
+
+    const recipeModal = new Modal(pane, 350, 460);
+    // recipeModal.moveToLeft(130);
+    
+    this.dom = recipeModal.dom;
+
+    const categoryWrap = document.createElement('div');
+    categoryWrap.classList.add('categoryWarp');
+    categoryWrap.style.top = '30px';
+    recipeModal.dom.appendChild(categoryWrap);
+
+    const tab = [{
+      category: 'All',
+      id: 0
+      }, {
+      category: '무기',
+      id: 1
+    }, {
+      category: '소모품',
+      id: 2
+    }];
+
+    tab.forEach((category) => {
+      const tabButton = new Button(category.category, 'category');
+      tabButton.dom.style.marginLeft = 80 * category.id + 10 + 'px';
+      categoryWrap.appendChild(tabButton.dom);
+    });
+
+    const itemData = [1,2,3,4,5,1,2,3,4,5,1,2,3,4,5]; // todo - json 파일 아이템 데이터 로드
+    const itemList = new ListBox(itemData, null, 320, 320);
+    itemList.dom.style.top = '80px';
+    recipeModal.dom.appendChild(itemList.dom);
+  }
+}
+
+class CombinerUI extends DomUI {
+  constructor(pane) {
+    super();
+    const combineModal = new Modal(pane, 350, 460);
+    combineModal.addCloseButton();
+    this.dom = combineModal.dom;
+
+    const combinerItem = document.createElement('div');
+    combinerItem.className = 'title';
+    combinerItem.innerText = '던젼 열쇠';
+    this.dom.appendChild(combinerItem);
+    
+    const itemInfo = document.createElement('div');
+    itemInfo.classList.add('combineItem')
+    itemInfo.style.top = '80px';
+
+    this.item = document.createElement('img');
+    this.item.src = `/src/assets/items/item1.png`;
+    this.itemStat_lv = document.createElement('p');
+    this.itemStat_lv.innerText = '아이템 레벨';
+
+    itemInfo.appendChild(this.item);
+    itemInfo.appendChild(this.itemStat_lv);
+
+    this.dom.appendChild(itemInfo);
+
+    this.ingredientsData = [{
+      item: 1,
+      count: 2,
+    },{
+      item: 1,
+      count: 2,
+    },{
+      item: 1,
+      count: 2,
+    },{
+      item: 1,
+      count: 2,
+    },{
+      item: 1,
+      count: 2,
+    }];
+
+    const ingredientInfo = document.createElement('div');
+    ingredientInfo.classList.add('ingredientInfo');
+    ingredientInfo.classList.add('contents');
+    ingredientInfo.classList.add('column-3')
+    
+    this.ingredientsData.forEach(ingredient => {
+      let ingredient1 = document.createElement('p');
+      let ingredient2 = document.createElement('p');
+      let ingredient3 = document.createElement('p');
+
+      ingredient1.innerText = `재료이름 : ${ingredient.item}`;
+      ingredient2.innerText = `수량 : 1 / ${ingredient.count}`;
+      ingredient3.innerText = `획득장소 `;
+
+      ingredientInfo.appendChild(ingredient1);
+      ingredientInfo.appendChild(ingredient2);
+      ingredientInfo.appendChild(ingredient3);
+    });
+
+    const combineButton = new Button('제작');
+    combineButton.moveToCenter(10);
+    combineButton.moveToBottom(10);
+
+    this.dom.appendChild(ingredientInfo);
+    this.dom.appendChild(combineButton.dom);
+  }
+
+  update() {
+    console.log('list에서 아이템 아이디로 참조해서 아이디 정보 update');
+  }
+}
+
 
 
 class SystemModal extends DomUI {
   constructor(width, height, text, callback) {
     super();
-
-    const confirmModal = new Modal(this.container, width, height);
+    this.pane = this.create();
+    const confirmModal = new Modal(this.pane, width, height);
     confirmModal.dom.id = 'SYSTEM';
-    confirmModal.dom.removeChild(confirmModal.closeBtn.dom);
 
     const descText = document.createElement('p');
     descText.className = 'contents';
     descText.innerText = text;
     confirmModal.dom.appendChild(descText);
-    
+
     this.contents = descText;
     this.callback = callback;
-    
+
     const okButton = new Button('OK', 'submit');
     const cancelButton = new Button('CANCEL');
 
     confirmModal.dom.appendChild(okButton.dom);
     confirmModal.dom.appendChild(cancelButton.dom);
-    
+
     okButton.moveToLeft(20);
     cancelButton.moveToRight(20);
     okButton.moveToBottom(20);
@@ -490,7 +594,7 @@ class SystemModal extends DomUI {
 
     okButton.dom.addEventListener('click', this.onSubmit.bind(this));
     cancelButton.dom.addEventListener('click', this.onCancel.bind(this));
-    
+
     this.response = null;
     this.dom = confirmModal.dom;
   }
@@ -499,29 +603,24 @@ class SystemModal extends DomUI {
     this.onclose();
     this.callback('ok');
   }
-
   onCancel() {
     this.onclose();
     this.callback('cancel');
   }
-
   onclose() {
     this.dom.parentNode.parentNode.removeChild(this.dom.parentNode);
   }
 }
 
-
 class Dialog extends DomUI {
   constructor(width, height, script) {
     super();
 
-    this.createDom();
-    this.container.style.pointerEvents = 'auto'; // UI컨테이너영역 클릭 이벤트 방지.
+    this.pane = this.create();
 
-    const dialog = new NineBox(this.container, width, height, 'dialog');
+    const dialog = new NineBox(this.pane, width, height, 'dialog');
     dialog.dom.className = 'dialog';
     dialog.moveToBottom(20);
-    this.container.appendChild(dialog.dom);
     this.dom = dialog.dom;
 
     // dialogText
@@ -571,13 +670,14 @@ class Dialog extends DomUI {
       ++this.currentIndex;
       if (this.currentIndex === this.endIndex) {
         this.hideDialog();
-        if (this.onComplete !== null) {
 
+        if (this.onComplete !== null) {
           this.onComplete();
           this.onComplete = null;
         }
         this.currentIndex = -1;
         this.dom.removeEventListener('click', this.nextDialog, true);
+
         return;
       }
       this.setText(this.data[this.currentIndex].text);
@@ -617,8 +717,7 @@ class Dialog extends DomUI {
   }
 
   hideDialog() {
-    this.preventEvent(true);
-    this.dom.parentNode.parentNode.removeChild(this.dom.parentNode);
+    this.pane.parentNode.removeChild(this.pane);
   }
 }
 
@@ -677,7 +776,7 @@ class SceneTitle extends DomUI {
 }
 
 class NineBox extends DomUI {
-  constructor(container, _width, _height, _type) {
+  constructor(pane, _width, _height, _type) {
     super();
 
     const nineBox = document.createElement('div');
@@ -687,6 +786,7 @@ class NineBox extends DomUI {
     nineBox.style.height = _height + 'px';
 
     this.dom = nineBox;
+    pane.appendChild(this.dom);
 
     for (let i = 0; i < nineBox.children.length; i++) {
       var pixel = nineBox.children[i];
@@ -724,33 +824,32 @@ class NineBox extends DomUI {
 }
 
 class Modal extends DomUI {
-  constructor(container, width, height) {
+  constructor(pane, width, height) {
     super();
-
-    this.createDom();
-
-    const modal = new NineBox(this.container, width, height);
-    modal.dom.classList.add('modal');
-
-    const closeBtn = new Button('', 'closeBtn');
-    modal.dom.appendChild(closeBtn.dom);
-
-    this.closeBtn = closeBtn;
+    this.pane = pane;
+    const modal = new NineBox(this.pane, width, height);
     this.dom = modal.dom;
-    this.container.appendChild(modal.dom);
-    this.preventEvent(false);
-
-    closeBtn.dom.addEventListener('click', function (event) {
-      modal.dom.parentNode.parentNode.removeChild(modal.dom.parentNode);
-    });
+    this.dom.classList.add('modal');
   }
 
+  addCloseButton() {
+    const closeBtn = new Button('', 'closeBtn');
+    this.dom.appendChild(closeBtn.dom);
+    this.closeBtn = closeBtn;
+    closeBtn.dom.addEventListener('click', this.closeModal.bind(this));
+  }
+  
   addTitle(text) {
     const title = document.createElement('h1');
     title.innerText = text;
     title.className = 'title';
     this.dom.id = text;
     this.dom.appendChild(title);
+  }
+
+  closeModal() {
+    this.pane.removeChild(this.dom);
+    this.remove(this.pane);
   }
 }
 
@@ -787,6 +886,7 @@ class ListBox extends DomUI {
     const scrollView = document.createElement('div');
     scrollView.className = 'scrollView';
 
+    this.listData = data;
 
     const scrollBlind = document.createElement('div');
     scrollBlind.className = 'scrollBlind';
@@ -800,14 +900,23 @@ class ListBox extends DomUI {
     listBox.classList.add('list-box');
     listBox.style.height = viewHeight;
     listBox.style.width = viewWidth;
+    
+    let selectedCell = null;
 
-    data.forEach((listCell) => {
+    this.listData.forEach((listCell) => {
       listCell = document.createElement('li');
       listBox.appendChild(listCell);
 
-      if (listCallback !== null) {
-        listCell.addEventListener('click', listCallback);
-      }
+      listCell.addEventListener('click', function (event) {
+        if (selectedCell) {
+          selectedCell.classList.remove('active');
+        }
+
+        listCell.classList.add('active');
+        selectedCell = listCell;
+
+        console.dir(selectedCell);
+      });
     });
 
     scrollView.appendChild(scrollBlind);
@@ -815,15 +924,16 @@ class ListBox extends DomUI {
 
     this.dom = scrollView;
   }
-  // todo list-cell 스타일도 변경되도록.
 }
 
-class LoadingScene extends DomUI {
-  constructor(time, onComplete) {
+class ProgressUI extends DomUI {
+  constructor(container, time, onComplete) {
     super();
-    this.createDom();
-    this.container.classList.add('loadingScene');
-    
+    // this.create();
+
+    this.pane = container;
+    this.pane.classList.add('loadingScene');
+
     const statusHolder = document.createElement('div');
     statusHolder.classList.add('ProgressHolder');
     statusHolder.id = 'ProgressHolder';
@@ -832,7 +942,7 @@ class LoadingScene extends DomUI {
     bar.classList.add('progressBar');
     statusHolder.appendChild(bar);
     this.progressBar = bar;
-    
+
     const percentage = document.createElement('p');
     percentage.className = 'progressRate'
     bar.appendChild(percentage);
@@ -842,9 +952,9 @@ class LoadingScene extends DomUI {
 
     this.timer = null;
     this.percentage = percentage;
-    this.container.appendChild(statusHolder);
+    this.pane.appendChild(statusHolder);
     this.dom = statusHolder;
-    
+
     this.update(time);
     this.onComplete = onComplete;
   }
@@ -854,24 +964,23 @@ class LoadingScene extends DomUI {
       ++this.progress;
 
       this.progressBar.style.width = this.progress * this.interval + '%';
-      this.percentage.innerText = this.progress * this.interval  + '%'; 
+      this.percentage.innerText = this.progress * this.interval + '%';
       this.clearTimer();
     }, time);
   }
 
   clearTimer() {
-    if ( this.progress * this.interval === 100 ) {
+    if (this.progress * this.interval === 60) {
       clearInterval(this.timer);
-      this.onComplete('onComplete');
-      this.hideLoading();
-    } 
+      this.onComplete('loading_complete');
+      // this.hideLoading();
+    }
   }
 
   hideLoading() {
     setTimeout(() => {
-      this.container.classList.remove('loadingScene');
-      this.container.removeChild(this.dom);
-      this.destroyDom();
+      this.pane.classList.remove('loadingScene');
+      this.pane.removeChild(this.dom);
     }, 600);
   }
 }

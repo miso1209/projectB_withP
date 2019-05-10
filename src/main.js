@@ -38,7 +38,7 @@ function closeCallback(){
 }
 
 function gameStart(pixi) {
-  // 나중에 스테이지 데이터와 캐릭터 데이터를 자동으로 추출할수 있게 해야한다
+  // 나중에 스테이지 데이터와 캐릭터 데이터를 자동으로 추출할수 있게 해미한다
   // 로딩 속도를 최적화 하기 위해서
   // 일단은 모든 데이터를 다 넣도록 하자 (알아서 캐싱된다)
 
@@ -151,7 +151,6 @@ function gameStart(pixi) {
     }
     game_update();
 
-    domUI.setProfile(1);
     domUI.showStageTitle('어둠의 타워 999층', 1500);
 
     let toggle = true;
@@ -162,25 +161,29 @@ function gameStart(pixi) {
         toggle = !toggle;
         if (toggle) {
           game.enterBattle();
+          domUI.setStageMode('battle');
         } else {
           game.leaveBattle();
+          domUI.setStageMode('normal');
         }
       } else if (e.keyCode === 67) {
         const confirm = ui.createConfirmModal("테스트");
       } else if (e.keyCode === 65) { // a 
+        // # system 모달
         domUI.showConfirmModal('업그레이드를 진행하시겠습니까?', (isOk) => { console.log(isOk); });
-        
       } else if (e.keyCode === 77) { // m
-        // item 획득 창
+        // ### DOM UI - TEST
+        // # 로딩바
+        // domUI.showLoading(100, (isComplete) => {
+        //   console.log(isComplete);
+        // });
+        // # 로딩바 in system 모달
+        // domUI.showProgressModal(100, (isComplete) => { console.log(isComplete); });
+        // # item 획득 모달
         domUI.showItemAquire(1);
-
       } else if (e.keyCode === 68) { // d
-        // domUI.showCombineItemList();
-        domUI.showLoading(100, (isComplete) => {
-          console.log(isComplete);
-        });
+        domUI.showCombineItemList();
       }
-
     }, true);
   });
 }
