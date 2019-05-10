@@ -12,6 +12,7 @@ import { doorIn, doorOut } from './cutscene/door';
 import ScriptPlay from './cutscene/scriptplay';
 import { EventEmitter } from 'events';
 import idle from './cutscene/idle';
+import Combiner from './combiner';
 
 export default class Game extends EventEmitter {
     constructor(pixi) {
@@ -57,16 +58,19 @@ export default class Game extends EventEmitter {
         
         this.resourceManager = new ResourceManager();
         this.generator = new EntityFactory();
+        this.combiner = new Combiner();
     }
 
     // 아이템과 캐릭터 데이터등을 미리 로딩을 한다
     loadCommon(next) {
         this.resourceManager.add("items", "assets/json/items.json");
         this.resourceManager.add("characters", "assets/json/characters.json");
+        this.resourceManager.add("recipe", "assets/json/recipe .json");
 
         this.resourceManager.load((resources) => {
             this.generator.setItems(resources.items.data);
             this.generator.setCharacters(resources.characters.data);
+            this.generator.setRecipe(resources.recipe.data);
 
             if (next) {
                 next();
