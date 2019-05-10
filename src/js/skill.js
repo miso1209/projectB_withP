@@ -59,7 +59,7 @@ class BaseSkill {
         };
 
         // 현재 남아있는 후딜을 계산하기 위함..
-                     this.currentDelay = Math.round(60 + this._delay.afterAttack * Math.random());
+        this.currentDelay = Math.round(60 + this._delay.afterAttack * Math.random());
 
         // 타겟팅 만들어야 한다..
         this.targeting = null;

@@ -86,8 +86,8 @@ export default class Battle {
         this.stage.setParty(this.enemyParty, BASE_POSITION.ENEMY_X, BASE_POSITION.ENEMY_Y, DIRECTIONS.SW);
 
         this.battleUi = new BattleUi(this);
-        this.stage.addChild(this.battleUi);
         this.stage.addChild(this.effect);
+        this.stage.addChild(this.battleUi);
     }
 
     update() {
@@ -126,7 +126,8 @@ export default class Battle {
                 });
                 this.setPartyIntro(this.enemyParty.getBackCharacters(), 189, DIRECTIONS.SW, () => {
                     this.nextScene = BATTLE_STATUS.BATTLE;
-                    this.battleUi.battleQueueUi.showBattleQueue();
+                    this.battleUi.battleQueueUi.show();
+                    this.battleUi.activeUi.show();
                 });
             });
         }

@@ -151,7 +151,7 @@ function gameStart(pixi) {
     }
     game_update();
 
-    // domUI.setProfile(1);
+    domUI.setProfile(1);
     domUI.showStageTitle('어둠의 타워 999층', 1500);
 
     let toggle = true;

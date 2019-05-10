@@ -272,15 +272,6 @@ export default class BattleCharacter extends PIXI.Container {
         this.statusManager = new StatusManager(this);
         this.makeProgressBar();
         this.addChild(this.container);
-
-        // 임시로 캐릭터를 누르면 Active Queue에 본인의 스킬을 넣는다. 제거할 것.
-        this.container.interactive = true;
-        this.container.on('mouseup', (event) => {
-            if (this.skills[1].isReady() && this.battle) {
-                this.skills[1].setWait();
-                this.battle.activeQueue.enqueue(this.skills[1]);
-            }
-        });
     }
 
     makeProgressBar() {

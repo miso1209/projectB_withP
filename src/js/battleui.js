@@ -5,23 +5,139 @@ export default class BattleUi extends PIXI.Container{
         super();
 
         this.battle = battle;
-        this.battleQueueUi = new BattleQueueUi(battle);
 
+        this.activeUi = new BattlePartyActiveUi(this.battle.playerParty);
+        this.activeUi.setPosition({x: 310, y: 210});
+        this.addChild(this.activeUi);
+        this.battleQueueUi = new BattleQueueUi(battle);
         this.addChild(this.battleQueueUi);
     }
 
     update() {
+        this.activeUi.update();
         this.battleQueueUi.update();
     }
 }
 
-// 캐릭터 하나의 배틀 UI를 담당한다. 이것이 모여 파티 UI를 담당한다. 
-class BattleCharacterUi extends PIXI.Container {
-    constructor() {
+class BattlePartyActiveUi extends PIXI.Container {
+    constructor(party) {
         super();
+        this.tweens = new Tweens();
+        this.party = party;
+        this.portraits = [];
+        this.init();
 
-        // character.portrait
-        this.portrait = new PIXI.Sprite(PIXI.Texture.fromFrame());
+        this.portraits.forEach((portrait) => {
+            portrait.visible = false;
+            portrait.alpha = 0;
+            this.addChild(portrait);
+        });
+    }
+
+    update() {
+        this.tweens.update();
+
+        this.portraits.forEach((portrait) => {
+            portrait.update();
+        });
+    }
+
+    setParty(party) {
+        this.party = party;
+    }
+
+    init() {
+        const portraitSize = 47;
+        const position = {
+            x: 0,
+            y: 0,
+        }
+
+        this.party.front.forEach((character) => {
+            position.x += portraitSize;
+            if (character) {
+                const portrait = new BattleActivePortraitUi(character);
+                portrait.setPosition(position);
+                this.portraits.push(portrait);
+            }
+        });
+        
+        position.x = 0;
+        position.y += 47;
+
+        this.party.back.forEach((character) => {
+            position.x += portraitSize;
+            if (character) {
+                const portrait = new BattleActivePortraitUi(character);
+                portrait.setPosition(position);
+                this.portraits.push(portrait);
+            }
+        });
+    }
+
+    setPosition(position) {
+        this.position = position;
+    }
+
+    show() {
+        this.portraits.forEach((portrait) => {
+            portrait.visible = true;
+            this.tweens.addTween(portrait, 0.5, { alpha: 1 }, 0, 'easeInOut', false, () => {
+            });
+        });
+    }
+
+    hide() {
+        this.portraits.forEach((portrait) => {
+            this.tweens.addTween(portrait, 0.5, { alpha: 0 }, 0, 'easeInOut', false, () => {
+                portrait.visible = false;
+            });
+        });
+    }
+}
+
+class BattleActivePortraitUi extends PIXI.Container {
+    constructor(character) {
+        super();
+        this.character = character;
+        this.portrait = new PIXI.Sprite(PIXI.Texture.fromFrame(character.battleUi.portrait));
+        this.addChild(this.portrait);
+
+        this.portrait.interactive = true;
+        this.portrait.on('mouseup', () => {
+            if (this.character.skills[1].isReady()) {
+                this.character.skills[1].setWait();
+                this.character.battle.activeQueue.enqueue(this.character.skills[1]);
+            }
+        });
+        this.setScale({x: 0.5, y: 0.5});
+    }
+
+    update() {
+        if (this.character.stat.hp <= 0) {
+            this.portrait.tint = 0xFF7777;
+        } else if (this.character.skills[1].isReady()) {
+            this.portrait.tint = 0xFFFFFF;
+        } else {
+            this.portrait.tint = 0x555555;
+        }
+    }
+
+    setScale(scale) {
+        this.scale.x = scale.x;
+        this.scale.y = scale.y;
+    }
+
+    setPosition(position) {
+        this.position = position;
+    }
+
+    disable() {
+        this.portrait.interactive = false;
+    }
+
+    enable() {
+        this.portrait.interactive = true;
     }
 }
 
@@ -89,7 +205,7 @@ class BattleQueueUi extends PIXI.Container {
             if (portrait.queuePriority === 0) {
                 // 최전방 배치.
                 position.x = 40;
-            } else if (portrait.queuePriority === -1) {
+            } else if (portrait.queuePriority === -1 || portrait.queuePriority > 5) {
                 // 위로 날린다.
                 position.y = -100;
             } else {
@@ -131,7 +247,7 @@ class BattleQueueUi extends PIXI.Container {
             if (portrait.queuePriority === 0) {
                 // 최전방 배치.
                 position.x = 40;
-            } else if (portrait.queuePriority === -1) {
+            } else if (portrait.queuePriority === -1 || portrait.queuePriority > 5) {
                 // 위로 날린다.
                 position.y = -100;
             } else {
@@ -144,7 +260,7 @@ class BattleQueueUi extends PIXI.Container {
         });
     }
 
-    showBattleQueue() {
+    show() {
         let perTime = 0.1;
 
         this.activePortraits.forEach((portrait) => {
@@ -160,7 +276,7 @@ class BattleQueueUi extends PIXI.Container {
         });
     }
 
-    hideBattleQueue() {
+    hide() {
         let perTime = 0.1;
 
         this.activePortraits.forEach((portrait) => {
@@ -193,7 +309,7 @@ class BattleQueueUi extends PIXI.Container {
                 portrait.queuePriority = 0;
             } else {
                 portrait.queuePriority = activeQueue.indexOf(portrait.character.skills[1]);
-                if(activeQueue.indexOf(portrait.character.skills[1]) !== -1) {
+                if(activeQueue.indexOf(portrait.character.skills[1]) !== -1 && this.battle.currentAction) {
                     portrait.queuePriority++;
                 }
             }
