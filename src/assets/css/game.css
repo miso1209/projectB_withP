@@ -310,7 +310,7 @@ button.category span{
 
 
 /* loading - progress bar */
-.ProgressHolder {
+.progressHolder {
   position: relative;
   width: 273px;
   height: 44px;
@@ -324,7 +324,7 @@ button.category span{
   max-width: 253px;
   width: 1%; 
   height: 23px; 
-  background: url(~assets/ui/progressBar.png) no-repeat;
+  background: url(~assets/ui/progressbar.png) no-repeat;
   background-size: cover;
   transition: all 0.3s linear;
 } 

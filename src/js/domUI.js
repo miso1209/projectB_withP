@@ -935,11 +935,11 @@ class ProgressUI extends DomUI {
     this.pane.classList.add('loadingScene');
 
     const statusHolder = document.createElement('div');
-    statusHolder.classList.add('ProgressHolder');
-    statusHolder.id = 'ProgressHolder';
+    statusHolder.classList.add('progressHolder');
+    statusHolder.id = 'progressHolder';
 
     const bar = document.createElement('div');
-    bar.classList.add('progressBar');
+    bar.classList.add('progressbar');
     statusHolder.appendChild(bar);
     this.progressBar = bar;
 
