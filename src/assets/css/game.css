@@ -368,6 +368,7 @@ button.category span{
   text-shadow: 2px 0px 0px #333; 
 }
 
+
 /* 아이템 조합창 */
 .combineItemInfo {
   position: absolute;
@@ -377,35 +378,60 @@ button.category span{
   margin: 0 auto 10px;
 }
 
-.combineItemInfo img{
+.combineItemInfo .materialsImg{
   max-width: 100px;
   max-height: 100px;
-}
-
-.combineItemInfo p {
-  margin: 15px 0 0;
-  max-height: 34px;
-  overflow: hidden;
-  font-size: 13px;
-  font-weight: normal;
-  line-height: 1.4;
-  color: #fff;
-}
-
-.itemStat{
-  background: none;
+  margin-top: 20px;
 }
 
 .materialInfo {
   position: absolute;
+  top: 200px;
+  width: 100%;
+  min-height: 116px;
   margin: 15px auto 0;
-
+  padding: 10px 15px;
   background-color: #1f130a;
   border-radius: 10px;
 }
 
+.materialInfo li {
+  height: 32px;
 
-.ingredientInfo img{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+/* 재료정보 */
+.materialInfo img {
   width: 32px;
   height: 32px;
+}
+
+.materialInfo p {
+  max-height: 34px;
+  overflow: hidden;
+  font-size: 13px;
+  font-weight: normal;
+  line-height: 32px;;
+  color: #fff;
+}
+
+.combineItemInfo .options{
+  margin: 15px 0 0;
+  background: none;
+}
+
+.combineItemInfo .options li {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+
+  padding: 5px 15px;
+}
+
+.combineItemInfo .options li span {
+  display: inline-block;
+  min-width: 10px;
 }

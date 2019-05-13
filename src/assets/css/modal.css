@@ -271,14 +271,13 @@ div[class*='column-'] p {
   height: 260px;
   padding: 0;
   
-  -webkit-overflow-scrolling: touch;
-  /* overflow-x: hidden;
+  overflow-x: hidden;
   overflow-y: scroll;
-  -webkit-overflow-scrolling: touch; */
+  -webkit-overflow-scrolling: touch;
 }
 
 .list-box {
-  width: 320px;
+  width: 330px;
   height: 100%;
 
   overflow-x: hidden;
@@ -298,7 +297,7 @@ div[class*='column-'] p {
   background-color:transparent;
 }
 
-.list-box li {
+/* .list-box li {
   width: calc(100% - 10px);
   min-height: 32px;
   height: 42px;
@@ -313,5 +312,41 @@ div[class*='column-'] p {
 
 .list-box li.active {
   border: 1px solid #ffd800;
+} */
+
+
+.list-cell {
+  width: calc(100% - 10px);
+  min-height: 32px;
+  height: 42px;
+  margin: 0 0 5px 0;
+  padding: 5px 10px;
+  line-height: 32px;
+  border: none;
+  box-sizing: border-box;
+  
+  clear: both;
+  display: block;
 }
 
+.list-cell.active {
+  border: 1px solid #ffd800;
+}
+
+.list-cell img {
+  width: 32px;
+  height: 32px;
+
+  float: left;
+}
+
+.list-cell p {
+  float: left;
+  font-size: 16px;
+  color: #fff;
+  margin-left:10px;
+}
+
+.list-cell p:last-child {
+  float: right;
+}
