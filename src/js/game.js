@@ -234,4 +234,21 @@ export default class Game extends EventEmitter {
             this.currentMode.update();
         }
     }
+
+    getRecipes(category) {
+        const recipes = this.combiner.getRecipes(category, this.player.inventory);
+        for (const recipe of recipes) {
+            if (!recipe.data)  {
+                recipe.data = this.itemTable.getData(recipe.item);
+            }
+
+            for (const mat of recipe.materials) {
+                if (!mat.data) {
+                    mat.data = this.itemTable.getData(mat.item);
+                }
+            }
+        }
+
+        return recipes;
+    }
 }

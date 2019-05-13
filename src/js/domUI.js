@@ -427,16 +427,34 @@ export default class DomUI {
     loading.moveToCenter(50);
   }
 
-  showCombineItemList() {
+  showCombineItemList(inputs) {
     // # TODO : 조합가능한 아이템 리스트 노출
     const pane = this.create();
     pane.classList.add('bScene');
 
+    for (const input of inputs) {
+      // 카테고리는 입력값에 의해서 동적으로 변한다
+      // 여기서 카테고리를 추가한다 : input.category;
+
+      for (const recipe of input.recipes) {
+        console.log("이름: " +recipe.data.name, "소지개수:" + recipe.owned);
+        for(const mat of recipe.materials) {
+          console.log("재료 : " + mat.data.name, "필요개수:" + mat.count, "소지개수:" + mat.owned );
+        }
+
+        // 아이템 효과는 배열로 전달된다.
+        for (const option of recipe.data.options ) {
+          console.log(option.toString());
+        }
+      }
+    }
+
+    
     // 임시
     const item = {
       item: 3,
       name: '던젼열쇠',
-      ingredient: [
+      material: [
         {
           item: 1,
           count: 1
@@ -533,7 +551,7 @@ class CombinerUI extends DomUI {
        ++i;
     }
 
-    this.ingredientsData = [{
+    this.materialsData = [{
       item: 1,
       count: 2,
     },{
@@ -547,22 +565,22 @@ class CombinerUI extends DomUI {
       count: 2,
     }];
 
-    const ingredientInfo = document.createElement('div');
-    ingredientInfo.classList.add('ingredientInfo');
-    ingredientInfo.classList.add('column-3')
+    const materialInfo = document.createElement('div');
+    materialInfo.classList.add('materialInfo');
+    materialInfo.classList.add('column-3')
     
-    this.ingredientsData.forEach(ingredient => {
-      let ingredient1 = document.createElement('p');
-      let ingredient2 = document.createElement('p');
-      let ingredient3 = document.createElement('p');
+    this.materialsData.forEach(material => {
+      let material1 = document.createElement('p');
+      let material2 = document.createElement('p');
+      let material3 = document.createElement('p');
 
-      ingredient1.innerText = `재료`;
-      ingredient2.innerText = `재료이름 : ${ingredient.item}`;
-      ingredient3.innerText = `수량 : 1 / ${ingredient.count}`;
+      material1.innerText = `재료`;
+      material2.innerText = `재료이름 : ${material.item}`;
+      material3.innerText = `수량 : 1 / ${material.count}`;
 
-      ingredientInfo.appendChild(ingredient1);
-      ingredientInfo.appendChild(ingredient2);
-      ingredientInfo.appendChild(ingredient3);
+      materialInfo.appendChild(material1);
+      materialInfo.appendChild(material2);
+      materialInfo.appendChild(material3);
     });
 
     const combineButton = new Button('제작');
@@ -571,7 +589,7 @@ class CombinerUI extends DomUI {
     combineButton.dom.addEventListener('click', this.doCombineItem.bind(this));
     
     contents.appendChild(itemStat);
-    contents.appendChild(ingredientInfo);
+    contents.appendChild(materialInfo);
     
     this.dom.appendChild(contents);
     this.dom.appendChild(combineButton.dom);

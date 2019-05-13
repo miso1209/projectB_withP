@@ -11,7 +11,7 @@ export default class Character {
         this.baseMaxHealth;
         this.plusMaxHealth = 0;
 
-        this.baseStrength;
+        this.baseStrength = 0;//data.getStrength(level);
         this.plusStrength = 0;
 
         this.baseIntellect;
@@ -40,10 +40,11 @@ export default class Character {
 
         this.plusAttack = 0;
         this.plusMagic = 0;
-        this.plusArmomr = 0;
+        this.plusArmor = 0;
 
         this.attackPotential = 0.5;
         this.magicPotential = 0.5;
+        this.armorPotential = 0.5;
     }
 
     get name() {
@@ -62,6 +63,10 @@ export default class Character {
         return this.baseIntellect + this.plusIntellect;
     }
 
+    get stamina() {
+        return this.baseStamina + this.plusStamina;
+    }
+
     get attack() {
         return Math.floor(this.strength * this.attackPotential) + this.attackPower;
     }
@@ -70,20 +75,42 @@ export default class Character {
         return Math.floor(this.intellect * this.magicPotential) + this.plusMagic;
     }
 
+    get armor() {
+        return Math.floor(this.stamina * this.armorPotential) + this.plusArmor;
+    }
+
     equip(slot, item) {
+        if (!this.canEquip(slot, item)) {
+            throw Error("can not equip item :" + item.name + " at " +  slot);
+        }
+
+        // 기존에 사용하고 있던 아이템이 있으면 제거한다
+        if (this.equipments[slot]) {
+            this.unequip(slot);
+        }
+
         this.equipments[slot] = item;
-        
-        this.plusAttack += item.attack || 0;
-        this.plusMagic += item.magic || 0;
-        // 기타 필요에 따라 추가
+        // 아이템 옵션을 적용한다
+        for(const option of item.options) {
+            option.apply(this);
+        }
+    }
+
+    canEquip(slot, item) {
+        // 아이템 카테고리가 일치하는지 보고, 서브 카테고리가 일치하는지도 살펴본다.
+        // TODO : 서브 카테고리는 나중에 처리
+        return item.category === slot;
     }
 
     unequip(slot) {
         const item = this.equipments[slot];
-        this.equipments[slot] = null;
-        
-        this.plusAttack -= item.attack || 0;
-        this.plusMagic -= item.magic || 0;
+        if (item) {
+            this.equipments[slot] = null;
+            // 아이템 옵션을 적용한다
+            for(const option of item.options) {
+                option.clear(this);
+            }
+        }
     }
     
 }

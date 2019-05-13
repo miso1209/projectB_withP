@@ -13,9 +13,9 @@
         "name": "기본갑옷",
         "image": { "texture": "items.png", "x": 0, "y": 12 },
         "description": "흔히 볼 수 있는 평범한 갑옷",
-        "category": "armomr",
+        "category": "armor",
         "subcategory": "medium-armor",
-        "options": ["defense(5)"]
+        "options": ["armor(5)"]
     },
     "1001": {
         "id": 1001,
@@ -23,7 +23,7 @@
         "image": { "texture": "items.png", "x": 2, "y": 0 },
         "description": "체력을 소량 회복한다",
         "category": "consumables",
-        "options": ["health(10)"]
+        "options": ["health(+10)"]
     },
     "2001": {
         "id": 2001,

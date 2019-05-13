@@ -166,14 +166,22 @@ function gameStart(pixi) {
           game.leaveBattle();
           domUI.setStageMode('normal');
         }
-      } else if (e.keyCode === 67) {
+      } else if (e.keyCode === 67) { //c
         // 조합 테스트
-        const inven = game.player.inventory;
+        /*const inven = game.player.inventory;
         inven.addItem(2001, 2);
         //const rs = game.combiner.getRecipes("consumables", inven);
         console.log(inven.getCount(2001), inven.getCount(1001));
         game.combiner.combine(1001, inven);
-        console.log(inven.getCount(2001), inven.getCount(1001));
+        console.log(inven.getCount(2001), inven.getCount(1001));*/
+        const c = game.player.characters[0];
+        console.log('attack : '+ c.strength,  'armor :' + c.armor);
+        const weapon = game.itemTable.getData(1);
+        const armor = game.itemTable.getData(2);
+        c.equip('weapon', weapon);
+        c.equip('armor', armor);
+        
+
 
       } else if (e.keyCode === 65) { // a 
         // # system 모달
@@ -189,7 +197,8 @@ function gameStart(pixi) {
         // # item 획득 모달
         domUI.showItemAquire(1);
       } else if (e.keyCode === 68) { // d
-        domUI.showCombineItemList();
+        const recipes = game.getRecipes('consumables');
+        domUI.showCombineItemList([{ category: 'consumables', recipes: recipes }]);
       }
     }, true);
   });
