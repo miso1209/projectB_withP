@@ -13,6 +13,9 @@ import ScriptPlay from './cutscene/scriptplay';
 import { EventEmitter } from 'events';
 import idle from './cutscene/idle';
 import Combiner from './combiner';
+import ItemTable from './resources/item-table';
+import CharacterTable from './resources/chararacter-table';
+import Character from './character';
 
 export default class Game extends EventEmitter {
     constructor(pixi) {
@@ -57,7 +60,8 @@ export default class Game extends EventEmitter {
         this.currentMode = null;
         
         this.resourceManager = new ResourceManager();
-        this.generator = new EntityFactory();
+        this.itemTable = new ItemTable();
+        this.charTable = new CharacterTable();
         this.combiner = new Combiner();
     }
 
@@ -68,9 +72,9 @@ export default class Game extends EventEmitter {
         this.resourceManager.add("recipe", "assets/json/recipe .json");
 
         this.resourceManager.load((resources) => {
-            this.generator.setItems(resources.items.data);
-            this.generator.setCharacters(resources.characters.data);
-            
+            this.itemTable.init(resources.items.data);
+            this.charTable.init(resources.characters.data);
+            this.combiner.addRecipes(resources.recipe.data, this.itemTable);
 
             if (next) {
                 next();
@@ -82,7 +86,7 @@ export default class Game extends EventEmitter {
         // 임시로 캐릭터데이터를 생성한다
         this.player = new Player();
         // 플레이어가 가지고 있는 캐릭터를 하나 정의한다
-        this.player.characters.push(this.generator.character(1));
+        this.player.characters.push(new Character(this.charTable.getData(1)));
         this.player.controlCharacter = this.player.characters[0];
 
         // 필요한 필드 캐릭터 정보를 로딩한다

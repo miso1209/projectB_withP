@@ -167,7 +167,14 @@ function gameStart(pixi) {
           domUI.setStageMode('normal');
         }
       } else if (e.keyCode === 67) {
-        const confirm = ui.createConfirmModal("테스트");
+        // 조합 테스트
+        const inven = game.player.inventory;
+        inven.addItem(2001, 2);
+        //const rs = game.combiner.getRecipes("consumables", inven);
+        console.log(inven.getCount(2001), inven.getCount(1001));
+        game.combiner.combine(1001, inven);
+        console.log(inven.getCount(2001), inven.getCount(1001));
+
       } else if (e.keyCode === 65) { // a 
         // # system 모달
         domUI.showConfirmModal('업그레이드를 진행하시겠습니까?', (isOk) => { console.log(isOk); });

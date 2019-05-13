@@ -1,18 +1,21 @@
 
 
 export default class Inventory {
-    constructor(itemResources) {
+    constructor() {
         this.items = {};
-        this.itemResources = itemResources;
     }
 
     addItem(itemId, count) {
         count = count || 1;
-        this.items[itemId] = {
-            id: itemId,
-            data: this.itemResources.getData(itemId),
-            count: count
-        };
+        const item = this.items[itemId];
+        if (item) {
+            item.count += count;
+        } else {
+            this.items[itemId] = {
+                id: itemId,
+                count: count
+            };
+        }
     }
 
     deleteItem(itemId, count) {
