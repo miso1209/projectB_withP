@@ -69,7 +69,7 @@ export default class Game extends EventEmitter {
     loadCommon(next) {
         this.resourceManager.add("items", "assets/json/items.json");
         this.resourceManager.add("characters", "assets/json/characters.json");
-        this.resourceManager.add("recipe", "assets/json/recipe .json");
+        this.resourceManager.add("recipe", "assets/json/recipe.json");
 
         this.resourceManager.load((resources) => {
             this.itemTable.init(resources.items.data);

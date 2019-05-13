@@ -3,7 +3,6 @@
 @import './modal.css';
 
 
-
 #Game, canvas {
   position: relative;
   display: block;
@@ -81,21 +80,41 @@ body.battle .gnbContainer.battleMode {
 
 .modal {
   top: 20px;
-  /* right: 20px; */
 }
 
 button, .button {
-  /* width: 130px;
-  height: 33px; */
   width: 118px;
   height: 44px;
   padding: 8px 0;
   color: #fff;
-  border: none;
   background: url(~assets/ui/button_s1.png) no-repeat;
 
   transition: all 0.4s linear;
 }
+
+.tabPane {
+  position: absolute;
+  left: -100px;
+  top: 0;
+  width: 100px;
+  height: 100%;
+
+  overflow: hidden;
+} 
+
+.tabBtn {
+  display: block;
+  left: 50px;
+}
+.tabBtn span {
+  text-align: left;
+}
+
+.tabBtn:hover, 
+.tabBtn.active {
+  left: 0;
+}
+
 
 .submit {
   background: url(~assets/ui/button_s2.png) no-repeat;
@@ -133,6 +152,21 @@ button.category span{
   text-align: center;
 
   color: #ffd800;
+  overflow: hidden;
+}
+
+.sub-title {
+  position: absolute;
+  top: 80px;
+  left: 30px;
+  right: 30px;
+
+  font-size: 16px;
+  font-weight: normal;
+
+  line-height: 1.2;
+  text-align: left;
+  color: #fff;
   overflow: hidden;
 }
 
@@ -183,8 +217,6 @@ button.category span{
   background: url(~assets/ui/tooltip_box.png) no-repeat;
   background-size: contain;
 }
-
-
 .profile {
   position: relative;
   text-align: center;
@@ -238,11 +270,13 @@ button.category span{
   right: 0;
   margin: 0 auto;
 }
-
 .dialog .dialog-speaker {
   display: none;
-}
 
+  position: absolute;
+  left: -5px;
+  top: -30px;
+}
 .dialog .contents {
   top: 15px;
   left: 20px;
@@ -258,19 +292,11 @@ button.category span{
   overflow: hidden;
   background-color: transparent;
 }
-
 .dialog.portrait .contents {
   left: 100px;
 }
-
 .dialog.portrait .dialog-speaker {
   display: block;
-}
-
-.dialog-speaker {
-  position: absolute;
-  left: -5px;
-  top: -30px;
 }
 
 .dialog.portrait .name{
@@ -340,4 +366,40 @@ button.category span{
   line-height: 1;
   color: #ffd800;
   text-shadow: 2px 0px 0px #333; 
+}
+
+/* 아이템 조합창 */
+.combineItem {
+  position: absolute;
+  top: 0;
+  left: 20px;
+  right: 20px;
+  margin: 0 auto 10px;
+}
+
+.combineItem img{
+  max-width: 100px;
+  max-height: 100px;
+}
+
+.combineItem p {
+  margin: 15px 0 0;
+  max-height: 34px;
+  overflow: hidden;
+  font-size: 13px;
+  font-weight: normal;
+  line-height: 1.4;
+  color: #fff;
+}
+
+.itemStat{
+  background: none;
+}
+
+.ingredientInfo {
+  position: absolute;
+  margin: 15px auto 0;
+
+  background-color: #1f130a;
+  border-radius: 10px;
 }
