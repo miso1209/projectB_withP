@@ -70,7 +70,7 @@ export default class Game extends EventEmitter {
         this.resourceManager.load((resources) => {
             this.generator.setItems(resources.items.data);
             this.generator.setCharacters(resources.characters.data);
-            this.generator.setRecipe(resources.recipe.data);
+            
 
             if (next) {
                 next();

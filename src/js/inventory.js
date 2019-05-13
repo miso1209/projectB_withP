@@ -1,37 +1,41 @@
 
 
 export default class Inventory {
-    constructor() {
-        this.items = [];
+    constructor(itemResources) {
+        this.items = {};
+        this.itemResources = itemResources;
     }
 
-    addItem(item) {
-        //const item = new Item(itemId, itemType);
-        this.items.push(item);
+    addItem(itemId, count) {
+        count = count || 1;
+        this.items[itemId] = {
+            id: itemId,
+            data: this.itemResources.getData(itemId),
+            count: count
+        };
     }
 
-    getItemByType(itemType) {
-        for(const item of this.items) {
-            if (item.itemType === itemType) {
-                return item;
-            }
+    deleteItem(itemId, count) {
+        // count 가 없으면 기본으로 1을 준다
+        count = count || 1;
+
+        const item = this.items[itemId];
+        if (item.count < count) {
+            throw Error("not enough owned items");
         }
-        return null;
-    }
 
-    deleteItem(itemId) {
-        for (let i = 0; i < this.items.length; i++) {
-            const item = this.items[i];
-            if (item.itemId === itemId) {
-                this.items.splice(i, 1);
-                return;
-            }
+        item.count -= count;
+        if (item.count === 0) {
+            delete this.items[itemId];
         }
     }
 
-    eachItem(callback) {
-        for(const item of this.items) {
-            callback(item);
+    getCount(itemId) {
+        const item = this.items[itemId];
+        if (item) {
+            return item.count;
+        } else {
+            return 0;
         }
     }
 }

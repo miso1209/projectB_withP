@@ -1,8 +1,13 @@
 [{
     "item": 4,
-    "ingredients": [
+    "materials": [
         { "item":1, "count": 2 },
         { "item":2, "count": 2 },
         { "item":3, "count": 2 }
+    ]
+}, {
+    "item": 1001,
+    "materials": [
+        { "item":2001, "count": 2 }
     ]
 }]
