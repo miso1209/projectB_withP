@@ -18,7 +18,7 @@ class ItemOption {
                 target.plusMagic += Number(this.args[0]);
                 break;
             case "armor":
-                target.plusArmomr += Number(this.args[0]);
+                target.plusArmor += Number(this.args[0]);
                 break;
             case "health":
                 target.health += Number(this.args[0]);
@@ -36,7 +36,7 @@ class ItemOption {
                 target.plusMagic -= Number(this.args[0]);
                 break;
             case "armor":
-                target.plusArmomr -= Number(this.args[0]);
+                target.plusArmor -= Number(this.args[0]);
                 break;
             case "health":
                 target.health -= Number(this.args[0]);

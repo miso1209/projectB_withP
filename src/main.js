@@ -175,11 +175,12 @@ function gameStart(pixi) {
         game.combiner.combine(1001, inven);
         console.log(inven.getCount(2001), inven.getCount(1001));*/
         const c = game.player.characters[0];
-        console.log('attack : '+ c.strength,  'armor :' + c.armor);
+        console.log('prev', 'attack : '+ c.attack,  'armor :' + c.armor);
         const weapon = game.itemTable.getData(1);
         const armor = game.itemTable.getData(2);
         c.equip('weapon', weapon);
         c.equip('armor', armor);
+        console.log('post', 'attack : '+ c.attack,  'armor :' + c.armor);
         
 
 

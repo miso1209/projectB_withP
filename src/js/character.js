@@ -4,6 +4,7 @@
 export default class Character {
     constructor(data) {
 
+        this.level = 1;
         this.data = data;
         
         this.health;
@@ -11,25 +12,25 @@ export default class Character {
         this.baseMaxHealth;
         this.plusMaxHealth = 0;
 
-        this.baseStrength = 0;//data.getStrength(level);
+        this.baseStrength = data.getStat('strength', this.level);
         this.plusStrength = 0;
 
-        this.baseIntellect;
+        this.baseIntellect = data.getStat('intellect', this.level);
         this.plusIntellect = 0;
 
-        this.baseAgility;
+        this.baseAgility = data.getStat('agility', this.level);
         this.plusAgility = 0;
 
-        this.baseStamina;
+        this.baseStamina = data.getStat('stamina', this.level);
         this.plusStamina = 0;
 
-        this.baseSpeed;
+        this.baseSpeed = data.getStat('speed', this.level);
         this.plusSpeed = 0;
 
-        this.baseCritical;
+        this.baseCritical = data.getStat('critical', this.level);
         this.plusCritical = 0;
 
-        this.baseRegist;
+        this.baseRegist = data.getStat('regist', this.level);
         this.plusRegist = 0;
 
         this.equipments = {
@@ -68,7 +69,7 @@ export default class Character {
     }
 
     get attack() {
-        return Math.floor(this.strength * this.attackPotential) + this.attackPower;
+        return Math.floor(this.strength * this.attackPotential) + this.plusAttack;
     }
 
     get magic() {
