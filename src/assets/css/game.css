@@ -369,7 +369,7 @@ button.category span{
 }
 
 /* 아이템 조합창 */
-.combineItem {
+.combineItemInfo {
   position: absolute;
   top: 0;
   left: 20px;
@@ -377,12 +377,12 @@ button.category span{
   margin: 0 auto 10px;
 }
 
-.combineItem img{
+.combineItemInfo img{
   max-width: 100px;
   max-height: 100px;
 }
 
-.combineItem p {
+.combineItemInfo p {
   margin: 15px 0 0;
   max-height: 34px;
   overflow: hidden;
@@ -402,4 +402,10 @@ button.category span{
 
   background-color: #1f130a;
   border-radius: 10px;
+}
+
+
+.ingredientInfo img{
+  width: 32px;
+  height: 32px;
 }

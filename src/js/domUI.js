@@ -471,7 +471,6 @@ export default class DomUI {
     
     this.recipeUI.moveToLeft(150);
     this.combinerUI.moveToRight(100);
-
   }
 }
 //. DomUI
@@ -497,15 +496,15 @@ class RecipeUI extends DomUI {
     
     recipeModal.addTab(tabs);
     
-    const itemData = [1,2,3,4,5,1,2,3,4,5]; // todo - json 파일 아이템 데이터 로드
+    const itemData = [1,2,3,4,5]; // todo - json 파일 아이템 데이터 로드
     const itemList = new ListBox(itemData, null, 320, 320);
     itemList.dom.style.top = '100px';
-
-    let subtitle = recipeModal.currentTab;
-    console.dir(subtitle);
-    
     
     recipeModal.dom.appendChild(itemList.dom);
+  }
+
+  update(){
+    
   }
 }
 
@@ -518,7 +517,7 @@ class CombinerUI extends DomUI {
     const contents = document.createElement('div');
     contents.classList.add('contents');
     contents.style.padding = '0 0';
-    contents.style.top = `170px`;
+    contents.style.top = '160px';
 
     const combinerItem = document.createElement('div');
     combinerItem.className = 'title';
@@ -527,13 +526,13 @@ class CombinerUI extends DomUI {
     this.dom.appendChild(combinerItem);
     
     const itemInfo = document.createElement('div');
-    itemInfo.classList.add('combineItem')
+    itemInfo.classList.add('combineItemInfo')
     itemInfo.style.top = '70px';
 
     this.itemImg = document.createElement('img');
     this.itemImg.src = `/src/assets/items/item1.png`;
-    this.itemDesc = document.createElement('p');
-    this.itemDesc.innerText = '2줄아이템 설명글..2줄아이템 설명글..2줄아이템 설명글..2줄아이템 설명글..2줄아이템 설명글..2줄아이템 설명글..2줄아이템 설명글..2줄아이템 설명글..2줄아이템 설명글..2줄';
+    // this.itemDesc = document.createElement('p');
+    // this.itemDesc.innerText = '2줄아이템 설명글..2줄아이템 설명글..2줄아이템 설명글..2줄아이템 설명글..2줄아이템 설명글..2줄아이템 설명글..2줄아이템 설명글..2줄아이템 설명글..2줄아이템 설명글..2줄';
 
     itemInfo.appendChild(this.itemImg);
     // itemInfo.appendChild(this.itemDesc);
@@ -541,7 +540,7 @@ class CombinerUI extends DomUI {
 
     const itemStat = document.createElement('ul');
     itemStat.classList.add('itemStat');
-    
+
     let i = 1;
 
     while (i < 4) {
@@ -552,9 +551,6 @@ class CombinerUI extends DomUI {
     }
 
     this.materialsData = [{
-      item: 1,
-      count: 2,
-    },{
       item: 1,
       count: 2,
     },{
@@ -891,8 +887,6 @@ class Modal extends DomUI {
   }
 
   setSubTitle(text) {
-    console.log('-');
-
     this.subTitle = document.createElement('h2');
     this.subTitle.innerText = text;
     this.subTitle.className = 'sub-title';
@@ -925,12 +919,22 @@ class Modal extends DomUI {
         }
         tabButton.dom.classList.add('active');
         selected = tabButton.dom;
-
         this.currentTab = tab;
       });
     });
   }
 }
+
+
+class Tab {
+  constructor(tab, index, callback) {
+    this.tab = document.createElement('div');
+
+    this.callback = callback;
+  }
+}
+
+
 
 class Button extends DomUI {
   constructor(value, type) {
@@ -958,6 +962,18 @@ class Button extends DomUI {
 
   }
 }
+
+class ListCell {
+  constructor(parentList){
+    this.cell = document.createElement('li');
+    parentList.appendChild(this.cell);
+  }
+
+  onclick(){
+
+  }
+}
+
 
 class ListBox extends DomUI {
   constructor(data, listCallback, _viewWidth, _viewHeight) {
@@ -989,8 +1005,6 @@ class ListBox extends DomUI {
 
     this.listData.forEach((listCell) => {
       listCell = document.createElement('li');
-      listBox.appendChild(listCell);
-
       listCell.addEventListener('click', function (event) {
         if (selectedCell) {
           selectedCell.classList.remove('active');
@@ -999,6 +1013,8 @@ class ListBox extends DomUI {
         listCell.classList.add('active');
         selectedCell = listCell;
       });
+
+      listBox.appendChild(listCell);
     });
 
     scrollView.appendChild(scrollBlind);
