@@ -24,6 +24,20 @@
         "description": "체력을 소량 회복한다",
         "category": "consumables",
         "options": ["health(+10)"]
+    },"1002": {
+        "id": 1002,
+        "name": "중형 회복약",
+        "image": { "texture": "items.png", "x": 2, "y": 0 },
+        "description": "체력을 회복한다",
+        "category": "consumables",
+        "options": ["health(+50)"]
+    },"1003": {
+        "id": 1003,
+        "name": "대형 회복약",
+        "image": { "texture": "items.png", "x": 2, "y": 0 },
+        "description": "체력을 대량 회복한다",
+        "category": "consumables",
+        "options": ["health(+200)"]
     },
     "2001": {
         "id": 2001,
