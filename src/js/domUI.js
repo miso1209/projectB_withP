@@ -56,7 +56,7 @@ export default class DomUI {
   }
 
   // gnb 메뉴 배치 / 파티, 인벤토리, 레시피 
-  setGNB(stage) {
+  setGNB() {
     const gnb_party = new Button('', 'gnb-party');
 
     this.gnbContainer = document.createElement('div');
@@ -102,23 +102,26 @@ export default class DomUI {
   showInventory() {
     const pane = this.create();
     const inventory = new Modal(pane, 360, 460);
-    inventory.addTitle('Inventory');
+    inventory.addTitle('인벤토리');
     inventory.addCloseButton();
 
     const categoryTab = [{
       tab: '전체',
-      index: 0
+      index: 0, 
+      active: true
     }, {
       tab: '갑옷',
-      index: 1
+      index: 1,
+      active:false
     }, {
       tab: '무기',
-      index: 2
+      index: 2,
+      active:false
     }, {
       tab: '악세사리',
-      index: 3
+      index: 3,
+      active:false
     }];
-
     inventory.addTab(categoryTab);
 
     // # stat
@@ -188,7 +191,7 @@ export default class DomUI {
   showStatUI() {
     const pane = this.create();
     const statUI = new Modal(pane, 360, 460);
-    statUI.addTitle('Player Status');
+    statUI.addTitle('플레이어 정보');
     statUI.addCloseButton();
     statUI.className = 'statUI';
 
@@ -237,6 +240,7 @@ export default class DomUI {
       y: 10,
       item: 'Ring'
     }];
+    
     const equipItems = document.createElement('div');
 
     equipItems.className = 'equipItems';
@@ -412,74 +416,57 @@ export default class DomUI {
     loading.moveToCenter(200);
   }
 
-  // todo : 테스트용. 삭제 
-  // showProgressModal(time, onComplete) {
-  //   const modal = new SystemModal(300, 200, null, null);
-  //   modal.dom.style.top = '50%';
-  //   modal.dom.style.marginTop = 200 * -0.5 + 'px';
-  //   modal.contents.style.fontSize = '1.1rem';
-  //   modal.contents.style.margin = '10% auto 0';
-  //   modal.dom.style.position = 'ralitive';
-
-  //   const loading = new ProgressUI(modal.dom, time, onComplete);
-  //   loading.dom.style.transform = 'scale(0.7)';
-  //   loading.moveToCenter(50);
-  // }
-
+  // 레시피 + 아이템 조합창
   showCombineItemList(inputs) {
-    // # TODO : 조합가능한 아이템 리스트 노출
     const pane = this.create();
-    pane.classList.add('bScene');
+    pane.classList.add('screen');
 
-    const recipeUI = new RecipeUI(pane, 360, 460);
-    const combinerUI = new CombinerUI(pane,360, 460);
-    recipeUI.combiner = combinerUI;
+    this.recipeUI = new RecipeUI(pane, 360, 460);
+    //console.dir(inputs);
 
     for (const input of inputs) {
-    // 카테고리는 입력값에 의해서 동적으로 변한다
-    // 여기서 카테고리를 추가한다 : input.category;
-      recipeUI.category = input.category;
-      recipeUI.recipes = input.recipes;
-      recipeUI.update();
+      this.recipeUI.category = input.category;
+      this.recipeUI.recipes = input.recipes;
+      this.recipeUI.update();
 
       for (const recipe of input.recipes) {
-        combinerUI.recipe = recipe;
-        combinerUI.update();
-
-    //     console.log("이름: " + recipe.data.name, "소지개수:" + recipe.owned);
-        // for(const mat of recipe.materials) {
-    //       console.log("재료 : " + mat.data.name, "필요개수:" + mat.count, "소지개수:" + mat.owned );
-        // }
-    //     // 아이템 효과는 배열로 전달된다.
-    //     for (const option of recipe.data.options ) {
-    //       console.log(option.toString());
-    //     }
+        console.log("이름: " + recipe.data.name, "소지개수:" + recipe.owned);
+        for(const mat of recipe.materials) {
+          console.log("재료 : " + mat.data.name, "필요개수:" + mat.count, "소지개수:" + mat.owned );
+        }
+        // 아이템 효과는 배열로 전달된다.
+        for (const option of recipe.data.options ) {
+          console.log(option.toString());
+        }
       }
+      
     }
-
-    combinerUI.moveToRight(100);
-    recipeUI.moveToLeft(150);
+    this.recipeUI.moveToLeft(150);
   }
 }
 //. DomUI
+
+
+
 
 class RecipeUI extends DomUI {
   constructor(pane, width, height) {
     super();
 
-    this.recipeModal = new Modal(pane, width, height, onclick);
+    this.recipeModal = new Modal(pane, width, height);
     this.recipeModal.addCloseButton();
-    this.recipeModal.addTitle('Item Recipe');
-    // this.combinerUI = new CombinerUI(pane,360, 460);
-    // this.combinerUI.recipe = recipe;
-    // this.combinerUI.moveToRight(100);
+    this.recipeModal.addTitle('아이템 레시피');
+
+    // 아이템 조합창
+    this.combinerUI = new CombinerUI(pane, 360, 460);
+    this.combinerUI.moveToRight(100);
 
     this.dom = this.recipeModal.dom;
     
     this.category = null;
     this.recipes = null;
-    
-    const tabs = [
+
+    this.tabs = [
       {index:0, tab:'전체', category: 'all'},
       {index:1, tab:'무기', category: 'weapon'},
       {index:2, tab:'갑옷', category: 'armor'},
@@ -488,30 +475,37 @@ class RecipeUI extends DomUI {
       {index:5, tab:'약초', category: 'material'}
     ];
 
-    this.recipeModal.addTab(tabs);
-    this.list = new ListBox(320, 320, this.onclick);
-
+    this.list = new ListBox(320, 320, this.onclick.bind(this));
     this.list.dom.style.top = '100px';
     this.dom.appendChild(this.list.dom);
-    
   }
 
   update(){
     this.recipeModal.setSubTitle(this.category);
     this.list.update(this.recipes);
-    return;
+    this.recipeModal.addTab(this.tabs);
+    this.recipeModal.currentIndex = index;
+
+    // 최초실행 시 제일 처음 레시피 데이터로 업데이트
+    this.combinerUI.recipe = this.recipes[0];
+    this.combinerUI.update();
+
+    const index = this.tabs.findIndex(tab => tab.category === this.category);
   }
 
   onclick(data){
-    console.log('RecipeUI onclick ---- ' + data);
+    this.combinerUI.recipe = data;
+    this.combinerUI.update();
   }
 }
 
 class CombinerUI extends DomUI {
   constructor(pane, width, height) {
     super();
+
     const combineModal = new Modal(pane, width, height);
     this.dom = combineModal.dom;
+
     this.recipe = null;
     this.materialsData = null;
 
@@ -519,23 +513,29 @@ class CombinerUI extends DomUI {
     contents.classList.add('contents');
     contents.classList.add('combineItemInfo');
 
-    contents.style.padding = '0 0';
-    contents.style.top = '30px';
+    const combineItem = document.createElement('div');
+    combineItem.className = 'combineItem';
 
-    this.materialsName = document.createElement('div');
-    this.materialsName.className = 'title';
-    this.materialsName.style.fontSize = '20px';
-    this.materialsName.style.position = 'static';
+    this.itemName = document.createElement('div');
+    this.itemName.className = 'title';
 
-    this.materialsImg = document.createElement('img');
-    this.materialsImg.className = 'materialsImg';
+    this.itemDesc = document.createElement('p');
+    this.itemDesc.className = 'itemDesc';
 
-    contents.appendChild(this.materialsName);
-    contents.appendChild(this.materialsImg);
+    this.itemImg = document.createElement('img');
+    // this.itemImg = new ItemImage('items.png', 0, 0);
+    this.itemImg.className = 'itemImg';
 
+    combineItem.appendChild(this.itemImg);
+    combineItem.appendChild(this.itemDesc);
+    contents.appendChild(this.itemName);
+    contents.appendChild(combineItem);
+
+    // 아이템 옵션
     this.options = document.createElement('ul');
     this.options.classList.add('options');
 
+    // 재료 리스트
     this.materialInfo = document.createElement('ul');
     this.materialInfo.classList.add('materialInfo');
     
@@ -546,47 +546,49 @@ class CombinerUI extends DomUI {
     
     contents.appendChild(this.options);
     contents.appendChild(this.materialInfo);
-    
+
     this.dom.appendChild(contents);
     this.dom.appendChild(combineButton.dom);
   }
 
   update() {
-    console.log('조합 아이템 정보 update-!');
-    
-    this.materialsName.innerText = this.recipe.data.name;
-    this.materialsImg.src = `/src/assets/items/item1.png`;
-    this.materialsData = this.recipe.materials;
-
-    // 아이템 효과는 배열로 전달된다.
-    for (const option of this.recipe.data.options ) {
-      let node = document.createElement('li');
-      let opt_em = document.createElement('span');
-      let opt_val = document.createElement('span');
-      opt_val.innerText = '*';
-      opt_val.innerText = option.toString();
-
-      node.appendChild(opt_em);
-      node.appendChild(opt_val);
-      this.options.appendChild(node);
-    }
-    
-    this.materialsData.forEach(mat => {
-      let node = document.createElement('li');
-      let material1 = document.createElement('img');
-      let material2 = document.createElement('p');
-      let material3 = document.createElement('p');
-
-      material1.src = '/src/assets/items/item2.png';//mat.data.src;
-      material2.innerText = `${mat.data.name}`;
-      material3.innerText = `${mat.owned} / ${mat.count}`;
-
-      node.appendChild(material1);
-      node.appendChild(material2);
-      node.appendChild(material3);
-
-      this.materialInfo.appendChild(node);
-    });
+    if (this.recipe !== null) {
+      // 기존데이터 초기화
+      this.materialInfo.innerHTML = '';
+      this.options.innerHTML = '';
+      
+      this.itemName.innerText = this.recipe.data.name;
+      this.itemImg.src = `/src/assets/items/item5.png`;
+      this.itemDesc.innerText = this.recipe.data.description;
+      this.materialsData = this.recipe.materials;
+  
+      // 아이템 효과는 배열로 전달된다.
+      for (const option of this.recipe.data.options ) {
+        let node = document.createElement('li');
+        node.className = 'li';
+        node.innerText = option.toString();
+        this.options.appendChild(node);
+      }
+      
+      this.materialsData.forEach(mat => {
+        let node = document.createElement('li');
+        node.className = 'li';
+        // let material1 = document.createElement('img');
+        let material1 = new ItemImage('items.png', 14, 10);
+        let material2 = document.createElement('p');
+        let material3 = document.createElement('p');
+  
+        // material1.src = '/src/assets/items/items.png';
+        material2.innerText = `${mat.data.name}`;
+        material3.innerText = `${mat.owned} / ${mat.count}`;
+  
+        node.appendChild(material1.img);
+        node.appendChild(material2);
+        node.appendChild(material3);
+  
+        this.materialInfo.appendChild(node);
+      });
+    } 
   }
 
   doCombineItem() {
@@ -595,12 +597,37 @@ class CombinerUI extends DomUI {
   }
 }
 
+class ItemImage {
+  constructor(texture, x, y) {
+    const imageSprite = document.createElement('div');
+    imageSprite.classList.add('img');
+    imageSprite.style.backgroundImage = `url(/src/assets/items/${texture})`;
+    imageSprite.style.display = 'inline-block';
+    imageSprite.style.width = '32px';
+    imageSprite.style.height = '32px';
+    
+    imageSprite.style.backgroundPositionX = (x * 32) + 'px';
+    imageSprite.style.backgroundPositionY = (y * 32) + 'px';
+    
+    this.positionX = 0;
+    this.positionY = 0;
+
+    this.img = imageSprite;
+  }
+
+  getImage(x, y){
+    this.img.style.backgroundPositionX = (x * 32) + 'px';
+    this.img.style.backgroundPositionY = (y * 32) + 'px';
+  }
+}
 
 
 class SystemModal extends DomUI {
   constructor(width, height, text, callback) {
     super();
     this.pane = this.create();
+    this.pane.classList.add('screen');
+
     const confirmModal = new Modal(this.pane, width, height);
     confirmModal.dom.id = 'SYSTEM';
 
@@ -729,9 +756,11 @@ class Dialog extends DomUI {
       this.dom.classList.remove('portrait');
       return;
     }
+
+    
     this.dom.classList.add('portrait');
     this.speaker.src = `/src/assets/player${id}.png`;
-    this.speakerName.innerText = 'Hector'; // todo - player name
+    this.speakerName.innerText = '헥터'; // todo - player name
   }
 
   setText(text) {
@@ -910,8 +939,7 @@ class Modal extends DomUI {
       tabButton.dom.classList.add('tabBtn');
       tabButton.dom.style.top = 45 * tab.index + 10 + 'px';
       tabPane.appendChild(tabButton.dom);
-
-      tabButton.dom.addEventListener('click', function(event){
+      tabButton.dom.addEventListener('click', function(event) {
         if (selected) {
           selected.classList.remove('active');
         }
@@ -925,9 +953,21 @@ class Modal extends DomUI {
   }
 }
 
-
+// 탭 클래스를 추가한다.
 class Tab {
-  constructor(category, callback) {
+  constructor(callback) {
+    const tabButton = document.createElement('li');
+    const icon = document.createElement('span');
+    const text = document.createElement('span');
+    
+    this.dom = tabButton;
+    this.activce = false;
+
+    text.innerText = value;
+    text.style.textShadow = '1px 2px 2px #444'
+    tabButton.appendChild(icon);
+    tabButton.appendChild(text);
+
     const data = [
       {index:0, tab:'전체', category: 'all'},
       {index:1, tab:'무기', category: 'weapon'},
@@ -937,7 +977,6 @@ class Tab {
       {index:5, tab:'약초', category: 'material'}
     ];
     
-    this.active = false;
     this.callback = callback;
 
     for(const d in data) {
@@ -946,8 +985,12 @@ class Tab {
       }
     }
   }
+  // onclick(category){
+  //   this.game.getRecipes(category);
+  //   this.showCombineItemList([{ category:category, recipes: recipes }]);
+  //   ????
+  // }
 }
-
 
 class Button extends DomUI {
   constructor(value, type) {
@@ -971,12 +1014,13 @@ class Button extends DomUI {
   }
 }
 
+
 class ListCell {
   constructor(cellData, cellType){
     this.cell = document.createElement('li');
     this.cell.classList.add('list-cell');
     this.data = cellData;
-
+    // 타입별로 리스트의 셀 스타일을 교체함.
     if ( cellType === 'recipe') {
       this.showRecipeCell();
     }
@@ -999,7 +1043,7 @@ class ListCell {
   }
 }
 
-
+// 현재는 리스트형태 / 갤러리도 추가할 것.
 class ListBox extends DomUI {
   constructor(_viewWidth, _viewHeight, callback) {
     super();
@@ -1034,7 +1078,7 @@ class ListBox extends DomUI {
 
   update (recipes) {
     if (recipes.length < 1) {
-      console.log('해당 카테고리 레시피가 없습니다.');
+      this.dom.innerText = '해당 카테고리 레시피가 없습니다.';
       return;
     }
 
@@ -1048,19 +1092,16 @@ class ListBox extends DomUI {
         }
         listCell.cell.classList.add('active');
         selectedCell = listCell.cell;
-        
-        console.log(recipe);
-        this.recipeData = recipe;
       });
-      
-      listCell.cell.addEventListener('click', this.onclick.bind(this));
+
+      this.recipeData = recipe;
+      listCell.cell.addEventListener('click', this.setRecipe.bind(this, this.recipeData));
       this.list.appendChild(listCell.cell);
     }
   }
 
-  onclick(){
-    console.log('ListBox onclick --- ' + this.recipeData);
-    this.callback(this.recipeData);
+  setRecipe(data){
+    this.callback(data);
   }
 }
 

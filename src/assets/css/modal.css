@@ -96,6 +96,9 @@ div[class*='column-'] p {
   margin-top: 10px;
   padding: 0;
 
+  font-size: 14px;
+  color: #fff;
+
   /* border: 1px solid #1f130a; */
   overflow: hidden;
 }
@@ -342,7 +345,7 @@ div[class*='column-'] p {
 
 .list-cell p {
   float: left;
-  font-size: 16px;
+  font-size: 15px;
   color: #fff;
   margin-left:10px;
 }
