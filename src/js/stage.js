@@ -96,6 +96,7 @@ export default class Stage extends PIXI.Container {
         this.groundOverlay = new PIXI.Container();
         this.objectContainer = new PIXI.Container();
 
+        this.mapContainer.addChild(this.bottomContainer);
         this.mapContainer.addChild(this.groundContainer);
         this.mapContainer.addChild(this.groundOverlay);
         this.mapContainer.addChild(this.objectContainer);
