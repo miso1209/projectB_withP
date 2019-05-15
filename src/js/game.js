@@ -169,7 +169,6 @@ export default class Game extends EventEmitter {
                 // 페이드 인이 끝나면 게임을 시작한다
                 this.currentMode = this.exploreMode;
                 const event = this.stage.findEventByName(eventName);
-                console.log(event, eventName);
                 if (event) {
                     this.currentMode.prepare(event.gridX, event.gridY);
                 } else {

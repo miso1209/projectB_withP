@@ -418,7 +418,7 @@ export default class Stage extends PIXI.Container {
 
     moveCharacter(character, x, y) {
 
-        const target = this.getInteractiveTarget(x, y) || this.eventMap[x + y * this.mapWidth];
+        const target = this.getInteractiveTarget(x, y);
         const ignoreTarget = target ? true : false;
 
         // 다음 위치에서부터 시작을 한다
@@ -456,8 +456,9 @@ export default class Stage extends PIXI.Container {
         const target = this.getObjectAt(x, y);
         if (target && target.isInteractive) {
             return target;
+        } else {
+            return this.eventMap[x + y * this.mapWidth];
         }
-        return null;
     }
 
     moveObjThrough(obj, path) {
@@ -474,7 +475,9 @@ export default class Stage extends PIXI.Container {
             this.onObjMoveStepEnd(obj);
             return;
         }
-        if (this.interactTarget && path.length === 1) {
+
+        if (this.interactTarget instanceof Prop && path.length === 1) {
+            this.stopObject(obj);
             this.onObjMoveStepEnd(obj);
             return;
         }
@@ -493,9 +496,11 @@ export default class Stage extends PIXI.Container {
     }
 
     stopObject(obj)  {
+        this.highlightPath(obj.currentPath, null);
         obj.currentPath = null;
         obj.currentTarget = null;
         obj.currentTargetTile = null;
+        obj.currentPathStep = 0;
         this.moveEngine.removeMovable(obj);
     }
 
@@ -517,7 +522,6 @@ export default class Stage extends PIXI.Container {
         obj.currentTargetTile = null;
         const pathEnded = (0 > obj.currentPathStep);
         this.moveEngine.removeMovable(obj);
-        let forceStop = false;
 
         // 기존이름프랍들을 제거한다
         for(const prop of this.nameTiles) {
@@ -536,12 +540,8 @@ export default class Stage extends PIXI.Container {
             }
         }
 
-        // 만약에 인터랙티브 타겟이 있고, 길이가 하나 남았으면 정지시킨다.
-        if (this.interactTarget && obj.currentPathStep === 0) {
-            forceStop = true;
-        }
         
-        if (!pathEnded && !forceStop) {
+        if (!pathEnded) {
             this.moveObjThrough(obj, obj.currentPath.slice(0, obj.currentPath.length-1));
         }
         else {
