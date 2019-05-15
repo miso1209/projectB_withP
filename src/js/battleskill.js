@@ -1,43 +1,20 @@
-// 움직인다 때린다 돌아온다.
-// 각 에니메이션 이름, 시전자 이펙트, 범위 이펙트, 날리는 오브제, 피격 이펙트, 전체 피격 이펙트
-// 캐릭터에게 접근 가능해야 하며, screenEffect, Effecter에 접근 가능해야한다.
-// Battle에 접근 가능하면 좋겠다.
-
-// 스킬 구조를 어떻게 짤까..
-// 플레이어 행위, 각 프레임별 동작.
-// 시전 이펙트, 전체 이펙트, 하나의 이펙트, 으.. 케이스가 너무많아. 머리 터진다.
 import MovieClip from './movieclip';
 import {DIRECTIONS} from './define';
 import { SKILL_STATUS, ACTIVE_TYPE, TARGETING_TYPE, EFFECT_TYPE } from './battledeclare';
-import { getDirectionName } from './battleutils';
+import { getDirectionName, Movies } from './battleutils';
 import { BaseBuff } from './battlecharacterstat';
 
-// 스텟 계산 파둬야 하는데.. 이건 언제하지?.. 어렵다.. 스탯이랑, 에큅으로 능력치 계산 및 스킬에 적용.. 염두해두자.. 생각해두자.
-// 기본적으로 배틀캐릭터가 Stat 을 가진 BaseCharacter공유할텐데.. 이것도 조금 머리아프네.. 주말간 생각해볼것.
-// 스킬 클래스 엄청 더러움.. 깔끔하게 변경할 수 없을까?
 class BaseSkill {
     constructor(character) {
         this.status = SKILL_STATUS.IDLE;
         this.proponent = character;
         this.activeType = ACTIVE_TYPE.PASSIVE;
-
-        // JSON을 받아서 각각의 정보를 넣는다. (지금은 하드코딩)
-        this.damage = 80 + Math.round(Math.random()*30);
-
-        // beforeAttack : Attack 전까지의 frame, doneAttack : Attack 액션이 모두 수행될때 까지의 frame, afterAttack 다음 공격까지의 delay frame (쉽게말해 쿨타임)
-        this._delay = {
-            beforeAttack: 50,
-            doneAttack: 78,
-            afterAttack: 100
-        };
-
-        // 현재 남아있는 후딜을 계산하기 위함..
-        this.currentDelay = Math.round(60 + this._delay.afterAttack * Math.random());
-
-        // 타겟팅 만들어야 한다..
+        this.currentDelay = 100;
+        this.coolTime = 100;
         this.targeting = null;
         this.target = null;
-        this.movies = [];
+        this.movies = new Movies();
+        this.result = this;
     }
 
     isReady() {
@@ -59,7 +36,43 @@ class BaseSkill {
         }
     }
 
-    // 타겟 선정알고리즘.. 지금은 우선 살아있는 랜덤 캐릭터 반환.
+    done(battle) {
+        this.result = null;
+        this.status = SKILL_STATUS.IDLE;
+        if (battle.scene.queue.peak() === this) {
+            battle.scene.queue.dequeue();
+        }
+    }
+
+    init(battle, targeting) {
+        this.result = this;
+        this.status = SKILL_STATUS.ACTION;
+        this.currentDelay = this.coolTime;
+        this.target = this.getTarget(battle.characters, targeting);
+    }
+
+
+    action(battle) {
+        if (this.proponent.baseStat.hp <= 0) {
+            this.done(battle);
+        }
+
+        this.movies.update();
+
+        const action = this.getSkillAction(battle);
+        
+        if (this.status === SKILL_STATUS.WAIT) {
+            this.movies.push(action);
+            action.playAndDestroy();
+        }
+
+        return this.result;
+    }
+
+    getSkillAction(battle) {
+        return null;
+    }
+
     getTarget(characters, targeting) {
         let target = null;
         let enemies = [];
@@ -123,38 +136,19 @@ class BaseSkill {
 
         return target;
     }
-
-    updateMovieclips() {
-        let len = this.movies.length;
-        for (let i = 0; i < len; i++) {
-            const movie = this.movies[i];
-            movie.update();
-            if (!movie._playing) {
-                this.movies.splice(i, 1);
-                i--; len--;
-            }
-        }
-    }
 }
 
 export class RunAwaySkill extends BaseSkill {
     constructor(character) {
         super(character);
-        this._delay.afterAttack = 200;
-        this.currentDelay = 200;
     }
 
-    init(battle) {
-        this.currentFrame = 0;
-        this.status = SKILL_STATUS.WAIT;
-        this.currentDelay = this._delay.afterAttack;
-        
-        const movieClip = new MovieClip(
+    getSkillAction(battle) {
+        return new MovieClip(
             MovieClip.Timeline(1, 1, null, () => {
-                this.target = this.getTarget(battle.characters, TARGETING_TYPE.ENEMY_FRONT_TANK);
+                this.init(battle, TARGETING_TYPE.ENEMY_FRONT_TANK);
             }),
             MovieClip.Timeline(1, 1, null, () => {
-                // battle.showChatBallon(this.proponent, "제가 조금 바빠서 이만..", 0.5);
                 this.proponent.animation.setAnimation('idle_' + getDirectionName(this.proponent.animation.currentDir));
                 this.proponent.animation.anim.loop = true;
             }),
@@ -165,33 +159,11 @@ export class RunAwaySkill extends BaseSkill {
                 this.proponent.animation.setAnimation('walk_' + getDirectionName(this.proponent.animation.currentDir));
                 this.proponent.animation.anim.loop = true;
             }),
-            MovieClip.Timeline(62, 62, null, () => {
+            MovieClip.Timeline(62, 63, null, () => {
+                this.proponent.baseStat.hp = 0;
+                this.done(battle);
             })
         );
-
-        this.movies.push(movieClip);
-        movieClip.playAndStop();
-    }
-
-    action(battle) {
-        if (this.proponent.baseStat.hp <= 0) {
-            return null;
-        }
-
-        this.updateMovieclips();
-        this.status = SKILL_STATUS.ACTION;
-        
-        if (this.currentFrame === 62) {
-            this.currentFrame = 0;
-            // 임시로 후딜을 랜덤으로 주어 공격 순서가 뒤죽박죽이 되게 만들어 본다.
-            this.proponent.baseStat.hp = 0;
-            this.status = SKILL_STATUS.IDLE;
-
-            return null;
-        }
-        this.currentFrame++;
-        
-        return this;
     }
 }
 
@@ -200,13 +172,10 @@ export class CrouchSkill extends BaseSkill {
         super(character);
     }
 
-    init(battle) {
-        this.currentFrame = 0;
-        this.status = SKILL_STATUS.WAIT;
-        
-        const movieClip = new MovieClip(
+    getSkillAction(battle) {
+        return new MovieClip(
             MovieClip.Timeline(1, 1, null, () => {
-                this.target = this.getTarget(battle.characters, TARGETING_TYPE.ENEMY_FRONT_TANK);
+                this.init(battle, TARGETING_TYPE.ENEMY_FRONT_TANK);
             }),
             MovieClip.Timeline(1, 1, null, () => {
                 this.proponent.animation.setAnimation('idle_' + getDirectionName(this.proponent.animation.currentDir));
@@ -238,32 +207,11 @@ export class CrouchSkill extends BaseSkill {
                 this.proponent.buffEffecter.addBuffEffect(buff);
                 this.proponent.animation.setAnimation('crouch_' + getDirectionName(this.proponent.animation.currentDir));
                 this.proponent.animation.anim.loop = true;
+            }),
+            MovieClip.Timeline(50, 51, null, () => {
+                this.done(battle);
             })
         );
-
-        this.movies.push(movieClip);
-        movieClip.playAndStop();
-    }
-
-    action(battle) {
-        if (this.proponent.baseStat.hp <= 0) {
-            return null;
-        }
-
-        this.updateMovieclips();
-        this.status = SKILL_STATUS.ACTION;
-        
-        if (this.currentFrame === 50) {
-            this.currentFrame = 0;
-            // 임시로 후딜을 랜덤으로 주어 공격 순서가 뒤죽박죽이 되게 만들어 본다.
-            this.currentDelay = Math.round(60 + this._delay.afterAttack * Math.random());
-            this.status = SKILL_STATUS.IDLE;
-
-            return null;
-        }
-        this.currentFrame++;
-        
-        return this;
     }
 }
 
@@ -271,27 +219,16 @@ export class CrouchSkill extends BaseSkill {
 export class DoubleMeleeSkill extends BaseSkill {
     constructor(character) {
         super(character);
-        this._delay = {
-            beforeAttack: [50, 96],
-            doneAttack: 137,
-            afterAttack: 200
-        };
     }
 
-    init(battle) {
-        this.currentFrame = 0;
-        this.status = SKILL_STATUS.WAIT;
-        this.damage = 80 + Math.round(Math.random()*15);
-        this.currentDelay = this._delay.afterAttack;
-        
-        // Proponent 의 움직임, 애니메이션처리.
+    getSkillAction(battle) {
         const start = { x: this.proponent.position.x, y: this.proponent.position.y };
         const vector = this.proponent.animation.currentDir === DIRECTIONS.SW? -1 : 1;
         const to = { x: this.proponent.position.x + 16 * vector, y: this.proponent.position.y - 8 * vector };
 
-        const movieClip = new MovieClip(
+        return new MovieClip(
             MovieClip.Timeline(1, 1, null, () => {
-                this.target = this.getTarget(battle.characters, TARGETING_TYPE.ENEMY_FRONT_TANK);
+                this.init(battle, TARGETING_TYPE.ENEMY_FRONT_TANK);
             }),
             MovieClip.Timeline(1, 10, this.proponent, [
                 ["x", start.x, to.x, "outCubic"],
@@ -301,9 +238,25 @@ export class DoubleMeleeSkill extends BaseSkill {
                 this.proponent.animation.setAnimation('attack2_' + getDirectionName(this.proponent.animation.currentDir));
                 this.proponent.animation.anim.loop = false;
             }),
+            MovieClip.Timeline(50, 50, null, () => {
+                this.damage = 80 + Math.round(Math.random()*15);
+                this.damage = Math.round((1 - this.target.baseStat.defense) * this.damage);
+                battle.stage.effecter.addEffect(this.target, { name: 'slash', animationLength: 8, removeFrame: 60, speed: 0.5 });
+                battle.stage.effecter.addFontEffect({target: this.target, outputText: '-' + this.damage});
+                this.target.onDamage(this.damage);
+            }),
             MovieClip.Timeline(63, 64, null, () => {
                 this.proponent.animation.setAnimation('attack_' + getDirectionName(this.proponent.animation.currentDir));
                 this.proponent.animation.anim.loop = false;
+            }),
+            MovieClip.Timeline(96, 96, null, () => {
+                this.damage = 80 + Math.round(Math.random()*15);
+                if (this.target) {
+                    this.damage = Math.round((1 - this.target.baseStat.defense) * this.damage);
+                    battle.stage.effecter.addEffect(this.target, { name: 'slash', animationLength: 8, removeFrame: 60, speed: 0.5 });
+                    battle.stage.effecter.addFontEffect({target: this.target, outputText: '-' + this.damage});
+                    this.target.onDamage(this.damage);
+                }
             }),
             MovieClip.Timeline(125, 126, null, () => {
                 this.proponent.animation.setAnimation('idle_' + getDirectionName(this.proponent.animation.currentDir));
@@ -313,7 +266,7 @@ export class DoubleMeleeSkill extends BaseSkill {
                 ["x", to.x, start.x, "outCubic"],
                 ["y", to.y, start.y, "outCubic"]
             ]),
-            MovieClip.Timeline(137, 137, null, () => {
+            MovieClip.Timeline(137, 138, null, () => {
                 const buff = new BaseBuff('double_melee', {
                     target: this.proponent,
                     retensionFrame: 900,
@@ -337,47 +290,9 @@ export class DoubleMeleeSkill extends BaseSkill {
                 })
                 this.proponent.stat.addBuff(buff);
                 this.proponent.buffEffecter.addBuffEffect(buff);
+                this.done(battle);
             }),
         );
-
-        this.movies.push(movieClip);
-        movieClip.playAndStop();
-    }
-
-    action(battle) {
-        if (this.proponent.baseStat.hp <= 0) {
-            return null;
-        }
-
-        this.updateMovieclips();
-        this.status = SKILL_STATUS.ACTION;
-
-        if (this.currentFrame === this._delay.beforeAttack[0]) {
-            this.damage = 80 + Math.round(Math.random()*15);
-            this.damage = Math.round((1 - this.target.baseStat.defense) * this.damage);
-
-            battle.stage.effecter.addEffect(this.target, { name: 'slash', animationLength: 8, removeFrame: 60, speed: 0.5 });
-            battle.stage.effecter.addFontEffect({target: this.target, outputText: '-' + this.damage});
-            this.target.onDamage(this.damage);
-        } else if (this.currentFrame === this._delay.beforeAttack[1]) {
-            this.damage = 80 + Math.round(Math.random()*15);
-            if (this.target) {
-                this.damage = Math.round((1 - this.target.baseStat.defense) * this.damage);
-    
-                battle.stage.effecter.addEffect(this.target, { name: 'slash', animationLength: 8, removeFrame: 60, speed: 0.5 });
-                battle.stage.effecter.addFontEffect({target: this.target, outputText: '-' + this.damage});
-                this.target.onDamage(this.damage);
-            }
-        } else if (this.currentFrame === this._delay.doneAttack) {
-            this.currentFrame = 0;
-            // 임시로 후딜을 랜덤으로 주어 공격 순서가 뒤죽박죽이 되게 만들어 본다.
-            this.status = SKILL_STATUS.IDLE;
-
-            return null;
-        }
-        this.currentFrame++;
-        
-        return this;
     }
 }
 
@@ -385,26 +300,16 @@ export class DoubleMeleeSkill extends BaseSkill {
 export class MeleeSkill extends BaseSkill {
     constructor(character) {
         super(character);
-        this._delay = {
-            beforeAttack: 50,
-            doneAttack: 92,
-            afterAttack: 100
-        };
     }
 
-    init(battle) {
-        this.currentFrame = 0;
-        this.status = SKILL_STATUS.WAIT;
-        this.damage = 80 + Math.round(Math.random()*15);
-        
-        // Proponent 의 움직임, 애니메이션처리.
+    getSkillAction(battle) {
         const start = { x: this.proponent.position.x, y: this.proponent.position.y };
         const vector = this.proponent.animation.currentDir === DIRECTIONS.SW? -1 : 1;
         const to = { x: this.proponent.position.x + 16 * vector, y: this.proponent.position.y - 8 * vector };
 
-        const movieClip = new MovieClip(
+        return new MovieClip(
             MovieClip.Timeline(1, 1, null, () => {
-                this.target = this.getTarget(battle.characters, TARGETING_TYPE.ENEMY_FRONT_TANK);
+                this.init(battle, TARGETING_TYPE.ENEMY_FRONT_TANK);
             }),
             MovieClip.Timeline(1, 10, this.proponent, [
                 ["x", start.x, to.x, "outCubic"],
@@ -414,6 +319,13 @@ export class MeleeSkill extends BaseSkill {
                 this.proponent.animation.setAnimation('attack_' + getDirectionName(this.proponent.animation.currentDir));
                 this.proponent.animation.anim.loop = false;
             }),
+            MovieClip.Timeline(50, 50, null, () => {
+                this.damage = 80 + Math.round(Math.random()*15);
+                this.damage = Math.round((1 - this.target.baseStat.defense) * this.damage);
+                battle.stage.effecter.addEffect(this.target, { name: 'slash', animationLength: 8, removeFrame: 60, speed: 0.5 });
+                battle.stage.effecter.addFontEffect({target: this.target, outputText: '-' + this.damage});
+                this.target.onDamage(this.damage);
+            }),
             MovieClip.Timeline(78, 80, null, () => {
                 this.proponent.animation.setAnimation('idle_' + getDirectionName(this.proponent.animation.currentDir));
                 this.proponent.animation.anim.loop = true;
@@ -422,39 +334,10 @@ export class MeleeSkill extends BaseSkill {
                 ["x", to.x, start.x, "outCubic"],
                 ["y", to.y, start.y, "outCubic"]
             ]),
-            MovieClip.Timeline(91, 91, null, () => {
+            MovieClip.Timeline(91, 92, null, () => {
+                this.done(battle);
             }),
         );
-
-        this.movies.push(movieClip);
-        movieClip.playAndStop();
-    }
-
-    action(battle) {
-        if (this.proponent.baseStat.hp <= 0) {
-            return null;
-        }
-
-        this.updateMovieclips();
-        this.status = SKILL_STATUS.ACTION;
-
-        if (this.currentFrame === this._delay.beforeAttack) {
-            this.damage = Math.round((1 - this.target.baseStat.defense) * this.damage);
-
-            battle.stage.effecter.addEffect(this.target, { name: 'slash', animationLength: 8, removeFrame: 60, speed: 0.5 });
-            battle.stage.effecter.addFontEffect({target: this.target, outputText: '-' + this.damage});
-            this.target.onDamage(this.damage);
-        } else if (this.currentFrame === this._delay.doneAttack) {
-            this.currentFrame = 0;
-            // 임시로 후딜을 랜덤으로 주어 공격 순서가 뒤죽박죽이 되게 만들어 본다.
-            this.currentDelay = Math.round(60 + this._delay.afterAttack * Math.random());
-            this.status = SKILL_STATUS.IDLE;
-
-            return null;
-        }
-        this.currentFrame++;
-        
-        return this;
     }
 }
 
@@ -462,85 +345,55 @@ export class MeleeSkill extends BaseSkill {
 export class ProjectileSkill extends BaseSkill {
     constructor(character) {
         super(character);
-
-        // JSON을 받아서 각각의 정보를 넣는다. (지금은 하드코딩)
-        this.damage = 90 + Math.round(Math.random()*30);
     }
 
-    init(battle) {
-        this.currentFrame = 0;
-        this.status = SKILL_STATUS.WAIT;
-        this.damage = 90 + Math.round(Math.random()*30);
-        
-        const movieClip = new MovieClip(
+    getSkillAction(battle) {
+        return new MovieClip(
             MovieClip.Timeline(1, 1, null, () => {
-                this.target = this.getTarget(battle.characters, TARGETING_TYPE.ENEMY_FRONT_TANK);
+                this.init(battle, TARGETING_TYPE.ENEMY_FRONT_TANK);
             }),
             MovieClip.Timeline(11, 25, null, () => {
                 this.proponent.animation.setAnimation('attack_' + getDirectionName(this.proponent.animation.currentDir));
                 this.proponent.animation.anim.loop = false;
             }),
+            MovieClip.Timeline(50, 50, null, () => {
+                const projectile = new PIXI.Sprite(PIXI.Texture.fromFrame("fireBall.png"));
+                projectile.anchor.x = 0.5;
+                projectile.anchor.y = 0.5;
+                projectile.position.x = this.proponent.position.x + this.proponent.width / 2;
+                projectile.position.y = this.proponent.position.y - this.proponent.height / 2;
+                projectile.alpha = 0;
+                projectile.blendMode = PIXI.BLEND_MODES.ADD;
+                projectile.rotation = Math.atan2((this.target.y - this.target.animation.height / 2) - (projectile.y - projectile.height / 2), (this.target.x - this.target.animation.width / 2) - (projectile.x - projectile.width / 2));
+                battle.stage.effecter.detailEffectContainer.addChild(projectile);
+    
+                const movieClip = new MovieClip(
+                    MovieClip.Timeline(1, 18, projectile, [["alpha", 0, 1, "outCubic"]]),
+                    MovieClip.Timeline(1, 28, projectile, [["x", projectile.position.x, this.target.position.x + this.target.animation.width / 2, "outCubic"]]),
+                    MovieClip.Timeline(1, 28, projectile, [["y", projectile.position.y, this.target.position.y - this.target.animation.height / 2, "outCubic"]]),
+                    MovieClip.Timeline(18, 28, projectile, [["alpha", 1, 0, "outCubic"]]),
+                    MovieClip.Timeline(28, 28, null, () => {
+                        battle.stage.effecter.detailEffectContainer.removeChild(projectile);
+                    }),
+                );
+        
+                this.movies.push(movieClip);
+                movieClip.playAndDestroy();
+            }),
             MovieClip.Timeline(63, 65, null, () => {
                 this.proponent.animation.setAnimation('idle_' + getDirectionName(this.proponent.animation.currentDir));
                 this.proponent.animation.anim.loop = true;
             }),
-            MovieClip.Timeline(78, 78, null, () => {
+            MovieClip.Timeline(78, 79, null, () => {
+                this.damage = 90 + Math.round(Math.random()*30);
+                this.damage = Math.round((1 - this.target.baseStat.defense) * this.damage);
+                battle.stage.effecter.addEffect(this.target, { name: 'explosion', animationLength: 16, removeFrame: 60, speed: 0.5 });
+                battle.stage.effecter.addFontEffect({target: this.target, outputText: '-' + this.damage});
+                this.target.onDamage(this.damage);
+
+                this.done(battle);
             }),
         );
-
-        this.movies.push(movieClip);
-        movieClip.playAndStop();
-    }
-
-    action(battle) {
-        if (this.proponent.baseStat.hp <= 0) {
-            return null;
-        }
-
-        this.updateMovieclips();
-        this.status = SKILL_STATUS.ACTION;
-
-        if (this.currentFrame === this._delay.beforeAttack) {
-            // 투사체 설정 음.. 방향이 맞는지 모르겠다..
-            const projectile = new PIXI.Sprite(PIXI.Texture.fromFrame("fireBall.png"));
-            projectile.anchor.x = 0.5;
-            projectile.anchor.y = 0.5;
-            projectile.position.x = this.proponent.position.x + this.proponent.width / 2;
-            projectile.position.y = this.proponent.position.y - this.proponent.height / 2;
-            projectile.alpha = 0;
-            projectile.blendMode = PIXI.BLEND_MODES.ADD;
-            // 둘 사이의 좌표를 이용 atan 으로 rotation 돌려보자.
-            projectile.rotation = Math.atan2((this.target.y - this.target.animation.height / 2) - (projectile.y - projectile.height / 2), (this.target.x - this.target.animation.width / 2) - (projectile.x - projectile.width / 2));
-            battle.stage.effecter.addChild(projectile);
-
-            const movieClip = new MovieClip(
-                MovieClip.Timeline(1, this._delay.doneAttack - this.currentFrame -10, projectile, [["alpha", 0, 1, "outCubic"]]),
-                MovieClip.Timeline(1, this._delay.doneAttack - this.currentFrame, projectile, [["x", projectile.position.x, this.target.position.x + this.target.animation.width / 2, "outCubic"]]),
-                MovieClip.Timeline(1, this._delay.doneAttack - this.currentFrame, projectile, [["y", projectile.position.y, this.target.position.y - this.target.animation.height / 2, "outCubic"]]),
-                MovieClip.Timeline(this._delay.doneAttack - this.currentFrame - 10, this._delay.doneAttack - this.currentFrame, projectile, [["alpha", 1, 0, "outCubic"]]),
-                MovieClip.Timeline(this._delay.doneAttack - this.currentFrame, this._delay.doneAttack - this.currentFrame + 1, null, () => {
-                    battle.stage.effecter.removeChild(projectile);
-                }),
-            );
-    
-            this.movies.push(movieClip);
-            movieClip.playAndStop();
-        } else if (this.currentFrame === this._delay.doneAttack) {
-            this.damage = Math.round((1 - this.target.baseStat.defense) * this.damage);
-
-            battle.stage.effecter.addEffect(this.target, { name: 'explosion', animationLength: 16, removeFrame: 60, speed: 0.5 });
-            battle.stage.effecter.addFontEffect({target: this.target, outputText: '-' + this.damage});
-            this.target.onDamage(this.damage);
-
-            this.currentFrame = 0;
-            this.currentDelay = Math.round(60 + this._delay.afterAttack * Math.random());
-            this.status = SKILL_STATUS.IDLE;
-
-            return null;
-        }
-        this.currentFrame++;
-        
-        return this;
     }
 }
 
@@ -548,101 +401,64 @@ export class ProjectileSkill extends BaseSkill {
 export class ArrowShotingSkill extends BaseSkill {
     constructor(character) {
         super(character);
-        this._delay = {
-            beforeAttack: 50,
-            doneAttack: 85,
-            afterAttack: 100
-        };
-
-        // JSON을 받아서 각각의 정보를 넣는다. (지금은 하드코딩)
-        this.damage = 130 + Math.round(Math.random()*30);
     }
 
-    init(battle) {
-        this.currentFrame = 0;
-        this.status = SKILL_STATUS.WAIT;
-        this.damage = 130 + Math.round(Math.random()*30);
-        
-        const movieClip = new MovieClip(
+    getSkillAction(battle) {
+        return new MovieClip(
             MovieClip.Timeline(1, 1, null, () => {
-                this.target = this.getTarget(battle.characters, TARGETING_TYPE.ENEMY_BACK_CARRY);
+                this.init(battle, TARGETING_TYPE.ENEMY_BACK_CARRY);
             }),
             MovieClip.Timeline(11, 25, null, () => {
                 this.proponent.animation.setAnimation('attack_' + getDirectionName(this.proponent.animation.currentDir));
                 this.proponent.animation.anim.loop = false;
             }),
+            MovieClip.Timeline(50, 50, null, () => {
+                // 투사체 설정 음.. 방향이 맞는지 모르겠다..
+                const projectile = new PIXI.Sprite(PIXI.Texture.fromFrame("arrow.png"));
+                projectile.anchor.x = 0.5;
+                projectile.anchor.y = 0.5;
+                projectile.position.x = this.proponent.position.x + this.proponent.width / 2;
+                projectile.position.y = this.proponent.position.y - this.proponent.height / 2;
+                projectile.alpha = 0;
+                projectile.blendMode = PIXI.BLEND_MODES.ADD;
+                battle.stage.effecter.detailEffectContainer.addChild(projectile);
+    
+                const totalFrame = 35;
+                let vecY = -6;
+                const gravity = -2 * vecY / (totalFrame + 1);
+                const sx = ((this.target.position.x + this.target.animation.width / 2) - projectile.position.x) / totalFrame;
+                let sy = ((this.target.position.y - this.target.animation.height / 2) - projectile.position.y) / totalFrame + vecY;
+    
+                const projectileMovieClip = new MovieClip(
+                    MovieClip.Timeline(1, 10, projectile, [["alpha", 0, 1, "outCubic"]]),
+                    MovieClip.Timeline(1, totalFrame, null, () => {
+                        sy += gravity;
+                        projectile.position.x += sx;
+                        projectile.position.y += sy;
+                        projectile.rotation = Math.atan2(sy, sx);
+                    }),
+                    MovieClip.Timeline(totalFrame, totalFrame, null, () => {
+                        battle.stage.effecter.detailEffectContainer.removeChild(projectile);
+                    }),
+                );
+        
+                this.movies.push(projectileMovieClip);
+                projectileMovieClip.playAndStop();
+            }),
             MovieClip.Timeline(63, 65, null, () => {
                 this.proponent.animation.setAnimation('idle_' + getDirectionName(this.proponent.animation.currentDir));
                 this.proponent.animation.anim.loop = true;
             }),
-            MovieClip.Timeline(78, 78, null, () => {
+            MovieClip.Timeline(85, 86, null, () => {
+                this.damage = 130 + Math.round(Math.random()*30);
+                this.damage = Math.round((1 - this.target.baseStat.defense) * this.damage);
+                battle.stage.effecter.addEffect(this.target, { name: 'shoted', animationLength: 18, removeFrame: 60, speed: 0.5 });
+                battle.stage.effecter.addFontEffect({target: this.target, outputText: '-' + this.damage});
+                this.target.onDamage(this.damage);
+
+                this.done(battle);
             }),
         );
-
-        this.movies.push(movieClip);
-        movieClip.playAndStop();
-    }
-
-    action(battle) {
-        if (this.proponent.baseStat.hp <= 0) {
-            return null;
-        }
-
-        this.updateMovieclips();
-        this.status = SKILL_STATUS.ACTION;
-
-        if (this.currentFrame === this._delay.beforeAttack) {
-            // 투사체 설정 음.. 방향이 맞는지 모르겠다..
-            const projectile = new PIXI.Sprite(PIXI.Texture.fromFrame("arrow.png"));
-            projectile.anchor.x = 0.5;
-            projectile.anchor.y = 0.5;
-            projectile.position.x = this.proponent.position.x + this.proponent.width / 2;
-            projectile.position.y = this.proponent.position.y - this.proponent.height / 2;
-            projectile.alpha = 0;
-            projectile.blendMode = PIXI.BLEND_MODES.ADD;
-            battle.stage.effecter.addChild(projectile);
-
-            const totalFrame = this._delay.doneAttack - this.currentFrame;
-            let vecY = -6;
-            const gravity = -2 * vecY / (totalFrame + 1);
-            const sx = ((this.target.position.x + this.target.animation.width / 2) - projectile.position.x) / totalFrame;
-            let sy = ((this.target.position.y - this.target.animation.height / 2) - projectile.position.y) / totalFrame + vecY;
-
-            const movieClip = new MovieClip(
-                MovieClip.Timeline(1, this._delay.doneAttack - this.currentFrame - 10, projectile, [["alpha", 0, 1, "outCubic"]]),
-                MovieClip.Timeline(1, this._delay.doneAttack - this.currentFrame, null, () => {
-                    sy += gravity;
-                    projectile.position.x += sx;
-                    projectile.position.y += sy;
-                    projectile.rotation = Math.atan2(sy, sx);
-                }),
-                // MovieClip.Timeline(this._delay.doneAttack - this.currentFrame - 5, this._delay.doneAttack - this.currentFrame, projectile, [["alpha", 1, 0, "outCubic"]]),
-                MovieClip.Timeline(this._delay.doneAttack - this.currentFrame, this._delay.doneAttack - this.currentFrame + 1, null, () => {
-                    battle.stage.effecter.removeChild(projectile);
-                }),
-            );
-    
-            this.movies.push(movieClip);
-            movieClip.playAndStop();
-        } else if (this.currentFrame === this._delay.doneAttack) {
-            this.damage = Math.round((1 - this.target.baseStat.defense) * this.damage);
-
-            battle.stage.effecter.addEffect(this.target, { name: 'shoted', animationLength: 18, removeFrame: 60, speed: 0.5 });
-            battle.stage.effecter.addFontEffect({target: this.target, outputText: '-' + this.damage});
-            this.target.onDamage(this.damage);
-            
-            // 임시로 독화살 구현
-            // this.target.statusManager.addConditionError(new Poison({ retensionTime: 300 }), true, false);
-
-            this.currentFrame = 0;
-            this.currentDelay = Math.round(60 + this._delay.afterAttack * Math.random());
-            this.status = SKILL_STATUS.IDLE;
-
-            return null;
-        }
-        this.currentFrame++;
-        
-        return this;
     }
 }
 
@@ -650,139 +466,92 @@ export class ArrowShotingSkill extends BaseSkill {
 export class ArrowHighShotingSkill extends BaseSkill {
     constructor(character) {
         super(character);
-        this._delay = {
-            beforeAttack: 50,
-            doneAttack: 130,
-            afterAttack: 200
-        };
-
-        // JSON을 받아서 각각의 정보를 넣는다. (지금은 하드코딩)
-        this.damage = 180 + Math.round(Math.random()*30);
     }
 
-    init(battle) {
-        this.currentFrame = 0;
-        this.status = SKILL_STATUS.WAIT;
-        this.damage = 180 + Math.round(Math.random()*30);
-        this.currentDelay = this._delay.afterAttack;
-        
-        const movieClip = new MovieClip(
+    getSkillAction(battle) {
+        return new MovieClip(
             MovieClip.Timeline(1, 1, null, () => {
-                this.target = this.getTarget(battle.characters, TARGETING_TYPE.ENEMY_MIN_HP);
+                this.init(battle, TARGETING_TYPE.ENEMY_MIN_HP);
             }),
             MovieClip.Timeline(11, 25, null, () => {
                 this.proponent.animation.setAnimation('attack_' + getDirectionName(this.proponent.animation.currentDir));
                 this.proponent.animation.anim.loop = false;
             }),
+            MovieClip.Timeline(50, 50, null, () => {
+                // 투사체 설정 음.. 방향이 맞는지 모르겠다..
+                const direnction = getDirectionName(this.proponent.animation.currentDir) === 'sw' ? -1 : 1;
+                const effect = battle.stage.effecter.addEffect(this.proponent, { name: 'shotingeffect', animationLength: 5, removeFrame: 60, speed: 0.2, flipX: direnction === 1, rotation: -30 });
+    
+                if (direnction === 1) {
+                    effect.position.x -= 2;
+                    effect.position.y -= 12;
+                } else {
+                    effect.position.x -= 5;
+                    effect.position.y += 22;
+                }
+    
+                const projectile = new PIXI.Sprite(PIXI.Texture.fromFrame("arrow.png"));
+                projectile.anchor.x = 0.5;
+                projectile.anchor.y = 0.5;
+                projectile.position.x = this.proponent.position.x + this.proponent.width / 2;
+                projectile.position.y = this.proponent.position.y - this.proponent.height / 2;
+                projectile.alpha = 0;
+                projectile.blendMode = PIXI.BLEND_MODES.ADD;
+                battle.stage.effecter.detailEffectContainer.addChild(projectile);
+    
+                const totalFrame = 80;
+                let vecY = -15;
+                const gravity = -2 * vecY / (totalFrame + 1);
+                const sx = ((this.target.position.x + this.target.animation.width / 2) - projectile.position.x) / totalFrame;
+                let sy = ((this.target.position.y - this.target.animation.height / 2) - projectile.position.y) / totalFrame + vecY;
+    
+                const projectileMovieClip = new MovieClip(
+                    MovieClip.Timeline(1, 10, projectile, [["alpha", 0, 1, "outCubic"]]),
+                    MovieClip.Timeline(1, totalFrame, null, () => {
+                        sy += gravity;
+                        projectile.position.x += sx;
+                        projectile.position.y += sy;
+                        projectile.rotation = Math.atan2(sy, sx);
+                    }),
+                    MovieClip.Timeline(totalFrame, totalFrame, null, () => {
+                        battle.stage.effecter.detailEffectContainer.removeChild(projectile);
+                    }),
+                );
+        
+                this.movies.push(projectileMovieClip);
+                projectileMovieClip.playAndStop();
+            }),
             MovieClip.Timeline(63, 65, null, () => {
                 this.proponent.animation.setAnimation('idle_' + getDirectionName(this.proponent.animation.currentDir));
                 this.proponent.animation.anim.loop = true;
             }),
-            MovieClip.Timeline(78, 78, null, () => {
+            MovieClip.Timeline(130, 131, null, () => {
+                this.damage = 180 + Math.round(Math.random()*30);
+                this.damage = Math.round((1 - this.target.baseStat.defense) * this.damage);
+                battle.stage.effecter.addEffect(this.target, { name: 'shoted', animationLength: 18, removeFrame: 60, speed: 0.5 });
+                battle.stage.effecter.addFontEffect({target: this.target, outputText: '-' + this.damage});
+                this.target.onDamage(this.damage);
+
+                this.done(battle);
             }),
         );
-
-        this.movies.push(movieClip);
-        movieClip.playAndStop();
-    }
-
-    action(battle) {
-        if (this.proponent.baseStat.hp <= 0) {
-            return null;
-        }
-
-        this.updateMovieclips();
-        this.status = SKILL_STATUS.ACTION;
-
-        if (this.currentFrame === this._delay.beforeAttack) {
-            // 투사체 설정 음.. 방향이 맞는지 모르겠다..
-            const direnction = getDirectionName(this.proponent.animation.currentDir) === 'sw' ? -1 : 1;
-            const effect = battle.stage.effecter.addEffect(this.proponent, { name: 'shotingeffect', animationLength: 5, removeFrame: 60, speed: 0.2, flipX: direnction === 1, rotation: -30 });
-
-            if (direnction === 1) {
-                effect.position.x -= 2;
-                effect.position.y -= 12;
-            } else {
-                effect.position.x -= 5;
-                effect.position.y += 22;
-            }
-
-            const projectile = new PIXI.Sprite(PIXI.Texture.fromFrame("arrow.png"));
-            projectile.anchor.x = 0.5;
-            projectile.anchor.y = 0.5;
-            projectile.position.x = this.proponent.position.x + this.proponent.width / 2;
-            projectile.position.y = this.proponent.position.y - this.proponent.height / 2;
-            projectile.alpha = 0;
-            projectile.blendMode = PIXI.BLEND_MODES.ADD;
-            battle.stage.effecter.addChild(projectile);
-
-            const totalFrame = this._delay.doneAttack - this.currentFrame;
-            let vecY = -15;
-            const gravity = -2 * vecY / (totalFrame + 1);
-            const sx = ((this.target.position.x + this.target.animation.width / 2) - projectile.position.x) / totalFrame;
-            let sy = ((this.target.position.y - this.target.animation.height / 2) - projectile.position.y) / totalFrame + vecY;
-
-            const movieClip = new MovieClip(
-                MovieClip.Timeline(1, 10, projectile, [["alpha", 0, 1, "outCubic"]]),
-                MovieClip.Timeline(1, this._delay.doneAttack - this.currentFrame, null, () => {
-                    sy += gravity;
-                    projectile.position.x += sx;
-                    projectile.position.y += sy;
-                    projectile.rotation = Math.atan2(sy, sx);
-                }),
-                // MovieClip.Timeline(this._delay.doneAttack - this.currentFrame - 5, this._delay.doneAttack - this.currentFrame, projectile, [["alpha", 1, 0, "outCubic"]]),
-                MovieClip.Timeline(this._delay.doneAttack - this.currentFrame, this._delay.doneAttack - this.currentFrame + 1, null, () => {
-                    battle.stage.effecter.removeChild(projectile);
-                }),
-            );
-    
-            this.movies.push(movieClip);
-            movieClip.playAndStop();
-        } else if (this.currentFrame === this._delay.doneAttack) {
-            this.damage = Math.round((1 - this.target.baseStat.defense) * this.damage);
-
-            battle.stage.effecter.addEffect(this.target, { name: 'shoted', animationLength: 18, removeFrame: 60, speed: 0.5 });
-            battle.stage.effecter.addFontEffect({target: this.target, outputText: '-' + this.damage});
-            this.target.onDamage(this.damage);
-            
-            // 임시로 독화살 구현
-            // this.target.statusManager.addConditionError(new Poison({ retensionTime: 300 }), true, false);
-
-            this.currentFrame = 0;
-            this.status = SKILL_STATUS.IDLE;
-
-            return null;
-        }
-        this.currentFrame++;
-        
-        return this;
     }
 }
 
 export class FireRainSkill extends BaseSkill {
     constructor(character) {
         super(character);
-        this._delay = {
-            beforeAttack: 50,
-            doneAttack: 252,
-            afterAttack: 200
-        };
     }
 
-    init(battle) {
-        this.currentFrame = 0;
-        this.status = SKILL_STATUS.WAIT;
-        this.damage = 50 + Math.round(Math.random()*30);
-        this.currentDelay = this._delay.afterAttack;
-        
+    getSkillAction(battle) {
         // Proponent 의 움직임, 애니메이션처리.
         const start = { x: this.proponent.position.x, y: this.proponent.position.y };
         const vector = this.proponent.animation.currentDir === DIRECTIONS.SW? -1 : 1;
         const to = { x: this.proponent.position.x + 16 * vector, y: this.proponent.position.y - 8 * vector };
 
-        const movieClip = new MovieClip(
+        return new MovieClip(
             MovieClip.Timeline(1, 1, null, () => {
-                this.target = this.getTarget(battle.characters, TARGETING_TYPE.ENEMY_ALL);
+                this.init(battle, TARGETING_TYPE.ENEMY_ALL);
             }),
             MovieClip.Timeline(1, 10, this.proponent, [
                 ["x", start.x, to.x, "outCubic"],
@@ -808,7 +577,7 @@ export class FireRainSkill extends BaseSkill {
                     projectile.alpha = 1;
                     projectile.blendMode = PIXI.BLEND_MODES.ADD;
                     projectile.rotation = Math.atan2((target.y - target.animation.height / 2) - (projectile.y - projectile.height / 2), (target.x - target.animation.width / 2) - (projectile.x - projectile.width / 2));
-                    battle.stage.effecter.addChild(projectile);
+                    battle.stage.effecter.detailEffectContainer.addChild(projectile);
 
                     const fireRainMovie = new MovieClip(
                         MovieClip.Timeline(startTime, endTime, projectile, [["x", projectile.position.x, target.position.x + target.animation.width / 2, "inCubic"]]),
@@ -821,7 +590,7 @@ export class FireRainSkill extends BaseSkill {
                             battle.stage.effecter.addFontEffect({target: target, outputText: '-' + this.damage});
                             target.onDamage(this.damage);
 
-                            battle.stage.effecter.removeChild(projectile);
+                            battle.stage.effecter.detailEffectContainer.removeChild(projectile);
                         }),
                     );
     
@@ -838,60 +607,26 @@ export class FireRainSkill extends BaseSkill {
                 ["x", to.x, start.x, "outCubic"],
                 ["y", to.y, start.y, "outCubic"]
             ]),
-            MovieClip.Timeline(91, 91, null, () => {
+            MovieClip.Timeline(230, 231, null, () => {
+                this.done(battle);
             }),
         );
-
-        this.movies.push(movieClip);
-        movieClip.playAndStop();
-    }
-
-    action(battle) {
-        if (this.proponent.baseStat.hp <= 0) {
-            return null;
-        }
-
-        this.updateMovieclips();
-        this.status = SKILL_STATUS.ACTION;
-
-        if (this.currentFrame === this._delay.beforeAttack) {
-        } else if (this.currentFrame === this._delay.doneAttack) {
-            this.currentFrame = 0;
-            // 임시로 후딜을 랜덤으로 주어 공격 순서가 뒤죽박죽이 되게 만들어 본다.
-            this.status = SKILL_STATUS.IDLE;
-
-            return null;
-        }
-        this.currentFrame++;
-        
-        return this;
     }
 }
 
 export class HealSkill extends BaseSkill {
     constructor(character) {
         super(character);
-        this._delay = {
-            beforeAttack: 50,
-            doneAttack: 92,
-            afterAttack: 200
-        };
     }
 
-    init(battle) {
-        this.currentFrame = 0;
-        this.status = SKILL_STATUS.WAIT;
-        this.damage = 80 + Math.round(Math.random()*15);
-        this.currentDelay = this._delay.afterAttack;
-        
-        // Proponent 의 움직임, 애니메이션처리.
+    getSkillAction(battle) {
         const start = { x: this.proponent.position.x, y: this.proponent.position.y };
         const vector = this.proponent.animation.currentDir === DIRECTIONS.SW? -1 : 1;
         const to = { x: this.proponent.position.x + 16 * vector, y: this.proponent.position.y - 8 * vector };
 
-        const movieClip = new MovieClip(
+        return new MovieClip(
             MovieClip.Timeline(1, 1, null, () => {
-                this.target = this.getTarget(battle.characters, TARGETING_TYPE.ALLY_ALL);
+                this.init(battle, TARGETING_TYPE.ALLY_ALL);
             }),
             MovieClip.Timeline(1, 10, this.proponent, [
                 ["x", start.x, to.x, "outCubic"],
@@ -901,6 +636,21 @@ export class HealSkill extends BaseSkill {
                 this.proponent.animation.setAnimation('magic_' + getDirectionName(this.proponent.animation.currentDir));
                 this.proponent.animation.anim.loop = false;
             }),
+            MovieClip.Timeline(50, 50, null, () => {
+                this.target.forEach((target) => {
+                    // 이펙트 추가한다.
+                    if (target.baseStat.hp + 30 <= target.baseStat.maxHp && target.baseStat.hp > 0) {
+                        target.baseStat.hp += 30;
+                        battle.stage.effecter.addEffect(target, { name: 'healeffect', animationLength: 25, removeFrame: 120, speed: 0.5 });
+                    } else if (target.baseStat.hp > 0) {
+                        target.baseStat.hp = target.baseStat.maxHp;
+                        battle.stage.effecter.addEffect(target, { name: 'healeffect', animationLength: 25, removeFrame: 120, speed: 0.5 });
+                    }
+    
+                    const hpWidth = (target.baseStat.hp< 0 ? 0 : target.baseStat.hp) / target.baseStat.maxHp * 34;
+                    target.progressBar.setWidth(hpWidth);
+                });
+            }),
             MovieClip.Timeline(78, 80, null, () => {
                 this.proponent.animation.setAnimation('idle_' + getDirectionName(this.proponent.animation.currentDir));
                 this.proponent.animation.anim.loop = true;
@@ -909,45 +659,9 @@ export class HealSkill extends BaseSkill {
                 ["x", to.x, start.x, "outCubic"],
                 ["y", to.y, start.y, "outCubic"]
             ]),
-            MovieClip.Timeline(91, 91, null, () => {
+            MovieClip.Timeline(91, 92, null, () => {
+                this.done(battle);
             }),
         );
-
-        this.movies.push(movieClip);
-        movieClip.playAndStop();
-    }
-
-    action(battle) {
-        if (this.proponent.baseStat.hp <= 0) {
-            return null;
-        }
-
-        this.updateMovieclips();
-        this.status = SKILL_STATUS.ACTION;
-
-        if (this.currentFrame === this._delay.beforeAttack) {
-            this.target.forEach((target) => {
-                // 이펙트 추가한다.
-                if (target.baseStat.hp + 30 <= target.baseStat.maxHp && target.baseStat.hp > 0) {
-                    target.baseStat.hp += 30;
-                    battle.stage.effecter.addEffect(target, { name: 'healeffect', animationLength: 25, removeFrame: 120, speed: 0.5 });
-                } else if (target.baseStat.hp > 0) {
-                    target.baseStat.hp = target.baseStat.maxHp;
-                    battle.stage.effecter.addEffect(target, { name: 'healeffect', animationLength: 25, removeFrame: 120, speed: 0.5 });
-                }
-
-                const hpWidth = (target.baseStat.hp< 0 ? 0 : target.baseStat.hp) / target.baseStat.maxHp * 34;
-                target.progressBar.setWidth(hpWidth);
-            });
-        } else if (this.currentFrame === this._delay.doneAttack) {
-            this.currentFrame = 0;
-            // 임시로 후딜을 랜덤으로 주어 공격 순서가 뒤죽박죽이 되게 만들어 본다.
-            this.status = SKILL_STATUS.IDLE;
-
-            return null;
-        }
-        this.currentFrame++;
-        
-        return this;
     }
 }

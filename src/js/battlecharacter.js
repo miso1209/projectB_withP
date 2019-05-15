@@ -87,13 +87,9 @@ export class BattleCharacter extends PIXI.Container {
         this.enqueueIdlePassiveSkill(scene);
     }
 
-    // 이 아랫단의 스킬 updateSkill관련 , skill관련은 전부 다시짜자..
     enqueueIdlePassiveSkill(scene) {
-        // 이 부분에 스킬 여러개가 레디상태 인 경우, 어떤 스킬을 Enqueue할지 정하는 로직 필요할듯 하다.
         let selectedPassiveSkill = null;
 
-        // 음.. 지금은 후딜을 공유하지 않게 작성하긴 했는데.. 후딜을 공유하지 않고 패시브 스킬을 여러개 가진다면? 연속적으로 enqueue로 공격한 후 딜레이를 할 것 같다.
-        // 맞기도하고 아닌것 같기도하고.. 정책적으로 정해야 할듯.
         this.skills.forEach((skill) => {
             if(skill.isReady() && skill.activeType === ACTIVE_TYPE.PASSIVE && selectedPassiveSkill === null) {
                 selectedPassiveSkill = skill;
@@ -102,7 +98,6 @@ export class BattleCharacter extends PIXI.Container {
 
         if (selectedPassiveSkill) {
             selectedPassiveSkill.setWait();
-            selectedPassiveSkill.init(scene.battle);
             scene.queue.enqueue(selectedPassiveSkill);
         }
     }

@@ -20,6 +20,11 @@ export class Scene {
     update() {
         this.movies.update();
         this.tweens.update();
+
+        this.battle.characters.forEach((character) => {
+            character.update(this);
+        });
+
         this.playScene();
     }
 
@@ -122,21 +127,11 @@ export class BattleScene extends Scene {
     }
 
     playScene() {
-        // // 캐릭터 전부 업데이트.
         const battleStatus = this.getBattleStatus();
-        this.battle.characters.forEach((character) => {
-            character.update(this);
-        });
 
-        // // 액션 실행하고, 액션 완료 시 큐에서 제거한다.
         if (this.queue.hasItem()) {
             const action = this.queue.peak();
-            // update에 battle을 준 이유는 스킬에서 effecter에 접근하기 위함.
-            const updateResult = action.action(this.battle);
-
-            if(updateResult === null) {
-                this.queue.delete(action);
-            }
+            action.action(this.battle);
         } else if (battleStatus.isEnd && battleStatus.aliveCamp.ally) {
             this.battle.changeScene(new VictoryScene(this.battle));
         } else if (battleStatus.isEnd && battleStatus.aliveCamp.enemy) {

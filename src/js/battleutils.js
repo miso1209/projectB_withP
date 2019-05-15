@@ -10,6 +10,10 @@ export class Movies {
         this.movies.push(movieClip);
     }
 
+    hasMovie() {
+        return this.movies.length > 0;
+    }
+
     update() {
         let len = this.movies.length;
         for (let i = 0; i < len; i++) {

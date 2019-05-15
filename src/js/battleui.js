@@ -94,7 +94,6 @@ class BattlePartyActiveUi extends PIXI.Container {
                 portrait.on('mouseup', () => {
                     if (character.skills[1].isReady()) {
                         character.skills[1].setWait();
-                        character.skills[1].init(this.battle);
                         this.battle.scene.queue.enqueue(character.skills[1]);
                     }
                 });
@@ -159,7 +158,7 @@ class BattleActivePortraitUi extends PIXI.Container {
         const hpWidth = (this.character.baseStat.hp< 0 ? 0 : this.character.baseStat.hp) / this.character.baseStat.maxHp * 34;
         this.hpProgressBar.setWidth(hpWidth);
 
-        const activeWidth = (this.character.skills[1]._delay.afterAttack - (this.character.skills[1].currentDelay< 0 ? 0 : this.character.skills[1].currentDelay)) / this.character.skills[1]._delay.afterAttack * 34;
+        const activeWidth = (this.character.skills[1].coolTime - (this.character.skills[1].currentDelay< 0 ? 0 : this.character.skills[1].currentDelay)) / this.character.skills[1].coolTime * 34;
         this.activeProgressBar.setWidth(activeWidth);
 
         this.hpProgressBar.update();
