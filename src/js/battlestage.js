@@ -1,132 +1,120 @@
-import MovieClip from './movieclip';
-import Tweens from './tweens';
-import { DIRECTIONS } from './define';
+import { BattleEffecter } from "./battleeffecter";
+import { Movies } from "./battleutils";
+import Tweens from "./tweens";
+import { STAGE_BASE_POSITION, CHARACTER_CAMP, STAGE_STATUS } from "./battledeclare";
+import { DIRECTIONS } from "./define";
 
-export const BASE_POSITION = {
-    PLAYER_X: 182,
-    PLAYER_Y: 243,
-    ENEMY_X: 357,
-    ENEMY_Y: 153,
-    CENTER_X: -54,
-    CENTER_Y: -140
-};
-
-/*
-    지금 맵 따로, 캐릭터 배치되는 위치 따로, 이펙터 위치 따로 움직인다. 이걸 어떻게 처리할지 생각해야 할 것이다.
-    캐릭터 이펙트, 맵, 캐릭터 배치 container는 같이가야 하지만,
-    화면 Flash는 따로가야 한다. 이 부분 생각해서 다시 만들어 둘 것..
-*/
-export default class BattleStage extends PIXI.Container {
-    constructor(mapName) {
+// 배틀의 실제 스테이지에 관련된 클래스 작성한다.
+export class BattleStage extends PIXI.Container {
+    // map Texture 어떻게 변경할거야?
+    constructor() {
         super();
-
-        this.scale.x = 2;
-        this.scale.y = 2;
-        
-        // 통짜 배틀 이미지를 박는다.. 추후 크기를 고정사이즈로 정의하든, 몇개의 사이즈(small, big, wide 같이..?)를 규격화하든 해야할 것 같다.
-        const battleStageSprite = new PIXI.Sprite(PIXI.Texture.fromFrame(mapName));
-        this.map = battleStageSprite;
-        this.addChild(battleStageSprite);
-
-        this.movies = [];
+        this.movies = new Movies();
         this.tweens = new Tweens();
 
-        this.focusMapAbsolutePos({x: 1000}, true, null);
-        this.focusCenterPos();
+        this.container = new PIXI.Container(); // 이펙트, 캐릭터, 맵
+        this.mapContainer = new PIXI.Container(); // 캐릭터, 맵
+        this.background = null;
+        this.map = new PIXI.Sprite(PIXI.Texture.fromFrame("battleMap1.png"));
+        this.effecter = new BattleEffecter();
+
+        this.state = STAGE_STATUS.MOVING;
+
+        this.buildStage();
+        this.container.position.x = 1200;
+        this.setScale({x: 2, y: 2});
     }
 
     update() {
-        this.updateMovieclips();
+        this.movies.update();
         this.tweens.update();
+        this.effecter.update();
     }
 
-    // Stage Vibration을 위한 코드.. 따라서 이것도 사실상 Stage 관련으로 빠져야한다.
-    updateMovieclips() {
-        let len = this.movies.length;
-        for (let i = 0; i < len; i++) {
-            const movie = this.movies[i];
-            movie.update();
-            if (!movie._playing) {
-                this.movies.splice(i, 1);
-                i--; len--;
-            }
-        }
-    }
-
-    setParty(party, baseX, baseY, directions) {
-        let [front, back] = [party.front, party.back];
-        if (directions === DIRECTIONS.SW) {
-            [front, back] = [back, front];
-        }
-
-        front.forEach((character, index) => {
-            if (character) {
-                character.position.x = baseX - 36 + index * 36;
-                character.position.y = baseY - 20 + index * 20;
-                character.changeVisualToDirection(directions);
-                this.addChild(character);
+    setCharacters(characters, callback) {
+        // 무비클립으로 순차적으로 애니메이션 처리하며 박아주자.
+        characters.forEach((character) => {
+            this.mapContainer.addChild(character);
+            // 좌표수정.
+            if (character.camp === CHARACTER_CAMP.ALLY) {
+                character.position.x = STAGE_BASE_POSITION.PLAYER_X + character.gridPosition.x * 36 - character.gridPosition.y * 36;
+                character.position.y = STAGE_BASE_POSITION.PLAYER_Y + character.gridPosition.x * 20 + character.gridPosition.y * 20;
+                character.animation.changeVisualToDirection(DIRECTIONS.NE);
+            } else if (character.camp === CHARACTER_CAMP.ENEMY) {
+                character.position.x = STAGE_BASE_POSITION.ENEMY_X + character.gridPosition.x * 36 + character.gridPosition.y * 36;
+                character.position.y = STAGE_BASE_POSITION.ENEMY_Y + character.gridPosition.x * 20 - character.gridPosition.y * 20;
+                character.animation.changeVisualToDirection(DIRECTIONS.SW);
             }
         });
 
-        baseX -= 36;
-        baseY += 20;
-
-        back.forEach((character, index) => {
-            if (character) {
-                character.position.x = baseX - 36 + index * 36;
-                character.position.y = baseY - 20 + index * 20;
-                character.changeVisualToDirection(directions);
-                this.addChild(character);
-            }
-        });
-    }
-
-    focusMapAbsolutePos(position, direct, callback) {
-        position.x = position.x !== undefined? position.x: this.map.position.x;
-        position.y = position.y !== undefined? position.y: this.map.position.y;
-        if (direct) {
-            this.map.position.x = position.x;
-            this.map.position.y = position.y;
-            if (callback) {
-                callback();
-            }
-        } else {
-            this.tweens.addTween(this.map.position, 1, { x: position.x, y: position.y }, 0, "easeInOut", true, () => {
-                if (callback) {
-                    callback();
-                }
-            });
+        if (callback) {
+            callback();
         }
     }
-    
-    // Stage 관련 코드 => 맵 흔들림, 맵 포지션 변경(사실상 카메라)는 따로 빼야하지 않을까?.. 여긴 전투로직 만들어야 할 것 같은데..? 
-    focusCenterPos(callback) {
-        this.tweens.addTween(this.position, 1, { x: BASE_POSITION.CENTER_X, y: BASE_POSITION.CENTER_Y }, 0, "easeInOut", true, () => {
-            if (callback) {
-                callback();
-            }
+
+    setStage(options) {
+        if (options.background) {
+            this.background = new PIXI.Sprite(PIXI.Texture.fromFrame(options.background));
+        }
+        if (options.map) {
+            this.map = new PIXI.Sprite(PIXI.Texture.fromFrame(options.map));
+        }
+    }
+
+    buildStage() {
+        this.container = new PIXI.Container();
+        this.mapContainer = new PIXI.Container();
+        this.effecter = new BattleEffecter();
+
+        if (this.background) {
+            this.addChild(this.background);
+        }
+        if (this.map) {
+            this.mapContainer.addChild(this.map);
+        }
+
+        this.container.addChild(this.mapContainer);
+        this.container.addChild(this.effecter);
+        this.addChild(this.container);
+    }
+
+    setScale(scale) {
+        this.container.scale = scale;
+    }
+
+    focusCenter() {
+        this.state = STAGE_STATUS.MOVING;
+        this.tweens.addTween(this.container.position, 1, { x: STAGE_BASE_POSITION.CENTER_X, y: STAGE_BASE_POSITION.CENTER_Y }, 0, "easeInOut", true, () => {
+            this.state = STAGE_STATUS.DONE;
         });
     }
 
-    // stage 의 position을 vibration중에 건드린다면 문제가 될 수 있다.
+    // Character는 State두어서 Vibration중첩 안생기겠지만 여전히 얘는 Vibration중첩이 생길 수 있다.
     vibrationStage(scale, duration) {
-        const x = this.position.x;
-        const y = this.position.y;
-        let vibrationScale = scale;
+        if (this.state === STAGE_STATUS.DONE) {
+            this.state = STAGE_STATUS.MOVING;
 
-        const movieClip = new MovieClip(
-            MovieClip.Timeline(1, duration, null, () => {
-                this.position.x = x + vibrationScale;
-                this.position.y = y + vibrationScale;
-                vibrationScale = vibrationScale / 6 * -5;
-            }),
-            MovieClip.Timeline(duration + 1, duration + 1, null, () => {
-                this.position.x = x;
-                this.position.y = y;
-            })
-        );
-
-        this.movies.push(movieClip);
-        movieClip.playAndStop();
+            const x = this.container.position.x;
+            const y = this.container.position.y;
+            let vibrationScale = scale;
+    
+            const movieClip = new MovieClip(
+                MovieClip.Timeline(1, duration, null, () => {
+                    this.container.position.x = x + vibrationScale;
+                    this.container.position.y = y + vibrationScale;
+                    vibrationScale = vibrationScale / 6 * -5;
+                }),
+                MovieClip.Timeline(duration + 1, duration + 1, null, () => {
+                    this.container.position.x = x;
+                    this.container.position.y = y;
+                }),
+                MovieClip.Timeline(duration + 2, duration + 2, null, () => {
+                    this.state = STAGE_STATUS.DONE;
+                })
+            );
+    
+            this.movies.push(movieClip);
+            movieClip.playAndStop();
+        }
     }
 }

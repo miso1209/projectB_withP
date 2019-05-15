@@ -1,5 +1,5 @@
 import FieldCharacter from './fieldcharacter';
-import BattleCharacter from './battlecharacter';
+import {BattleCharacter} from './battlecharacter';
 import CharacterSpec from './characterspec';
 import Player from './player';
 

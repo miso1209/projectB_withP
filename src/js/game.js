@@ -4,7 +4,7 @@ import Tweens from "./tweens";
 import Stage  from "./stage";
 
 import Player  from "./player";
-import Battle  from "./battle";
+import {Battle}  from "./battle";
 import Explore  from "./explore";
 
 import EntityFactory from './entityfactory';
@@ -197,7 +197,7 @@ export default class Game extends EventEmitter {
             // 기존 스테이지를 보이지 않게 한다 (스테이지를 떠날 필요는없다)
             this.battleMode.prepare();
             this.gamelayer.removeChild(this.stage);
-            this.gamelayer.addChild(this.battleMode.stage);
+            this.gamelayer.addChild(this.battleMode.container);
             // 배틀을 사용한다
             this.currentMode = this.battleMode;
         }
@@ -206,7 +206,7 @@ export default class Game extends EventEmitter {
     leaveBattle() {
         if (this.currentMode === this.battleMode) {
             // 기존 스테이지를 보이지 않게 한다 (스테이지를 떠날 필요는없다)
-            this.gamelayer.removeChild(this.battleMode.stage);
+            this.gamelayer.removeChild(this.battleMode.container);
             this.gamelayer.addChild(this.stage);
             // 배틀을 사용한다
             this.currentMode = this.exploreMode;
