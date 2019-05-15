@@ -9,24 +9,23 @@ export default class DomUI {
 
   create() {
     console.log('-- DomUI --');
-
     const container = document.createElement('div');
     container.className = 'uiContainer';
     container.style.top = this.gamePane.offsetTop + 'px';
     document.body.appendChild(container);
 
-    this.preventEvent(container, true);
+    this.preventEvent(container);
+    // container.style.pointerEvents = 'auto'; // 클릭 이벤트.
     return container;
   }
 
   preventEvent(container, clickable) {
-    let iscClickable;
+    let iscClickable = clickable;
 
-    if (clickable === false) {
-      iscClickable = 'none'; // 타일클릭 가능
-    } else {
-      iscClickable = 'auto'; // 타일클릭 방지 
+    if (clickable === undefined) {
+      iscClickable = 'auto'; // 타일클릭 가능
     }
+
     container.style.pointerEvents = iscClickable; // 클릭 이벤트.
   }
 
@@ -122,6 +121,7 @@ export default class DomUI {
       index: 3,
       active:false
     }];
+
     inventory.addTab(categoryTab);
 
     // # stat
@@ -299,7 +299,7 @@ export default class DomUI {
       itemIcon.style.display = 'inline-block';
       itemIcon.style.width = '32px';
       itemIcon.style.height = '32px';
-      itemIcon.style.backgroundPositionX = -(item.x * 32) + 'px';
+      itemIcon.style.backgroundPositionX = (item.x * 32) + 'px';
       itemIcon.style.backgroundPositionY = -(item.y * 32) + 'px';
 
       itemIcon.append(itemName);
@@ -430,13 +430,19 @@ export default class DomUI {
       this.recipeUI.update();
 
       for (const recipe of input.recipes) {
-        console.log("이름: " + recipe.data.name, "소지개수:" + recipe.owned);
+        // console.log('--- recipe.data ---')
+        // console.dir(recipe.data);
+        // console.log('--- / ---');
+        // console.log("이름: " + recipe.data.name, "소지개수:" + recipe.owned);
         for(const mat of recipe.materials) {
-          console.log("재료 : " + mat.data.name, "필요개수:" + mat.count, "소지개수:" + mat.owned );
+          // console.log('--- recipe.materials ---')
+          // console.dir(mat);
+          // console.log('--- / ---');
+          // console.log("재료 : " + mat.data.name, "필요개수:" + mat.count, "소지개수:" + mat.owned );
         }
         // 아이템 효과는 배열로 전달된다.
         for (const option of recipe.data.options ) {
-          console.log(option.toString());
+          // console.log(option.toString());
         }
       }
       
@@ -467,35 +473,41 @@ class RecipeUI extends DomUI {
     this.recipes = null;
 
     this.tabs = [
-      {index:0, tab:'전체', category: 'all'},
-      {index:1, tab:'무기', category: 'weapon'},
-      {index:2, tab:'갑옷', category: 'armor'},
-      {index:3, tab:'악세사리', category: 'accessories'},
+      {index:0, tab:'무기', category: 'weapon'},
+      {index:1, tab:'방어구', category: 'armor'},
+      {index:2, tab:'악세사리', category: 'accessory'},
+      {index:3, tab:'재료', category: 'material'},
       {index:4, tab:'소모품', category: 'consumables'},
-      {index:5, tab:'약초', category: 'material'}
+      {index:5, tab:'퀘스트', category: 'valuables'}
     ];
 
     this.list = new ListBox(320, 320, this.onclick.bind(this));
     this.list.dom.style.top = '100px';
     this.dom.appendChild(this.list.dom);
+
   }
 
   update(){
     this.recipeModal.setSubTitle(this.category);
     this.list.update(this.recipes);
-    this.recipeModal.addTab(this.tabs);
-    this.recipeModal.currentIndex = index;
 
     // 최초실행 시 제일 처음 레시피 데이터로 업데이트
-    this.combinerUI.recipe = this.recipes[0];
-    this.combinerUI.update();
+    this.updateCombiner(this.recipes[0]);
+    this.recipeModal.addTab(this.tabs, this.category);
+    // this.recipeModal.currentIndex = index;
+    // const index = this.tabs.findIndex(tab => tab.category === this.category);
+  }
 
-    const index = this.tabs.findIndex(tab => tab.category === this.category);
+  updateCombiner(data){
+    this.combinerUI.recipe = data;
+    this.combinerUI.update();
   }
 
   onclick(data){
     this.combinerUI.recipe = data;
     this.combinerUI.update();
+    // this.combinerUI.update(data);
+
   }
 }
 
@@ -522,11 +534,10 @@ class CombinerUI extends DomUI {
     this.itemDesc = document.createElement('p');
     this.itemDesc.className = 'itemDesc';
 
-    this.itemImg = document.createElement('img');
-    // this.itemImg = new ItemImage('items.png', 0, 0);
-    this.itemImg.className = 'itemImg';
+    this.itemImg = new ItemImage('items@2.png', 21, 14);
+    this.itemImg.dom.classList.add('itemImg');
 
-    combineItem.appendChild(this.itemImg);
+    combineItem.appendChild(this.itemImg.dom);
     combineItem.appendChild(this.itemDesc);
     contents.appendChild(this.itemName);
     contents.appendChild(combineItem);
@@ -556,9 +567,10 @@ class CombinerUI extends DomUI {
       // 기존데이터 초기화
       this.materialInfo.innerHTML = '';
       this.options.innerHTML = '';
-      
+
+      // this.recipe.data
+      this.itemImg.updateImage(this.recipe.data.image.x, this.recipe.data.image.y);
       this.itemName.innerText = this.recipe.data.name;
-      this.itemImg.src = `/src/assets/items/item5.png`;
       this.itemDesc.innerText = this.recipe.data.description;
       this.materialsData = this.recipe.materials;
   
@@ -573,16 +585,15 @@ class CombinerUI extends DomUI {
       this.materialsData.forEach(mat => {
         let node = document.createElement('li');
         node.className = 'li';
-        // let material1 = document.createElement('img');
-        let material1 = new ItemImage('items.png', 14, 10);
+        
+        let material1 = new ItemImage(mat.data.image.texture, mat.data.image.x, mat.data.image.y);
         let material2 = document.createElement('p');
         let material3 = document.createElement('p');
   
-        // material1.src = '/src/assets/items/items.png';
         material2.innerText = `${mat.data.name}`;
         material3.innerText = `${mat.owned} / ${mat.count}`;
   
-        node.appendChild(material1.img);
+        node.appendChild(material1.dom);
         node.appendChild(material2);
         node.appendChild(material3);
   
@@ -600,24 +611,30 @@ class CombinerUI extends DomUI {
 class ItemImage {
   constructor(texture, x, y) {
     const imageSprite = document.createElement('div');
+    this.size = 32;
+
+    if ((texture.toString()).includes('@2')) {
+      this.size = this.size * 2;
+    }
+
     imageSprite.classList.add('img');
     imageSprite.style.backgroundImage = `url(/src/assets/items/${texture})`;
     imageSprite.style.display = 'inline-block';
-    imageSprite.style.width = '32px';
-    imageSprite.style.height = '32px';
+    imageSprite.style.width = `${this.size}px`;
+    imageSprite.style.height = `${this.size}px`;
     
-    imageSprite.style.backgroundPositionX = (x * 32) + 'px';
-    imageSprite.style.backgroundPositionY = (y * 32) + 'px';
+    imageSprite.style.backgroundPositionX = -(x * this.size) + 'px';
+    imageSprite.style.backgroundPositionY = -(y * this.size) + 'px';
     
     this.positionX = 0;
     this.positionY = 0;
 
-    this.img = imageSprite;
+    this.dom = imageSprite;
   }
 
-  getImage(x, y){
-    this.img.style.backgroundPositionX = (x * 32) + 'px';
-    this.img.style.backgroundPositionY = (y * 32) + 'px';
+  updateImage(x, y){
+    this.dom.style.backgroundPositionX = -(x * this.size) + 'px';
+    this.dom.style.backgroundPositionY = -(y * this.size) + 'px';
   }
 }
 
@@ -890,7 +907,6 @@ class Modal extends DomUI {
     const modal = new NineBox(this.pane, width, height);
     this.dom = modal.dom;
     this.dom.classList.add('modal');
-    this.currentTab = null;
   }
 
   addCloseButton() {
@@ -924,8 +940,8 @@ class Modal extends DomUI {
     this.remove(this.pane);
   }
 
-  addTab(tabs) {
-    const tabPane = document.createElement('div');
+  addTab(tabs, category) {
+    const tabPane = document.createElement('ul');
     tabPane.classList.add('tabPane');
     this.dom.appendChild(tabPane);
 
@@ -935,19 +951,23 @@ class Modal extends DomUI {
     let selected = null;
 
     tabs.forEach(tab => {
-      let tabButton = new Button(tab.tab, 'tab');
+      let tabButton = new Tab(tab);
       tabButton.dom.classList.add('tabBtn');
-      tabButton.dom.style.top = 45 * tab.index + 10 + 'px';
+      tabButton.active = false;
+
       tabPane.appendChild(tabButton.dom);
-      tabButton.dom.addEventListener('click', function(event) {
+
+      if (tab.category === category) {
+        tabButton.dom.classList.add('active');
+        selected = tabButton.dom;
+      }
+
+      tabButton.dom.addEventListener('click', function() {
         if (selected) {
           selected.classList.remove('active');
         }
         tabButton.dom.classList.add('active');
         selected = tabButton.dom;
-        this.currentTab = tab;
-
-        console.log(this.currentTab.tab);
       });
     });
   }
@@ -955,41 +975,35 @@ class Modal extends DomUI {
 
 // 탭 클래스를 추가한다.
 class Tab {
-  constructor(callback) {
-    const tabButton = document.createElement('li');
-    const icon = document.createElement('span');
-    const text = document.createElement('span');
-    
-    this.dom = tabButton;
-    this.activce = false;
-
-    text.innerText = value;
-    text.style.textShadow = '1px 2px 2px #444'
-    tabButton.appendChild(icon);
-    tabButton.appendChild(text);
-
-    const data = [
-      {index:0, tab:'전체', category: 'all'},
-      {index:1, tab:'무기', category: 'weapon'},
-      {index:2, tab:'갑옷', category: 'armor'},
-      {index:3, tab:'악세사리', category: 'accessories'},
-      {index:4, tab:'소모품', category: 'consumables'},
-      {index:5, tab:'약초', category: 'material'}
+  constructor(tab) {
+    const iconMap = [
+      {category: 'weapon', x:19, y:9},
+      {category: 'armor', x:4, y:12},
+      {category: 'accessory', x:11, y:3},
+      {category: 'material', x:11, y:4},
+      {category: 'consumables', x:5, y:3},
+      {category: 'valuables', x:3, y:2}
     ];
-    
-    this.callback = callback;
 
-    for(const d in data) {
-      if(d.category === category) {
-        this.active = true;
+    const tabButton = document.createElement('li');
+    const tabImg = new ItemImage('items.png', 10, 10);
+
+    for (const icon of iconMap) {
+      if (icon.category === tab.category) {
+        tabImg.updateImage(icon.x, icon.y);
+        this.category = icon.category;
       }
     }
+   
+    this.dom = tabButton;
+
+    tabButton.appendChild(tabImg.dom);
+    this.dom.addEventListener('click', this.onclick.bind(this));
   }
-  // onclick(category){
-  //   this.game.getRecipes(category);
-  //   this.showCombineItemList([{ category:category, recipes: recipes }]);
-  //   ????
-  // }
+
+  onclick(){
+    console.log(this.category);
+  }
 }
 
 class Button extends DomUI {
@@ -1019,27 +1033,34 @@ class ListCell {
   constructor(cellData, cellType){
     this.cell = document.createElement('li');
     this.cell.classList.add('list-cell');
-    this.data = cellData;
+    this.cellData = cellData;
+    this.index = null;
+
     // 타입별로 리스트의 셀 스타일을 교체함.
     if ( cellType === 'recipe') {
       this.showRecipeCell();
     }
+
+    this.cell.addEventListener('click', this.onclick.bind(this));
   }
 
   showRecipeCell() {
-    const recipe = this.data;
-    this.cellImg = document.createElement('img');
-    this.cellImg.src = 'src/assets/items/item1.png';//item.src;
+    const imgData = this.cellData.data.image;
+    this.cellImg = new ItemImage(imgData.texture, imgData.x, imgData.y);
     
     this.cellData1 = document.createElement('p');
     this.cellData2 = document.createElement('p');
 
-    this.cellData1.innerText = recipe.data.name;
-    this.cellData2.innerText = recipe.owned;
+    this.cellData1.innerText = this.cellData.data.name;
+    this.cellData2.innerText = this.cellData.owned;
     
-    this.cell.appendChild(this.cellImg);
+    this.cell.appendChild(this.cellImg.dom);
     this.cell.appendChild(this.cellData1);
     this.cell.appendChild(this.cellData2);
+  }
+
+  onclick(){
+    console.log(this.index);
   }
 }
 
@@ -1073,7 +1094,6 @@ class ListBox extends DomUI {
 
     this.dom = scrollView;
     this.callback = callback;
-    this.recipeData = null;
   }
 
   update (recipes) {
@@ -1083,9 +1103,19 @@ class ListBox extends DomUI {
     }
 
     let selectedCell = null;
+    let index = -1;
 
     for (const recipe of recipes) {
       let listCell = new ListCell(recipe, 'recipe');
+
+      ++index;
+      listCell.index = index;
+
+      if (listCell.index === 0) {
+        listCell.cell.classList.add('active');
+        selectedCell = listCell.cell;
+      }
+
       listCell.cell.addEventListener('click', function () {
         if (selectedCell) {
           selectedCell.classList.remove('active');
@@ -1094,8 +1124,7 @@ class ListBox extends DomUI {
         selectedCell = listCell.cell;
       });
 
-      this.recipeData = recipe;
-      listCell.cell.addEventListener('click', this.setRecipe.bind(this, this.recipeData));
+      listCell.cell.addEventListener('click', this.setRecipe.bind(this, recipe));
       this.list.appendChild(listCell.cell);
     }
   }

@@ -27,14 +27,14 @@
     },"1002": {
         "id": 1002,
         "name": "중형 회복약",
-        "image": { "texture": "items.png", "x": 2, "y": 0 },
+        "image": { "texture": "items.png", "x": 8, "y": 0 },
         "description": "체력을 회복한다",
         "category": "consumables",
         "options": ["health(+50)"]
     },"1003": {
         "id": 1003,
         "name": "대형 회복약",
-        "image": { "texture": "items.png", "x": 2, "y": 0 },
+        "image": { "texture": "items.png", "x": 14, "y": 0 },
         "description": "체력을 대량 회복한다",
         "category": "consumables",
         "options": ["health(+200)"]
@@ -42,7 +42,7 @@
     "2001": {
         "id": 2001,
         "name": "약초",
-        "image": { "texture": "items.png", "x": 1, "y": 4 },
+        "image": { "texture": "items.png", "x": 8, "y": 4 },
         "description": "흔히 볼수 있는 식물",
         "category": "material",
         "options": []

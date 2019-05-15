@@ -98,21 +98,47 @@ button, .button {
   top: 0;
   width: 100px;
   height: 100%;
-
+  padding: 20px 0;
   overflow: hidden;
 } 
 
 .tabBtn {
   display: block;
-  left: 50px;
+  width:118px;
+  height:50px;
+  background: url(~assets/ui/tabBtn.png) no-repeat;
+  margin-bottom: 10px;
+
+  margin-left: 55px;
+  
+  padding: 10px 10px;
+  text-align: left;
+  transition: all 0.3s;
+}
+.tabBtn::after{
+  content: '';
+  clear: both;
+}
+
+.tabBtn * {
+  display: block;
+  float: left;
 }
 .tabBtn span {
   text-align: left;
+  font-size: 14px;
+  line-height: 30px;
+
+  padding-left: 10px;
+  color: #fff;
 }
 
 .tabBtn:hover, 
 .tabBtn.active {
-  left: 0;
+  width:118px;
+  height:50px;
+  background: url(~assets/ui/tabBtn_active.png) no-repeat;
+  margin-left: 45px;
 }
 
 
@@ -121,7 +147,7 @@ button, .button {
 }
 
 .button._small, 
-button.category {
+button {
   width: 75px;
   height: 35px;
   padding: 5px 0;
@@ -129,7 +155,7 @@ button.category {
   background-size: contain;
 }
 
-button.category span{
+button span {
   font-size: 14px;
 }
 
@@ -397,6 +423,8 @@ button.category span{
   flex-wrap: wrap;
   justify-content: space-around;
   margin: 20px 0;
+  padding-left: 20px;
+
 }
 
 .combineItem::after{
@@ -407,9 +435,19 @@ button.category span{
   height: 0;
 }
 
+.img {
+  transform: perspective(1px) translateZ(0);
+  backface-visibility: hidden;
+}
+
 .combineItem .itemImg {
   width: 64px;
   height: 64px;
+
+  transform: perspective(1px) translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  object-fit: contain; 
 }
 
 .combineItem .itemDesc {
