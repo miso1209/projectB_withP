@@ -141,6 +141,15 @@ button, .button {
   margin-left: 45px;
 }
 
+.tabBtn .img {
+  opacity: 0.6;
+  transition: opacity 0.3s;
+}
+
+.tabBtn:hover .img, 
+.tabBtn.active .img {
+  opacity: 1;
+}
 
 .submit {
   background: url(~assets/ui/button_s2.png) no-repeat;

@@ -100,29 +100,22 @@ export default class DomUI {
 
   showInventory() {
     const pane = this.create();
+    pane.classList.add('screen');
+
     const inventory = new Modal(pane, 360, 460);
     inventory.addTitle('인벤토리');
     inventory.addCloseButton();
 
-    const categoryTab = [{
-      tab: '전체',
-      index: 0, 
-      active: true
-    }, {
-      tab: '갑옷',
-      index: 1,
-      active:false
-    }, {
-      tab: '무기',
-      index: 2,
-      active:false
-    }, {
-      tab: '악세사리',
-      index: 3,
-      active:false
-    }];
+    this.tabs = [
+      {index:0, tab:'무기', category: 'weapon'},
+      {index:1, tab:'방어구', category: 'armor'},
+      {index:2, tab:'악세사리', category: 'accessory'},
+      {index:3, tab:'재료', category: 'material'},
+      {index:4, tab:'소모품', category: 'consumables'},
+      {index:5, tab:'퀘스트', category: 'valuables'}
+    ];
 
-    inventory.addTab(categoryTab);
+    inventory.addTab(this.tabs, 'weapon');
 
     // # stat
     const statContent = document.createElement('div');
@@ -147,7 +140,13 @@ export default class DomUI {
     let selectedSlot = null;
 
     // inventory items
-    this.game.player.inventory.eachItem((item) => {
+    const playerInven = this.game.player.inventory.items;
+    if (playerInven.length < 0) {
+      return
+    }
+
+    // this.game.player.inventory.eachItem((item) => {
+    for (const item of playerInven.items) {
       const itemSprite = document.createElement('img');
       itemSprite.src = '/src/assets/items/' + item.image;
       itemSprite.style.width = '50px';
@@ -172,7 +171,8 @@ export default class DomUI {
         stat.innerText = item.description;
         statContent.appendChild(stat);
       });
-    });
+    }
+    // });
 
     scrollView.appendChild(scrollBlind);
     scrollBlind.appendChild(storageContent);
@@ -190,6 +190,7 @@ export default class DomUI {
 
   showStatUI() {
     const pane = this.create();
+    pane.classList.add('screen');
     const statUI = new Modal(pane, 360, 460);
     statUI.addTitle('플레이어 정보');
     statUI.addCloseButton();
@@ -422,9 +423,13 @@ export default class DomUI {
     pane.classList.add('screen');
 
     this.recipeUI = new RecipeUI(pane, 360, 460);
-    //console.dir(inputs);
+    
+    // console.dir(inputs);
+    // tab을 여기서 붙여서 접근해야..하나???
 
     for (const input of inputs) {
+      this.recipeUI.categoryData.push(input.category);
+
       this.recipeUI.category = input.category;
       this.recipeUI.recipes = input.recipes;
       this.recipeUI.update();
@@ -463,14 +468,13 @@ class RecipeUI extends DomUI {
     this.recipeModal.addCloseButton();
     this.recipeModal.addTitle('아이템 레시피');
 
-    // 아이템 조합창
-    this.combinerUI = new CombinerUI(pane, 360, 460);
-    this.combinerUI.moveToRight(100);
+    this.pane = pane;
 
     this.dom = this.recipeModal.dom;
     
     this.category = null;
     this.recipes = null;
+    this.categoryData = [];
 
     this.tabs = [
       {index:0, tab:'무기', category: 'weapon'},
@@ -484,18 +488,21 @@ class RecipeUI extends DomUI {
     this.list = new ListBox(320, 320, this.onclick.bind(this));
     this.list.dom.style.top = '100px';
     this.dom.appendChild(this.list.dom);
-
   }
 
   update(){
     this.recipeModal.setSubTitle(this.category);
     this.list.update(this.recipes);
-
-    // 최초실행 시 제일 처음 레시피 데이터로 업데이트
-    this.updateCombiner(this.recipes[0]);
     this.recipeModal.addTab(this.tabs, this.category);
-    // this.recipeModal.currentIndex = index;
-    // const index = this.tabs.findIndex(tab => tab.category === this.category);
+
+    if(this.recipes.length > 0) {
+      // 아이템 조합창
+      this.combinerUI = new CombinerUI(this.pane, 360, 460);
+      this.combinerUI.moveToRight(100);
+      
+      // 최초실행 시 제일 처음 레시피 데이터로 업데이트
+      this.updateCombiner(this.recipes[0]);
+    }
   }
 
   updateCombiner(data){
@@ -511,6 +518,21 @@ class RecipeUI extends DomUI {
   }
 }
 
+
+class InventoryUI extends DomUI {
+  constructor() {
+    super();
+
+    this.tabs = [
+      {index:0, tab:'무기', category: 'weapon'},
+      {index:1, tab:'방어구', category: 'armor'},
+      {index:2, tab:'악세사리', category: 'accessory'},
+      {index:3, tab:'재료', category: 'material'},
+      {index:4, tab:'소모품', category: 'consumables'},
+      {index:5, tab:'퀘스트', category: 'valuables'}
+    ];
+  }
+}
 class CombinerUI extends DomUI {
   constructor(pane, width, height) {
     super();
@@ -1002,6 +1024,8 @@ class Tab {
   }
 
   onclick(){
+    console.dir(this);
+    // const recipes = this.game.getRecipes(this.category);
     console.log(this.category);
   }
 }
