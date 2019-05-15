@@ -19,3 +19,15 @@ export function getDirectionName(dir) {
         return 'sw';
     }
 }
+
+export function getDirectionFromName(dir) {
+    if (dir === 'se') {
+        return DIRECTIONS.SE;
+    } else if (dir === 'nw') {
+        return DIRECTIONS.NW;
+    } else if (dir === 'ne') {
+        return DIRECTIONS.NE;
+    } else if (dir === 'sw') {
+        return DIRECTIONS.SW;
+    }
+}

@@ -12,87 +12,63 @@ export default class TiledMap {
 
         // 타일셋을 먼저 등록한다
         const tileset = this.createTileSet(mapData);
-
-        // 그라운드 타일과 오브젝트 타일을 구분한다
-        const bottomLayer = new Array(this.width * this.height);
-        const groundLayer = new Array(this.width * this.height);
-        const objectLayer = new Array(this.width * this.height);
+        const groups = [];
 
         let nextGroupId = 0;
-        for (const layer of mapData.layers) {
-            if (mapData.width !== layer.width || mapData.height !== layer.height) {
-                throw new Error("map 과 layer 의 크기는 항상 일치하여야 합니다");
-            }
-
-            let target;
-            if (layer.name === "ground") {
-                target = groundLayer; 
-            } else if (layer.name === "ground_bottom") {
-                target = bottomLayer;
-            } else {
-                target = objectLayer;
-            }
+        for (const _layer of mapData.layers) {
+            // 레이어그룹을 만든다
+            const group = { 
+                name: _layer.name,
+                layers: [],
+            };
+            groups.push(group);
             
-            for (let y = 0; y < this.height;++y) {
-                for (let x = 0; x < this.width;++x) {
-                    // 맵툴문제 때문에 90 도를 뒤집어야 한다
-                    const dstIndex = x + y * this.width;
-                    const srcIndex =  y + (layer.width - x -1) * layer.width;
-                    let tileId = layer.data[srcIndex];
+            const layers = _layer.type === "group" ? _layer.layers : [ _layer ];
+            for(const layer of layers) {
+                if (this.width !== layer.width || this.height !== layer.height) {
+                    throw new Error("map 과 layer 의 크기는 항상 일치하여야 합니다");
+                }
+                
+                const target = new Array(this.width * this.height);
+                group.layers.push(target)
 
-                    if (tileId !== 0) {
-                        // flip 여부를 찾는다
-                        const flipX = !!(tileId & 0x80000000);
-                        tileId = tileId &0x0FFFFFFF;
-                        
-                        const instance = {};
-                        Object.assign(instance, tileset[tileId]);
-                        instance.flipX = flipX;
+                for (let index = 0; index < layer.data.length; ++index) {
+                    const tileId = layer.data[index];
+                    if (tileId === 0) { continue; }
 
-                        const xsize = instance.flipX ? instance.ysize : instance.xsize;
-                        const ysize = instance.flipX ? instance.xsize : instance.ysize;
-                        
-                        if (ysize > 1) {
-                            // 오프셋을 정한다 
-                            instance.imageOffset = {
-                                x: -(ysize - 1) * mapData.tilewidth / 2 ,
-                                y: 0,
-                            };
-                        }
+                    const instance = {};
+                    instance.tileId = tileId &0x0FFFFFFF;
+                    instance.groupId = ++nextGroupId;
 
-                        instance.groupId = ++nextGroupId;
+                    Object.assign(instance, tileset[instance.tileId]);
+                    
+                    instance.flipX = !!(tileId & 0x80000000);
+                    instance.xsize = instance.xsize || 1;
+                    instance.ysize = instance.ysize || 1;
+                    
+                    if (instance.flipX) {
+                        // x 와 y 를 바꾼다
+                        const temp = instance.xsize;
+                        instance.xsize = instance.ysize;
+                        instance.ysize = temp;
+                    }
 
-                        if (target === groundLayer) {
-                            // 그룹을 세팅한다
-                            for(let j = 0; j < ysize; ++j ) {
-                                for(let i = 0; i < xsize; ++i ) {
-                                    if (i === 0 && j === 0) { continue; }
-                                    // 타일의 데이터를 추가로 변경한다
-                                    const gindex = (x + i) + (y - j) * this.width;
-                                    //tiledata[gindex] = tiledata[gindex] || [];
-
-                                    // 서브타일 정보를 생각한다
-                                    const subtile = {};
-                                    Object.assign(subtile,  instance);
-                                    subtile.texture = null;
-                                    //tiledata[gindex].push(subtile);
-                                    target[gindex] = subtile;
-                                }
-                            }
-                        }
-
-                        // 타일이 배열로 들어가게 된다. 배열의 순서는 드로잉 순서이기 때문에 매우 중요하다
-                        target[dstIndex] = instance;
-                    } 
+                    if (instance.ysize > 1) {
+                        // 오프셋을 정한다 
+                        instance.imageOffset = {
+                            x: -(instance.ysize - 1) * mapData.tilewidth / 2 ,
+                            y: 0,
+                        };
+                    }
+                    
+                    target[index] = instance;
                 }
             }
         }
 
         // 타일데이터와 타일 셋 정보를 클래스에 기록한다
         this.tileset = tileset;
-        this.bottomLayer = bottomLayer;
-        this.groundLayer = groundLayer;
-        this.objectLayer = objectLayer;
+        this.groups = groups;
     }
 
     createTileSet(data) {

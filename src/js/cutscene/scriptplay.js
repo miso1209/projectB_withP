@@ -7,7 +7,7 @@ import { DIRECTIONS } from '../define';
 const sampleScript = [
     {
         command: "enterstage",
-        arguments: ["house", { x: 0, y: 1, direction: DIRECTIONS.SE, margin: 2}],
+        arguments: ["house", "house-gate"],
     }, {
         command: "delay",
         arguments: [0.5],
@@ -74,14 +74,14 @@ export default class ScriptPlay extends EventEmitter {
             }, delay);
         } else if (script.command === COMMAND_ENTERSTAGE) {
             const path = "assets/mapdata/" + script.arguments[0] + ".json";
-            const options = script.arguments[1];  
-            game.enterStage(path, options);
+            const eventName = script.arguments[1];  
+            game.enterStage(path, eventName);
             game.once('stageentercomplete', () => {
                 this.next(game);
             });
         }  else if (script.command === COMMAND_LEAVESTAGE) {
-            const options = script.arguments[0];  
-            game.leaveStage(options);
+            const eventName = script.arguments[0];  
+            game.leaveStage(eventName);
             game.once('stageleavecomplete', () => {
                 this.next(game);
             });

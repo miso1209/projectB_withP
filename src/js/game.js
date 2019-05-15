@@ -112,21 +112,27 @@ export default class Game extends EventEmitter {
         this.cutscene.play(this);
     }
 
-    buildStageEnterCutscene(options) {
-        // 현재는 door 만 있다
-        return new doorIn(this, options.x, options.y, options.direction, options.margin);
-    }
-
-    buildStageLeaveCutscene(options) {
-        if (options) {
+    buildStageEnterCutscene(eventName) {
+        const event = this.stage.findEventByName(eventName);
+        if (event) {
             // 현재는 door 만 있다
-            return new doorOut(this, options.x, options.y, options.direction, options.margin);
+            return new doorIn(this, event.x, event.y, event.direction, 1);
         } else {
             return new idle();
         }
     }
 
-    enterStage(stagePath, options) {
+    buildStageLeaveCutscene(eventName) {
+        const event = this.stage.findEventByName(eventName);
+        if (event) {
+            // 현재는 door 만 있다
+            return new doorOut(this, event.x, event.y, event.direction, 1);
+        } else {
+            return new idle();
+        }
+    }
+
+    enterStage(stagePath, eventName) {
 
         this.resourceManager.add("stage", stagePath);
         this.resourceManager.load((resources) => {
@@ -152,7 +158,7 @@ export default class Game extends EventEmitter {
 
             this.resourceManager.load((resources) => {
                 const stageName = path.basename(stagePath, ".json");
-                const stage = new Stage(stageName, mapData.width, mapData.height, mapData.tilewidth, mapData.tileheight);
+                const stage = new Stage(this, stageName, mapData.width, mapData.height, mapData.tilewidth, mapData.tileheight);
                 stage.load(mapData);
                 
                  // 스테이지의 줌레벨을 결정한다
@@ -162,11 +168,17 @@ export default class Game extends EventEmitter {
 
                 // 페이드 인이 끝나면 게임을 시작한다
                 this.currentMode = this.exploreMode;
-                this.currentMode.prepare(options.x, options.y);
+                const event = this.stage.findEventByName(eventName);
+                console.log(event, eventName);
+                if (event) {
+                    this.currentMode.prepare(event.gridX, event.gridY);
+                } else {
+                    this.currentMode.prepare(0, 0);
+                }
 
                 // 진입 컷신을 사용한다
                 this.tweens.addTween(this.blackScreen, 0.5, { alpha: 0 }, 0, "easeOut", true, () => {
-                    const cutscene = this.buildStageEnterCutscene(options)
+                    const cutscene = this.buildStageEnterCutscene(eventName)
                     cutscene.once('complete', () => { 
                         this.currentMode.start();
                         this.emit('stageentercomplete');
@@ -177,10 +189,11 @@ export default class Game extends EventEmitter {
         });
     }
 
-    leaveStage(options) {
+    leaveStage(eventName) {
         if (this.stage) {
+            // 이벤트를 찾는다
             this.currentMode.setInteractive(false);
-            const cutscene = this.buildStageLeaveCutscene(options);
+            const cutscene = this.buildStageLeaveCutscene(eventName);
             cutscene.play();
             cutscene.once('complete', () => {
                 this.tweens.addTween(this.blackScreen, 0.5, { alpha: 1 }, 0, "easeIn", true, () => {

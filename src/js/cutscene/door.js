@@ -9,8 +9,6 @@ export class doorIn extends EventEmitter {
     constructor(game, x , y, direction, margin) {
         super();
         this.game = game;
-        this.x = x;
-        this.y = y;
         this.direction = direction;
         this.margin = margin;
     }
@@ -18,34 +16,37 @@ export class doorIn extends EventEmitter {
     play() {
         const stage = this.game.stage;
         const character = this.game.currentMode.controller;
+        character.isMoving = true;
         
         // 페이드인 되면서 살짝 앞으로 나온다.
         const targetY = character.position.y;
         const targetX = character.position.x;
+        const x = character.gridX;
+        const y = character.gridY;
 
-        if (this.direction === DIRECTIONS.SE) {
-            character.position.x = stage.getTilePosXFor(this.x, this.y-this.margin);
-            character.position.y = stage.getTilePosYFor(this.x, this.y-this.margin);
+        if (this.direction === DIRECTIONS.SW) {
+            character.position.x = stage.getTilePosXFor(x, y+this.margin);
+            character.position.y = stage.getTilePosYFor(x, y+this.margin);
+            character.changeVisualToDirection(DIRECTIONS.NE);
+        } else if (this.direction === DIRECTIONS.NE) {
+            character.position.x = stage.getTilePosXFor(x, y-this.margin);
+            character.position.y = stage.getTilePosYFor(x, y-this.margin);
+            character.changeVisualToDirection(DIRECTIONS.SW);
         } else if (this.direction === DIRECTIONS.NW) {
-            character.position.x = stage.getTilePosXFor(this.x, this.y + this.margin);
-            character.position.y = stage.getTilePosYFor(this.x, this.y + this.margin);
-        } else if (this.direction === DIRECTIONS.SW) {
-            character.position.x = stage.getTilePosXFor(this.x + this.margin, this.y);
-            character.position.y = stage.getTilePosYFor(this.x + this.margin, this.y);
+            character.position.x = stage.getTilePosXFor(x-this.margin, y);
+            character.position.y = stage.getTilePosYFor(x-this.margin, y);
+            character.changeVisualToDirection(DIRECTIONS.SE);
         } else {
-            character.position.x = stage.getTilePosXFor(this.x - this.margin, this.y);
-            character.position.y = stage.getTilePosYFor(this.x - this.margin, this.y);
+            character.position.x = stage.getTilePosXFor(x+this.margin, y);
+            character.position.y = stage.getTilePosYFor(x+this.margin, y);
+            character.changeVisualToDirection(DIRECTIONS.NW);
         }
-
-        
-        character.isMoving = true;
-        character.changeVisualToDirection(this.direction);
 
 
         stage.tweens.addTween(character, this.margin/4, { alpha: 1 }, 0, "linear", true);
         stage.tweens.addTween(character.position, this.margin/2, { x: targetX, y: targetY }, 0, "linear", true, () => {
             character.isMoving = false;
-            character.changeVisualToDirection(this.direction);
+            character.changeVisualToDirection(character.currentDir);
             this.emit('complete');
         });
 
@@ -57,8 +58,8 @@ export class doorOut extends EventEmitter {
     constructor(game, x , y, direction, margin) {
         super();
         this.game = game;
-        this.x = x;
-        this.y = y;
+        x = x;
+        y = y;
         this.direction = direction;
         this.margin = margin;
     }
@@ -66,24 +67,27 @@ export class doorOut extends EventEmitter {
     play() {
         const stage = this.game.stage;
         const character = this.game.currentMode.controller;
+        const x = character.gridX;
+        const y = character.gridY;
+
         
         // 페이드인 되면서 살짝 앞으로 나온다.
         ///const targetY = character.position.y;
         //const targetX = character.position.x;
         let targetX, targetY;
 
-        if (this.direction === DIRECTIONS.SE) {
-            targetX = stage.getTilePosXFor(this.x, this.y+this.margin);
-            targetY = stage.getTilePosYFor(this.x, this.y+this.margin);
+        if (this.direction === DIRECTIONS.SW) {
+            targetX = stage.getTilePosXFor(x, y+this.margin);
+            targetY = stage.getTilePosYFor(x, y+this.margin);
+        } else if (this.direction === DIRECTIONS.NE) {
+            targetX = stage.getTilePosXFor(x, y - this.margin);
+            targetY = stage.getTilePosYFor(x, y - this.margin);
         } else if (this.direction === DIRECTIONS.NW) {
-            targetX = stage.getTilePosXFor(this.x, this.y - this.margin);
-            targetY = stage.getTilePosYFor(this.x, this.y - this.margin);
-        } else if (this.direction === DIRECTIONS.SW) {
-            targetX = stage.getTilePosXFor(this.x - this.margin, this.y);
-            targetY = stage.getTilePosYFor(this.x - this.margin, this.y);
+            targetX = stage.getTilePosXFor(x - this.margin, y);
+            targetY = stage.getTilePosYFor(x - this.margin, y);
         } else {
-            targetX = stage.getTilePosXFor(this.x + this.margin, this.y);
-            targetY = stage.getTilePosYFor(this.x + this.margin, this.y);
+            targetX = stage.getTilePosXFor(x + this.margin, y);
+            targetY = stage.getTilePosYFor(x + this.margin, y);
         }
 
         character.isMoving = true;

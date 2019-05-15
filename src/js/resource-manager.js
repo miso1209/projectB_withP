@@ -27,11 +27,17 @@ export default class ResourceManager {
     }
 
     add(name, url) {
-        if (url) {
-            this.loader.add(name, require('../' + url));
-        } else {
-            this.loader.add(require('../' + name));
+        if (this.loader.resources[name]) {
+            return;
         }
+
+        if (url) {
+            url = require('../' + url);
+        } else {
+            url = require('../' + name);
+        }
+
+        this.loader.add(name, url);
     }
 
     load(onLoadComplete) {

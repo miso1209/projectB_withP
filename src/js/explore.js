@@ -36,12 +36,12 @@ export default class Explore {
         this.game.stage.onTouchObject = this.onTouchObject.bind(this);
         this.game.stage.onTileSelected = this.onTileSelected.bind(this);
 
-        //=====================================================================
+        /*//=====================================================================
         // 포탈을 하드코딩으로 설치한다
         // 나중에 데이터로 빼자
         if (this.game.stage.name === "house") {
-            this.game.stage.events[250] = new Portal(this.game, {x:10, y: 15, direction: DIRECTIONS.SE, margin:1}, {stage: "house-room", x: 0, y: 1, direction: DIRECTIONS.SE, margin: 2});
-            this.game.stage.events[251] = new Portal(this.game, {x:11, y: 15, direction: DIRECTIONS.SE, margin:1}, {stage: "house-room", x: 1, y: 1, direction: DIRECTIONS.SE, margin: 2});
+            this.game.stage.events[250] = new Portal(this.game, {x:10, y: 15, direction: DIRECTIONS.SE, margin:1}, {stage: "house-room", x: 1, y: 15, direction: DIRECTIONS.SE, margin: 2});
+            this.game.stage.events[251] = new Portal(this.game, {x:11, y: 15, direction: DIRECTIONS.SE, margin:1}, {stage: "house-room", x: 1, y: 14, direction: DIRECTIONS.SE, margin: 2});
 
             this.game.stage.events[0] = new Portal(this.game, {x:0, y:0, direction:DIRECTIONS.NW, margin: 1}, {stage: "open_road_1", x:44, y:23, direction:DIRECTIONS.SW, margin:1});
             this.game.stage.events[1] = new Portal(this.game, {x:1, y:0, direction:DIRECTIONS.NW, margin: 1}, {stage: "open_road_1", x:44, y:22, direction:DIRECTIONS.SW, margin:1});
@@ -52,7 +52,7 @@ export default class Explore {
             this.game.stage.events[1145] = new Portal(this.game, {x: 45, y:22, direction:DIRECTIONS.NE, margin:1}, {stage: "house", x:1, y:1, direction:DIRECTIONS.SE, margin:2});
             this.game.stage.events[1195] = new Portal(this.game, {x: 45, y:23, direction:DIRECTIONS.NE, margin:1}, {stage: "house", x:0, y:1, direction:DIRECTIONS.SE, margin:2});
         }
-        //=====================================================================
+        //=====================================================================*/
     }
 
     start() {

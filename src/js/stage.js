@@ -12,7 +12,8 @@ import InventoryProp from './tile/inventory-prop';
 import Stove from './tile/stove';
 import WorkTable from './tile/worktable';
 import EventEmitter from 'events';
-import TileSet from "./tiledmap";
+import TiledMap from "./tiledmap";
+import { Portal2 } from './event/portal';
 
 function hitTestRectangle(rect1, rect2) {
     return  (rect1.x < rect2.x + rect2.width &&
@@ -30,12 +31,12 @@ function hitTestPoint(point, rect) {
 
 function getDirection(x1, y1, x2, y2) {
     if (x1 === x2) {
-        if (y1 < y2) { return DIRECTIONS.SE; }
-        else if (y1 > y2) { return DIRECTIONS.NW; }
+        if (y1 < y2) { return DIRECTIONS.SW; }
+        else if (y1 > y2) { return DIRECTIONS.NE; }
     }
     else if (y1 === y2) {
-        if (x1 < x2) { return DIRECTIONS.NE; }
-        else if (x1 > x2)	{ return DIRECTIONS.SW; }
+        if (x1 < x2) { return DIRECTIONS.SE; }
+        else if (x1 > x2)	{ return DIRECTIONS.NW; }
     }
     return null;
 }
@@ -55,9 +56,21 @@ function isInPolygon(gp, vertices) {
 	return c;
 };
 
+const isBoxInFront = function (box1, box2) {
+    // test for intersection x-axis
+    if (box1.xmin > box2.xmax) { return true; }
+    else if (box2.xmin > box1.xmax) { return false; }
+
+    // test for intersection y-axis
+    if (box1.ymin > box2.ymax) { return true; }
+    else if (box2.ymin > box1.ymax) { return false; }
+};
+
 export default class Stage extends PIXI.Container {
-    constructor(name, width, height, tileWidth, tileHeight) {
+    constructor(game, name, width, height, tileWidth, tileHeight) {
         super();
+
+        this.game = game;
 
         this.name = name;
 
@@ -68,16 +81,17 @@ export default class Stage extends PIXI.Container {
         this.TILE_HALF_W = tileWidth / 2;
         this.TILE_HALF_H = tileHeight / 2;
 
-        
-        this.bottomMap = new Array(height * width);
         this.groundMap = new Array(height * width);
         this.objectMap = new Array(height * width);
+        this.eventMap = new Array(height * width);
+
         this.alphaTiles = [];
         this.nameTiles = [];
        
         this.mapContainer = new PIXI.Container();
         this.addChild(this.mapContainer);
 
+        this.bottomContainer = new PIXI.Container();
         this.groundContainer = new PIXI.Container();
         this.groundOverlay = new PIXI.Container();
         this.objectContainer = new PIXI.Container();
@@ -107,34 +121,7 @@ export default class Stage extends PIXI.Container {
         this.currentFocusLocation = { x: this.mapWidth >> 1, y: this.mapHeight >> 1 };
         this.centralizeToPoint(this.externalCenter.x, this.externalCenter.y, true);
         
-        // 맵에 따라서 이벤트를 바꾸어야 한다
-        this.events = {};
-
         Object.assign(this, new EventEmitter());
-    }
-
-    load(mapData) {
-        const tileset = new TileSet(mapData);
-
-        // 타일맵을 설정한다
-        for (let y = 0; y < tileset.height;++y) {
-            for (let x = 0; x < tileset.width;++x) {
-                const btile = tileset.bottomLayer[x +y * tileset.width];
-                if (btile) {
-                    this.setBottomTile(x, y, btile);
-                }
-                const gtile = tileset.groundLayer[x +y * tileset.width];
-                if (gtile) {
-                    this.setGroundTile(x, y, gtile);
-                }
-                const otile = tileset.objectLayer[x +y * tileset.width];
-                if (otile) {
-                    this.setObjectTile(x, y, otile);
-                }
-            }
-        }
-        // 렌더링 데이터를 빌드한다
-        this.build();
     }
 
     zoomTo(scale, instantZoom) {
@@ -171,25 +158,86 @@ export default class Stage extends PIXI.Container {
         }
     }
 
+    
+    load(mapData) {
+        const map = new TiledMap(mapData);
+        
+
+        // 타일셋의 레이어는 총 4종류이다.
+        for (const groupName in map.groups) {
+            const group = map.groups[groupName];
+            for (const layer of group.layers) {
+                // 레이어에 맞게 설정한다
+                this.loadLayer(layer, group.name, map.width, map.height);
+            }
+        }
+
+        // object 들의 렌더링 순서대로 빌드한다
+        this.buildObjectRederOrder();
+    }
+
+    loadLayer(layer, group, width, height) {
+        // 타일맵을 설정한다
+        for (let y = 0; y < height;++y) {
+            for (let x = 0; x < width;++x) {
+                const tile = layer[x +y * width];
+                
+                if (tile) {
+                    if (group === "bottom") {
+                        this.setBottomTile(x, y, tile);
+                    } else if (group === "ground") {
+                        this.setGroundTile(x, y, tile);
+                    } else if (group === "object") { 
+                        this.setObjectTile(x, y, tile);
+                    } else if (group === "event") {
+                        this.eventMap[x + y * width] = new Portal2(x, y, tile);
+                        // 포탈이벤트를 기본적으로 패스에 포함시킬수 없다
+                        this.pathFinder.setCell(x, y, false);
+                    } else {
+                        throw Error("invalid group :" + group);
+                    }
+                }
+            }
+        }
+    }
+
     setBottomTile(x, y, src) {
         const tile = this.newTile(x, y, src);
-        this.bottomMap[x + y * this.mapWidth] = tile;
+        this.bottomContainer.addChild(tile);
     }
 
     setGroundTile(x, y, src) {
-        const tile = this.newTile(x, y, src);
-        this.groundMap[x + y * this.mapWidth] = tile;
+        for(let j = 0; j < src.xsize; ++j ) {
+            for(let i = 0; i < src.ysize; ++i ) {
+                const cx = x - i;
+                const cy = y - j;
+                if (cx >= 0 && cy >= 0) {
+                    
+                    // 나중에 하이라이트와 픽킹 부분을 따로처리한다
+                    const tile = this.newTile(cx, cy, src);
+                    tile.highlightedOverlay.position = tile.position;
+                    
+                    this.groundOverlay.addChild(tile.highlightedOverlay);
+                    this.pathFinder.setCell(cx, cy, tile.movable);
+                    this.groundMap[cx + cy*this.mapWidth] = tile;
+
+                    // 텍스쳐는 최초 하나만 설정한다
+                    if (i === 0 && j === 0) {
+                        this.groundContainer.addChild(tile);
+                    }
+                }
+            }
+        }
     }
 
     setObjectTile(x, y, src) {
         const tile = this.newTile(x, y, src);
-        const xsize = Math.max(src.xsize, 1);
-        const ysize = Math.max(src.ysize, 1);
-
-        for(let j = 0; j < ysize; ++j ) {
-            for(let i = 0; i < xsize; ++i ) {
-                if (x + i < this.mapWidth && y - j >= 0) {
-                    this.objectMap[(x + i) + (y - j) * this.mapWidth] = tile;
+        for(let j = 0; j < src.xsize; ++j ) {
+            for(let i = 0; i < src.ysize; ++i ) {
+                const cx = x - i;
+                const cy = y - j;
+                if (cx >= 0 && cy >= 0) {
+                    this.objectMap[cx + cy * this.mapWidth] = tile;
                 }
             }
         }
@@ -222,11 +270,11 @@ export default class Stage extends PIXI.Container {
 
    
     getTilePosXFor = function(c, r) {
-        return (c * this.TILE_HALF_W) + (r * this.TILE_HALF_W);
+        return (c - r ) * this.TILE_HALF_W;
     };
 
     getTilePosYFor = function(c, r) {
-        return (r * this.TILE_HALF_H) - (c * this.TILE_HALF_H);
+        return (r +c ) *  this.TILE_HALF_H;
     }
     
     getGroundTileAt(x, y) {
@@ -238,62 +286,27 @@ export default class Stage extends PIXI.Container {
         return this.objectMap[x + y*this.mapWidth];
     }
 
-    build() {
+    buildObjectRederOrder() {
 
-        const isBoxInFront = function (box1, box2) {
-            // test for intersection x-axis
-            // (lower x value is in front)
-            if (box1.xmin > box2.xmax) { return false; }
-            else if (box2.xmin > box1.xmax) { return true; }
-        
-            // test for intersection y-axis
-            // (lower y value is in front)
-            if (box1.ymin > box2.ymax) { return true; }
-            else if (box2.ymin > box1.ymax) { return false; }
-        };
-
-        // 타일순서를 빌드한다
-        // 타일을 순회할때는 밖에 타일부터 안쪽으로 껍질을 깎듯이 내려와야 한다.
-        const forEachTile = (callback, layer) => {
-            // (width-1, 0) 에서부터 드로잉을 시작한다
-            for (let x = this.mapWidth - 1; x >= 0; --x) {
-                for (let y = 0; y < this.mapHeight; ++y) {
-                    const index = x + y * this.mapWidth;
-                    const tile = layer[index];
-                    if (tile) {
-                        callback(tile, x, y);
+        const objects = {};
+        for (let y = 0; y < this.mapHeight;++y) {
+            for (let x = 0; x < this.mapWidth;++x) {
+                const tile = this.objectMap[x + y * this.mapWidth];
+                if (tile) {
+                    if (objects[tile.groupId]) {
+                        tile.xmin = Math.min(tile.xmin, x);
+                        tile.xmax = Math.max(tile.xmax, x);
+                        tile.ymin = Math.min(tile.ymin, y);
+                        tile.ymax = Math.max(tile.ymax, y);
+                    } else {
+                        objects[tile.groupId] = tile;
+                        tile.xmin = tile.xmax = x;
+                        tile.ymin = tile.ymax = y;
                     }
+                    this.pathFinder.setDynamicCell(x, y, tile.movable);
                 }
             }
         }
-
-
-        forEachTile((tile, x, y) => {
-            this.groundContainer.addChild(tile);
-        }, this.bottomMap);
-
-        forEachTile((tile, x, y) => {
-            this.groundContainer.addChild(tile);
-            tile.highlightedOverlay.position = tile.position;
-
-            this.groundOverlay.addChild(tile.highlightedOverlay);
-            this.pathFinder.setCell(x, y, tile.movable);
-        }, this.groundMap);
-
-        const objects = {};
-        forEachTile((tile, x, y) => {
-            if (objects[tile.groupId]) {
-                tile.xmin = Math.min(tile.xmin, x);
-                tile.xmax = Math.max(tile.xmax, x);
-                tile.ymin = Math.min(tile.ymin, y);
-                tile.ymax = Math.max(tile.ymax, y);
-            } else {
-                objects[tile.groupId] = tile;
-                tile.xmin = tile.xmax = x;
-                tile.ymin = tile.ymax = y;
-            }
-            this.pathFinder.setDynamicCell(x, y, tile.movable);
-        }, this.objectMap);
 
         const sortedObjects = [];
         for (const groupId in objects) {
@@ -379,7 +392,7 @@ export default class Stage extends PIXI.Container {
                     // 타일마름모 안에 있는지 확인한다
                     if (Math.abs(point.x - cx) * this.TILE_HALF_H / this.TILE_HALF_W + Math.abs(point.y - cy) <= this.TILE_HALF_H) {
                         const index = x + y * this.mapWidth;
-                        return this.groundMap[index];
+                        return this.eventMap[index] || this.groundMap[index];
                     }
                 }
             }
@@ -405,7 +418,7 @@ export default class Stage extends PIXI.Container {
 
     moveCharacter(character, x, y) {
 
-        const target = this.getInteractiveTarget(x, y);
+        const target = this.getInteractiveTarget(x, y) || this.eventMap[x + y * this.mapWidth];
         const ignoreTarget = target ? true : false;
 
         // 다음 위치에서부터 시작을 한다
@@ -523,18 +536,6 @@ export default class Stage extends PIXI.Container {
             }
         }
 
-        // 현재 지나고 있는 타일에 이벤트가 있는지 확인한다
-        const tileEvent = this.events[obj.gridX + obj.gridY * this.mapWidth];
-        if (tileEvent) {
-            tileEvent.call();
-            if (tileEvent.forceStop) {
-                // 마지막 타일의 선택을 지운다
-                this.highlightPath(obj.currentPath, null);
-                return;
-            }
-        }
-        
-
         // 만약에 인터랙티브 타겟이 있고, 길이가 하나 남았으면 정지시킨다.
         if (this.interactTarget && obj.currentPathStep === 0) {
             forceStop = true;
@@ -610,7 +611,7 @@ export default class Stage extends PIXI.Container {
             if (isInPolygon(pos, vertices))
             {
                 this.arrangeObjLocation(obj, obj.currentTargetTile.x, obj.currentTargetTile.y);
-                this.arrangeObjTransperancies(obj, obj.gridX, obj.gridY, obj.currentTargetTile.x, obj.currentTargetTile.y);
+                //this.arrangeObjTransperancies(obj, obj.gridX, obj.gridY, obj.currentTargetTile.x, obj.currentTargetTile.y);
                 this.arrangeDepthsFromLocation(obj, obj.gridX, obj.gridY);
             }
         }	
@@ -632,7 +633,7 @@ export default class Stage extends PIXI.Container {
         }
     }
 
-    arrangeObjTransperancies(obj, prevX, prevY, x, y) {
+    /*arrangeObjTransperancies(obj, prevX, prevY, x, y) {
         for (const t of this.alphaTiles) {
             t.alpha = 1;
         }
@@ -654,7 +655,7 @@ export default class Stage extends PIXI.Container {
                 //}
             }
         }
-    }
+    }*/
         
     arrangeObjLocation(obj, x, y) {
         this.removeObjRefFromLocation(obj);
@@ -663,8 +664,8 @@ export default class Stage extends PIXI.Container {
     
     arrangeDepthsFromLocation(obj, gridX, gridY) {
         let targetIndex = null;
-        for (let x = gridX; x >= 0 ; x--) {
-            for (let y = gridY; y < this.mapHeight; y++) {
+        for (let y = gridY; y < this.mapHeight; y++) {
+            for (let x = gridX; x < this.mapWidth ; x++) {
                 const tile = this.objectMap[x + y * this.mapWidth];
                 if (tile instanceof Prop) {
                     const i = this.objectContainer.getChildIndex(tile);
@@ -694,6 +695,16 @@ export default class Stage extends PIXI.Container {
         const index = x + y * this.mapWidth;
         this.objectMap[index] = obj;
         this.objectContainer.addChild(obj);
+    }
+
+    findEventByName(name) {
+        for(let i = 0; i <  this.eventMap.length; ++i) {
+            const event = this.eventMap[i];
+            if (event && event.name === name) {
+                return event;
+            }
+        }
+        return null;
     }
 
     update() {
