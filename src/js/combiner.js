@@ -22,7 +22,7 @@ export default class Combiner {
                 recipe.available = true;
                 for(const mat of recipe.materials) {
                     mat.owned = inventory.getCount(mat.item);
-                    recipe.available &= (mat.count >= mat.owned);
+                    recipe.available &= (mat.count <= mat.owned);
                 }
 
                 result.push(recipe);
