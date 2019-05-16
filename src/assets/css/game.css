@@ -91,9 +91,9 @@ button, .button {
 
 *.disabled {
   /* cursor: not-allowed; */
-  pointer-events: none;
   opacity: 0.7;
 }
+
 
 button span {
   font-size: 14px;

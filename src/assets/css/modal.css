@@ -296,6 +296,7 @@ div[class*='column-'] p {
 }
 
 .list-cell {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   justify-items: start;
@@ -347,6 +348,8 @@ div[class*='column-'] p {
   height: 32px;
   display: none;
   background: url('~assets/ui/build.png') no-repeat;
+  /* background: url('~assets/ui/craft.gif') no-repeat; */
+  
 }
 
 .list-cell .availableIcon + .img {
