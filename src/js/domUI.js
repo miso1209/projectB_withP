@@ -107,15 +107,15 @@ export default class DomUI {
     inventory.addCloseButton();
 
     this.tabs = [
-      {index:0, tab:'무기', category: 'weapon'},
-      {index:1, tab:'방어구', category: 'armor'},
-      {index:2, tab:'악세사리', category: 'accessory'},
-      {index:3, tab:'재료', category: 'material'},
-      {index:4, tab:'소모품', category: 'consumables'},
-      {index:5, tab:'퀘스트', category: 'valuables'}
+      {category: 'weapon'},
+      {category: 'armor'},
+      {category: 'accessory'},
+      {category: 'material'},
+      {category: 'consumables'},
+      {category: 'valuables'}
     ];
 
-    inventory.addTab(this.tabs, 'weapon');
+    inventory.addTab(this.tabs, tabs[0].category);
 
     // # stat
     const statContent = document.createElement('div');
@@ -418,26 +418,21 @@ export default class DomUI {
   }
 
   // 레시피 + 아이템 조합창
-  showCombineItemList(inputs) {
+  showCombineItemList(inputs, callback) { // 제작하기 버튼 콜백
     const pane = this.create();
     pane.classList.add('screen');
 
-    this.recipeUI = new RecipeUI(pane, 360, 460);
-    
-    // console.dir(inputs);
-    // tab을 여기서 붙여서 접근해야..하나???
-
+    this.recipeUI = new RecipeUI(pane, 360, 460, callback);
   
     for (const input of inputs) {
       this.recipeUI.tabs.push({category: input.category});
       this.recipeUI.inputs = inputs;
     }
 
-
     if (inputs.length > 0) {
       this.recipeUI.select(inputs[0].category);
     }
-    this.recipeUI.update();
+    // this.recipeUI.update();
     this.recipeUI.moveToLeft(150);
   }
 }
@@ -445,33 +440,23 @@ export default class DomUI {
 
 
 
-
 class RecipeUI extends DomUI {
-  constructor(pane, width, height) {
+  constructor(pane, width, height, callback) {
     super();
 
     this.recipeModal = new Modal(pane, width, height);
     this.recipeModal.addCloseButton();
     this.recipeModal.addTitle('아이템 레시피');
+    this.combinerUI = null;
 
     this.pane = pane;
-
     this.dom = this.recipeModal.dom;
-    
+    this.callback = callback;
     this.category = null;
     this.recipes = null;
-    this.categoryData = [];
-
     this.tabs = [];
-      // {index:0, tab:'무기', category: 'weapon'},
-      // {index:1, tab:'방어구', category: 'armor'},
-      // {index:2, tab:'악세사리', category: 'accessory'},
-      // {index:3, tab:'재료', category: 'material'},
-      // {index:4, tab:'소모품', category: 'consumables'},
-      // {index:5, tab:'퀘스트', category: 'valuables'}
-    // ];
 
-    this.list = new ListBox(320, 320, this.onclick.bind(this));
+    this.list = new ListBox(320, 320, this.listCallback.bind(this));
     this.list.dom.style.top = '100px';
     this.dom.appendChild(this.list.dom);
   }
@@ -483,20 +468,27 @@ class RecipeUI extends DomUI {
         this.recipes = input.recipes;
       }
     }
+    
+    this.update();
   }
 
   update(){
     this.recipeModal.setSubTitle(this.category);
     this.list.update(this.recipes);
-    this.recipeModal.addTab(this.tabs, this.category);
+    this.recipeModal.addTab(this.tabs, this.category, this.select.bind(this));
 
     if(this.recipes.length > 0) {
       // 아이템 조합창
-      this.combinerUI = new CombinerUI(this.pane, 360, 460);
+      this.combinerUI = new CombinerUI(this.pane, 360, 460, this.onCombine.bind(this));
       this.combinerUI.moveToRight(100);
       
       // 최초실행 시 제일 처음 레시피 데이터로 업데이트
       this.updateCombiner(this.recipes[0]);
+    } else {
+      if ( this.combinerUI !== null ){
+        this.remove(this.combinerUI.dom);
+        this.combinerUI = null;
+      }
     }
   }
 
@@ -505,11 +497,16 @@ class RecipeUI extends DomUI {
     this.combinerUI.update();
   }
 
-  onclick(data){
+  listCallback(data){
     this.combinerUI.recipe = data;
     this.combinerUI.update();
-    // this.combinerUI.update(data);
+  }
 
+  onCombine(combine){
+    if(combine) {
+      console.log('RecipeUI--' + combine);
+      this.callback(combine);
+    }
   }
 }
 
@@ -528,12 +525,15 @@ class InventoryUI extends DomUI {
     ];
   }
 }
-class CombinerUI extends DomUI {
-  constructor(pane, width, height) {
-    super();
 
+
+class CombinerUI extends DomUI {
+  constructor(pane, width, height, callback) {
+    super();
+    
     const combineModal = new Modal(pane, width, height);
     this.dom = combineModal.dom;
+    this.callback = callback;
 
     this.recipe = null;
     this.materialsData = null;
@@ -620,8 +620,8 @@ class CombinerUI extends DomUI {
   }
 
   doCombineItem() {
-    console.log('아이템 조합-!');
     this.remove(this.dom.parentNode);
+    this.callback(this.materialsData);
   }
 }
 
@@ -957,8 +957,10 @@ class Modal extends DomUI {
     this.remove(this.pane);
   }
 
-  addTab(tabs, category) {
-    console.log(tabs);
+  addTab(tabs, category, callback) {
+    if (this.dom.querySelector('.tabPane') !== null) {
+      return;
+    }
     const tabPane = document.createElement('ul');
     tabPane.classList.add('tabPane');
     this.dom.appendChild(tabPane);
@@ -967,9 +969,10 @@ class Modal extends DomUI {
     tabPane.style.width = '100px;'
     
     let selected = null;
+    this.callback = callback;
 
     tabs.forEach(tab => {
-      let tabButton = new Tab(tab);
+      let tabButton = new Tab(tab, callback);
       tabButton.dom.classList.add('tabBtn');
       tabButton.active = false;
 
@@ -989,11 +992,15 @@ class Modal extends DomUI {
       });
     });
   }
+
+  callback(category) {
+    return category;
+  }
 }
 
 // 탭 클래스를 추가한다.
 class Tab {
-  constructor(tab) {
+  constructor(tab, callback) {
     const iconMap = [
       {category: 'weapon', x:19, y:9},
       {category: 'armor', x:4, y:12},
@@ -1005,7 +1012,7 @@ class Tab {
 
     const tabButton = document.createElement('li');
     const tabImg = new ItemImage('items.png', 10, 10);
-
+    
     for (const icon of iconMap) {
       if (icon.category === tab.category) {
         tabImg.updateImage(icon.x, icon.y);
@@ -1014,15 +1021,14 @@ class Tab {
     }
    
     this.dom = tabButton;
+    this.callback = callback;
 
     tabButton.appendChild(tabImg.dom);
     this.dom.addEventListener('click', this.onclick.bind(this));
   }
 
   onclick(){
-    console.dir(this);
-    // const recipes = this.game.getRecipes(this.category);
-    console.log(this.category);
+    this.callback(this.category);
   }
 }
 

@@ -198,8 +198,12 @@ function gameStart(pixi) {
         // # item 획득 모달
         domUI.showItemAquire(1);
       } else if (e.keyCode === 68) { // d
-        const recipes = game.getRecipes('consumables');
-        domUI.showCombineItemList([{ category: 'consumables', recipes: recipes }]);
+        // const recipes = game.getRecipes('consumables');
+        domUI.showCombineItemList(
+          [ { category: 'armor', recipes: game.getRecipes('armor') },{ category: 'consumables', recipes: game.getRecipes('consumables') },
+            { category: 'weapon', recipes: game.getRecipes('weapon') }], (isOk) => { console.log(isOk); }
+            );
+        // });
       }
     }, true);
   });

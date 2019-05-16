@@ -77,7 +77,6 @@ body.battle .gnbContainer.battleMode {
   pointer-events: none;
 }
 
-
 .modal {
   top: 20px;
 }
@@ -88,8 +87,23 @@ button, .button {
   padding: 8px 0;
   color: #fff;
   background: url(~assets/ui/button_s1.png) no-repeat;
-
   transition: all 0.4s linear;
+}
+
+.submit {
+  background: url(~assets/ui/button_s2.png) no-repeat;
+}
+
+.button._small {
+  width: 75px;
+  height: 35px;
+  padding: 5px 0;
+  background: url(~assets/ui/btn_1.png) no-repeat;
+  background-size: contain;
+}
+
+button span {
+  font-size: 14px;
 }
 
 .tabPane {
@@ -150,24 +164,6 @@ button, .button {
 .tabBtn.active .img {
   opacity: 1;
 }
-
-.submit {
-  background: url(~assets/ui/button_s2.png) no-repeat;
-}
-
-.button._small, 
-button {
-  width: 75px;
-  height: 35px;
-  padding: 5px 0;
-  background: url(~assets/ui/btn_1.png) no-repeat;
-  background-size: contain;
-}
-
-button span {
-  font-size: 14px;
-}
-
 .categoryWarp{
   position: absolute;
   display: flex;
