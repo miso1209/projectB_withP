@@ -602,7 +602,7 @@ class CombinerUI extends DomUI {
       this.materialsData.forEach(mat => {
         let node = document.createElement('li');
         node.className = 'li';
-        
+
         let material1 = new ItemImage(mat.data.image.texture, mat.data.image.x, mat.data.image.y);
         let material2 = document.createElement('p');
         let material3 = document.createElement('p');
@@ -1114,7 +1114,7 @@ class ListBox extends DomUI {
     this.list.classList.add('list-box');
     this.list.style.height = viewHeight;
     this.list.style.width = viewWidth;
-    
+
     scrollView.appendChild(scrollBlind);
     scrollBlind.appendChild(this.list);
 
@@ -1124,34 +1124,35 @@ class ListBox extends DomUI {
 
   update (recipes) {
     if (recipes.length < 1) {
-      this.dom.innerText = '해당 카테고리 레시피가 없습니다.';
+      this.list.innerHTML = '해당 카테고리 레시피가 없습니다.';
       return;
-    }
+    } else {
+      this.list.innerHTML = '';
 
-    let selectedCell = null;
-    let index = -1;
-
-    for (const recipe of recipes) {
-      let listCell = new ListCell(recipe, 'recipe');
-
-      ++index;
-      listCell.index = index;
-
-      if (listCell.index === 0) {
-        listCell.cell.classList.add('active');
-        selectedCell = listCell.cell;
-      }
-
-      listCell.cell.addEventListener('click', function () {
-        if (selectedCell) {
-          selectedCell.classList.remove('active');
+      let selectedCell = null;
+      let index = -1;
+  
+      for (const recipe of recipes) {
+        let listCell = new ListCell(recipe, 'recipe');
+  
+        ++index;
+        listCell.index = index;
+  
+        if (listCell.index === 0) {
+          listCell.cell.classList.add('active');
+          selectedCell = listCell.cell;
         }
-        listCell.cell.classList.add('active');
-        selectedCell = listCell.cell;
-      });
-
-      listCell.cell.addEventListener('click', this.setRecipe.bind(this, recipe));
-      this.list.appendChild(listCell.cell);
+  
+        listCell.cell.addEventListener('click', function () {
+          if (selectedCell) {
+            selectedCell.classList.remove('active');
+          }
+          listCell.cell.classList.add('active');
+          selectedCell = listCell.cell;
+        });
+        listCell.cell.addEventListener('click', this.setRecipe.bind(this, recipe));
+        this.list.appendChild(listCell.cell);
+      }
     }
   }
 
