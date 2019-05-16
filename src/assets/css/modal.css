@@ -299,7 +299,6 @@ div[class*='column-'] p {
   position: relative;
   display: flex;
   flex-wrap: wrap;
-  justify-items: start;
   justify-content: space-between;
 
   width: calc(100% - 10px);
@@ -343,19 +342,19 @@ div[class*='column-'] p {
 }
 
 /* 조합가능 표시 */
-.list-cell.disabled .availableIcon {
+.list-cell .availableIcon {
   width: 32px;
   height: 32px;
-  display: none;
   background: url('~assets/ui/build.png') no-repeat;
-  /* background: url('~assets/ui/craft.gif') no-repeat; */
-  
 }
 
 .list-cell .availableIcon + .img {
   margin-right: 10px;
 }
+.list-cell.disabled .availableIcon {
+  opacity: 0;
+}
 .list-cell.isAvailable .availableIcon {
-  opacity: 1;
   display: block;
+  opacity: 1;
 }

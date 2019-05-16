@@ -8,7 +8,7 @@ export default class DomUI {
   }
 
   create() {
-    console.log('-- DomUI --');
+    // console.log('-- DomUI --');
     const container = document.createElement('div');
     container.className = 'uiContainer';
     container.style.top = this.gamePane.offsetTop + 'px';
@@ -33,7 +33,7 @@ export default class DomUI {
     document.body.className = stage;
     this.stageMode = stage;
 
-    console.log('current stage mode: ' + this.stageMode);
+    // console.log('current stage mode: ' + this.stageMode);
   }
 
   setProfile(playerId) {
@@ -116,7 +116,6 @@ export default class DomUI {
     ];
     
     this.select = null;
-
     inventory.addTab(this.tabs, this.tabs[0].category, this.select);
 
     // # stat
@@ -142,13 +141,12 @@ export default class DomUI {
     let selectedSlot = null;
 
     // inventory items
-    const playerInven = this.game.player.inventory.items;
-    if (playerInven.length < 0) {
-      return
-    }
+    const playerInven = this.game.player.inventory;
+    console.log(playerInven);
+
 
     // this.game.player.inventory.eachItem((item) => {
-    for (const item of playerInven.items) {
+    for (const item of playerInven) {
       const itemSprite = document.createElement('img');
       itemSprite.src = '/src/assets/items/' + item.image;
       itemSprite.style.width = '50px';
@@ -174,7 +172,6 @@ export default class DomUI {
         statContent.appendChild(stat);
       });
     }
-    // });
 
     scrollView.appendChild(scrollBlind);
     scrollBlind.appendChild(storageContent);
@@ -506,7 +503,6 @@ class RecipeUI extends DomUI {
 
   onCombine(combine){
     if(combine) {
-      console.log('RecipeUI--' + combine);
       this.callback(combine);
     }
   }
@@ -1093,7 +1089,7 @@ class ListCell {
   }
 
   onclick(){
-    console.log(this.index);
+    // console.log(this.index);
   }
 }
 

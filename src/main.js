@@ -3,6 +3,7 @@ import UI from './js/ui'
 import ResourceManager from './js/resource-manager'
 
 import DomUI from './js/domUI'
+import { AdvancedBloomFilter } from 'pixi-filters';
 
 function initApp() {
   const pixi = new PIXI.Application(980, 500, {
@@ -193,7 +194,18 @@ function gameStart(pixi) {
         // });
       }
     }, true);
+
+
+    window.addItem = (id, count) => {
+
+      console.log('item id :' + id.toString() + ' / count :' + count);
+
+      const inven = game.player.inventory;
+      inven.addItem(id.toString(), count);
+    }
+    
   });
 }
 
 initApp();
+
