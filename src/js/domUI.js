@@ -427,31 +427,17 @@ export default class DomUI {
     // console.dir(inputs);
     // tab을 여기서 붙여서 접근해야..하나???
 
+  
     for (const input of inputs) {
-      this.recipeUI.categoryData.push(input.category);
-
-      this.recipeUI.category = input.category;
-      this.recipeUI.recipes = input.recipes;
-      this.recipeUI.update();
-
-      for (const recipe of input.recipes) {
-        // console.log('--- recipe.data ---')
-        // console.dir(recipe.data);
-        // console.log('--- / ---');
-        // console.log("이름: " + recipe.data.name, "소지개수:" + recipe.owned);
-        for(const mat of recipe.materials) {
-          // console.log('--- recipe.materials ---')
-          // console.dir(mat);
-          // console.log('--- / ---');
-          // console.log("재료 : " + mat.data.name, "필요개수:" + mat.count, "소지개수:" + mat.owned );
-        }
-        // 아이템 효과는 배열로 전달된다.
-        for (const option of recipe.data.options ) {
-          // console.log(option.toString());
-        }
-      }
-      
+      this.recipeUI.tabs.push({category: input.category});
+      this.recipeUI.inputs = inputs;
     }
+
+
+    if (inputs.length > 0) {
+      this.recipeUI.select(inputs[0].category);
+    }
+    this.recipeUI.update();
     this.recipeUI.moveToLeft(150);
   }
 }
@@ -476,18 +462,27 @@ class RecipeUI extends DomUI {
     this.recipes = null;
     this.categoryData = [];
 
-    this.tabs = [
-      {index:0, tab:'무기', category: 'weapon'},
-      {index:1, tab:'방어구', category: 'armor'},
-      {index:2, tab:'악세사리', category: 'accessory'},
-      {index:3, tab:'재료', category: 'material'},
-      {index:4, tab:'소모품', category: 'consumables'},
-      {index:5, tab:'퀘스트', category: 'valuables'}
-    ];
+    this.tabs = [];
+      // {index:0, tab:'무기', category: 'weapon'},
+      // {index:1, tab:'방어구', category: 'armor'},
+      // {index:2, tab:'악세사리', category: 'accessory'},
+      // {index:3, tab:'재료', category: 'material'},
+      // {index:4, tab:'소모품', category: 'consumables'},
+      // {index:5, tab:'퀘스트', category: 'valuables'}
+    // ];
 
     this.list = new ListBox(320, 320, this.onclick.bind(this));
     this.list.dom.style.top = '100px';
     this.dom.appendChild(this.list.dom);
+  }
+
+  select(category) {
+    for(const input of this.inputs) {
+      if (input.category === category) {
+        this.category = input.category;
+        this.recipes = input.recipes;
+      }
+    }
   }
 
   update(){
@@ -963,6 +958,7 @@ class Modal extends DomUI {
   }
 
   addTab(tabs, category) {
+    console.log(tabs);
     const tabPane = document.createElement('ul');
     tabPane.classList.add('tabPane');
     this.dom.appendChild(tabPane);
