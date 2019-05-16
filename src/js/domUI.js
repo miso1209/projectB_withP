@@ -114,8 +114,10 @@ export default class DomUI {
       {category: 'consumables'},
       {category: 'valuables'}
     ];
+    
+    this.select = null;
 
-    inventory.addTab(this.tabs, tabs[0].category);
+    inventory.addTab(this.tabs, this.tabs[0].category, this.select);
 
     // # stat
     const statContent = document.createElement('div');
@@ -511,22 +513,6 @@ class RecipeUI extends DomUI {
 }
 
 
-class InventoryUI extends DomUI {
-  constructor() {
-    super();
-
-    this.tabs = [
-      {index:0, tab:'무기', category: 'weapon'},
-      {index:1, tab:'방어구', category: 'armor'},
-      {index:2, tab:'악세사리', category: 'accessory'},
-      {index:3, tab:'재료', category: 'material'},
-      {index:4, tab:'소모품', category: 'consumables'},
-      {index:5, tab:'퀘스트', category: 'valuables'}
-    ];
-  }
-}
-
-
 class CombinerUI extends DomUI {
   constructor(pane, width, height, callback) {
     super();
@@ -570,8 +556,10 @@ class CombinerUI extends DomUI {
     const combineButton = new Button('제작');
     combineButton.moveToCenter(10);
     combineButton.moveToBottom(15);
-    combineButton.dom.addEventListener('click', this.doCombineItem.bind(this));
+    combineButton.dom.classList.add('disabled');
     
+    this.button = combineButton.dom;
+
     contents.appendChild(this.options);
     contents.appendChild(this.materialInfo);
 
@@ -581,6 +569,13 @@ class CombinerUI extends DomUI {
 
   update() {
     if (this.recipe !== null) {
+      if (this.recipe.available === 1) {
+        this.button.classList.remove('disabled');
+        this.button.classList.add('isAvailable');
+
+        this.button.addEventListener('click', this.doCombineItem.bind(this));
+      }
+
       // 기존데이터 초기화
       this.materialInfo.innerHTML = '';
       this.options.innerHTML = '';
@@ -609,7 +604,7 @@ class CombinerUI extends DomUI {
   
         material2.innerText = `${mat.data.name}`;
         material3.innerText = `${mat.owned} / ${mat.count}`;
-  
+
         node.appendChild(material1.dom);
         node.appendChild(material2);
         node.appendChild(material3);
@@ -621,7 +616,7 @@ class CombinerUI extends DomUI {
 
   doCombineItem() {
     this.remove(this.dom.parentNode);
-    this.callback(this.materialsData);
+    this.callback(this.recipe);
   }
 }
 
@@ -1028,7 +1023,9 @@ class Tab {
   }
 
   onclick(){
-    this.callback(this.category);
+    if(this.callback !== null) {
+      this.callback(this.category);
+    }
   }
 }
 
@@ -1059,6 +1056,8 @@ class ListCell {
   constructor(cellData, cellType){
     this.cell = document.createElement('li');
     this.cell.classList.add('list-cell');
+    this.cell.classList.add('disabled');
+
     this.cellData = cellData;
     this.index = null;
 
@@ -1066,23 +1065,31 @@ class ListCell {
     if ( cellType === 'recipe') {
       this.showRecipeCell();
     }
-
-    this.cell.addEventListener('click', this.onclick.bind(this));
   }
 
   showRecipeCell() {
+    if (this.cellData.available === 1) {
+      this.cell.classList.remove('disabled');
+      this.cell.classList.add('isAvailable');
+
+      this.cell.addEventListener('click', this.onclick.bind(this));
+    }
+
     const imgData = this.cellData.data.image;
     this.cellImg = new ItemImage(imgData.texture, imgData.x, imgData.y);
     
     this.cellData1 = document.createElement('p');
     this.cellData2 = document.createElement('p');
+    this.cellData3 = document.createElement('p');
 
     this.cellData1.innerText = this.cellData.data.name;
     this.cellData2.innerText = this.cellData.owned;
-    
+    this.cellData3.className = 'availableIcon';
+
     this.cell.appendChild(this.cellImg.dom);
     this.cell.appendChild(this.cellData1);
     this.cell.appendChild(this.cellData2);
+    this.cell.appendChild(this.cellData3);
   }
 
   onclick(){
@@ -1131,12 +1138,12 @@ class ListBox extends DomUI {
 
       let selectedCell = null;
       let index = -1;
-  
       for (const recipe of recipes) {
         let listCell = new ListCell(recipe, 'recipe');
-  
+        
         ++index;
         listCell.index = index;
+        listCell.available = recipe.available;
   
         if (listCell.index === 0) {
           listCell.cell.classList.add('active');

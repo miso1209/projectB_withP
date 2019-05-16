@@ -46,5 +46,13 @@
         "description": "흔히 볼수 있는 식물",
         "category": "material",
         "options": []
+    },
+    "2002": {
+        "id": 2002,
+        "name": "희귀 약초",
+        "image": { "texture": "items.png", "x": 7, "y": 4 },
+        "description": "흔히 볼수 없는 식물",
+        "category": "material",
+        "options": []
     }
 }
