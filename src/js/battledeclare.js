@@ -13,8 +13,8 @@ export const STAGE_BASE_POSITION = {
     PLAYER_Y: 223,
     ENEMY_X: 285,
     ENEMY_Y: 153,
-    CENTER_X: -54,
-    CENTER_Y: -140
+    CENTER_X: -27,
+    CENTER_Y: -70
 };
 
 export const STAGE_STATUS = {

@@ -11,10 +11,10 @@ import { BuffEffecter } from "./battleeffecter";
 
 // 캐릭터 로직
 export class BattleCharacter extends PIXI.Container {
-    constructor(base) {
+    constructor(character) {
         super();
-        this.baseStat = {};
-        this.battleUi = {};
+        this.character = character;
+        
         this.camp = CHARACTER_CAMP.ALLY;
         this.gridPosition = {
             x: 0,
@@ -24,9 +24,8 @@ export class BattleCharacter extends PIXI.Container {
         this.tweens = new Tweens();
         this.movies = new Movies();
 
-        this.loadBase(base);
         this.container = new PIXI.Container();
-        this.animation = new BattleAnimation(base);
+        this.animation = new BattleAnimation(this.character);
         this.progressBar = new BattleProgressBar();
         this.buffEffecter = new BuffEffecter(this);
         this.progressBar.position.y = -this.animation.height;
@@ -38,24 +37,23 @@ export class BattleCharacter extends PIXI.Container {
 
         this.skills = [];
         this.state = new State();
-        this.stat = new StatManager(this.baseStat);
+        this.stat = new StatManager(this.character);
 
-        const stateSuccess = this.state.change('idle');
-        if (stateSuccess) {
-            this.setAnimation('idle');
-        }
+        this.progressBar.setWidth(this.health / this.maxHealth * 34);
+
+        this.stateInit();
 
         // 스킬을 가지는 것 우선 하드코딩..
-        if (base.name == 'Elid') {
+        if (character.data.name == 'elid') {
             this.skills.push(new ProjectileSkill(this));
             this.skills.push(new FireRainSkill(this));
-        } else if (base.name == 'Miluda') {
+        } else if (character.data.name == 'miluda') {
             this.skills.push(new ArrowShotingSkill(this));
             this.skills.push(new ArrowHighShotingSkill(this));
-        } else if (base.name == 'Warrior') {
+        } else if (character.data.name == 'warrior') {
             this.skills.push(new MeleeSkill(this));
             this.skills.push(new DoubleMeleeSkill(this));
-        } else if (base.name == 'Healer') {
+        } else if (character.data.name == 'healer') {
             this.skills.push(new MeleeSkill(this));
             this.skills.push(new HealSkill(this));
         } else {
@@ -64,6 +62,17 @@ export class BattleCharacter extends PIXI.Container {
         }
         this.skills[1].currentDelay = 0;
         this.skills[1].activeType = ACTIVE_TYPE.ACTIVE;
+    }
+    
+    stateInit() {
+        if (this.health > 0) {
+            const stateSuccess = this.state.change('idle');
+            if (stateSuccess) {
+                this.setAnimation('idle');
+            }
+        } else {
+            this.state.change('die');
+        }
     }
 
     setCamp(camp) {
@@ -104,29 +113,15 @@ export class BattleCharacter extends PIXI.Container {
 
     updateSkills(scene) {
         this.skills.forEach((skill) => {
-            if (skill.status === SKILL_STATUS.IDLE && !scene.queue.hasItem() && this.baseStat.hp > 0) {
+            if (skill.status === SKILL_STATUS.IDLE && !scene.queue.hasItem() && this.health > 0) {
                 skill.delay();
             }
         });
     }
 
-    loadBase(base) {
-        this.name = base.name;
-
-        this.baseStat = {};
-        for(let key in base.stat) {
-            this.baseStat[key] = base.stat[key];
-        }
-
-        this.battleUi = {};
-        for(let key in base.battleUi) {
-            this.battleUi[key] = base.battleUi[key];
-        }
-    }
-
     onDamage(damage) {
-        this.baseStat.hp -= damage;
-        const hpWidth = (this.baseStat.hp< 0 ? 0 : this.baseStat.hp) / this.baseStat.maxHp * 34;
+        this.character.health -= damage;
+        const hpWidth = (this.health< 0 ? 0 : this.health) / this.maxHealth * 34;
         this.progressBar.setWidth(hpWidth);
 
         const stateSuccess = this.state.change('damaged');
@@ -137,18 +132,27 @@ export class BattleCharacter extends PIXI.Container {
             });
         }
 
-        if (this.baseStat.hp <= 0) {
+        if (this.health <= 0) {
             this.state.change('die');
             this.tweens.addTween(this.container, 0.5, {alpha: 0}, 0, 'easeInOut', false, () => {
             });
         }
     }
+
+    get health() {
+        return this.character.health;
+    }
+
+    get maxHealth() {
+        return this.character.maxHealth;
+    }
 }
 
 // Battle Character의 Animation Sprite 처리를 하는 클래스.
 class BattleAnimation extends PIXI.Container {
-    constructor(base) {
+    constructor(character) {
         super();
+        this.character = character;
         this.tweens = new Tweens();
         this.movies = new Movies();
 
@@ -156,14 +160,20 @@ class BattleAnimation extends PIXI.Container {
         this.shadow.position.y = -this.shadow.height;
 
         this.animations = {};
-        for(let key in base.animations) {
-            this.animations[key + '_nw'] = { textures: loadAniTexture(base.animations[key].texture + "_nw", base.animations[key].length), flipX: false };
+        this.animationKeys = this.getAnimationKeys(character);
+        
+        for(let key of this.animationKeys) {
+            const keyA = character.name + "_" + key + "_nw";
+            this.animations[key + '_nw'] = { textures: loadAniTexture(keyA, character.data.animations[keyA].length), flipX: false };
             this.animations[key + '_ne'] = { textures: this.animations[key + '_nw'].textures, flipX: true };
-            this.animations[key + '_sw'] = { textures: loadAniTexture(base.animations[key].texture + "_sw", base.animations[key].length), flipX: false };
+            
+
+            const keyB = character.name + "_" + key + "_sw";
+            this.animations[key + '_sw'] = { textures: loadAniTexture(keyB, character.data.animations[keyB].length), flipX: false };
             this.animations[key + '_se'] = { textures: this.animations[key + '_sw'].textures, flipX: true };
         }
 
-        this.offset = base.offset;
+        this.offset = character.data.offset;
         const anim = new PIXI.extras.AnimatedSprite(this.animations.idle_sw.textures);
         anim.animationSpeed = 0.1;
         anim.play();
@@ -179,6 +189,17 @@ class BattleAnimation extends PIXI.Container {
     update() {
         this.movies.update();
         this.tweens.update();
+    }
+
+    getAnimationKeys(character) {
+        const keys = [];
+
+        for (const animationName in character.data.animations) {
+            const key = animationName.replace(character.name + '_', '').replace('_nw', '').replace('_ne', '').replace('_sw', '').replace('_se', '');
+            keys.push(key);
+        }
+
+        return keys;
     }
 
     changeVisualToDirection(direction) {
@@ -231,7 +252,7 @@ class BattleAnimation extends PIXI.Container {
             MovieClip.Timeline(1, duration, null, () => {
                 this.anim.position.x = x + vibrationScale;
                 this.anim.position.y = y + vibrationScale;
-                vibrationScale = vibrationScale / 6 * -5;
+                vibrationScale = vibrationScale / 8 * -7;
             }),
             MovieClip.Timeline(duration + 1, duration + 1, null, () => {
                 this.anim.position.x = x;

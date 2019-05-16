@@ -87,6 +87,10 @@ export default class Game extends EventEmitter {
         this.player = new Player();
         // 플레이어가 가지고 있는 캐릭터를 하나 정의한다
         this.player.characters.push(new Character(this.charTable.getData(1)));
+        this.player.characters.push(new Character(this.charTable.getData(2)));
+        this.player.characters.push(new Character(this.charTable.getData(3)));
+        this.player.characters.push(new Character(this.charTable.getData(4)));
+        this.player.characters.push(new Character(this.charTable.getData(5)));
         this.player.controlCharacter = this.player.characters[0];
 
         // 필요한 필드 캐릭터 정보를 로딩한다

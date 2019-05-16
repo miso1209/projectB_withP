@@ -7,10 +7,10 @@ export default class Character {
         this.level = 1;
         this.data = data;
         
-        this.health;
-        
-        this.baseMaxHealth;
+        this.baseMaxHealth = data.getStat('health', this.level);
         this.plusMaxHealth = 0;
+        
+        this.health = this.maxHealth;
 
         this.baseStrength = data.getStat('strength', this.level);
         this.plusStrength = 0;
@@ -69,11 +69,11 @@ export default class Character {
     }
 
     get attack() {
-        return Math.floor(this.strength * this.attackPotential) + this.plusAttack;
+        return Math.floor(this.strength * this.attackPotential * 10) + this.plusAttack;
     }
 
     get magic() {
-        return Math.floor(this.intellect * this.magicPotential) + this.plusMagic;
+        return Math.floor(this.intellect * this.magicPotential * 10) + this.plusMagic;
     }
 
     get armor() {

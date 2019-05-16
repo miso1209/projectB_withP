@@ -3,7 +3,6 @@ import UI from './js/ui'
 import ResourceManager from './js/resource-manager'
 
 import DomUI from './js/domUI'
-import CharacterFactory from './js/characterfactory';
 
 function initApp() {
   const pixi = new PIXI.Application(980, 500, {
@@ -73,17 +72,9 @@ function gameStart(pixi) {
   game.resourceManager.add("monster03_active.png", "assets/monster03_active.png");
   game.resourceManager.add("ending_victory.png", "assets/ending_victory.png");
   game.resourceManager.add("battleMap1.png", "assets/battleMap1.png");
+  game.resourceManager.add("battle_background.png", "assets/battle_background.png");
 
   // 전투용 이미지. 나중에 모두 제거해야 한다
-  game.resourceManager.add("assets/night/atk_sw.json");
-  game.resourceManager.add("assets/night/atk_nw.json");
-  game.resourceManager.add("assets/night/idle_sw.json");
-  game.resourceManager.add("assets/night/idle_nw.json");
-  game.resourceManager.add("assets/night/walk_sw.json");
-  game.resourceManager.add("assets/night/walk_nw.json");
-  game.resourceManager.add("assets/night/crouch_nw.json");
-  game.resourceManager.add("assets/night/crouch_sw.json");
-
   game.resourceManager.add("assets/warrior/warrior_atk_sw.json");
   game.resourceManager.add("assets/warrior/warrior_atk_nw.json");
   game.resourceManager.add("assets/warrior/warrior_atk_2_sw.json");
@@ -128,10 +119,6 @@ function gameStart(pixi) {
   game.resourceManager.add("fireBall.png", "assets/fireBall.png");
   game.resourceManager.add("shield.png", "assets/shield.png");
   game.resourceManager.add("arrow.png", "assets/arrow.png");
-
-  CharacterFactory.loadCharacterJson();
-
-
 
   game.loadCommon(() => {
     const ui = new UI(game);

@@ -3,9 +3,8 @@
 // 버프에 의한 스텟 변화값을 계산해주는 클래스
 // 캐릭터 사망 시, 전투 불능 시 버프 다 제거하는거 만들자.
 export class StatManager {
-    constructor(base) {
-        this.baseStat = Object.assign({}, base);
-        this.statPointer = base;
+    constructor(character) {
+        this.character = character;
         this.buffs = {};
     }
 
@@ -26,7 +25,7 @@ export class StatManager {
 
     addBuff(buff) {
         this.buffs[buff.name] = buff;
-        this.calculateStat();
+        // this.calculateStat();
     }
 
     removeBuff(buff) {
@@ -36,38 +35,11 @@ export class StatManager {
         for (let stat in this.buffs[buff.name].options.multiBuffs) {
             this.buffs[buff.name].options.multiBuffs[stat] = 1;
         }
-        this.calculateStat();
+        // this.calculateStat();
         delete this.buffs[buff.name];
     }
 
     calculateStat() {
-        const base = Object.assign({}, this.baseStat);
-        const resultStat = {};
-
-        for (let key in this.buffs) {
-            const addCalcBuffs = this.buffs[key].options.addBuffs;
-            const multiCalcBuffs = this.buffs[key].options.multiBuffs;
-
-            for (let stat in addCalcBuffs) {
-                if (resultStat[stat]) {
-                    resultStat[stat] += addCalcBuffs[stat];
-                } else {
-                    resultStat[stat] = base[stat] + addCalcBuffs[stat];
-                }
-            }
-
-            for (let stat in multiCalcBuffs) {
-                if (resultStat[stat]) {
-                    resultStat[stat] *= multiCalcBuffs[stat];
-                } else {
-                    resultStat[stat] = base[stat] * multiCalcBuffs[stat];
-                }
-            }
-        }
-
-        for (let key in resultStat) {
-            this.statPointer[key] = resultStat[key];
-        }
     }
 }
 
@@ -113,7 +85,7 @@ export class Poison extends BaseBuff {
     // HP 관련은 전부 여기로 빼서 적용한다.
     action() {
         if (this.options.target) {
-            this.options.taget.onDamage(this.options.addBuff.hp);
+            this.options.taget.onDamage(this.options.addBuff.health);
         } else {
             console.log('target error');
         }

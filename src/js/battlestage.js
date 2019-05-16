@@ -14,15 +14,19 @@ export class BattleStage extends PIXI.Container {
 
         this.container = new PIXI.Container(); // 이펙트, 캐릭터, 맵
         this.mapContainer = new PIXI.Container(); // 캐릭터, 맵
-        this.background = null;
+        this.background = new PIXI.Sprite(PIXI.Texture.fromFrame("battle_background.png"));
         this.map = new PIXI.Sprite(PIXI.Texture.fromFrame("battleMap1.png"));
         this.effecter = new BattleEffecter();
+        this.directScale = {
+            x: 1,
+            y: 1
+        }
 
         this.state = STAGE_STATUS.MOVING;
 
         this.buildStage();
         this.container.position.x = 1200;
-        this.setScale({x: 2, y: 2});
+        // this.setScale({x: 2, y: 2});
     }
 
     update() {
@@ -31,25 +35,30 @@ export class BattleStage extends PIXI.Container {
         this.effecter.update();
     }
 
-    setCharacters(characters, callback) {
-        // 무비클립으로 순차적으로 애니메이션 처리하며 박아주자.
-        characters.forEach((character) => {
-            this.mapContainer.addChild(character);
-            // 좌표수정.
-            if (character.camp === CHARACTER_CAMP.ALLY) {
-                character.position.x = STAGE_BASE_POSITION.PLAYER_X + character.gridPosition.x * 36 - character.gridPosition.y * 36;
-                character.position.y = STAGE_BASE_POSITION.PLAYER_Y + character.gridPosition.x * 20 + character.gridPosition.y * 20;
-                character.animation.changeVisualToDirection(DIRECTIONS.NE);
-            } else if (character.camp === CHARACTER_CAMP.ENEMY) {
+    setCharacters(characters) {
+        // ENEMY
+        characters.sort((a, b) => {
+            return (-a.gridPosition.y * 3 + a.gridPosition.x) > (-b.gridPosition.y * 3 + b.gridPosition.x)?1 :-1;
+        }).forEach((character) => {
+            if (character.camp === CHARACTER_CAMP.ENEMY && character.health > 0) {
                 character.position.x = STAGE_BASE_POSITION.ENEMY_X + character.gridPosition.x * 36 + character.gridPosition.y * 36;
                 character.position.y = STAGE_BASE_POSITION.ENEMY_Y + character.gridPosition.x * 20 - character.gridPosition.y * 20;
                 character.animation.changeVisualToDirection(DIRECTIONS.SW);
+                this.mapContainer.addChild(character);
             }
         });
 
-        if (callback) {
-            callback();
-        }
+        // ALLY
+        characters.sort((a, b) => {
+            return (a.gridPosition.y * 3 + a.gridPosition.x) > (b.gridPosition.y * 3 + b.gridPosition.x)?1 :-1;
+        }).forEach((character) => {
+            if (character.camp === CHARACTER_CAMP.ALLY && character.health > 0) {
+                character.position.x = STAGE_BASE_POSITION.PLAYER_X + character.gridPosition.x * 36 - character.gridPosition.y * 36;
+                character.position.y = STAGE_BASE_POSITION.PLAYER_Y + character.gridPosition.x * 20 + character.gridPosition.y * 20;
+                character.animation.changeVisualToDirection(DIRECTIONS.NE);
+                this.mapContainer.addChild(character);
+            }
+        });
     }
 
     setStage(options) {
@@ -78,13 +87,21 @@ export class BattleStage extends PIXI.Container {
         this.addChild(this.container);
     }
 
-    setScale(scale) {
-        this.container.scale = scale;
+    setScale(scale, direct) {
+        this.directScale = scale;
+        if (direct) {
+            this.container.scale = scale;
+        } else {
+            this.tweens.addTween(this.container.scale, 1, scale, 0, "easeInOut", true, () => {
+                this.state = STAGE_STATUS.DONE;
+            });
+        }
     }
 
     focusCenter() {
         this.state = STAGE_STATUS.MOVING;
-        this.tweens.addTween(this.container.position, 1, { x: STAGE_BASE_POSITION.CENTER_X, y: STAGE_BASE_POSITION.CENTER_Y }, 0, "easeInOut", true, () => {
+        // 괄호는 맵 이미지에 대한 옵셋이다.
+        this.tweens.addTween(this.container.position, 1, { x: 450 + (41) - this.map.width / 2 * this.directScale.x, y: 250 - (this.map.height + 20) / 2 * this.directScale.y }, 0, "easeInOut", true, () => {
             this.state = STAGE_STATUS.DONE;
         });
     }

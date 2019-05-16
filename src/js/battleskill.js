@@ -9,8 +9,8 @@ class BaseSkill {
         this.status = SKILL_STATUS.IDLE;
         this.proponent = character;
         this.activeType = ACTIVE_TYPE.PASSIVE;
-        this.currentDelay = 100;
-        this.coolTime = 100;
+        this.coolTime = 150;
+        this.currentDelay = Math.round(Math.random() * this.coolTime);
         this.targeting = null;
         this.target = null;
         this.movies = new Movies();
@@ -41,6 +41,7 @@ class BaseSkill {
         this.status = SKILL_STATUS.IDLE;
         if (battle.scene.queue.peak() === this) {
             battle.scene.queue.dequeue();
+            this.currentDelay = this.coolTime;
         }
     }
 
@@ -53,17 +54,17 @@ class BaseSkill {
 
 
     action(battle) {
-        if (this.proponent.baseStat.hp <= 0) {
+        if (this.proponent.character.health <= 0) {
             this.done(battle);
         }
 
         this.movies.update();
 
-        const action = this.getSkillAction(battle);
+        const skillAction = this.getSkillAction(battle);
         
         if (this.status === SKILL_STATUS.WAIT) {
-            this.movies.push(action);
-            action.playAndDestroy();
+            this.movies.push(skillAction);
+            skillAction.playAndDestroy();
         }
 
         return this.result;
@@ -80,7 +81,7 @@ class BaseSkill {
         switch(targeting) {
             case TARGETING_TYPE.ENEMY_FRONT_TANK:
                 characters.forEach((opponent) => {
-                    if (opponent.gridPosition.y < 1 && opponent.baseStat.hp > 0 && opponent.camp !== this.proponent.camp) {
+                    if (opponent.gridPosition.y < 1 && opponent.character.health > 0 && opponent.camp !== this.proponent.camp) {
                         enemies.push(opponent);
                     }
                 });
@@ -88,7 +89,7 @@ class BaseSkill {
 
             case TARGETING_TYPE.ENEMY_BACK_CARRY:
                 characters.forEach((opponent) => {
-                    if (opponent.gridPosition.y > 0 && opponent.baseStat.hp > 0 && opponent.camp !== this.proponent.camp) {
+                    if (opponent.gridPosition.y > 0 && opponent.character.health > 0 && opponent.camp !== this.proponent.camp) {
                         enemies.push(opponent);
                     }
                 });
@@ -96,7 +97,7 @@ class BaseSkill {
 
             case TARGETING_TYPE.ENEMY_MIN_HP:
                 characters.forEach((opponent) => {
-                    if ((target === null && opponent.baseStat.hp > 0 && opponent.camp !== this.proponent.camp) || (target !== null && target.baseStat.hp > opponent.baseStat.hp && opponent.baseStat.hp > 0 && opponent.camp !== this.proponent.camp)) {
+                    if ((target === null && opponent.character.health > 0 && opponent.camp !== this.proponent.camp) || (target !== null && target.character.health > opponent.character.health && opponent.character.health > 0 && opponent.camp !== this.proponent.camp)) {
                         target = opponent;
                         enemies = [opponent];
                     }
@@ -105,7 +106,7 @@ class BaseSkill {
 
             case TARGETING_TYPE.ALLY_ALL:
                 characters.forEach((opponent) => {
-                    if( opponent.baseStat.hp > 0 && opponent.camp === this.proponent.camp ) {
+                    if( opponent.character.health > 0 && opponent.camp === this.proponent.camp ) {
                         enemies.push(opponent);
                     }
                 });
@@ -113,7 +114,7 @@ class BaseSkill {
 
             case TARGETING_TYPE.ENEMY_ALL:
                 characters.forEach((opponent) => {
-                    if( opponent.baseStat.hp > 0 && opponent.camp !== this.proponent.camp ) {
+                    if( opponent.character.health > 0 && opponent.camp !== this.proponent.camp ) {
                         enemies.push(opponent);
                     }
                 });
@@ -122,7 +123,7 @@ class BaseSkill {
 
         if (enemies.length === 0) {
             characters.forEach((opponent) => {
-                if (opponent.baseStat.hp > 0 && opponent.camp !== this.proponent.camp) {
+                if (opponent.character.health > 0 && opponent.camp !== this.proponent.camp) {
                     enemies.push(opponent);
                 }
             });
@@ -160,7 +161,7 @@ export class RunAwaySkill extends BaseSkill {
                 this.proponent.animation.anim.loop = true;
             }),
             MovieClip.Timeline(62, 63, null, () => {
-                this.proponent.baseStat.hp = 0;
+                this.proponent.character.health = 0;
                 this.done(battle);
             })
         );
@@ -197,7 +198,7 @@ export class CrouchSkill extends BaseSkill {
                         }
                     },
                     addBuffs: {
-                        defense: 0.5
+                        armor: 0.5
                     },
                     multiBuffs: {
 
@@ -235,24 +236,22 @@ export class DoubleMeleeSkill extends BaseSkill {
                 ["y", start.y, to.y, "outCubic"]
             ]),
             MovieClip.Timeline(11, 23, null, () => {
-                this.proponent.animation.setAnimation('attack2_' + getDirectionName(this.proponent.animation.currentDir));
+                this.proponent.animation.setAnimation('atk_2_' + getDirectionName(this.proponent.animation.currentDir));
                 this.proponent.animation.anim.loop = false;
             }),
             MovieClip.Timeline(50, 50, null, () => {
-                this.damage = 80 + Math.round(Math.random()*15);
-                this.damage = Math.round((1 - this.target.baseStat.defense) * this.damage);
+                this.damage = Math.round(this.proponent.character.attack - this.target.character.armor);
                 battle.stage.effecter.addEffect(this.target, { name: 'slash', animationLength: 8, removeFrame: 60, speed: 0.5 });
                 battle.stage.effecter.addFontEffect({target: this.target, outputText: '-' + this.damage});
                 this.target.onDamage(this.damage);
             }),
             MovieClip.Timeline(63, 64, null, () => {
-                this.proponent.animation.setAnimation('attack_' + getDirectionName(this.proponent.animation.currentDir));
+                this.proponent.animation.setAnimation('atk_' + getDirectionName(this.proponent.animation.currentDir));
                 this.proponent.animation.anim.loop = false;
             }),
             MovieClip.Timeline(96, 96, null, () => {
-                this.damage = 80 + Math.round(Math.random()*15);
                 if (this.target) {
-                    this.damage = Math.round((1 - this.target.baseStat.defense) * this.damage);
+                    this.damage = Math.round(this.proponent.character.attack - this.target.character.armor);
                     battle.stage.effecter.addEffect(this.target, { name: 'slash', animationLength: 8, removeFrame: 60, speed: 0.5 });
                     battle.stage.effecter.addFontEffect({target: this.target, outputText: '-' + this.damage});
                     this.target.onDamage(this.damage);
@@ -282,7 +281,7 @@ export class DoubleMeleeSkill extends BaseSkill {
                         }
                     },
                     addBuffs: {
-                        defense: 0.2
+                        armor: 0.2
                     },
                     multiBuffs: {
 
@@ -316,12 +315,11 @@ export class MeleeSkill extends BaseSkill {
                 ["y", start.y, to.y, "outCubic"]
             ]),
             MovieClip.Timeline(11, 25, null, () => {
-                this.proponent.animation.setAnimation('attack_' + getDirectionName(this.proponent.animation.currentDir));
+                this.proponent.animation.setAnimation('atk_' + getDirectionName(this.proponent.animation.currentDir));
                 this.proponent.animation.anim.loop = false;
             }),
             MovieClip.Timeline(50, 50, null, () => {
-                this.damage = 80 + Math.round(Math.random()*15);
-                this.damage = Math.round((1 - this.target.baseStat.defense) * this.damage);
+                this.damage = Math.round(this.proponent.character.attack - this.target.character.armor);
                 battle.stage.effecter.addEffect(this.target, { name: 'slash', animationLength: 8, removeFrame: 60, speed: 0.5 });
                 battle.stage.effecter.addFontEffect({target: this.target, outputText: '-' + this.damage});
                 this.target.onDamage(this.damage);
@@ -353,7 +351,7 @@ export class ProjectileSkill extends BaseSkill {
                 this.init(battle, TARGETING_TYPE.ENEMY_FRONT_TANK);
             }),
             MovieClip.Timeline(11, 25, null, () => {
-                this.proponent.animation.setAnimation('attack_' + getDirectionName(this.proponent.animation.currentDir));
+                this.proponent.animation.setAnimation('atk_' + getDirectionName(this.proponent.animation.currentDir));
                 this.proponent.animation.anim.loop = false;
             }),
             MovieClip.Timeline(50, 50, null, () => {
@@ -385,8 +383,7 @@ export class ProjectileSkill extends BaseSkill {
                 this.proponent.animation.anim.loop = true;
             }),
             MovieClip.Timeline(78, 79, null, () => {
-                this.damage = 90 + Math.round(Math.random()*30);
-                this.damage = Math.round((1 - this.target.baseStat.defense) * this.damage);
+                this.damage = Math.round(this.proponent.character.magic - this.target.character.armor);
                 battle.stage.effecter.addEffect(this.target, { name: 'explosion', animationLength: 16, removeFrame: 60, speed: 0.5 });
                 battle.stage.effecter.addFontEffect({target: this.target, outputText: '-' + this.damage});
                 this.target.onDamage(this.damage);
@@ -409,7 +406,7 @@ export class ArrowShotingSkill extends BaseSkill {
                 this.init(battle, TARGETING_TYPE.ENEMY_BACK_CARRY);
             }),
             MovieClip.Timeline(11, 25, null, () => {
-                this.proponent.animation.setAnimation('attack_' + getDirectionName(this.proponent.animation.currentDir));
+                this.proponent.animation.setAnimation('atk_' + getDirectionName(this.proponent.animation.currentDir));
                 this.proponent.animation.anim.loop = false;
             }),
             MovieClip.Timeline(50, 50, null, () => {
@@ -450,8 +447,7 @@ export class ArrowShotingSkill extends BaseSkill {
                 this.proponent.animation.anim.loop = true;
             }),
             MovieClip.Timeline(85, 86, null, () => {
-                this.damage = 130 + Math.round(Math.random()*30);
-                this.damage = Math.round((1 - this.target.baseStat.defense) * this.damage);
+                this.damage = Math.round(this.proponent.character.attack - this.target.character.armor);
                 battle.stage.effecter.addEffect(this.target, { name: 'shoted', animationLength: 18, removeFrame: 60, speed: 0.5 });
                 battle.stage.effecter.addFontEffect({target: this.target, outputText: '-' + this.damage});
                 this.target.onDamage(this.damage);
@@ -474,7 +470,7 @@ export class ArrowHighShotingSkill extends BaseSkill {
                 this.init(battle, TARGETING_TYPE.ENEMY_MIN_HP);
             }),
             MovieClip.Timeline(11, 25, null, () => {
-                this.proponent.animation.setAnimation('attack_' + getDirectionName(this.proponent.animation.currentDir));
+                this.proponent.animation.setAnimation('atk_' + getDirectionName(this.proponent.animation.currentDir));
                 this.proponent.animation.anim.loop = false;
             }),
             MovieClip.Timeline(50, 50, null, () => {
@@ -526,8 +522,7 @@ export class ArrowHighShotingSkill extends BaseSkill {
                 this.proponent.animation.anim.loop = true;
             }),
             MovieClip.Timeline(130, 131, null, () => {
-                this.damage = 180 + Math.round(Math.random()*30);
-                this.damage = Math.round((1 - this.target.baseStat.defense) * this.damage);
+                this.damage = Math.round(this.proponent.character.attack - this.target.character.armor);
                 battle.stage.effecter.addEffect(this.target, { name: 'shoted', animationLength: 18, removeFrame: 60, speed: 0.5 });
                 battle.stage.effecter.addFontEffect({target: this.target, outputText: '-' + this.damage});
                 this.target.onDamage(this.damage);
@@ -558,7 +553,7 @@ export class FireRainSkill extends BaseSkill {
                 ["y", start.y, to.y, "outCubic"]
             ]),
             MovieClip.Timeline(11, 25, null, () => {
-                this.proponent.animation.setAnimation('attack_' + getDirectionName(this.proponent.animation.currentDir));
+                this.proponent.animation.setAnimation('atk_' + getDirectionName(this.proponent.animation.currentDir));
                 this.proponent.animation.anim.loop = false;
             }),
             MovieClip.Timeline(50, 50, null, () => {
@@ -583,8 +578,7 @@ export class FireRainSkill extends BaseSkill {
                         MovieClip.Timeline(startTime, endTime, projectile, [["x", projectile.position.x, target.position.x + target.animation.width / 2, "inCubic"]]),
                         MovieClip.Timeline(startTime, endTime, projectile, [["y", projectile.position.y, target.position.y - target.animation.height / 2, "inCubic"]]),
                         MovieClip.Timeline(endTime + 1, endTime + 1, null, () => {
-                            this.damage = 50 + Math.round(Math.random()*30);
-                            this.damage = Math.round((1 - target.baseStat.defense) * this.damage);
+                            this.damage = Math.round(this.proponent.character.magic - target.character.armor);
                 
                             battle.stage.effecter.addEffect(target, { name: 'explosion', animationLength: 16, removeFrame: 60, speed: 0.5 });
                             battle.stage.effecter.addFontEffect({target: target, outputText: '-' + this.damage});
@@ -639,15 +633,15 @@ export class HealSkill extends BaseSkill {
             MovieClip.Timeline(50, 50, null, () => {
                 this.target.forEach((target) => {
                     // 이펙트 추가한다.
-                    if (target.baseStat.hp + 30 <= target.baseStat.maxHp && target.baseStat.hp > 0) {
-                        target.baseStat.hp += 30;
+                    if (target.character.health + 30 <= target.character.maxHealth && target.character.health > 0) {
+                        target.character.health += 30;
                         battle.stage.effecter.addEffect(target, { name: 'healeffect', animationLength: 25, removeFrame: 120, speed: 0.5 });
-                    } else if (target.baseStat.hp > 0) {
-                        target.baseStat.hp = target.baseStat.maxHp;
+                    } else if (target.character.health > 0) {
+                        target.character.health = target.character.maxHealth;
                         battle.stage.effecter.addEffect(target, { name: 'healeffect', animationLength: 25, removeFrame: 120, speed: 0.5 });
                     }
     
-                    const hpWidth = (target.baseStat.hp< 0 ? 0 : target.baseStat.hp) / target.baseStat.maxHp * 34;
+                    const hpWidth = (target.health< 0 ? 0 : target.health) / target.maxHealth * 34;
                     target.progressBar.setWidth(hpWidth);
                 });
             }),
