@@ -8,24 +8,20 @@ export default class DomUI {
   }
 
   create() {
-    // console.log('-- DomUI --');
     const container = document.createElement('div');
     container.className = 'uiContainer';
     container.style.top = this.gamePane.offsetTop + 'px';
     document.body.appendChild(container);
-
     this.preventEvent(container);
-    // container.style.pointerEvents = 'auto'; // 클릭 이벤트.
+
     return container;
   }
 
   preventEvent(container, clickable) {
     let iscClickable = clickable;
-
     if (clickable === undefined) {
       iscClickable = 'auto'; // 타일클릭 가능
     }
-
     container.style.pointerEvents = iscClickable; // 클릭 이벤트.
   }
 
@@ -136,16 +132,14 @@ export default class DomUI {
     scrollView.style.top = statContent.clientHeight + 100 + 'px';
 
     // # inventory size
-    //let inventorySize = 4 * 4;
+    // let inventorySize = 4 * 4;
     let selectedSlot = null;
 
     // inventory items
     const playerInven = this.game.player.inventory;
     console.log(playerInven);
-
-
-    // this.game.player.inventory.eachItem((item) => {
-    for (const item of playerInven) {
+    
+    this.game.player.inventory.eachItem((item) => {
       const itemSprite = document.createElement('img');
       itemSprite.src = '/src/assets/items/' + item.image;
       itemSprite.style.width = '50px';
@@ -170,8 +164,7 @@ export default class DomUI {
         stat.innerText = item.description;
         statContent.appendChild(stat);
       });
-    }
-
+    });
     scrollView.appendChild(scrollBlind);
     scrollBlind.appendChild(storageContent);
     inventory.dom.appendChild(scrollView);
@@ -401,7 +394,49 @@ export default class DomUI {
     // 로딩속도(interval 함수 호출 시간)
     const pane = this.create();
     const loading = new ProgressUI(pane, time, onComplete);
+    loading.isLoading = true;
     loading.moveToCenter(200);
+  }
+
+  showCraftUI(itemId, result) {
+    const pane = this.create();
+    const modal = new Modal(pane, 360, 300, result);
+    modal.addTitle('아이템 조합중');
+    modal.addCloseButton();
+    modal.addConfirmButton();
+
+    const itemText = document.createElement('div');
+    itemText.className = 'contents';
+    itemText.innerText = "아이템을 조합중";
+    itemText.style.top = '60px';
+    modal.dom.appendChild(itemText);
+
+    const itemSprite = document.createElement('img');
+    itemSprite.src = '/src/assets/ui/craft.gif';
+    itemSprite.style.position = 'absolute';
+    itemSprite.style.left = (modal.dom.clientWidth / 2 - 24) + 'px';
+    itemSprite.style.top = itemText.offsetTop + itemText.offsetHeight + 20 + 'px';
+
+    const loading = new ProgressUI(modal.dom, 100, (onComplete)=>{
+      console.log('progress-complete');
+      itemSprite.src = '/src/assets/items/item' + itemId + '.png';
+      loading.hide();
+      itemSprite.style.top = itemText.offsetTop + itemText.offsetHeight + 10 + 'px';
+
+      itemText.innerText = "아이템 조합 성공!"
+    });
+
+    loading.moveToCenter(100);
+    modal.dom.appendChild(loading.dom);
+    modal.dom.appendChild(itemSprite);
+  }
+
+  showCombineModal(text, result) {
+    const confirmModal = new Modal(300, 200, text, result);
+    confirmModal.dom.style.top = '50%';
+    confirmModal.dom.style.marginTop = 200 * -0.5 + 'px';
+    confirmModal.contents.style.fontSize = '1.1rem';
+    confirmModal.contents.style.margin = '10% auto 0';
   }
 
   // 레시피 + 아이템 조합창
@@ -486,7 +521,12 @@ class RecipeUI extends DomUI {
   onCombine(combine){
     if(combine) {
       this.callback(combine);
+      this.onClose();
     }
+  }
+
+  onClose() {
+    this.remove(this.pane);
   }
 }
 
@@ -543,6 +583,8 @@ class CombinerUI extends DomUI {
 
     this.dom.appendChild(contents);
     this.dom.appendChild(combineButton.dom);
+
+    this.button.removeEventListener('click', this.doCombineItem.bind(this));
   }
 
   update() {
@@ -550,11 +592,11 @@ class CombinerUI extends DomUI {
       if (this.recipe.available === 1) {
         this.button.classList.remove('disabled');
         this.button.classList.add('isAvailable');
-        this.button.addEventListener('click', this.doCombineItem.bind(this), false);
+        this.button.addEventListener('click', this.doCombineItem.bind(this));
       } else {
         this.button.classList.add('disabled');
         this.button.classList.remove('isAvailable');
-        this.button.removeEventListener('click', this.doCombineItem.bind(this), false);
+        this.button.removeEventListener('click', this.doCombineItem.bind(this));
       }
 
       // 기존데이터 초기화
@@ -596,14 +638,10 @@ class CombinerUI extends DomUI {
   }
 
   doCombineItem() {
-    this.callback(this.recipe);
-    this.onclose();
-  }
-
-  onclose(){
-    console.log(this);
-    
-    this.remove(this.dom.parentNode);
+    if(this.recipe !== null) {
+      this.callback(this.recipe);
+      this.recipe = null;
+    }
   }
 }
 
@@ -900,12 +938,13 @@ class NineBox extends DomUI {
 }
 
 class Modal extends DomUI {
-  constructor(pane, width, height) {
+  constructor(pane, width, height, result) {
     super();
     this.pane = pane;
     const modal = new NineBox(this.pane, width, height);
     this.dom = modal.dom;
     this.dom.classList.add('modal');
+    this.result = null;
   }
 
   addCloseButton() {
@@ -914,7 +953,24 @@ class Modal extends DomUI {
     this.closeBtn = closeBtn;
     closeBtn.dom.addEventListener('click', this.closeModal.bind(this));
   }
-  
+
+  addConfirmButton() {
+    const confirmBtn = new Button('확인');
+    this.dom.appendChild(confirmBtn.dom);
+    this.confirmBtn = confirmBtn;
+    confirmBtn.moveToCenter(0);
+    confirmBtn.moveToBottom(20);
+    confirmBtn.dom.addEventListener('click', this.onConfirm.bind(this));
+  }
+
+  onConfirm(){
+    if (this.result !== null) {
+      this.result('onConfirm - ok');
+    }
+   
+    this.closeModal();
+  }
+
   addTitle(text) {
     const title = document.createElement('h1');
     title.innerText = text;
@@ -1117,17 +1173,20 @@ class ListBox extends DomUI {
       this.list.innerHTML = '';
 
       let selectedCell = null;
-      
-      for (const data of listData) {
-        let listCell = new ListCell(data, 'recipe');
+      let index = -1;
 
+      for (const data of listData) {
+        ++index;
+
+        let listCell = new ListCell(data, 'recipe');
         listCell.available = data.available;
-  
-        if (listCell.index === 0) {
+        listCell.index = index;
+
+        if (index === 0) {
           listCell.cell.classList.add('active');
           selectedCell = listCell.cell;
         }
-  
+
         listCell.cell.addEventListener('click', function () {
           if (selectedCell) {
             selectedCell.classList.remove('active');
@@ -1135,7 +1194,6 @@ class ListBox extends DomUI {
           listCell.cell.classList.add('active');
           selectedCell = listCell.cell;
         });
-
         listCell.cell.addEventListener('click', this.setData.bind(this, data));
         this.list.appendChild(listCell.cell);
       }
@@ -1148,58 +1206,61 @@ class ListBox extends DomUI {
 }
 
 class ProgressUI extends DomUI {
-  constructor(container, time, onComplete) {
+  constructor(container, duration, onComplete) {
     super();
     this.pane = container;
     this.pane.classList.add('loadingScene');
 
-    const statusHolder = document.createElement('div');
-    statusHolder.classList.add('progressHolder');
-    statusHolder.id = 'progressHolder';
+    // dom
+    const holder = document.createElement('div');
+    holder.classList.add('progressHolder');
+    holder.id = 'progressHolder';
 
     const bar = document.createElement('div');
     bar.classList.add('progressbar');
-    statusHolder.appendChild(bar);
+    holder.appendChild(bar);
     this.progressBar = bar;
 
-    const percentage = document.createElement('p');
-    percentage.className = 'progressRate'
-    bar.appendChild(percentage);
+    const rate = document.createElement('p');
+    rate.className = 'progressRate'
+    bar.appendChild(rate);
 
     this.progress = 1;
     this.interval = 5;
 
     this.timer = null;
-    this.percentage = percentage;
-    this.pane.appendChild(statusHolder);
-    this.dom = statusHolder;
+    this.rate = rate;
+    this.pane.appendChild(holder);
+    this.dom = holder;
 
-    this.update(time);
+    this.update(duration);
     this.onComplete = onComplete;
   }
 
-  update(time) {
+  update(duration) {
     this.timer = setInterval(() => {
       ++this.progress;
 
       this.progressBar.style.width = this.progress * this.interval + '%';
-      this.percentage.innerText = this.progress * this.interval + '%';
+      this.rate.innerText = this.progress * this.interval + '%';
       this.clearTimer();
-    }, time);
-  }
+    }, duration);
 
-  clearTimer() {
-    if (this.progress * this.interval === 60) {
-      clearInterval(this.timer);
+    if(this.timer === null) {
       this.onComplete('loading_complete');
-      // this.hideLoading();
     }
   }
 
-  hideLoading() {
-    setTimeout(() => {
-      this.pane.classList.remove('loadingScene');
-      this.pane.removeChild(this.dom);
-    }, 600);
+  clearTimer() {
+    if (this.progress * this.interval === 100) {
+      clearInterval(this.timer);
+      this.onComplete('loading_complete');
+      this.timer = null;
+    }
+  }
+
+  hide() {
+    this.pane.classList.remove('loadingScene');
+    this.pane.removeChild(this.dom);
   }
 }

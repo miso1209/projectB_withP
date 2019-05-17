@@ -174,7 +174,13 @@ function gameStart(pixi) {
 
       } else if (e.keyCode === 65) { // a 
         // # system 모달
-        domUI.showConfirmModal('업그레이드를 진행하시겠습니까?', (isOk) => { console.log(isOk); });
+        // domUI.showConfirmModal('업그레이드를 진행하시겠습니까?', (isOk) => { console.log(isOk); });
+
+        // domUI.showLoading(100, (isComplete) => {
+        //   console.log(isComplete);
+        // });
+
+        domUI.showCraftUI(1, (isOk) => { console.log(isOk); });
       } else if (e.keyCode === 77) { // m
         // ### DOM UI - TEST
         // # 로딩바
@@ -197,9 +203,7 @@ function gameStart(pixi) {
 
 
     window.addItem = (id, count) => {
-
       console.log('item id :' + id.toString() + ' / count :' + count);
-
       const inven = game.player.inventory;
       inven.addItem(id.toString(), count);
     }
