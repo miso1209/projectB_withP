@@ -32,7 +32,6 @@ export default class DomUI {
   setStageMode(stage) {
     document.body.className = stage;
     this.stageMode = stage;
-
     // console.log('current stage mode: ' + this.stageMode);
   }
 
@@ -250,21 +249,15 @@ export default class DomUI {
     equipItems.style.bottom = '100px';
 
     equipItemsData.forEach(item => {
-      let itemIcon = document.createElement('p');
+      let itemIcon = new ItemImage('items.png', item.x, item.y);
       itemIcon.className = 'stat-item';
 
       let itemName = document.createElement('span');
       itemName.innerText = item.item;
 
-      itemIcon.style.backgroundImage = "url(./src/assets/items/items.png)";
-      itemIcon.style.display = 'inline-block';
-      itemIcon.style.width = '32px';
-      itemIcon.style.height = '32px';
-      itemIcon.style.backgroundPositionX = (item.x * 32) + 'px';
-      itemIcon.style.backgroundPositionY = (item.y * 32) + 'px';
-
-      itemIcon.append(itemName);
-      equipItems.appendChild(itemIcon);
+      itemIcon.dom.style.display = 'inline-block';
+      itemIcon.dom.append(itemName);
+      equipItems.appendChild(itemIcon.dom);
     });
 
     // 현재 캐릭터 스킬정보
@@ -281,6 +274,7 @@ export default class DomUI {
       y: 6,
       skill: 'poison'
     }];
+
     const skillItems = document.createElement('div');
     skillItems.className = 'skillItems';
     skillItems.style.position = 'absolute';
@@ -289,21 +283,16 @@ export default class DomUI {
     skillItems.style.bottom = '100px';
 
     skillItemData.forEach(item => {
-      let itemIcon = document.createElement('p');
+      let itemIcon = new ItemImage('items.png', item.x, item.y);
+
       itemIcon.className = 'stat-item';
 
       let itemName = document.createElement('span');
       itemName.innerText = item.skill;
 
-      itemIcon.style.backgroundImage = "url(./src/assets/items/items.png)";
-      itemIcon.style.display = 'inline-block';
-      itemIcon.style.width = '32px';
-      itemIcon.style.height = '32px';
-      itemIcon.style.backgroundPositionX = (item.x * 32) + 'px';
-      itemIcon.style.backgroundPositionY = -(item.y * 32) + 'px';
-
-      itemIcon.append(itemName);
-      skillItems.appendChild(itemIcon);
+      itemIcon.dom.style.display = 'inline-block';
+      itemIcon.dom.append(itemName);
+      skillItems.appendChild(itemIcon.dom);
     });
 
     statUI.dom.appendChild(equipItems);
@@ -354,7 +343,6 @@ export default class DomUI {
   moveToLeft(_left) {
     this.dom.style.position = 'absolute';
     this.dom.style.left = `${_left}px`;
-    // this.dom.style.top = `${_left}px`;
   }
 
   moveToRight(_right) {
@@ -455,7 +443,7 @@ class RecipeUI extends DomUI {
     this.recipes = null;
     this.tabs = [];
 
-    this.list = new ListBox(320, 320, this.listCallback.bind(this));
+    this.list = new ListBox(320, 320, this.updateCombiner.bind(this));
     this.list.dom.style.top = '100px';
     this.dom.appendChild(this.list.dom);
   }
@@ -467,7 +455,6 @@ class RecipeUI extends DomUI {
         this.recipes = input.recipes;
       }
     }
-    
     this.update();
   }
 
@@ -492,11 +479,6 @@ class RecipeUI extends DomUI {
   }
 
   updateCombiner(data){
-    this.combinerUI.recipe = data;
-    this.combinerUI.update();
-  }
-
-  listCallback(data){
     this.combinerUI.recipe = data;
     this.combinerUI.update();
   }
@@ -568,8 +550,11 @@ class CombinerUI extends DomUI {
       if (this.recipe.available === 1) {
         this.button.classList.remove('disabled');
         this.button.classList.add('isAvailable');
-
-        this.button.addEventListener('click', this.doCombineItem.bind(this));
+        this.button.addEventListener('click', this.doCombineItem.bind(this), false);
+      } else {
+        this.button.classList.add('disabled');
+        this.button.classList.remove('isAvailable');
+        this.button.removeEventListener('click', this.doCombineItem.bind(this), false);
       }
 
       // 기존데이터 초기화
@@ -611,8 +596,14 @@ class CombinerUI extends DomUI {
   }
 
   doCombineItem() {
-    this.remove(this.dom.parentNode);
     this.callback(this.recipe);
+    this.onclose();
+  }
+
+  onclose(){
+    console.log(this);
+    
+    this.remove(this.dom.parentNode);
   }
 }
 
@@ -1067,10 +1058,7 @@ class ListCell {
     if (this.cellData.available === 1) {
       this.cell.classList.remove('disabled');
       this.cell.classList.add('isAvailable');
-
-      this.cell.addEventListener('click', this.onclick.bind(this));
     }
-
     const imgData = this.cellData.data.image;
     this.cellImg = new ItemImage(imgData.texture, imgData.x, imgData.y);
     
@@ -1086,10 +1074,6 @@ class ListCell {
     this.cell.appendChild(this.cellData1);
     this.cell.appendChild(this.cellData2);
     this.cell.appendChild(this.cellData3);
-  }
-
-  onclick(){
-    // console.log(this.index);
   }
 }
 
@@ -1125,21 +1109,19 @@ class ListBox extends DomUI {
     this.callback = callback;
   }
 
-  update (recipes) {
-    if (recipes.length < 1) {
+  update (listData) {
+    if (listData.length < 1) {
       this.list.innerHTML = '해당 카테고리 레시피가 없습니다.';
       return;
     } else {
       this.list.innerHTML = '';
 
       let selectedCell = null;
-      let index = -1;
-      for (const recipe of recipes) {
-        let listCell = new ListCell(recipe, 'recipe');
-        
-        ++index;
-        listCell.index = index;
-        listCell.available = recipe.available;
+      
+      for (const data of listData) {
+        let listCell = new ListCell(data, 'recipe');
+
+        listCell.available = data.available;
   
         if (listCell.index === 0) {
           listCell.cell.classList.add('active');
@@ -1153,13 +1135,14 @@ class ListBox extends DomUI {
           listCell.cell.classList.add('active');
           selectedCell = listCell.cell;
         });
-        listCell.cell.addEventListener('click', this.setRecipe.bind(this, recipe));
+
+        listCell.cell.addEventListener('click', this.setData.bind(this, data));
         this.list.appendChild(listCell.cell);
       }
     }
   }
 
-  setRecipe(data){
+  setData(data){
     this.callback(data);
   }
 }

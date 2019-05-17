@@ -461,6 +461,10 @@ button span {
   backface-visibility: hidden;
 }
 
+.img span {
+  display: block;
+}
+
 .combineItem .itemImg {
   width: 64px;
   height: 64px;
