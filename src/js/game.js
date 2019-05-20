@@ -65,6 +65,10 @@ export default class Game extends EventEmitter {
         this.combiner = new Combiner();
     }
 
+    setStorage(storage) {
+        this.storage = storage;
+    }
+
     // 아이템과 캐릭터 데이터등을 미리 로딩을 한다
     loadCommon(next) {
         this.resourceManager.add("items", "assets/json/items.json");
@@ -82,7 +86,7 @@ export default class Game extends EventEmitter {
         });
     }
 
-    start(playerInfo) {
+    start() {
         // 임시로 캐릭터데이터를 생성한다
         this.player = new Player();
         // 플레이어가 가지고 있는 캐릭터를 하나 정의한다

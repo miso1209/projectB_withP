@@ -1,7 +1,7 @@
 export default class DomUI {
   constructor(game) {
     this.game = game;
-    this.gamePane = document.getElementById('Game');
+    this.gamePane = document.getElementById('canvas');
     this.screenWidth = this.gamePane.screenWidth;
     this.screenHeight = this.gamePane.screenHeight;
     this.stageMode = 'normal';

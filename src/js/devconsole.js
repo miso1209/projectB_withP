@@ -1,15 +1,17 @@
 // 이 함수에 하나씩 콘솔 명령어를 하나씩 추가하면 된다
 
 export default class DevConsole {
-    static init(game) {
-        const inst = new DevConsole(game);
+    constructor() {
         const names = Object.getOwnPropertyNames(DevConsole.prototype);
         for(const name of names) {
             if (name !== 'constructor') {
-                window[name] = inst[name].bind(inst);
+                window[name] = this[name].bind(this);
             }
         }
-        inst.game = game;
+    }
+
+    setGame(game) {
+        this.game = game;
     }
 
     addItem(id, count) {
