@@ -6,6 +6,7 @@ export default class DomUI {
     this.screenHeight = this.gamePane.screenHeight;
     this.stageMode = 'normal';
     this.gnbContainer = null;
+    this.theaterUI = null;
   }
 
   create() {
@@ -42,7 +43,6 @@ export default class DomUI {
     // const btnInventory = new Button('', 'btnInventory');
     // btnInventory.dom.style.top = '20px';
     // btnInventory.dom.style.right = '20px';
-
     this.gnbContainer.appendChild(profile.dom);
     // this.gnbContainer.appendChild(btnInventory.dom);
 
@@ -59,29 +59,32 @@ export default class DomUI {
       this.gnbContainer.style.opacity = '1';
       document.body.appendChild(this.gnbContainer); 
 
-      const gnb = document.createElement('ul');
+      const gnb = document.createElement('div');
+      gnb.className = 'gnb';
+      this.gnbContainer.appendChild(gnb);
+
       const menuData = [
-        {menu:'보관함', method: this.showInventory},
+        {menu:'보관함', method: this.showInventory.bind(this)},
         {menu:'퀘스트', method: null},
         {menu:'설정', method: null}
       ];
       
       menuData.forEach(menu => {
-        let li = document.createElement('li');
         let btn = new Button(menu.menu, 'tabBtn');
-        li.appendChild(btn);
-        gnb.appendChild(li);
+        gnb.appendChild(btn.dom);
+        btn.dom.addEventListener('click', menu.method);
       });
 
       this.setProfile(1);
     }
   }
 
-  showItemAquire(itemId) {
+  showItemAquire(itemId, result) {
     const pane = this.create();
-    const itemAcquire = new Modal(pane, 360, 300);
+    const itemAcquire = new Modal(pane, 360, 300, result);
     itemAcquire.addTitle('NEW ITEM');
     itemAcquire.addCloseButton();
+    itemAcquire.addConfirmButton('확인');
 
     let acquireText;
     const itemText = document.createElement('div');
@@ -102,12 +105,12 @@ export default class DomUI {
     itemSprite.src = '/src/assets/items/item' + itemId + '.png';
     itemSprite.style.position = 'absolute';
     itemSprite.style.left = (itemAcquire.dom.clientWidth / 2 - 36) + 'px';
-    itemSprite.style.top = itemText.offsetTop + itemText.offsetHeight + 50 + 'px';
+    itemSprite.style.top = itemText.offsetTop + itemText.offsetHeight / 2 + 25 + 'px';
 
     itemAcquire.dom.appendChild(itemSprite);
   }
 
-
+  
   showInventory() {
     const pane = this.create();
     pane.classList.add('screen');
@@ -390,7 +393,8 @@ export default class DomUI {
   }
 
   showDialog(script, callback) {
-    const dialog = new Dialog(700, 140, script);
+    this.pane = this.create();
+    const dialog = new Dialog(this.pane, 700, 140, script);
 
     dialog.setText(script[0].text);
     dialog.showSpeaker(script[0].speaker);
@@ -419,14 +423,14 @@ export default class DomUI {
 
     modal.addTitle('아이템 조합중');
     modal.addCloseButton();
-    modal.addConfirmButton();
+    modal.addConfirmButton('조합완료');
 
     const itemText = document.createElement('div');
     itemText.className = 'contents';
     itemText.innerText = "아이템을 조합중";
     itemText.style.top = '60px';
 
-    const loading = new ProgressUI(modal.dom, 100, (onComplete)=>{
+    const loading = new ProgressUI(modal.dom, 2, (onComplete)=>{
       console.log('progress-complete');
       itemText.innerText = "아이템 조합 성공!"
 
@@ -436,10 +440,8 @@ export default class DomUI {
       }
     });
 
-   
-
+    loading.moveToCenter(130);
     modal.dom.appendChild(itemText);
-    loading.moveToCenter(100);
     modal.dom.appendChild(loading.dom);
   }
 
@@ -467,6 +469,24 @@ export default class DomUI {
       this.recipeUI.select(inputs[0].category);
     }
     this.recipeUI.moveToLeft(150);
+  }
+
+  showTheaterUI(duration){
+    if (this.theaterUI === null) {
+      this.theaterUI = document.createElement('div');
+      this.theaterUI.id = 'theater';
+      this.theaterUI.style.top = this.gamePane.offsetTop + 'px';
+      this.theaterUI.classList.add('show');
+      this.theaterUI.style.transition = `background ${duration}s ease ${duration}s`;
+      document.body.appendChild(this.theaterUI);
+    }
+  }
+
+  hideTheaterUI(duration){
+    this.theaterUI.style.transition = `background ${duration}s ease ${duration}s`;
+    this.theaterUI.classList.remove('show');
+    document.body.removeChild(this.theaterUI);
+    this.theaterUI = null;
   }
 }
 //. DomUI
@@ -736,10 +756,10 @@ class SystemModal extends DomUI {
 }
 
 class Dialog extends DomUI {
-  constructor(width, height, script) {
+  constructor(pane, width, height, script) {
     super();
 
-    this.pane = this.create();
+    this.pane = pane;
 
     const dialog = new NineBox(this.pane, width, height, 'dialog');
     dialog.dom.className = 'dialog';
@@ -821,7 +841,6 @@ class Dialog extends DomUI {
       this.dom.classList.remove('portrait');
       return;
     }
-
     
     this.dom.classList.add('portrait');
     this.speaker.src = `/src/assets/player${id}.png`;
@@ -965,8 +984,8 @@ class Modal extends DomUI {
     closeBtn.dom.addEventListener('click', this.closeModal.bind(this));
   }
 
-  addConfirmButton() {
-    const confirmBtn = new Button('확인');
+  addConfirmButton(text) {
+    const confirmBtn = new Button(text);
     this.dom.appendChild(confirmBtn.dom);
     this.confirmBtn = confirmBtn;
     confirmBtn.moveToCenter(0);
@@ -978,7 +997,7 @@ class Modal extends DomUI {
     if (this.result !== null) {
       this.result('onConfirm - ok');
     }
-    this.closeModal();
+    // this.closeModal();
   }
 
   addTitle(text) {
@@ -1216,7 +1235,7 @@ class ListBox extends DomUI {
 }
 
 class ProgressUI extends DomUI {
-  constructor(container, duration, onComplete) {
+  constructor(container, interval, onComplete) {
     super();
     this.pane = container;
     this.pane.classList.add('loadingScene');
@@ -1236,20 +1255,19 @@ class ProgressUI extends DomUI {
     bar.appendChild(rate);
 
     this.progress = 1;
-    this.interval = 5;
+    this.interval = interval;
 
     this.timer = null;
     this.rate = rate;
     this.isLoading = false;
     this.pane.appendChild(holder);
     this.dom = holder;
-
    
     this.onComplete = onComplete;
-    this.update(duration);
+    this.update();
   }
 
-  update(duration) {
+  update() {
     this.timer = setInterval(() => {
 
       if (this.progress * this.interval === 100) {
@@ -1262,12 +1280,9 @@ class ProgressUI extends DomUI {
       } else {
         ++this.progress;
         this.isLoading = true;
-  
         this.progressBar.style.width = this.progress * this.interval + '%';
-  
         this.rate.innerText = this.progress * this.interval + '%';
       }
-      
     }, 100);
   }
 

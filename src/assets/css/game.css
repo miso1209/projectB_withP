@@ -22,15 +22,14 @@
 
 .gnbContainer {
   display: block;
-
   position: absolute;
-  z-index: 99;
+  z-index: 999;
   
   left: 0;
   right: 0;
+
   width: 980px;
   margin: 0 auto;
-  /* opacity: 0; */
   transition: all 0.8s;
 }
 
@@ -43,7 +42,8 @@ body.battle .gnbContainer.battleMode {
   display: block;
 }
 
-.uiContainer {
+
+.uiContainer, #theater {
   position: absolute;
   z-index: 999;
   
@@ -77,6 +77,42 @@ body.battle .gnbContainer.battleMode {
   pointer-events: none;
 }
 
+#theater {
+  z-index: 99;
+  top: 20px;
+  pointer-events: none;
+  opacity: 0;
+  transition: all 0.5s;
+}
+#theater.show {
+  opacity: 1;
+}
+#theater::before{
+  content: '';
+  display: block;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  height: 100px;
+  background: -moz-linear-gradient(top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(top, rgba(0,0,0,1) 0%,rgba(0,0,0,0) 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to bottom, rgba(0,0,0,1) 0%,rgba(0,0,0,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+}
+#theater::after{
+  content: '';
+  display: block;
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  right: 10px;
+  height: 100px;
+
+  background: -moz-linear-gradient(bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(bottom, rgba(0,0,0,1) 0%,rgba(0,0,0,0) 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to top, rgba(0,0,0,1) 0%,rgba(0,0,0,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+}
+
 .modal {
   top: 20px;
 }
@@ -93,7 +129,6 @@ button, .button {
   /* cursor: not-allowed; */
   opacity: 0.7;
 }
-
 
 button span {
   font-size: 14px;
@@ -179,6 +214,30 @@ button span {
 .tabBtn.active .img {
   opacity: 1;
 }
+
+.gnb {
+  position: absolute;
+  right: 0;
+  top: 0;
+
+  margin: 20px 10px 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.gnb .tabBtn {
+  position: static !important;
+  text-align: center;
+}
+
+.gnb .tabBtn:hover, 
+.gnb .tabBtn.active {
+  width:118px;
+  height:50px;
+  background: url(~assets/ui/tabBtn_active.png) no-repeat;
+}
+
 .categoryWarp{
   position: absolute;
   display: flex;
@@ -186,7 +245,6 @@ button span {
   margin: 0 20px;
   text-align: center;
 }
-
 .title {
   position: absolute;
   top: 20px;
@@ -314,20 +372,23 @@ button span {
   position: relative;
   left: 0;
   right: 0;
+  z-index: 1;
   margin: 0 auto;
 }
 .dialog .dialog-speaker {
   display: none;
 
   position: absolute;
+  z-index: 11;
   left: -5px;
   top: -30px;
 }
+
 .dialog .contents {
   top: 15px;
   left: 20px;
   right: 20px;
-
+  z-index: 10;
   max-height: 90px;
   margin: 10px 0;
   padding: 0;
@@ -351,16 +412,17 @@ button span {
   left: 0;
   top: 65px;
   width: 80px;
+  z-index: 22;
 
   font-size: 15px;
   text-align: center;
   color: #ffd800;
 }
-
 .dialog-prompt {
   position: absolute;
   right: 15px;
   bottom: 15px;
+  z-index: 33;
 
   width: 15px;
   height: 15px;
