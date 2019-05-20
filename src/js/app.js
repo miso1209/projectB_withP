@@ -199,6 +199,6 @@ export default class App {
 
     endCutscene() {
         this.ui_old.hideTheaterScreen(0.5);
-        //this.ui.setGNB();
+        this.ui.setGNB();
     }
 }
