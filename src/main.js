@@ -1,9 +1,10 @@
 import Game from './js/game'
 import UI from './js/ui'
 import ResourceManager from './js/resource-manager'
-
 import DomUI from './js/domUI'
-import { AdvancedBloomFilter } from 'pixi-filters';
+import DevConsole from './js/devconsole';
+
+
 
 function initApp() {
   const pixi = new PIXI.Application(980, 500, {
@@ -38,6 +39,7 @@ function closeCallback(){
 }
 
 function gameStart(pixi) {
+
   // 나중에 스테이지 데이터와 캐릭터 데이터를 자동으로 추출할수 있게 해미한다
   // 로딩 속도를 최적화 하기 위해서
   // 일단은 모든 데이터를 다 넣도록 하자 (알아서 캐싱된다)
@@ -122,6 +124,9 @@ function gameStart(pixi) {
   game.resourceManager.add("arrow.png", "assets/arrow.png");
 
   game.loadCommon(() => {
+    // 개발용 콘솔 초기화
+    DevConsole.init(game);
+
     const ui = new UI(game);
     game.ui = ui;
 
@@ -200,14 +205,6 @@ function gameStart(pixi) {
         // });
       }
     }, true);
-
-
-    window.addItem = (id, count) => {
-      console.log('item id :' + id.toString() + ' / count :' + count);
-      const inven = game.player.inventory;
-      inven.addItem(id.toString(), count);
-    }
-    
   });
 }
 

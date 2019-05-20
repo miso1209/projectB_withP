@@ -18,13 +18,17 @@ export default class WorkTable extends Prop {
 
     touch(game) {
         if (this.upgraded) {
-            console.log("open worktable")
+            const recipes = game.getRecipes('consumables');
+            game.ui2.showCombineItemList([{category: 'consumables', recipes: recipes}], (item) => {
+                console.log(item);
+                game.combine(item.item);
+            });
         } else {
             // 업그레이드 하시겠습니까 모달.을 띄운다
             game.ui2.showConfirmModal("업그레이드 하시겠습니까?", (confirmed) => {
                 if (confirmed === "ok") {
                     this.upgrade();
-
+/*
                     // 여기서 다음 컷신을 플레이한다.
                     // 슈퍼 울트라 하드코딩
                     // TODO : 이벤트를 써서 별도로 처리하도록 변경해야한다
@@ -51,7 +55,7 @@ export default class WorkTable extends Prop {
                             ]
                         }
                     ]
-                    game.playCutscene(script);
+                    game.playCutscene(script);*/
                 }
             });
         }

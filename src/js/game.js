@@ -267,4 +267,8 @@ export default class Game extends EventEmitter {
 
         return recipes;
     }
+
+    combine(id) {
+        this.combiner.combine(id, this.player.inventory);
+    }
 }
