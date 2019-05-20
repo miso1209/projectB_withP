@@ -19,10 +19,9 @@ export default class WorkTable extends Prop {
     touch(game) {
         if (this.upgraded) {
             const recipes = game.getRecipes('consumables');
-            game.ui2.showCombineItemList([{category: 'consumables', recipes: recipes}], (item) => {
-                console.log(item);
-                game.combine(item.item);
-            });
+            if (game.combineropen_callback) {
+                game.combineropen_callback([{category: 'consumables', recipes: recipes}]);
+            }
         } else {
             // 업그레이드 하시겠습니까 모달.을 띄운다
             game.ui2.showConfirmModal("업그레이드 하시겠습니까?", (confirmed) => {

@@ -274,5 +274,11 @@ export default class Game extends EventEmitter {
 
     combine(id) {
         this.combiner.combine(id, this.player.inventory);
+        return true;
+    }
+
+    // 콜백 함수 연결
+    onCombinerOpen(callback) {
+        this.combineropen_callback = callback;
     }
 }

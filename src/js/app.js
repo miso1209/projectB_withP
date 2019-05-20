@@ -131,25 +131,46 @@ export default class App {
         
         // TODO : ui 에서 ui2 로 변경중
         this.game.ui = new UI(this.game);
-        this.game.ui2 = new DomUI(this.game);
+        this.ui = this.game.ui2 = new DomUI(this.game);
+        this.setUICallback();
 
         this.game.start();
         this.update();
 
         window.addEventListener("keydown", (e) => {
-            if (e.keyCode === 66) {
+            if (e.keyCode === 66) { // b 키 전투 테스트는 여기서 하세요
                 // 스테이지를 변경한다
-                toggle = !toggle;
-                if (toggle) {
-                game.enterBattle();
-                domUI.setStageMode('battle');
+                if (this.game.currentMode === this.game.exploreMode) {
+                    this.game.enterBattle();
+                    this.ui.setStageMode('battle');
                 } else {
-                game.leaveBattle();
-                domUI.setStageMode('normal');
+                    this.game.leaveBattle();
+                    this.ui.setStageMode('normal');
                 }
             }
+            if (e.keyCode === 68) { // d키 // ui 는 여기서 테스트
+                this.ui.showCombineItemList([
+                    { category: 'armor', recipes: this.game.getRecipes('armor') },
+                    { category: 'consumables', recipes: this.game.getRecipes('consumables') },
+                    { category: 'weapon', recipes: this.game.getRecipes('weapon') }], 
+                    (isOk) => { console.log(isOk); });
+              }
 
+        });
+    }
 
+    setUICallback() {
+        this.game.onCombinerOpen(this.openCombiner.bind(this));
+    }
+
+    openCombiner(data) {
+        this.ui.showCombineItemList(data, (item) => {
+            // TODO : 나중에 아이템 이름과 아이콘을 표시할수 있도록 하자
+            this.ui.showCraftUI(null, () => {
+                this.game.combine(item.item);
+                // 아이템 획득 UI 를 표시한다
+                this.ui.showItemAquire(item.item);
+            })
         });
     }
 
