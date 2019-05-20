@@ -4,9 +4,6 @@ import PathFinder from './pathfinder';
 import Tweens from './tweens';
 
 import Tile from './tile/tile';
-import Anvil from './tile/anvil';
-import Gate from './tile/gate';
-import Chest from './tile/chest';
 import Prop from './tile/prop';
 import InventoryProp from './tile/inventory-prop';
 import Stove from './tile/stove';

@@ -281,4 +281,16 @@ export default class Game extends EventEmitter {
     onCombinerOpen(callback) {
         this.combineropen_callback = callback;
     }
+
+    onDialog(callback) {
+        this.dialog_callback = callback;
+    }
+
+    onCutsceneStart(callback) {
+        this.cutscenestart_callback = callback;
+    }
+
+    onCutsceneEnd(callback) {
+        this.cutsceneend_callback = callback;
+    }
 }

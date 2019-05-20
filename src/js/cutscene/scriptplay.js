@@ -39,9 +39,8 @@ export default class ScriptPlay extends EventEmitter {
     }
 
     play(game) {
-        game.ui.showTheaterScreen(0.5);
-            
         this.emit('start');
+        game.emit('cutscene-start');
         // 컷신 준비를 한다
         this.next(game);
     }
@@ -52,11 +51,10 @@ export default class ScriptPlay extends EventEmitter {
 
     next(game) {
         if (this.currentIndex === this.endIndex) {
-            game.ui.hideTheaterScreen(0.5);
             game.currentMode.endCutscene();
-            game.ui2.setGNB();
             // 컷신을 종료한다
             this.emit('complete');
+            game.emit('cutscene-end');
             return;
         }
 
@@ -64,9 +62,7 @@ export default class ScriptPlay extends EventEmitter {
         ++this.currentIndex;
         if (script.command === COMMAND_DIALOG) {
             // 다이얼로그를 띄운다
-            game.ui2.showDialog(script.arguments, () => {
-                this.next(game);
-            });
+            game.emit('dialog-show', script.arguments, () => { this.next(game); });
         } else if (script.command === COMMAND_DELAY) { 
             const delay = script.arguments[0] * 1000;
             setTimeout(() => {

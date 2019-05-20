@@ -82,16 +82,16 @@ export default class Gate extends Prop {
                 // 열쇠를 가지고 있는지 검사한다
                 const keyItem = game.player.inventory.getItemByType(3);
                 if (keyItem) {
-                    game.ui.showDialog("문을 열었다!");
+                    //ui.showDialog("문을 열었다!");
                     this.open(game.tweens);
                     // 열쇠를 파괴한다
                     game.player.inventory.deleteItem(keyItem.itemId);
                 } else {
-                    game.ui.showDialog("문을 열기 위해서 열쇠가 필요하다");
+                    //ui.showDialog("문을 열기 위해서 열쇠가 필요하다");
                 }
                 
             } else {
-                game.ui.showDialog("이 문은 열리지 않을 것 같다\n\n다른 문을 찾아보자");
+                //ui.showDialog("이 문은 열리지 않을 것 같다\n\n다른 문을 찾아보자");
             }
         }
     }

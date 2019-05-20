@@ -130,8 +130,8 @@ export default class App {
         this.dev.setGame(this.game);
         
         // TODO : ui 에서 ui2 로 변경중
-        this.game.ui = new UI(this.game);
-        this.ui = this.game.ui2 = new DomUI(this.game);
+        this.ui_old = new UI(this.game);
+        this.ui = new DomUI();
         this.setUICallback();
 
         this.game.start();
@@ -159,8 +159,18 @@ export default class App {
         });
     }
 
+    update() {
+        this.game.update();
+        this.ui_old.update();
+        requestAnimationFrame(this.update.bind(this));      
+    }
+
     setUICallback() {
-        this.game.onCombinerOpen(this.openCombiner.bind(this));
+        this.game.on('combine-open', this.openCombiner.bind(this));
+        this.game.on('dialog-show', this.showDialog.bind(this));
+        this.game.on('confirm-show', this.showConfirm.bind(this))
+        this.game.on('cutscene-start', this.startCutscene.bind(this))
+        this.game.on('cutscene-end', this.endCutscene.bind(this))
     }
 
     openCombiner(data) {
@@ -174,9 +184,21 @@ export default class App {
         });
     }
 
-    update() {
-        this.game.update();
-        this.game.ui.update();
-        requestAnimationFrame(this.update.bind(this));      
+    showDialog(data, callback) {
+        this.ui.showDialog(data, callback);
+    }
+
+    showConfirm(text, callback) {
+        // TODO : 프로그레시브 모달이 필요
+        this.ui.showConfirmModal(text, callback);
+    }
+    
+    startCutscene() {
+        this.ui_old.showTheaterScreen(0.5);
+    }
+
+    endCutscene() {
+        this.ui_old.hideTheaterScreen(0.5);
+        //this.ui.setGNB();
     }
 }
