@@ -71,6 +71,7 @@ export default class ScriptPlay extends EventEmitter {
             game.stage.moveCharacter(game.currentMode.controller, x, y);
         } else if (script.command === COMMAND_ADDTAG) {
             game.addTag(script.arguments[0]);
+            this.next(game); 
         }
     }
 
