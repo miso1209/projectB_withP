@@ -7,7 +7,6 @@ import Player  from "./player";
 import {Battle}  from "./battle";
 import Explore  from "./explore";
 
-import EntityFactory from './entityfactory';
 import { doorIn, doorOut } from './cutscene/door';
 import ScriptPlay from './cutscene/scriptplay';
 import { EventEmitter } from 'events';
@@ -86,16 +85,38 @@ export default class Game extends EventEmitter {
         });
     }
 
-    start() {
-        // 임시로 캐릭터데이터를 생성한다
+    initPlayer() {
         this.player = new Player();
-        // 플레이어가 가지고 있는 캐릭터를 하나 정의한다
+        
+        if (!this.storage.hasAlreadyPlayed()) {
+            // 플레이어의 초기장비와 초기 캐릭터를 설정한다
+            this.storage.addItem(2001, 2);
+        }
+
+        // 플레이어의 인벤토리에 복사한다
+        for (const itemId in this.storage.data.inventory) {
+            this.player.inventory.addItem(itemId, this.storage.data.inventory[itemId]);
+        }
+
+        // TODO : 배틀 테스트를 위해서 추가한것인가?
         this.player.characters.push(new Character(this.charTable.getData(1)));
         this.player.characters.push(new Character(this.charTable.getData(2)));
         this.player.characters.push(new Character(this.charTable.getData(3)));
         this.player.characters.push(new Character(this.charTable.getData(4)));
         this.player.characters.push(new Character(this.charTable.getData(5)));
         this.player.controlCharacter = this.player.characters[0];
+    }
+
+    hasTag(tag) {
+        return this.storage.data.tags.indexOf(tag) >= 0;
+    }
+
+    addTag(tag) {
+        this.storage.addTag(tag);
+    }
+
+    start() {
+        this.initPlayer();
 
         // 필요한 필드 캐릭터 정보를 로딩한다
         const anim_path = "assets/sprite/character/" + this.player.controlCharacter.name;
@@ -104,8 +125,37 @@ export default class Game extends EventEmitter {
         }
         this.resourceManager.add("shadow.png", "assets/shadow.png");
 
-        // 필드에 들어간다
-        this.playCutscene();
+        if (this.hasTag("intro-watch")) {
+            // 그냥 평범하게 집에 들어간다
+            this.playCutscene([
+                {
+                    command: "enterstage",
+                    arguments: ["house", "house-gate"],
+                }
+            ]);
+        } else {
+            // 필드에 들어간다// 튜토리얼 컷신을 샘플로 작성해본다
+            const introCutscene = [
+                {
+                    command: "enterstage",
+                    arguments: ["house", "house-gate"],
+                }, {
+                    command: "delay",
+                    arguments: [0.5],
+                }, {
+                    command: "dialog",
+                    arguments: [
+                        { text: "돈이 없다고 이런곳에서 살아야 하나 ...", speaker: 1},
+                        { text: "난 어제 내집에서 잘 수 있을까", speaker: 1},
+                        { text: "... 우울해지네", speaker: 1},
+                        { text: "아 모르겠다! 일단 작업용 탁자나 찾아보자", speaker: 1}]
+                }, {
+                    command: "addtag",
+                    arguments: ["intro-watch"]
+                }
+            ];
+            this.playCutscene(introCutscene);
+        }
     }
 
     playCutscene(script) {
@@ -275,11 +325,6 @@ export default class Game extends EventEmitter {
     combine(id) {
         this.combiner.combine(id, this.player.inventory);
         return true;
-    }
-
-    // 콜백 함수 연결
-    onCombinerOpen(callback) {
-        this.combineropen_callback = callback;
     }
 
     onDialog(callback) {

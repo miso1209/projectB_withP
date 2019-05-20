@@ -14,6 +14,14 @@ export default class DevConsole {
         this.game = game;
     }
 
+    resetPlayer() {
+        if (this.game && this.game.storage) {
+            this.game.storage.clear();
+            // 강제 페이지 리로드
+            window.location.reload();
+        }
+    }
+
     addItem(id, count) {
         const inven = this.game.player.inventory;
         inven.addItem(id.toString(), count);
