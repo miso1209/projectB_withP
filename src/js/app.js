@@ -1,9 +1,8 @@
-import ResourceManager from './resource-manager'
+import ResourceManager from './resource-manager';
 import Storage from './storage';
 import DevConsole from './devconsole';
 import Game from './game';
-import UI from './ui'
-import DomUI from './domUI'
+import DomUI from './domUI';
 
 export default class App {
     constructor() {
@@ -130,7 +129,6 @@ export default class App {
         this.dev.setGame(this.game);
         
         // TODO : ui 에서 ui2 로 변경중
-        this.ui_old = new UI(this.game);
         this.ui = new DomUI();
         this.setUICallback();
 
@@ -161,7 +159,6 @@ export default class App {
 
     update() {
         this.game.update();
-        this.ui_old.update();
         requestAnimationFrame(this.update.bind(this));      
     }
 
@@ -194,11 +191,11 @@ export default class App {
     }
     
     startCutscene() {
-        this.ui_old.showTheaterScreen(0.5);
+        this.ui.showTheaterUI(0.5);
     }
 
     endCutscene() {
-        this.ui_old.hideTheaterScreen(0.5);
+        this.ui.hideTheaterUI(0.5);
         this.ui.setGNB();
     }
 }
