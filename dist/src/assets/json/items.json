@@ -2,15 +2,57 @@
     "1": {
         "id": 1,
         "name": "기본검",
-        "image": "item1.png",
-        "attack": 10,
-        "description": "흔히 볼 수 있는 평범한 무기"
+        "image": { "texture": "items.png", "x": 0, "y": 9 },
+        "description": "흔히 볼 수 있는 평범한 무기",
+        "category": "weapon",
+        "subcategory": "sword",
+        "options": ["attack(10)"]
     },
     "2":{
         "id": 2,
         "name": "기본갑옷",
-        "image": "item2.png",
-        "defense": 5,
-        "description": "흔히 볼 수 있는 평범한 갑옷"
+        "image": { "texture": "items.png", "x": 0, "y": 12 },
+        "description": "흔히 볼 수 있는 평범한 갑옷",
+        "category": "armor",
+        "subcategory": "medium-armor",
+        "options": ["armor(5)"]
+    },
+    "1001": {
+        "id": 1001,
+        "name": "소형 회복약",
+        "image": { "texture": "items.png", "x": 2, "y": 0 },
+        "description": "체력을 소량 회복한다",
+        "category": "consumables",
+        "options": ["health(+10)"]
+    },"1002": {
+        "id": 1002,
+        "name": "중형 회복약",
+        "image": { "texture": "items.png", "x": 8, "y": 0 },
+        "description": "체력을 회복한다",
+        "category": "consumables",
+        "options": ["health(+50)"]
+    },"1003": {
+        "id": 1003,
+        "name": "대형 회복약",
+        "image": { "texture": "items.png", "x": 14, "y": 0 },
+        "description": "체력을 대량 회복한다",
+        "category": "consumables",
+        "options": ["health(+200)"]
+    },
+    "2001": {
+        "id": 2001,
+        "name": "약초",
+        "image": { "texture": "items.png", "x": 8, "y": 4 },
+        "description": "흔히 볼수 있는 식물",
+        "category": "material",
+        "options": []
+    },
+    "2002": {
+        "id": 2002,
+        "name": "희귀 약초",
+        "image": { "texture": "items.png", "x": 7, "y": 4 },
+        "description": "흔히 볼수 없는 식물",
+        "category": "material",
+        "options": []
     }
 }

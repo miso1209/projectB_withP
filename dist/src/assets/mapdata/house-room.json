@@ -2,30 +2,82 @@
  "infinite":false,
  "layers":[
         {
-         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1],
-         "height":8,
-         "id":1,
-         "name":"ground",
+         "id":6,
+         "layers":[],
+         "name":"bottom",
          "opacity":1,
-         "type":"tilelayer",
+         "type":"group",
          "visible":true,
-         "width":8,
          "x":0,
          "y":0
         }, 
         {
-         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-         "height":8,
-         "id":3,
+         "id":4,
+         "layers":[
+                {
+                 "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1],
+                 "height":8,
+                 "id":1,
+                 "name":"ground",
+                 "opacity":1,
+                 "type":"tilelayer",
+                 "visible":true,
+                 "width":8,
+                 "x":0,
+                 "y":0
+                }],
+         "name":"ground",
+         "opacity":1,
+         "type":"group",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "id":5,
+         "layers":[
+                {
+                 "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 "height":8,
+                 "id":3,
+                 "name":"object",
+                 "opacity":1,
+                 "type":"tilelayer",
+                 "visible":true,
+                 "width":8,
+                 "x":0,
+                 "y":0
+                }],
          "name":"object",
          "opacity":1,
-         "type":"tilelayer",
+         "type":"group",
          "visible":true,
-         "width":8,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "id":7,
+         "layers":[
+                {
+                 "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0],
+                 "height":8,
+                 "id":11,
+                 "name":"portal",
+                 "opacity":1,
+                 "type":"tilelayer",
+                 "visible":true,
+                 "width":8,
+                 "x":0,
+                 "y":0
+                }],
+         "name":"event",
+         "opacity":1,
+         "type":"group",
+         "visible":true,
          "x":0,
          "y":0
         }],
- "nextlayerid":4,
+ "nextlayerid":12,
  "nextobjectid":1,
  "orientation":"isometric",
  "renderorder":"right-down",
@@ -112,6 +164,56 @@
                  "imagewidth":96
                 }],
          "tilewidth":96
+        }, 
+        {
+         "columns":0,
+         "firstgid":4,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"event",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":16,
+         "tiles":[
+                {
+                 "id":0,
+                 "image":"event_02.png",
+                 "imageheight":16,
+                 "imagewidth":32,
+                 "properties":[
+                        {
+                         "name":"direction",
+                         "type":"string",
+                         "value":"nw"
+                        }, 
+                        {
+                         "name":"name",
+                         "type":"string",
+                         "value":"room-gate"
+                        }, 
+                        {
+                         "name":"target",
+                         "type":"string",
+                         "value":"room-gate"
+                        }, 
+                        {
+                         "name":"targetstage",
+                         "type":"string",
+                         "value":"house"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"door"
+                        }],
+                 "type":"portalevent"
+                }],
+         "tilewidth":32
         }],
  "tilewidth":32,
  "type":"map",
