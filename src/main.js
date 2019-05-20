@@ -185,7 +185,9 @@ function gameStart(pixi) {
         //   console.log(isComplete);
         // });
 
-        domUI.showCraftUI(1, (isOk) => { console.log(isOk); });
+        domUI.showCraftUI(1, (itemID) => { 
+          domUI.showItemAquire(itemID);
+         });
       } else if (e.keyCode === 77) { // m
         // ### DOM UI - TEST
         // # 로딩바

@@ -5,6 +5,7 @@ export default class DomUI {
     this.screenWidth = this.gamePane.screenWidth;
     this.screenHeight = this.gamePane.screenHeight;
     this.stageMode = 'normal';
+    this.gnbContainer = null;
   }
 
   create() {
@@ -38,28 +39,42 @@ export default class DomUI {
     profile.moveToLeft(20);
     profile.dom.style.top = '20px';
 
-    const btnInventory = new Button('', 'btnInventory');
-    btnInventory.dom.style.top = '20px';
-    btnInventory.dom.style.right = '20px';
+    // const btnInventory = new Button('', 'btnInventory');
+    // btnInventory.dom.style.top = '20px';
+    // btnInventory.dom.style.right = '20px';
 
     this.gnbContainer.appendChild(profile.dom);
-    this.gnbContainer.appendChild(btnInventory.dom);
+    // this.gnbContainer.appendChild(btnInventory.dom);
 
     profile.dom.addEventListener('click', this.showStatUI.bind(this));
-    btnInventory.dom.addEventListener('click', this.showInventory.bind(this));
+    // btnInventory.dom.addEventListener('click', this.showInventory.bind(this));
   }
 
   // gnb 메뉴 배치 / 파티, 인벤토리, 레시피 
   setGNB() {
-    const gnb_party = new Button('', 'gnb-party');
+    if(this.gnbContainer === null) {
+      this.gnbContainer = document.createElement('div');
+      this.gnbContainer.className = 'gnbContainer';
+      this.gnbContainer.style.top = this.gamePane.offsetTop + 'px';
+      this.gnbContainer.style.opacity = '1';
+      document.body.appendChild(this.gnbContainer); 
 
-    this.gnbContainer = document.createElement('div');
-    this.gnbContainer.className = 'gnbContainer';
-    this.gnbContainer.style.top = this.gamePane.offsetTop + 'px';
-    this.gnbContainer.style.opacity = '1';
-    document.body.appendChild(this.gnbContainer);
+      const gnb = document.createElement('ul');
+      const menuData = [
+        {menu:'보관함', method: this.showInventory},
+        {menu:'퀘스트', method: null},
+        {menu:'설정', method: null}
+      ];
+      
+      menuData.forEach(menu => {
+        let li = document.createElement('li');
+        let btn = new Button(menu.menu, 'tabBtn');
+        li.appendChild(btn);
+        gnb.appendChild(li);
+      });
 
-    this.setProfile(1);
+      this.setProfile(1);
+    }
   }
 
   showItemAquire(itemId) {
@@ -400,7 +415,8 @@ export default class DomUI {
 
   showCraftUI(itemId, result) {
     const pane = this.create();
-    const modal = new Modal(pane, 360, 300, result);
+    const modal = new Modal(pane, 360, 300);
+
     modal.addTitle('아이템 조합중');
     modal.addCloseButton();
     modal.addConfirmButton();
@@ -409,26 +425,22 @@ export default class DomUI {
     itemText.className = 'contents';
     itemText.innerText = "아이템을 조합중";
     itemText.style.top = '60px';
-    modal.dom.appendChild(itemText);
-
-    const itemSprite = document.createElement('img');
-    itemSprite.src = '/src/assets/ui/craft.gif';
-    itemSprite.style.position = 'absolute';
-    itemSprite.style.left = (modal.dom.clientWidth / 2 - 24) + 'px';
-    itemSprite.style.top = itemText.offsetTop + itemText.offsetHeight + 20 + 'px';
 
     const loading = new ProgressUI(modal.dom, 100, (onComplete)=>{
       console.log('progress-complete');
-      itemSprite.src = '/src/assets/items/item' + itemId + '.png';
-      loading.hide();
-      itemSprite.style.top = itemText.offsetTop + itemText.offsetHeight + 10 + 'px';
-
       itemText.innerText = "아이템 조합 성공!"
+
+      modal.result = () => {
+        this.remove(pane);
+        result(1);
+      }
     });
 
+   
+
+    modal.dom.appendChild(itemText);
     loading.moveToCenter(100);
     modal.dom.appendChild(loading.dom);
-    modal.dom.appendChild(itemSprite);
   }
 
   showCombineModal(text, result) {
@@ -454,7 +466,6 @@ export default class DomUI {
     if (inputs.length > 0) {
       this.recipeUI.select(inputs[0].category);
     }
-    // this.recipeUI.update();
     this.recipeUI.moveToLeft(150);
   }
 }
@@ -944,7 +955,7 @@ class Modal extends DomUI {
     const modal = new NineBox(this.pane, width, height);
     this.dom = modal.dom;
     this.dom.classList.add('modal');
-    this.result = null;
+    this.result = result;
   }
 
   addCloseButton() {
@@ -967,7 +978,6 @@ class Modal extends DomUI {
     if (this.result !== null) {
       this.result('onConfirm - ok');
     }
-   
     this.closeModal();
   }
 
@@ -1230,33 +1240,35 @@ class ProgressUI extends DomUI {
 
     this.timer = null;
     this.rate = rate;
+    this.isLoading = false;
     this.pane.appendChild(holder);
     this.dom = holder;
 
-    this.update(duration);
+   
     this.onComplete = onComplete;
+    this.update(duration);
   }
 
   update(duration) {
     this.timer = setInterval(() => {
-      ++this.progress;
 
-      this.progressBar.style.width = this.progress * this.interval + '%';
-      this.rate.innerText = this.progress * this.interval + '%';
-      this.clearTimer();
-    }, duration);
+      if (this.progress * this.interval === 100) {
 
-    if(this.timer === null) {
-      this.onComplete('loading_complete');
-    }
-  }
-
-  clearTimer() {
-    if (this.progress * this.interval === 100) {
-      clearInterval(this.timer);
-      this.onComplete('loading_complete');
-      this.timer = null;
-    }
+        clearInterval(this.timer);
+  
+        this.onComplete('loading_complete');
+        this.timer = null;
+        this.isLoading = false;
+      } else {
+        ++this.progress;
+        this.isLoading = true;
+  
+        this.progressBar.style.width = this.progress * this.interval + '%';
+  
+        this.rate.innerText = this.progress * this.interval + '%';
+      }
+      
+    }, 100);
   }
 
   hide() {

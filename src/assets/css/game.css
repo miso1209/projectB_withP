@@ -102,7 +102,6 @@ button span {
   text-shadow: 2px 2px 1px #111; 
 }
 
-
 .submit {
   background: url(~assets/ui/button_s2.png) no-repeat;
 }
@@ -135,13 +134,15 @@ button span {
   height:50px;
   background: url(~assets/ui/tabBtn.png) no-repeat;
   margin-bottom: 10px;
-
-  margin-left: 55px;
-  
   padding: 10px 10px;
   text-align: left;
   transition: all 0.3s;
 }
+
+.tabPane .tabBtn {
+  margin-left: 55px;
+}
+
 .tabBtn::after{
   content: '';
   clear: both;
@@ -151,6 +152,7 @@ button span {
   display: block;
   float: left;
 }
+
 .tabBtn span {
   text-align: left;
   font-size: 14px;
@@ -160,8 +162,8 @@ button span {
   color: #fff;
 }
 
-.tabBtn:hover, 
-.tabBtn.active {
+.tabPane .tabBtn:hover, 
+.tabPane .tabBtn.active {
   width:118px;
   height:50px;
   background: url(~assets/ui/tabBtn_active.png) no-repeat;
