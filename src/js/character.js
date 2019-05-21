@@ -46,6 +46,8 @@ export default class Character {
         this.attackPotential = 0.5;
         this.magicPotential = 0.5;
         this.armorPotential = 0.5;
+
+        this.skills = data.skills;
     }
 
     get name() {

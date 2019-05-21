@@ -56,7 +56,6 @@ export default class Game extends EventEmitter {
         this.blackScreen = blackScreen;
 
         this.tweens = new Tweens();
-        this.battleMode = new Battle(this);
         this.exploreMode = new Explore(this);
         this.currentMode = null;
         
@@ -265,20 +264,30 @@ export default class Game extends EventEmitter {
     }
 
     enterBattle() {
-        if (this.currentMode === this.exploreMode) {
+        if (this.currentMode instanceof Explore) {
             // 기존 스테이지를 보이지 않게 한다 (스테이지를 떠날 필요는없다)
-            this.battleMode.prepare();
             this.gamelayer.removeChild(this.stage);
-            this.gamelayer.addChild(this.battleMode.container);
+
             // 배틀을 사용한다
-            this.currentMode = this.battleMode;
+            const options = {
+                allies: [{ character: new Character(this.charTable.getData(1)), x: 0, y: 0}],
+                enemies: [{ character: new Character(this.charTable.getData(2)), x: 0, y: 0}],
+                background: "battle_background.png",
+                battlefield: "battleMap1.png",
+                screenWidth: this.screenWidth,
+                screenHeight: this.screenHeight,
+            };
+            this.currentMode = new Battle(options);
+            this.currentMode.on('win', () => { this.leaveBattle(); });
+            this.currentMode.on('lose', () => { this.leaveBattle(); });
+            this.gamelayer.addChild(this.currentMode.stage);
         }
     }
 
     leaveBattle() {
-        if (this.currentMode === this.battleMode) {
+        if (this.currentMode instanceof Battle) {
             // 기존 스테이지를 보이지 않게 한다 (스테이지를 떠날 필요는없다)
-            this.gamelayer.removeChild(this.battleMode.container);
+            this.gamelayer.removeChild(this.currentMode.stage);
             this.gamelayer.addChild(this.stage);
             // 배틀을 사용한다
             this.currentMode = this.exploreMode;

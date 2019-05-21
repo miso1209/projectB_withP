@@ -139,11 +139,11 @@ export default class App {
             if (e.keyCode === 66) { // b 키 전투 테스트는 여기서 하세요
                 // 스테이지를 변경한다
                 if (this.game.currentMode === this.game.exploreMode) {
+                    this.ui.hideMenu();
                     this.game.enterBattle();
-                    this.ui.setStageMode('battle');
                 } else {
                     this.game.leaveBattle();
-                    this.ui.setStageMode('normal');
+                    this.ui.showMenu();
                 }
             }
             if (e.keyCode === 68) { // d키 // ui 는 여기서 테스트

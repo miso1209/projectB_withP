@@ -6,72 +6,49 @@ import { DIRECTIONS } from "./define";
 import { MeleeSkill, CrouchSkill, RunAwaySkill, HealSkill, DoubleMeleeSkill, ArrowHighShotingSkill, ArrowShotingSkill, FireRainSkill, ProjectileSkill } from "./battleskill";
 
 // 캐릭터 로직
-export class BattleCharacter extends PIXI.Container {
+export default class BattleCharacter extends PIXI.Container {
     constructor(character) {
         super();
         this.character = character;
-        
-        this.camp = CHARACTER_CAMP.ALLY;
-        this.gridPosition = {
-            x: 0,
-            y: 0
-        }
-
+       
         this.tweens = new Tweens();
 
-        this.container = new PIXI.Container();
-        this.animation = new BattleAnimation(this.character);
+        this.animation = new BattleAnimation(character);
         this.progressBar = new BattleProgressBar();
         this.progressBar.setPosition({
             x: this.animation.width / 2,
-            y: this.progressBar.position.y
+            y: -this.animation.height,
         });
-        this.progressBar.position.y = -this.animation.height;
 
-        this.container.addChild(this.animation);
-        this.container.addChild(this.progressBar);
-        this.addChild(this.container);
+        this.addChild(this.animation);
+        this.addChild(this.progressBar);
 
         this.skills = [];
 
         this.progressBar.setProgress(this.health / this.maxHealth);
-
-        // 스킬을 가지는 것 우선 하드코딩..
-        if (character.data.name == 'elid') {
-            this.skills.push(new ProjectileSkill(this));
-            this.skills.push(new FireRainSkill(this));
-        } else if (character.data.name == 'miluda') {
-            this.skills.push(new ArrowShotingSkill(this));
-            this.skills.push(new ArrowHighShotingSkill(this));
-        } else if (character.data.name == 'warrior') {
-            this.skills.push(new MeleeSkill(this));
-            this.skills.push(new DoubleMeleeSkill(this));
-        } else if (character.data.name == 'healer') {
-            this.skills.push(new MeleeSkill(this));
-            this.skills.push(new HealSkill(this));
-        } else {
-            this.skills.push(new CrouchSkill(this));
-            this.skills.push(new RunAwaySkill(this));
-        }
-        this.skills[1].currentDelay = 0;
-        this.skills[1].activeType = ACTIVE_TYPE.ACTIVE;
+        // 캐릭터의 스피드대로 세팅한다
+        this.actionScore = 0;
     }
 
     setCamp(camp) {
         this.camp = camp;
     }
 
-    setGridPosition(position) {
-        this.gridPosition.x = position.x;
-        this.gridPosition.y = position.y;
+    setGridPosition(x, y) {
+        this.gridPosition = {};
+        this.gridPosition.x = x;
+        this.gridPosition.y = y;
     }
 
     update(scene) {
         this.tweens.update();
         this.animation.update();
 
-        this.updateSkills(scene);
-        this.enqueueIdlePassiveSkill(scene);
+        //this.updateSkills(scene);
+        //this.enqueueIdlePassiveSkill(scene);
+
+        // 액티브 스코어를 감소시킨다
+        --this.actionScore;
     }
 
     enqueueIdlePassiveSkill(scene) {
@@ -102,13 +79,8 @@ export class BattleCharacter extends PIXI.Container {
         const healthRate = this.health / this.maxHealth;
         this.progressBar.setProgress(healthRate);
 
-            this.animation.softRollBackTint(0xFF0000, 0.75);
-            this.animation.vibration(6, 0.5);
-
-        if (this.health <= 0) {
-            this.tweens.addTween(this.container, 0.5, {alpha: 0}, 0, 'easeInOut', false, () => {
-            });
-        }
+        this.animation.softRollBackTint(0xFF0000, 0.75);
+        this.animation.vibration(6, 0.5);
     }
 
     get health() {
@@ -117,6 +89,33 @@ export class BattleCharacter extends PIXI.Container {
 
     get maxHealth() {
         return this.character.maxHealth;
+    }
+
+    animation_attack() {
+        this.animation._setAnimation('atk_' + getDirectionName(this.animation.currentDir));
+        this.animation.anim.isLoop = false;
+    }
+
+    animation_idle() {
+        this.animation._setAnimation('idle_' + getDirectionName(this.animation.currentDir));
+        this.animation.anim.isLoop = true;
+    }
+
+    animation_walk() {
+        this.animation._setAnimation('walk_' + getDirectionName(this.animation.currentDir));
+        this.animation.anim.isLoop = true;
+    }
+
+    get attack() {
+        return this.character.attack;
+    }
+
+    get armor() {
+        return this.character.armor;
+    }
+
+    get isAlive() {
+        return this.character.health > 0;
     }
 }
 
@@ -177,10 +176,10 @@ class BattleAnimation extends PIXI.Container {
     changeVisualToDirection(direction) {
         const animationName = this.anim.name?this.anim.name:'idle';
         this.currentDir = direction;
-        this.setAnimation(animationName.split('_')[0] + '_' + getDirectionName(direction));
+        this._setAnimation(animationName.split('_')[0] + '_' + getDirectionName(direction));
     }
    
-    setAnimation(name) {
+    _setAnimation(name) {
         const ani = this.animations[name];
         if (ani && this.anim.name !== name) {
             this.anim.name = name;
@@ -190,6 +189,7 @@ class BattleAnimation extends PIXI.Container {
             this.anim.gotoAndPlay(0);
         }
     }
+
 
     // 여러 softRollBackTint와 겹치면 문제될 수 있다. 단독, 중복없이 실행되야할듯.. 문제될 수 있다.
     softRollBackTint (tint, duration) {

@@ -3,18 +3,14 @@ import { PROGRESSBAR_STATUS, CHARACTER_CAMP } from "./battledeclare";
 // 배틀에 사용된 ui관련된 클래스 작성한다.
 
 export class BattleUi extends PIXI.Container{
-    constructor(battle) {
+    constructor(screenSize, characters) {
         super();
-        const screenSize = {
-            w: battle.game.screenWidth,
-            h: battle.game.screenHeight
-        }
         const offset = {
             x: -20,
             y: -20,
         }
 
-        this.activeUi = new BattlePortraitsContainer(battle);
+        this.activeUi = new BattlePortraitsContainer(characters);
         this.activeUi.setPosition({
             x: (screenSize.w - this.activeUi.width) + offset.x,
             y: (screenSize.h - this.activeUi.height) + offset.y
@@ -72,7 +68,7 @@ export class BattleProgressBar extends PIXI.Container {
 }
 
 class BattlePortraitsContainer extends PIXI.Container {
-    constructor(battle) {
+    constructor(characters) {
         super();
         this.portraits = [];
 
@@ -81,7 +77,7 @@ class BattlePortraitsContainer extends PIXI.Container {
             y: 0,
         }
 
-        battle.characters.forEach((character) => {
+        characters.forEach((character) => {
             if (character && character.camp === CHARACTER_CAMP.ALLY) {
                 const portrait = new BattleActivePortraitUi(character);
                 portrait.setPosition(position);
@@ -153,20 +149,12 @@ class BattleActivePortraitUi extends PIXI.Container {
     }
 
     update() {
-        // 이 부분 마음에 안든다.
-        if (this.character.character.health <= 0) {
-            this.portrait.tint = 0xFF7777;
-        } else if (this.character.skills[1].isReady()) {
-            this.portrait.tint = 0xFFFFFF;
-        } else {
-            this.portrait.tint = 0x555555;
-        }
-
+      
         const healthRate = this.character.character.health / this.character.character.maxHealth;
         this.healthProgressBar.setProgress(healthRate);
 
-        const activeRate = 1 - (this.character.skills[1].currentDelay / this.character.skills[1].coolTime);
-        this.activeProgressBar.setProgress(activeRate);
+        //const activeRate = 1 - (this.character.skills[1].currentDelay / this.character.skills[1].coolTime);
+        //this.activeProgressBar.setProgress(activeRate);
     }
 
     setScale(scale) {
