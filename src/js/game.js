@@ -1,4 +1,6 @@
 import path from 'path';
+import { EventEmitter } from 'events';
+
 import ResourceManager from "./resource-manager";
 import Tweens from "./tweens";
 import Stage  from "./stage";
@@ -9,7 +11,7 @@ import Explore  from "./explore";
 
 import { doorIn, doorOut } from './cutscene/door';
 import ScriptPlay from './cutscene/scriptplay';
-import { EventEmitter } from 'events';
+
 import idle from './cutscene/idle';
 import Combiner from './combiner';
 import ItemTable from './resources/item-table';
@@ -305,6 +307,23 @@ export default class Game extends EventEmitter {
         }
     }
 
+    combine(id) {
+        this.combiner.combine(id, this.player.inventory);
+        return true;
+    }
+
+    onDialog(callback) {
+        this.dialog_callback = callback;
+    }
+
+    onCutsceneStart(callback) {
+        this.cutscenestart_callback = callback;
+    }
+
+    onCutsceneEnd(callback) {
+        this.cutsceneend_callback = callback;
+    }
+
     getRecipes(category) {
         const recipes = this.combiner.getRecipes(category, this.player.inventory);
         for (const recipe of recipes) {
@@ -322,20 +341,25 @@ export default class Game extends EventEmitter {
         return recipes;
     }
 
-    combine(id) {
-        this.combiner.combine(id, this.player.inventory);
-        return true;
-    }
+    // TODO : 나중에 밖으로 빼야 하나?
+    getInvenotryData() {
+        const sortByCategory = {};
+        // 카테고리별로 묶는다.
+        for(const itemId in this.player.inventory.items) {
+            const count = this.player.inventory.items[itemId];
 
-    onDialog(callback) {
-        this.dialog_callback = callback;
-    }
+            const data = this.itemTable.getData(itemId);
+            
+            sortByCategory[data.category] = sortByCategory[data.category] || [];
+            sortByCategory[data.category].push({ item: itemId, data: data, owned: count });
+        }
 
-    onCutsceneStart(callback) {
-        this.cutscenestart_callback = callback;
-    }
-
-    onCutsceneEnd(callback) {
-        this.cutsceneend_callback = callback;
+        // 이것을 배열로 바꾼다
+        const result = [];
+        for(const category in sortByCategory) {
+            const items = sortByCategory[category];
+            result.push({ category: category, items: items });
+        }
+        return result;
     }
 }

@@ -2,7 +2,7 @@ import ResourceManager from './resource-manager';
 import Storage from './storage';
 import DevConsole from './devconsole';
 import Game from './game';
-import DomUI from './domUI';
+import UI from './ui/ui';
 
 export default class App {
     constructor() {
@@ -129,7 +129,7 @@ export default class App {
         this.dev.setGame(this.game);
         
         // TODO : ui 에서 ui2 로 변경중
-        this.ui = new DomUI();
+        this.ui = new UI();
         this.setUICallback();
 
         this.game.start();
@@ -168,6 +168,8 @@ export default class App {
         this.game.on('confirm-show', this.showConfirm.bind(this))
         this.game.on('cutscene-start', this.startCutscene.bind(this))
         this.game.on('cutscene-end', this.endCutscene.bind(this))
+
+        this.ui.on('inventory', this.openInventory.bind(this));
     }
 
     openCombiner(data) {
@@ -192,10 +194,17 @@ export default class App {
     
     startCutscene() {
         this.ui.showTheaterUI(0.5);
+        this.ui.hideMenu();
     }
 
     endCutscene() {
         this.ui.hideTheaterUI(0.5);
-        this.ui.setGNB();
+        this.ui.showMenu();
+    }
+
+    openInventory() {
+        // 게임에서 인벤토리 데이터를 얻어온다
+        const inputs = this.game.getInvenotryData();
+        this.ui.showInventory(inputs);
     }
 }
