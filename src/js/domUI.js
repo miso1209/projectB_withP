@@ -101,15 +101,15 @@ export default class DomUI {
     itemText.innerText = acquireText;
     itemAcquire.dom.appendChild(itemText);
 
-    const itemSprite = document.createElement('img');
+    // const itemSprite = document.createElement('img');
     itemSprite.src = '/src/assets/items/item' + itemId + '.png';
+    // const itemSprite = new ItemImage('items.png', )
     itemSprite.style.position = 'absolute';
     itemSprite.style.left = (itemAcquire.dom.clientWidth / 2 - 36) + 'px';
     itemSprite.style.top = itemText.offsetTop + itemText.offsetHeight / 2 + 25 + 'px';
 
     itemAcquire.dom.appendChild(itemSprite);
   }
-
   
   showInventory() {
     const pane = this.create();
@@ -459,7 +459,7 @@ export default class DomUI {
     pane.classList.add('screen');
 
     this.recipeUI = new RecipeUI(pane, 360, 460, callback);
-  
+    
     for (const input of inputs) {
       this.recipeUI.tabs.push({category: input.category});
       this.recipeUI.inputs = inputs;
