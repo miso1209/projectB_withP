@@ -20,8 +20,27 @@ const easeInOutQuad = function (t, b, c, d) {
     return -c/2 * (t*(t-2) - 1) + b;
 };
 
+const outBounce = function outBounce(t, b, c, d) {
+    const weight = function (w) {
+        if (w < 4/11.0) {
+            return (121 * w * w) / 16.0
+        } else if (w < 8/11.0) {
+            return  (363 / 40.0 * w * w) - (99 / 10.0 * w) + 17/5.0
+        } else if (w < 9/10.0) {
+            return (4356 / 361.0 * w * w) - (35442 / 1805.0 * w) + 16061/1805.0
+        } else {
+            return (54 / 5.0 * w * w) - (513 / 25.0 * w) + 268/25.0
+        }
+    };
+
+    t /= d;
+    return c * weight(t) + b;
+};
+
 const getEasingFunc = function (e) {
-    if (e === "easeInOut" || e === "easeInOutQuad" || e === "Quad.easeInOut")
+    if (e === 'outBounce') {
+        return outBounce;
+    } else if (e === "easeInOut" || e === "easeInOutQuad" || e === "Quad.easeInOut")
     {
         return easeInOutQuad;
     }
@@ -70,9 +89,10 @@ export default class Tweens {
                 vars : 			v
             };
                     
-            const idx = this.tweenTargets.indexOf(o); 
+            const idx = this.findTargetIndex(o);
             if (idx >= 0) {
-                let tweens = o.tweens;
+                const x = this.tweenTargets[idx];
+                let tweens = x.tweens;
                 if (!tweens) {
                     tweens = [];
                 }
@@ -84,10 +104,12 @@ export default class Tweens {
                 }
                 
                 tweens[tweens.length] = t;
-                o.tweens = tweens;
+                x.tweens = tweens;
             } else {
-                o.tweens = [t];
-                this.tweenTargets[this.tweenTargets.length] = o;
+                this.tweenTargets[this.tweenTargets.length] = {
+                    o: o,
+                    tweens: [t]
+                };
             }
 
             if (this.tweenTargets.length > 0 && !this.activeForTweens) {
@@ -96,11 +118,21 @@ export default class Tweens {
         }
     }
 
+    findTargetIndex(o) {
+        for (let i=0; i<this.tweenTargets.length; i++) {
+            if(this.tweenTargets[i].o === o) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
     removeTween(o, t) {
         let targetRemoved = false;
         
         if (o && t) {
-            const idx = this.tweenTargets.indexOf(o); 
+            const idx = this.findTargetIndex(o);
             if (idx >= 0) {
                 if (this.tweenTargets[idx].tweens && this.tweenTargets[idx].tweens.length > 0) {
                     const tweens = this.tweenTargets[idx].tweens;
@@ -140,8 +172,9 @@ export default class Tweens {
             let len = this.tweenTargets.length;
             for (let i=0; i < len; i++)
             {
-                const o = this.tweenTargets[i];
-                const tweens = o.tweens;
+                const x = this.tweenTargets[i];
+                const o = x.o;
+                const tweens = x.tweens;
                 for (let j=0; j < tweens.length; j++)
                 {
                     const t = tweens[j];

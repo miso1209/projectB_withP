@@ -2,7 +2,6 @@ import MovieClip from './movieclip';
 import {DIRECTIONS} from './define';
 import { SKILL_STATUS, ACTIVE_TYPE, TARGETING_TYPE, EFFECT_TYPE } from './battledeclare';
 import { getDirectionName, Movies } from './battleutils';
-import { BaseBuff } from './battlecharacterstat';
 
 class BaseSkill {
     constructor(character) {
@@ -183,29 +182,6 @@ export class CrouchSkill extends BaseSkill {
                 this.proponent.animation.anim.loop = true;
             }),
             MovieClip.Timeline(30, 31, null, () => {
-                const buff = new BaseBuff('crouch', {
-                    target: this.proponent,
-                    retensionFrame: 6000,
-                    actionFrame: 6000,
-                    buffEffect: {
-                        animationGraphic: null,
-                        graphic: 'shield.png',
-                        blendMode: PIXI.BLEND_MODES.ADD,
-                        type: EFFECT_TYPE.FADE_LOOP,
-                        offset: {
-                            x: 14,
-                            y: 5
-                        }
-                    },
-                    addBuffs: {
-                        armor: 0.5
-                    },
-                    multiBuffs: {
-
-                    }
-                })
-                this.proponent.stat.addBuff(buff);
-                this.proponent.buffEffecter.addBuffEffect(buff);
                 this.proponent.animation.setAnimation('crouch_' + getDirectionName(this.proponent.animation.currentDir));
                 this.proponent.animation.anim.loop = true;
             }),
@@ -266,29 +242,6 @@ export class DoubleMeleeSkill extends BaseSkill {
                 ["y", to.y, start.y, "outCubic"]
             ]),
             MovieClip.Timeline(137, 138, null, () => {
-                const buff = new BaseBuff('double_melee', {
-                    target: this.proponent,
-                    retensionFrame: 900,
-                    actionFrame: 900,
-                    buffEffect: {
-                        animationGraphic: null,
-                        graphic: 'shield.png',
-                        blendMode: PIXI.BLEND_MODES.ADD,
-                        type: EFFECT_TYPE.FADE_LOOP,
-                        offset: {
-                            x: 14,
-                            y: 5
-                        }
-                    },
-                    addBuffs: {
-                        armor: 0.2
-                    },
-                    multiBuffs: {
-
-                    }
-                })
-                this.proponent.stat.addBuff(buff);
-                this.proponent.buffEffecter.addBuffEffect(buff);
                 this.done(battle);
             }),
         );

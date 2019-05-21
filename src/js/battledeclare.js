@@ -3,6 +3,8 @@ export const QUEUE_ACTION = {
     UPDATING: 1,
 };
 
+export const FRAME_PER_SEC = 60;
+
 export const CHARACTER_CAMP = {
     ALLY: 0,
     ENEMY: 1
@@ -25,7 +27,13 @@ export const STAGE_STATUS = {
 export const SKILL_STATUS = {
     IDLE: 1,
     WAIT: 2,
-    ACTION: 3
+    ACTION: 3,
+};
+
+export const BATTLE_STATUS = {
+    DEFAULT: 0,
+    WIN: 1,
+    LOSE: 2
 };
 
 export const ACTIVE_TYPE = {

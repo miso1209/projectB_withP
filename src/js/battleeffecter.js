@@ -1,84 +1,18 @@
 import Tweens from "./tweens";
-import { Movies, loadAniTexture } from "./battleutils";
-import MovieClip from "./movieclip";
-
-// battle에 사용되는 이펙트 관련된 클래스 작성한다.
-
-export class BuffEffect extends PIXI.Container {
-    constructor(buff) {
-        super();
-        this.buff = buff.options;
-
-        this.effect = new PIXI.Sprite(PIXI.Texture.fromFrame(this.buff.buffEffect.graphic));
-        this.effect.position.x = - this.effect.width / 2 + this.buff.buffEffect.offset.x;
-        this.effect.position.y = - this.effect.height + this.buff.buffEffect.offset.y;
-        this.effect.blendMode = this.buff.buffEffect.blendMode;
-
-        this.addChild(this.effect);
-    }
-
-    name() {
-        return this.buff.name;
-    }
-
-    update() {
-        this.effect.position.x = - this.effect.width / 2 + this.buff.buffEffect.offset.x;
-        this.effect.position.y = - this.effect.height + this.buff.buffEffect.offset.y;
-    }
-}
-
-// 캐릭터 버프 이펙트 담당.
-export class BuffEffecter extends PIXI.Container {
-    constructor(character) {
-        super();
-        
-        this.tweens = new Tweens();
-        this.movies = new Movies();
-        this.character = character;
-        this.buffEffects = {};
-    }
-
-    addBuffEffect(buff) {
-        const newBuffEffect = new BuffEffect(buff);
-        this.addChild(newBuffEffect);
-        
-        if (this.buffEffects[buff.name]) {
-            this.removeChild(this.buffEffects[buff.name]);
-        }
-
-        this.buffEffects[buff.name] = newBuffEffect;
-    }
-
-    update() {
-        this.tweens.update();
-        this.movies.update();
-
-        for (let key in this.buffEffects) {
-            const buffEffect = this.buffEffects[key];
-            if (!this.character.stat.buffs[key]) {
-                this.removeChild(buffEffect);
-                delete this.buffEffects[key];
-            } else {
-                buffEffect.update();
-            }
-        }
-    }
-}
-
+import { loadAniTexture } from "./battleutils";
+import { FRAME_PER_SEC } from "./battledeclare";
 
 // Damage Graphic, Font Graphic 처리.
 export class BattleEffecter extends PIXI.Container {
     constructor() {
         super();
         this.tweens = new Tweens();
-        this.movies = new Movies();
         this.detailEffectContainer = new PIXI.Container();
         this.addChild(this.detailEffectContainer);
     }
 
     update() {
         this.tweens.update();
-        this.movies.update();
     }
 
     addEffect(target, options) {
@@ -105,20 +39,15 @@ export class BattleEffecter extends PIXI.Container {
         this.detailEffectContainer.addChild(anim);
         anim.play();
 
-        const movieClip = new MovieClip(
-            MovieClip.Timeline(options.removeFrame, options.removeFrame + 1, null, () => {
-                that.detailEffectContainer.removeChild(anim);
-            }),
-        );
-
-        this.movies.push(movieClip);
-        movieClip.playAndDestroy();
+        // n Frame이후 실행될 함수에 대해 어떻게 처리해야 하나.. 새로 빼서 작업해야할듯 하다..
+        this.tweens.addTween(this, options.removeFrame / FRAME_PER_SEC, {alpha: 1}, 0, "linear", true, () => {
+            that.detailEffectContainer.removeChild(anim);
+        });
 
         return anim;
     }
 
-    addFontEffect(options, callback) {
-        const that = this;
+    addFontEffect(options) {
         const style = new PIXI.TextStyle();
         style.dropShadow = true;
         style.dropShadowDistance = 3;
@@ -129,30 +58,23 @@ export class BattleEffecter extends PIXI.Container {
 
         const text = new PIXI.Text(options.outputText, style);
         text.anchor.x = 0.5;
+        text.alpha = 0;
         text.position.x = options.target.position.x + options.target.animation.width / 2 - 3;
         text.position.y = options.target.position.y - options.target.animation.height / 2 - 3;
-        text.alpha = 0;
         this.detailEffectContainer.addChild(text);
 
-        const movieClip = new MovieClip(
-            MovieClip.Timeline(1, 30, text, [["alpha", 0, 1, "outCubic"]]),
-            MovieClip.Timeline(1, 30, text, [["y", text.position.y, text.position.y - 15, "outCubic"]]),
-            MovieClip.Timeline(61, 91, text, [["alpha", 1, 0, "outCubic"]]),
-            MovieClip.Timeline(91, 92, null, () => {
-                that.detailEffectContainer.removeChild(text);
-                if (callback) {
-                    callback();
-                }
-            }),
-        );
-        this.movies.push(movieClip);
-        movieClip.playAndDestroy();
+        this.tweens.addTween(text.position, 0.5, {y: text.position.y - 15}, 0, "easeOut", true, null);
+        this.tweens.addTween(text, 0.5, {alpha: 1}, 0, "easeOut", true, () => {
+            this.tweens.addTween(text, 0.5, {alpha: 0}, 0.5, "easeOut", true, () => {
+                this.detailEffectContainer.removeChild(text);
+            });
+        });
     }
 }
 
 // Scene, Screen Effect관련 처리.
 export class BattleScreenEffecter extends PIXI.Container {
-    constructor() {
+    constructor(screenSize) {
         super();
         this.tweens = new Tweens();
         this.screenEffectContainer = new PIXI.Container();
@@ -161,7 +83,7 @@ export class BattleScreenEffecter extends PIXI.Container {
         const graphics = new PIXI.Graphics();
         graphics.beginFill(0xFFFFFF);
         // 크기 하드코딩?
-        graphics.drawRect(0, 0, 980, 500);
+        graphics.drawRect(0, 0, screenSize.width, screenSize.height);
         graphics.endFill();
         this.screenEffect = graphics;
         this.screenEffectContainer.addChild(graphics);
@@ -182,28 +104,22 @@ export class BattleScreenEffecter extends PIXI.Container {
         });
     }
 
-    sceneIn(callback) {
+    sceneIn() {
         this.screenEffectContainer.visible = true;
         this.screenEffectContainer.alpha = 1;
-        this.screenEffect.tint = 0x0F0F0F;
+        this.screenEffect.tint = 0x000000;
         this.tweens.addTween(this.screenEffectContainer, 1, { alpha: 0 }, 0, "linear", true, () => {
             this.tint = 0xFFFFFF;
             this.screenEffectContainer.visible = false;
-            if (callback) {
-                callback();
-            }
         });
     }
 
-    sceneOut(callback) {
+    sceneOut() {
         this.screenEffectContainer.visible = true;
         this.screenEffectContainer.alpha = 0;
-        this.screenEffect.tint = 0x0F0F0F;
+        this.screenEffect.tint = 0x000000;
         this.tweens.addTween(this.screenEffectContainer, 2, { alpha: 1 }, 0, "linear", true, () => {
             this.tint = 0xFFFFFF;
-            if (callback) {
-                callback();
-            }
         });
     }
 }

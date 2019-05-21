@@ -1,13 +1,9 @@
-import { State } from "./battlecharacterstate";
-import { StatManager } from "./battlecharacterstat";
 import { BattleProgressBar } from "./battleui";
-import { Movies, loadAniTexture, getDirectionName } from "./battleutils";
+import { loadAniTexture, getDirectionName } from "./battleutils";
 import { CHARACTER_CAMP, ACTIVE_TYPE, SKILL_STATUS } from "./battledeclare";
 import Tweens from "./tweens";
 import { DIRECTIONS } from "./define";
-import MovieClip from "./movieclip";
 import { MeleeSkill, CrouchSkill, RunAwaySkill, HealSkill, DoubleMeleeSkill, ArrowHighShotingSkill, ArrowShotingSkill, FireRainSkill, ProjectileSkill } from "./battleskill";
-import { BuffEffecter } from "./battleeffecter";
 
 // 캐릭터 로직
 export class BattleCharacter extends PIXI.Container {
@@ -22,26 +18,23 @@ export class BattleCharacter extends PIXI.Container {
         }
 
         this.tweens = new Tweens();
-        this.movies = new Movies();
 
         this.container = new PIXI.Container();
         this.animation = new BattleAnimation(this.character);
         this.progressBar = new BattleProgressBar();
-        this.buffEffecter = new BuffEffecter(this);
+        this.progressBar.setPosition({
+            x: this.animation.width / 2,
+            y: this.progressBar.position.y
+        });
         this.progressBar.position.y = -this.animation.height;
 
         this.container.addChild(this.animation);
-        this.container.addChild(this.buffEffecter);
         this.container.addChild(this.progressBar);
         this.addChild(this.container);
 
         this.skills = [];
-        this.state = new State();
-        this.stat = new StatManager(this.character);
 
-        this.progressBar.setWidth(this.health / this.maxHealth * 34);
-
-        this.stateInit();
+        this.progressBar.setProgress(this.health / this.maxHealth);
 
         // 스킬을 가지는 것 우선 하드코딩..
         if (character.data.name == 'elid') {
@@ -63,17 +56,6 @@ export class BattleCharacter extends PIXI.Container {
         this.skills[1].currentDelay = 0;
         this.skills[1].activeType = ACTIVE_TYPE.ACTIVE;
     }
-    
-    stateInit() {
-        if (this.health > 0) {
-            const stateSuccess = this.state.change('idle');
-            if (stateSuccess) {
-                this.setAnimation('idle');
-            }
-        } else {
-            this.state.change('die');
-        }
-    }
 
     setCamp(camp) {
         this.camp = camp;
@@ -85,12 +67,8 @@ export class BattleCharacter extends PIXI.Container {
     }
 
     update(scene) {
-        this.movies.update();
         this.tweens.update();
-        this.stat.update();
         this.animation.update();
-        this.progressBar.update();
-        this.buffEffecter.update();
 
         this.updateSkills(scene);
         this.enqueueIdlePassiveSkill(scene);
@@ -121,19 +99,13 @@ export class BattleCharacter extends PIXI.Container {
 
     onDamage(damage) {
         this.character.health -= damage;
-        const hpWidth = (this.health< 0 ? 0 : this.health) / this.maxHealth * 34;
-        this.progressBar.setWidth(hpWidth);
+        const healthRate = this.health / this.maxHealth;
+        this.progressBar.setProgress(healthRate);
 
-        const stateSuccess = this.state.change('damaged');
-        if (stateSuccess) {
-            this.animation.softRollBackTint(0xFF0000, 45);
-            this.animation.vibration(6, 12, () => {
-                this.state.rollback();
-            });
-        }
+            this.animation.softRollBackTint(0xFF0000, 0.75);
+            this.animation.vibration(6, 0.5);
 
         if (this.health <= 0) {
-            this.state.change('die');
             this.tweens.addTween(this.container, 0.5, {alpha: 0}, 0, 'easeInOut', false, () => {
             });
         }
@@ -154,7 +126,7 @@ class BattleAnimation extends PIXI.Container {
         super();
         this.character = character;
         this.tweens = new Tweens();
-        this.movies = new Movies();
+        this.vibrationTween = new Tweens();
 
         this.shadow = new PIXI.Sprite(PIXI.Texture.fromFrame("shadow.png"));
         this.shadow.position.y = -this.shadow.height;
@@ -187,8 +159,8 @@ class BattleAnimation extends PIXI.Container {
     }
 
     update() {
-        this.movies.update();
         this.tweens.update();
+        this.vibrationTween.update();
     }
 
     getAnimationKeys(character) {
@@ -221,51 +193,51 @@ class BattleAnimation extends PIXI.Container {
 
     // 여러 softRollBackTint와 겹치면 문제될 수 있다. 단독, 중복없이 실행되야할듯.. 문제될 수 있다.
     softRollBackTint (tint, duration) {
-        const startTint = tint? tint: 0xFFFFFF;
-        let [sR, sG, sB] = [(startTint & 0xFF0000) >>> 16, (startTint & 0x00FF00) >>> 8, startTint & 0x0000FF];
-        const [addR, addG, addB] = [(255 - sR) / duration, (255 - sG) / duration, (255 - sB) / duration];
-        this.anim.tint = Math.round(sR) << 16 | Math.round(sG) << 8 | Math.round(sB);
+        this.tintR = (tint & 0xFF0000) >> 16;
+        this.tintG = (tint & 0x00FF00) >> 8;
+        this.tintB = (tint & 0x0000FF);
+        
+        this.tweens.addTween(this, duration, {tintR: 255, tintG: 255, tintB: 255}, 0, 'linear', false, null);
+    }
 
-        const movieClip = new MovieClip(
-            MovieClip.Timeline(1, duration, null, () => {
-                sR += addR;
-                sG += addG;
-                sB += addB;
-                this.anim.tint = (Math.round(sR) << 16 | Math.round(sG) << 8 | Math.round(sB));
-            }),
-            MovieClip.Timeline(duration + 1, duration + 1, null, () => {
-                this.anim.tint = 0xFFFFFF;
-            })
-        );
+    get tintR() {
+        return (this.anim.tint & 0xFF0000) >> 16;
+    }
+    get tintG() {
+        return (this.anim.tint & 0x00FF00) >> 8;
+    }
+    get tintB() {
+        return this.anim.tint & 0x0000FF;
+    }
 
-        this.movies.push(movieClip);
-        movieClip.playAndStop();
+    set tintR(r) {
+        this.anim.tint = (this.anim.tint & 0x00FFFF) | (r << 16);
+    }
+
+    set tintG(g) {
+        this.anim.tint = (this.anim.tint & 0xFF00FF) | (g << 8);
+    }
+
+    set tintB(b) {
+        this.anim.tint = (this.anim.tint & 0xFFFF00) | (b);
     }
 
     // 캐릭터 anim의 position 건드리는데.. anim x 건드리는 애랑 같이 사용할 경우 문제될 수 있다.
-    vibration(scale, duration, callback) {
-        const x = this.anim.position.x;
-        const y = this.anim.position.y;
-        let vibrationScale = scale;
+    vibration(scale, duration) {
+        if (this.vibrationTween.activeForTweens) {
+            this.anim.position.x = this.tx;
+            this.anim.position.y = this.ty;
+            // TODO : tween 초기화할 함수가 필요하다.
+            this.vibrationTween = new Tweens();
+        }
 
-        const movieClip = new MovieClip(
-            MovieClip.Timeline(1, duration, null, () => {
-                this.anim.position.x = x + vibrationScale;
-                this.anim.position.y = y + vibrationScale;
-                vibrationScale = vibrationScale / 8 * -7;
-            }),
-            MovieClip.Timeline(duration + 1, duration + 1, null, () => {
-                this.anim.position.x = x;
-                this.anim.position.y = y;
-            }),
-            MovieClip.Timeline(duration + 2, duration + 2, null, () => {
-                if (callback) {
-                    callback();
-                }
-            })
-        );
+        const tx = this.anim.position.x;
+        this.tx = tx;
+        const ty = this.anim.position.y;
+        this.ty = ty;
 
-        this.movies.push(movieClip);
-        movieClip.playAndStop();
+        this.anim.position.x += scale;
+        this.anim.position.y += scale;
+        this.vibrationTween.addTween(this.anim.position, duration, {x: tx, y: ty}, 0, 'outBounce', true, null);
     }
 }
