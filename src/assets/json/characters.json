@@ -25,7 +25,9 @@
         },
 
         "skills": {
-
+            "a": "crouch",
+            "b": "crouch",
+            "extra": "runaway"
         },
         "animations": {
             "hector_idle_nw": { "length": 2 },
@@ -68,7 +70,9 @@
         },
 
         "skills": {
-
+            "a": "slash",
+            "b": "shieldAttack",
+            "extra": "doubleAttack"
         },
         "animations": {
             "warrior_idle_nw": { "length": 1 },
@@ -111,7 +115,9 @@
         },
 
         "skills": {
-
+            "a": "wandAttack",
+            "b": "antiPower",
+            "extra": "heal"
         },
         "animations": {
             "healer_idle_nw": { "length": 1 },
@@ -154,7 +160,9 @@
         },
 
         "skills": {
-
+            "a": "shotArrow",
+            "b": "criticalAttack",
+            "extra": "arrowOfTracker"
         },
         "animations": {
             "miluda_idle_nw": { "length": 1 },
@@ -193,7 +201,9 @@
         },
 
         "skills": {
-
+            "a": "fireBolt",
+            "b": "fireCape",
+            "extra": "fireRain"
         },
         "animations": {
             "elid_idle_nw": { "length": 1 },
