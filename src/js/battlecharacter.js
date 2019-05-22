@@ -174,6 +174,18 @@ export default class BattleCharacter extends PIXI.Container {
         this.animation.vibration(6, 0.5);
     }
 
+    // 현재 Warrior만 들고있는데.. 이런것은 어떻게 처리하지.. 원래 모든 캐릭터가 통일된 animation을 들고 있어야 할듯한데..
+    animation_shieldAttack() {
+        this.animation._setAnimation('atk_2_' + getDirectionName(this.animation.currentDir));
+        this.animation.anim.isLoop = false;
+    }
+
+    // 현재 Hector만 들고있는데.. 이런것은 어떻게 처리하지.. 원래 모든 캐릭터가 통일된 animation을 들고 있어야 할듯한데..
+    animation_crouch() {
+        this.animation._setAnimation('crouch_' + getDirectionName(this.animation.currentDir));
+        this.animation.anim.isLoop = false;
+    }
+
 
     animation_attack() {
         this.animation._setAnimation('atk_' + getDirectionName(this.animation.currentDir));

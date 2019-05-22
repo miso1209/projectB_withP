@@ -20,6 +20,14 @@ const easeInOutQuad = function (t, b, c, d) {
     return -c/2 * (t*(t-2) - 1) + b;
 };
 
+// 중간지점에서 h민큼 떨어진 2차 함수 포물선을 그리는 이진함수. 화살의 y좌표 변경때문에 작성하였다.
+const arrrowYEase = function (t, b, c, d) {
+    const h = -70;
+    t /= d;
+    // 일차함수랑, 2차함수 붙여서 야매 포물선 함수 만든다. 포물선 높이값은 h로 조절한다.
+    return b - 4*h*(t*(t-1)) + (c*t);
+};
+
 const outBounce = function outBounce(t, b, c, d) {
     const weight = function (w) {
         if (w < 4/11.0) {
@@ -54,6 +62,9 @@ const getEasingFunc = function (e) {
     }
     else if (e === "easeOut_ex") {
         return easeOutQuad_ex;
+    }
+    else if( e === "arrrowYEase") {
+        return arrrowYEase;
     }
     else
     {

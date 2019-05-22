@@ -32,7 +32,7 @@ export default class Skill {
     }
 
     addEffect(...args) {
-        this.effects.addEffect(...args);
+        return this.effects.addEffect(...args);
     }
 
     addFontEffect(...args) {

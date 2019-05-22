@@ -16,30 +16,27 @@ export class BattleEffecter extends PIXI.Container {
 
     addEffect(target, options) {
         const that = this;
-        const slash = { textures: loadAniTexture(`${options.name}_`, options.animationLength), flipX: false };
-        const anim = new PIXI.extras.AnimatedSprite(slash.textures);
-        anim.animationSpeed = options.speed;
-        anim.loop = false;
-        anim.blendMode = PIXI.BLEND_MODES.ADD;
-        anim.position.x = target.position.x - anim.width / 4;
-        anim.position.y = target.position.y - target.animation.height / 2 - anim.height / 2;
+        
+        let anim = null;
+        if (options.animation) {
+            anim = new PIXI.extras.AnimatedSprite(loadAniTexture(`${options.name}_`, options.animationLength));
+            anim.animationSpeed = options.speed;
+            anim.loop = false;
+            anim.play();
+        } else {
+            anim = new PIXI.Sprite(PIXI.Texture.fromFrame(options.name));
+        }
 
-        if (options.flipX) {
-            anim.scale.x = options.flipX ? -1 : 1;
-            anim.position.x += anim.width;
-        }
-        if (options.flipY) {
-            anim.scale.y = options.flipY ? -1 : 1;
-            anim.position.x += anim.height;
-        }
-        if (options.rotation) {
-            anim.rotation = Math.PI * options.rotation / 180;
-        }
+        anim.anchor.x = 0.5;
+        anim.anchor.y = 0.5;
+        anim.blendMode = PIXI.BLEND_MODES.ADD;
+        anim.position.x = target.position.x + target.animation.width / 2;
+        anim.position.y = target.position.y - target.animation.height / 2;
+
         this.detailEffectContainer.addChild(anim);
-        anim.play();
 
         // n Frame이후 실행될 함수에 대해 어떻게 처리해야 하나.. 새로 빼서 작업해야할듯 하다..
-        this.tweens.addTween(this, options.removeFrame / FRAME_PER_SEC, {alpha: 1}, 0, "linear", true, () => {
+        this.tweens.addTween(this, options.removeFrame / FRAME_PER_SEC, {alpha: 1}, 0, "linear", false, () => {
             that.detailEffectContainer.removeChild(anim);
         });
 

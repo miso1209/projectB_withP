@@ -236,8 +236,7 @@ export class Battle extends EventEmitter {
 
     getNormalSkill(character) {
         // TODO : crunch 를 만들지 않아서 ... 
-        //const skill = Skill.New(character.skills.a);
-        const skill = Skill.New("melee");
+        const skill = Skill.New(character.skills.a);
 
         const allies = (character.camp === CHARACTER_CAMP.ALLY) ? this.allies : this.enemies;
         const enemies = (character.camp === CHARACTER_CAMP.ALLY) ? this.enemies : this.allies;

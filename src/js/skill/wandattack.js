@@ -1,8 +1,7 @@
 import SkillBase from "./skillbase";
 import { CHARACTER_CAMP, TARGETING_TYPE } from "../battledeclare";
 
-// MELEE SKILL
-export default class Melee extends SkillBase {
+export default class WandAttack extends SkillBase {
     constructor() {
         super(TARGETING_TYPE.ENEMY_FRONT_TANK);
 
@@ -21,16 +20,17 @@ export default class Melee extends SkillBase {
                 this.originX = this.owner.position.x;
                 this.originY = this.owner.position.y;
 
-                this.tweens.addTween(this.owner.position, 0.15, {x: toX, y: toY }, 0, "outCubic", true );
+                this.tweens.addTween(this.owner.position, 0.15, {x: toX, y: toY }, 0, "easeOut", true );
                 break;
             }
             case 11: {
                 this.owner.animation_attack();
                 break;
             } 
-            case 50: {
+            case 45: {
                 // TODO : 데미지 계산 공식을 어디서 가져와야 할까??
-                this.addEffect(this.target, { name: 'slash', animationLength: 8, removeFrame: 60, speed: 0.5 });
+                // 완드 공격 이펙트로 변경하면 될 것 같다.
+                this.addEffect(this.target, { name: 'slash', animation: true, animationLength: 8, removeFrame: 60, speed: 0.5 });
                 this.hit(this.owner, this.target);
                 break;
             }
@@ -39,7 +39,7 @@ export default class Melee extends SkillBase {
                 break;
             }
             case 81: {
-                this.tweens.addTween(this.owner.position, 0.15, {x: this.originX, y: this.originY }, 0, "outCubic", true );
+                this.tweens.addTween(this.owner.position, 0.15, {x: this.originX, y: this.originY }, 0, "easeOut", true );
                 break;
             }
             case 91: {
