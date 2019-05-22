@@ -20,7 +20,7 @@ export default class Slash extends SkillBase {
                 this.originX = this.owner.position.x;
                 this.originY = this.owner.position.y;
 
-                this.tweens.addTween(this.owner.position, 0.15, {x: toX, y: toY }, 0, "easeOut", true );
+                this.tweens.addTween(this.owner.position, 0.15, { x: toX, y: toY }, 0, "easeOut", true );
                 break;
             }
             case 11: {
@@ -38,7 +38,7 @@ export default class Slash extends SkillBase {
                 break;
             }
             case 81: {
-                this.tweens.addTween(this.owner.position, 0.15, {x: this.originX, y: this.originY }, 0, "easeOut", true );
+                this.tweens.addTween(this.owner.position, 0.15, { x: this.originX, y: this.originY }, 0, "easeOut", true );
                 break;
             }
             case 91: {

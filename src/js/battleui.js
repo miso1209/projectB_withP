@@ -82,16 +82,6 @@ class BattlePortraitsContainer extends PIXI.Container {
                 const portrait = new BattleActivePortraitUi(character);
                 portrait.setPosition(position);
                 position.x += portrait.width;
-
-                // 이 부분 마음에 안든다.
-                portrait.interactive = true;
-                portrait.on('mouseup', () => {
-                    if (character.skills[1].isReady() && character.health > 0) {
-                        character.skills[1].setWait();
-                        battle.scene.queue.enqueue(character.skills[1]);
-                    }
-                });
-
                 this.portraits.push(portrait);
                 this.addChild(portrait);
             }

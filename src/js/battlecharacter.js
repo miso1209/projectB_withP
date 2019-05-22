@@ -185,6 +185,12 @@ export default class BattleCharacter extends PIXI.Container {
         this.animation._setAnimation('crouch_' + getDirectionName(this.animation.currentDir));
         this.animation.anim.isLoop = false;
     }
+    
+    // 현재 Healer만 들고있는데.. 이런것은 어떻게 처리하지.. 원래 모든 캐릭터가 통일된 animation을 들고 있어야 할듯한데..
+    animation_magic() {
+        this.animation._setAnimation('magic_' + getDirectionName(this.animation.currentDir));
+        this.animation.anim.isLoop = false;
+    }
 
 
     animation_attack() {

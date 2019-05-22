@@ -24,7 +24,7 @@ export default class FireBolt extends SkillBase {
                 const toY = this.target.position.y - this.target.height / 2;
 
                 this.tweens.addTween(fireBall, 0.1, { alpha: 0 }, 0.15, "easeOut", true );
-                this.tweens.addTween(fireBall.position, 0.25, {x: toX, y: toY }, 0, "easeOut", true );
+                this.tweens.addTween(fireBall.position, 0.25, { x: toX, y: toY }, 0, "easeOut", true );
                 break;
             }
             case 50: {

@@ -107,11 +107,11 @@ export class Battle extends EventEmitter {
             while (this.specialSkillQueue.length > 0 ){
                 const character = this.specialSkillQueue[0];
                 this.specialSkillQueue.splice(0, 1);
+                nextSkill = this.getSpeicalSkill(character);
+
                 if (character.isAlive) {
                     break;
                 }
-
-                nextSkill = this.getSpeicalSkill(character);
             }
 
             // 스페셜 스킬이 설정되어 있지 않다면 일반 스킬을 설정한다
@@ -163,7 +163,8 @@ export class Battle extends EventEmitter {
         let selected = null;
         const list = this.allies.concat(this.enemies);
         for (const bchar of list) {
-            if (bchar.actionScore < score) {
+            // 살아있는 놈만 반환하도록 해둔다.
+            if (bchar.actionScore < score && bchar.isAlive) {
                 selected = bchar;
                 score = bchar.actionScore;
             }
@@ -200,7 +201,7 @@ export class Battle extends EventEmitter {
 
             case TARGETING_TYPE.ENEMY_MIN_HP:
                 {
-                    let selectedHp = Math.MAX_SAFE_INTEGER;
+                    let selectedHp = Number.MAX_SAFE_INTEGER;
                     let selected = null;
                     enemies.forEach((target) => {
                         if (target.isAlive && target.health < selectedHp) {
@@ -218,7 +219,7 @@ export class Battle extends EventEmitter {
             case TARGETING_TYPE.ALLY_ALL:
                 allies.forEach((target) => {
                     if( target.isAlive ) {
-                        result.push(opponent);
+                        result.push(target);
                     }
                 });
                 break;
@@ -226,7 +227,7 @@ export class Battle extends EventEmitter {
             case TARGETING_TYPE.ENEMY_ALL:
                 enemies.forEach((target) => {
                     if( target.isAlive ) {
-                        result.push(opponent);
+                        result.push(target);
                     }
                 });
                 break;
@@ -235,7 +236,6 @@ export class Battle extends EventEmitter {
     }
 
     getNormalSkill(character) {
-        // TODO : crunch 를 만들지 않아서 ... 
         const skill = Skill.New(character.skills.a);
 
         const allies = (character.camp === CHARACTER_CAMP.ALLY) ? this.allies : this.enemies;
@@ -253,7 +253,7 @@ export class Battle extends EventEmitter {
     }
 
     getSpeicalSkill(character) {
-        const skill = new MeleeSkill();
+        const skill = Skill.New(character.skills.extra);
         
         const allies = (character.camp === CHARACTER_CAMP.ALLY) ? this.allies : this.enemies;
         const enemies = (character.camp === CHARACTER_CAMP.ALLY) ? this.enemies : this.allies;
