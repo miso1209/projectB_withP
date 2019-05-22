@@ -1,6 +1,4 @@
 import EventEmitter from 'events';
-import {doorIn} from './door';
-import { DIRECTIONS } from '../define';
 
 const COMMAND_DIALOG = "dialog";
 const COMMAND_DELAY = "delay";
@@ -8,6 +6,7 @@ const COMMAND_ENTERSTAGE = "enterstage";
 const COMMAND_LEAVESTAGE = "leavestage";
 const COMMAND_GOTO = "goto";
 const COMMAND_ADDTAG = "addtag";
+const COMMAND_ADDQUEST = "addquest";
 
 export default class ScriptPlay extends EventEmitter {
     constructor(script) {
@@ -71,6 +70,9 @@ export default class ScriptPlay extends EventEmitter {
             game.stage.moveCharacter(game.currentMode.controller, x, y);
         } else if (script.command === COMMAND_ADDTAG) {
             game.addTag(script.arguments[0]);
+            this.next(game); 
+        }  else if (script.command === COMMAND_ADDQUEST) {
+            game.addQuest(script.arguments[0]);
             this.next(game); 
         }
     }

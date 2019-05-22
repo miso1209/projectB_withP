@@ -168,6 +168,7 @@ export default class App {
         this.game.on('confirm-show', this.showConfirm.bind(this))
         this.game.on('cutscene-start', this.startCutscene.bind(this))
         this.game.on('cutscene-end', this.endCutscene.bind(this))
+        this.game.on('quest-update', this.questUpdated.bind(this))
 
         this.ui.on('inventory', this.openInventory.bind(this));
     }
@@ -206,5 +207,13 @@ export default class App {
         // 게임에서 인벤토리 데이터를 얻어온다
         const inputs = this.game.getInvenotryData();
         this.ui.showInventory(inputs);
+    }
+
+    questUpdated(id, data) {
+        // 데이터를 저장한다
+        this.storage.setQuest(id, data);
+
+        // quset ui 를 업데이트한다
+
     }
 }

@@ -86,7 +86,9 @@ export default class DomUI extends EventEmitter {
         const dialog = new Dialog(pane, 700, 140, script);
     
         dialog.setText(script[0].text);
-        dialog.showSpeaker(script[0].speaker);
+        if (script[0].speaker) {
+            dialog.showSpeaker(script[0].speaker);
+        }
         dialog.onComplete = callback;
     }
 

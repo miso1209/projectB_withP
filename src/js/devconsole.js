@@ -27,4 +27,12 @@ export default class DevConsole {
         inven.addItem(id.toString(), count);
         return true;
     }
+
+    printquest() {
+        // 현재 퀘스트 상태를 출력한다
+        for (const qusetId in this.game.player.quests) {
+            const quest = this.game.player.quests[qusetId];
+            console.log(quest.title, quest.description, quest.objectives, quest.rewards, quest.isAllObjectivesCompleted());
+        }
+    }
 }

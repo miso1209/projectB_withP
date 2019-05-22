@@ -24,6 +24,7 @@ export default class WorkTable extends Prop {
             // 업그레이드 하시겠습니까 모달.을 띄운다
             game.emit('confirm-show', "업그레이드 하시겠습니까?", (confirmed) => {
                 if (confirmed === "ok") {
+                    game.addTag("worktable");
                     this.upgrade();
 /*
                     // 여기서 다음 컷신을 플레이한다.

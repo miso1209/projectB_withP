@@ -12,6 +12,7 @@ export default class Storage {
         this.data = {};
         this.data.inventory = {};
         this.data.tags = [];
+        this.data.quests = {};
     }
 
     save() {
@@ -40,5 +41,10 @@ export default class Storage {
             this.data.tags.push(tag);
             this.save();
         }
+    }
+
+    setQuest(questId, questData) {
+        this.data.quests[questId] = questData;
+        this.save();
     }
 }

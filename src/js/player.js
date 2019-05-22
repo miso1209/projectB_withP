@@ -13,8 +13,7 @@ export default class Player {
         // 캐릭터 로딩을 언제 어떻게 해야할까... 게임 시작시에 미리 데이터를 로딩해야 할 것 같다. 
         // 캐릭터 팩토리를 다시 만들어야 할듯
         this.controlCharacter = null;
-
-        this.tags = [];
+        this.quests = {};
     }
 
     addTag(tag) {

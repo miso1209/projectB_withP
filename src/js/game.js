@@ -16,6 +16,8 @@ import Combiner from './combiner';
 import ItemTable from './resources/item-table';
 import CharacterTable from './resources/chararacter-table';
 import Character from './character';
+import QuestTable from './resources/quest-table';
+import Quest from './quest';
 
 export default class Game extends EventEmitter {
     constructor(pixi) {
@@ -61,6 +63,7 @@ export default class Game extends EventEmitter {
         this.resourceManager = new ResourceManager();
         this.itemTable = new ItemTable();
         this.charTable = new CharacterTable();
+        this.questTable = new QuestTable();
         this.combiner = new Combiner();
     }
 
@@ -73,11 +76,13 @@ export default class Game extends EventEmitter {
         this.resourceManager.add("items", "assets/json/items.json");
         this.resourceManager.add("characters", "assets/json/characters.json");
         this.resourceManager.add("recipe", "assets/json/recipe.json");
+        this.resourceManager.add("quest", "assets/json/quest.json");
 
         this.resourceManager.load((resources) => {
             this.itemTable.init(resources.items.data);
             this.charTable.init(resources.characters.data);
             this.combiner.addRecipes(resources.recipe.data, this.itemTable);
+            this.questTable.init(resources.quest.data);
 
             if (next) {
                 next();
@@ -98,6 +103,15 @@ export default class Game extends EventEmitter {
             this.player.inventory.addItem(itemId, this.storage.data.inventory[itemId]);
         }
 
+        // 퀘스트 정보를 등록한다
+        for (const questId in this.storage.data.quests) {
+            const quest = new Quest(this.questTable.getData(questId));
+            quest.refresh(this.storage.data.quests[questId]);
+            quest.registerEvent(this);
+            this.player.quests[questId] = quest;
+        }
+
+
         // TODO : 배틀 테스트를 위해서 추가한것인가?
         this.player.characters.push(new Character(this.charTable.getData(1)));
         this.player.characters.push(new Character(this.charTable.getData(2)));
@@ -113,6 +127,23 @@ export default class Game extends EventEmitter {
 
     addTag(tag) {
         this.storage.addTag(tag);
+        // 태그 추가 이벤트 트리거 
+        this.emit('addtag', tag);
+    }
+
+    addQuest(questId) {
+
+        if (!this.storage.data.quests[questId]) {
+            // 퀘스트를 가지고 있지 않다면 퀘스트를 추가한다
+            // 가지고 있다면 추가하지 않는다.
+            const questCore = this.questTable.getData(questId);
+            const quest = new Quest(questCore);
+            this.storage.setQuest(questId, quest.data);
+
+            // 퀘스트를 활성화시킨다
+            this.player.quests[questId] = quest;
+            quest.registerEvent(this);
+        }
     }
 
     start() {
@@ -125,7 +156,7 @@ export default class Game extends EventEmitter {
         }
         this.resourceManager.add("shadow.png", "assets/shadow.png");
 
-        if (this.hasTag("intro-watch")) {
+        if (this.hasTag("newplayer")) {
             // 그냥 평범하게 집에 들어간다
             this.playCutscene([
                 {
@@ -142,17 +173,41 @@ export default class Game extends EventEmitter {
                 }, {
                     command: "delay",
                     arguments: [0.5],
+                },  {
+                    command: "dialog",
+                    arguments: [
+                        { text: "누구 계신가요?", speaker: 1},
+                    ]
                 }, {
                     command: "dialog",
                     arguments: [
-                        { text: "돈이 없다고 이런곳에서 살아야 하나 ...", speaker: 1},
-                        { text: "난 어제 내집에서 잘 수 있을까", speaker: 1},
-                        { text: "... 우울해지네", speaker: 1},
-                        { text: "아 모르겠다! 일단 작업용 탁자나 찾아보자", speaker: 1}]
+                        { text: "(아무런 반응이 없다)" },
+                    ]
+                }, {
+                    command: 'goto',
+                    arguments: [3, 14]
+                }, {
+                    command: "dialog",
+                    arguments: [
+                        { text: "여긴 빈집인가?", speaker: 1},
+                        { text: "좋아!! 여기서부터 새출발이다!", speaker: 1},
+                    ]
+                }, {
+                    command: 'goto',
+                    arguments: [5, 8]
+                }, {
+                    command: "dialog",
+                    arguments: [
+                        
+                        { text: "우선 여기 테이블에 작업도구들을 준비해보자 ", speaker: 1}
+                    ]
+                }, { 
+                    command: "addquest",
+                    arguments: [1]
                 }, {
                     command: "addtag",
-                    arguments: ["intro-watch"]
-                }
+                    arguments: ["newplayer"]
+                }, 
             ];
             this.playCutscene(introCutscene);
         }
