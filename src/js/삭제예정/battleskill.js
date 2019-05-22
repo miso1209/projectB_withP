@@ -1,7 +1,7 @@
-import MovieClip from './movieclip';
+/*import MovieClip from './movieclip';
 import {DIRECTIONS} from './define';
 import { SKILL_STATUS, ACTIVE_TYPE, TARGETING_TYPE, EFFECT_TYPE } from './battledeclare';
-import { getDirectionName, Movies } from './battleutils';
+import { getDirectionName, Movies } from './battleutils';*/
 
 class BaseSkill {
     constructor(character) {

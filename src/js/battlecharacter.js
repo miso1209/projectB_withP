@@ -1,9 +1,6 @@
-import { BattleProgressBar } from "./battleui";
-import { loadAniTexture, getDirectionName } from "./battleutils";
-import { CHARACTER_CAMP, ACTIVE_TYPE, SKILL_STATUS } from "./battledeclare";
-import Tweens from "./tweens";
 import { DIRECTIONS } from "./define";
-import { MeleeSkill, CrouchSkill, RunAwaySkill, HealSkill, DoubleMeleeSkill, ArrowHighShotingSkill, ArrowShotingSkill, FireRainSkill, ProjectileSkill } from "./battleskill";
+import { loadAniTexture, getDirectionName } from "./utils";
+import { BattleProgressBar } from "./battleui";
 
 // Battle Character의 Animation Sprite 처리를 하는 클래스.
 class BattleAnimation extends PIXI.Container {

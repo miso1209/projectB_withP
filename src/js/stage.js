@@ -1,7 +1,6 @@
 import { DIRECTIONS } from './define';
 import MoveEngine from './moveengine';
 import PathFinder from './pathfinder';
-import Tweens from './tweens';
 
 import Tile from './tile/tile';
 import Prop from './tile/prop';

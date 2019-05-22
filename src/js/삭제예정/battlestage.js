@@ -1,6 +1,6 @@
-import { BattleEffecter } from "./battleeffecter";
+/*import { BattleEffecter } from "./battleeffecter";
 import { STAGE_BASE_POSITION, CHARACTER_CAMP } from "./battledeclare";
-import { DIRECTIONS } from "./define";
+import { DIRECTIONS } from "./define";*/
 
 // 배틀의 실제 스테이지에 관련된 클래스 작성한다.
 export class BattleStage extends PIXI.Container {

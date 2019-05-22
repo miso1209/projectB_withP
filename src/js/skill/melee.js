@@ -1,5 +1,4 @@
 import SkillBase from "./skillbase";
-import Tweens from "../tweens";
 import { CHARACTER_CAMP, TARGETING_TYPE } from "../battledeclare";
 
 // MELEE SKILL

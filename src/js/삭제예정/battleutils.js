@@ -1,4 +1,4 @@
-import { DIRECTIONS } from "./define";
+// import { DIRECTIONS } from "./define";
 
 // 무비클립 관리 클래스
 export class Movies {

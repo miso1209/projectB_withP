@@ -2,7 +2,6 @@ import path from 'path';
 import { EventEmitter } from 'events';
 
 import ResourceManager from "./resource-manager";
-import Tweens from "./tweens";
 import Stage  from "./stage";
 
 import Player  from "./player";

@@ -1,5 +1,4 @@
-import Tweens from "./tweens";
-import { loadAniTexture } from "./battleutils";
+import { loadAniTexture } from "./utils";
 import { FRAME_PER_SEC } from "./battledeclare";
 
 // Damage Graphic, Font Graphic 처리.
