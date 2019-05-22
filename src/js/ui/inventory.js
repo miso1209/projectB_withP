@@ -8,12 +8,12 @@ export default class Inventory extends Panel {
         super();
 
         this.inputs = inputs;
-
-        const inventory = new Modal(pane, 360, 460);
+        const inventory = new Modal(pane, 800, 450);
         this.dom = inventory.dom;
         
         inventory.addTitle('인벤토리');
         inventory.addCloseButton();
+        pane.classList.add('screen');
     
         this.tabs = [
             {category: 'weapon'},
@@ -26,54 +26,161 @@ export default class Inventory extends Panel {
         
         inventory.addTab(this.tabs, this.tabs[0].category, this.onTabSelected.bind(this));
     
+        const wrapper = document.createElement('div');
+        wrapper.classList.add('flexWrap');
+        wrapper.classList.add('contents');
+
         // # stat
         const statContent = document.createElement('div');
-        statContent.classList.add('contents-box');
-        statContent.style.textAlign = 'left';
+        statContent.classList.add('flex-left');
+        statContent.classList.add('inventory-detail');
     
-        inventory.dom.appendChild(statContent);
-    
+        this.itemImg = new ItemImage('items@2.png', 0, 0);
+        this.itemName = document.createElement('p');
+        this.itemDesc = document.createElement('p');
+        this.itemOptions = document.createElement('ul');
+
+        this.itemName.className = 'itemImg';
+        this.itemName.className = 'itemName';
+        this.itemDesc.className = 'itemDesc';
+        this.itemOptions.className = 'itemOptions';
+
+        statContent.appendChild(this.itemImg.dom);
+        statContent.appendChild(this.itemName);
+        statContent.appendChild(this.itemDesc);
+        statContent.appendChild(this.itemOptions);
+
+        // inventory.dom.appendChild(statContent);
+        wrapper.appendChild(statContent);
+        let scrollHeight = '320px';
         // IE 스크롤바 이슈 대응
         const scrollView = document.createElement('div');
-        scrollView.className = 'scrollView';
+        scrollView.classList.add('scrollView');
+        scrollView.classList.add('flex-right');
         scrollView.style.top = statContent.clientHeight + 100 + 'px';
-    
+        scrollView.style.height = scrollHeight;
+
         const scrollBlind = document.createElement('div');
         scrollBlind.className = 'scrollBlind';
     
         const storageContent = document.createElement('ul');
-        storageContent.classList.add('contents-list');
-        
+        storageContent.classList.add('slot-list-box');
+        storageContent.classList.add('scrollbox');
+        storageContent.style.height = scrollHeight;
+
+        // 스크롤 이벤트 추가
+        // storageContent.addEventListener('scroll', this.scrolled.bind(this, storageContent));
+
         this.storageContent = storageContent;
+        this.slotSize = 24;
 
         scrollView.appendChild(scrollBlind);
         scrollBlind.appendChild(storageContent);
-        inventory.dom.appendChild(scrollView);
+        // inventory.dom.appendChild(scrollView);
+        wrapper.appendChild(scrollView);
+        inventory.dom.appendChild(wrapper);
+    }
+
+
+    scrolled(event) {
+        //visible height + pixel scrolled = total height 
+        if (event.offsetHeight + event.scrollTop == event.scrollHeight) {
+            console.log(event.scrollTop);
+        } 
     }
 
     onTabSelected(category) {
         // 탭정보를 모두 지운다
         while (this.storageContent.firstChild) {
-            this.storageContent.removeChild(this.storageContent.firstChild);
+            this.storagePane = [];
+            this.selectedItemDetail(null);
+            this.storageContent.removeChild(this.storageContent.firstChild);   
         }
 
         for (const input of this.inputs) {
             if (input.category === category) {
+                // 탭에 아이템이 있으면 최초 아이템 정보를 뿌려준다
+                this.selectedItemDetail(input.items[0]);
+
+                let selected = null;
+                let index = -1;
+
                 // 여기서 아이템을 가져온다
                 for (const item of input.items) {
-                    const itemImage = new ItemImage(item.data.image.texture, item.data.image.x, item.data.image.y);
-              
-                    const slot = document.createElement('li');
-                    slot.appendChild(itemImage.dom);
-                    slot.style.height = '50px';
-                    slot.addEventListener('click', function (event) {
-                        // 아이템 클릭 이벤트를 추가
-                    });
+                    ++index;
 
+                    const itemImage = new ItemImage(item.data.image.texture, item.data.image.x, item.data.image.y);
+
+                    const slot = document.createElement('li');
+                    slot.classList.add('slot');
+                    slot.appendChild(itemImage.dom);
+
+                    const num = document.createElement('span');
+                    num.className = 'inventory-itemCount';
+                    num.innerText = item.owned.count;
+                    slot.appendChild(num);
+
+                    if (index === 0) {
+                        slot.classList.add('active');
+                        selected = slot;
+                    }
+
+                    slot.addEventListener('click', function(e){
+                        if (selected) {
+                            selected.classList.remove('active');
+                        }
+                        slot.classList.add('active');
+                        selected = slot;
+                    });
+                    slot.addEventListener('click', this.selectedItemDetail.bind(this, item));
                     this.storageContent.appendChild(slot);
                 }
             }
         }
+
+        let total = this.storageContent.childNodes.length;
+        let emptySlot = this.slotSize - total; 
+        if ( emptySlot % this.slotSize === 0 ) { // 24n
+            if (total === 0) {
+                this.addSlot(this.slotSize);
+            }
+        } else { // !24n
+            emptySlot = this.slotSize - Math.abs(emptySlot);
+        }
+
+        this.addSlot(emptySlot);
     }
-   
+
+    selectedItemDetail(item) {
+        if (item !== null) {
+            this.itemImg.updateImage(item.data.image.x, item.data.image.y);
+            this.itemName.innerText = item.data.name;
+            this.itemDesc.innerText = item.data.description;
+
+            if (this.itemOptions.children !== 0) {
+                this.itemOptions.innerHTML = '';
+            }
+
+            item.data.options.forEach(option => {
+                let li = document.createElement('li');
+                li.innerText = option;
+                this.itemOptions.appendChild(li);
+            });
+        } else {
+            this.itemImg.updateImage(0,0);
+            this.itemName.innerHTML = '';
+            this.itemDesc.innerHTML = '';
+            this.itemOptions.innerHTML = '';
+        }
+    }
+
+    addSlot(size) {
+        for (let i = 0; i < size; i++) {
+            let slot = document.createElement('li');
+            slot.classList.add('slot');
+            this.storageContent.appendChild(slot);
+        }
+
+    }
 }
+

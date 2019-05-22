@@ -27,7 +27,6 @@
   
   left: 0;
   right: 0;
-
   width: 980px;
   margin: 0 auto;
   transition: all 0.8s;
@@ -63,7 +62,7 @@ body.battle .gnbContainer.battleMode {
   /* pointer-events: none; */
   
   background:none;
-  transition: all 0.3s;
+  /* transition: all 0.3s; */
 }
 
 .uiContainer * {
@@ -82,7 +81,6 @@ body.battle .gnbContainer.battleMode {
   top: 20px;
   pointer-events: none;
   opacity: 0;
-  transition: all 0.5s;
 }
 #theater.show {
   opacity: 1;
@@ -107,15 +105,11 @@ body.battle .gnbContainer.battleMode {
   left: 10px;
   right: 10px;
   height: 60px;
-
   background: -moz-linear-gradient(bottom, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 100%); /* FF3.6-15 */
   background: -webkit-linear-gradient(bottom, rgba(0,0,0,1) 30%,rgba(0,0,0,0) 100%); /* Chrome10-25,Safari5.1-6 */
   background: linear-gradient(to top, rgba(0,0,0,1) 30%,rgba(0,0,0,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 }
 
-.modal {
-  top: 20px;
-}
 
 button, .button {
   width: 118px;
@@ -307,13 +301,13 @@ button span {
   padding: 10px 20px;
 }
 
-.btnInventory {
+/* .btnInventory {
   position: absolute;
   width: 68px;
   height: 67px;
   background: url(~assets/btn_inventory.png) no-repeat;
   background-size: contain;
-}
+} */
 
 .tooltip {
   position: absolute;
@@ -590,13 +584,17 @@ button.disabled span {
   padding: 10px 15px;
   background-color: #1f130a;
   border-radius: 10px;
+
+  transition: all 0.3s;
 }
 
 .materialInfo li {
-  height: 32px;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+
+  height: 32px;
+  margin-bottom: 5px;
 }
 
 /* 재료정보 */
@@ -617,4 +615,48 @@ button.disabled span {
   text-align: left;
   color: #fff;
   overflow: hidden;
+}
+
+.inventory-detail {
+  padding: 20px 10px;
+  text-align: center;
+
+  background: url(~assets/ui/frameRN.png) no-repeat 50% 0;
+  background-size: 130px auto;
+}
+
+.inventory-detail .img{
+  margin: 15px auto 0;
+}
+
+.inventory-detail .itemName {
+  margin-top: 35px;
+  font-size: 18px;
+  line-height: 2.5;
+}
+
+.inventory-detail .itemDesc {
+  max-height: 38px;
+  font-size: 14px;
+  line-height: 1.3;
+  overflow: hidden;
+  word-break: keep-all;
+}
+
+.inventory-detail .itemOptions {
+  margin-top: 20px;
+}
+.inventory-detail .itemOptions li {
+  line-height: 1.4;
+  text-align: center;
+}
+
+.inventory-itemCount {
+  position: absolute;
+  z-index: 11;
+  bottom: 5px;
+  right: 5px;
+  font-size: 13px;
+  font-weight: bold;
+  color: #fff;
 }
