@@ -1,0 +1,11 @@
+{"1": {
+    "id": 1,
+    "title": "새로운 시작",
+    "description" : "주인없는 집에서의 새로운 시작! 장소는 해결되었으니 이제 본격적으로 일을 해보자.",
+    "objectives": [
+        { "text": "작업용 테이블 찾기", "event": "addtag", "args":["worktable"] }
+    ],
+    "rewards": [
+        { "text": "약초 x2",  "script": "additem(2001, 2)" }
+    ]
+}}

@@ -59,31 +59,24 @@ class ItemOption {
     }
 }
 
-export default class ItemTable {
-    constructor() {
-    }
-
-    init(data) {
-        this.data = data;
-        // 아이템 옵션을 적용한다
-        // 아이템 옵션은 적용(apply)과 해제(clear) 가 있다..
-        // 착용 아이템일 경우는 착용과 동시에 적용이 일어나고 해제할때 해제가 발생한다
-        // 사용아이템은 사용할때 적용이 발생하고 해제는 따로 발생하지 않는다
-        for (const itemId in  this.data) {
-            const item = this.data[itemId];
-            const newOptions = [];
-            if (item.options) {
-                for (const option of item.options) {
-                    const itemOption = new ItemOption(option);
-                    newOptions.push(itemOption);
-                }
-            }
-            item.options = newOptions;
+const items = require('json/items.json');
+for (const itemId in  items) {
+    const item = items[itemId];
+    const newOptions = [];
+    if (item.options) {
+        for (const option of item.options) {
+            const itemOption = new ItemOption(option);
+            newOptions.push(itemOption);
         }
     }
+    item.options = newOptions;
+}
+
+export default class ItemTable {
+
 
     getCategory(itemId) {
-        const item = this.data[itemId];
+        const item = items[itemId];
         if (!item)  {
             return Error("invalid item id:" + itemId);
         }
@@ -91,6 +84,6 @@ export default class ItemTable {
     }
 
     getData(itemId) {
-        return this.data[itemId];
+        return items[itemId];
     }
 }

@@ -1,0 +1,219 @@
+{
+    "1" : {
+        "name": "hector",
+        "displayname": "헥터",
+        "portrait": "player1_active.png",
+        "base": {
+            "health": 300,
+            "strength": 6,
+            "intellect": 10,
+            "agility": 5,
+            "stamina": 6,
+            "speed": 0.5,
+            "critical": 0,
+            "regist": 0
+        },
+        "levelup": {
+            "health": 0.5,
+            "strength": 0.5,
+            "intellect": 0.5,
+            "agility": 0.5,
+            "stamina": 0.5,
+            "speed": 0,
+            "critical": 0.1,
+            "regist": 0.3
+        },
+
+        "skills": {
+            "a": "crouch",
+            "b": "crouch",
+            "extra": "runaway"
+        },
+        "animations": {
+            "hector_idle_nw": { "length": 2 },
+            "hector_idle_sw": { "length": 2 },
+            "hector_atk_nw": { "length": 10 },
+            "hector_atk_sw": { "length": 10 },
+            "hector_walk_nw": { "length": 8 },
+            "hector_walk_sw": { "length": 8 },
+            "hector_crouch_nw": { "length": 1 },
+            "hector_crouch_sw": { "length": 1 }
+        },
+        "offset": {
+            "x": 0,
+            "y": -48
+        }
+    },
+    "2" : {
+        "name": "warrior",
+        "displayname": "전사",
+        "portrait": "player5_active.png",
+        "base": {
+            "health": 300,
+            "strength": 6,
+            "intellect": 10,
+            "agility": 5,
+            "stamina": 6,
+            "speed": 0.5,
+            "critical": 0,
+            "regist": 0
+        },
+        "levelup": {
+            "health": 0.5,
+            "strength": 0.5,
+            "intellect": 0.5,
+            "agility": 0.5,
+            "stamina": 0.5,
+            "speed": 0,
+            "critical": 0.1,
+            "regist": 0.3
+        },
+
+        "skills": {
+            "a": "slash",
+            "b": "shieldAttack",
+            "extra": "doubleAttack"
+        },
+        "animations": {
+            "warrior_idle_nw": { "length": 1 },
+            "warrior_idle_sw": { "length": 1 },
+            "warrior_atk_nw": { "length": 10 },
+            "warrior_atk_sw": { "length": 10 },
+            "warrior_atk_2_nw": { "length": 7 },
+            "warrior_atk_2_sw": { "length": 7 },
+            "warrior_walk_nw": { "length": 8 },
+            "warrior_walk_sw": { "length": 8 }
+        },
+        "offset": {
+            "x": 0,
+            "y": -48
+        }
+    },
+    "3" : {
+        "name": "healer",
+        "displayname": "힐러",
+        "portrait": "player4_active.png",
+        "base": {
+            "health": 300,
+            "strength": 6,
+            "intellect": 10,
+            "agility": 5,
+            "stamina": 6,
+            "speed": 0.5,
+            "critical": 0,
+            "regist": 0
+        },
+        "levelup": {
+            "health": 0.5,
+            "strength": 0.5,
+            "intellect": 0.5,
+            "agility": 0.5,
+            "stamina": 0.5,
+            "speed": 0,
+            "critical": 0.1,
+            "regist": 0.3
+        },
+
+        "skills": {
+            "a": "wandAttack",
+            "b": "antiPower",
+            "extra": "heal"
+        },
+        "animations": {
+            "healer_idle_nw": { "length": 1 },
+            "healer_idle_sw": { "length": 1 },
+            "healer_atk_nw": { "length": 7 },
+            "healer_atk_sw": { "length": 7 },
+            "healer_magic_nw": { "length": 7 },
+            "healer_magic_sw": { "length": 7 },
+            "healer_walk_nw": { "length": 8 },
+            "healer_walk_sw": { "length": 8 }
+        },
+        "offset": {
+            "x": 0,
+            "y": -48
+        }
+    },
+    "4" : {
+        "name": "miluda",
+        "displayname": "궁수",
+        "portrait": "player3_active.png",
+        "base": {
+            "health": 300,
+            "strength": 6,
+            "intellect": 10,
+            "agility": 5,
+            "stamina": 6,
+            "speed": 0.5,
+            "critical": 0,
+            "regist": 0
+        },
+        "levelup": {
+            "health": 0.5,
+            "strength": 0.5,
+            "intellect": 0.5,
+            "agility": 0.5,
+            "stamina": 0.5,
+            "speed": 0,
+            "critical": 0.1,
+            "regist": 0.3
+        },
+
+        "skills": {
+            "a": "shotArrow",
+            "b": "criticalAttack",
+            "extra": "arrowOfTracker"
+        },
+        "animations": {
+            "miluda_idle_nw": { "length": 1 },
+            "miluda_idle_sw": { "length": 1 },
+            "miluda_atk_nw": { "length": 8 },
+            "miluda_atk_sw": { "length": 8 }
+        },
+        "offset": {
+            "x": 0,
+            "y": -48
+        }
+    },
+    "5" : {
+        "name": "elid",
+        "displayname": "마법사",
+        "portrait": "player2_active.png",
+        "base": {
+            "health": 300,
+            "strength": 6,
+            "intellect": 10,
+            "agility": 5,
+            "stamina": 6,
+            "speed": 0.5,
+            "critical": 0,
+            "regist": 0
+        },
+        "levelup": {
+            "health": 0.5,
+            "strength": 0.5,
+            "intellect": 0.5,
+            "agility": 0.5,
+            "stamina": 0.5,
+            "speed": 0,
+            "critical": 0.1,
+            "regist": 0.3
+        },
+
+        "skills": {
+            "a": "fireBolt",
+            "b": "fireCape",
+            "extra": "fireRain"
+        },
+        "animations": {
+            "elid_idle_nw": { "length": 1 },
+            "elid_idle_sw": { "length": 1 },
+            "elid_atk_nw": { "length": 7 },
+            "elid_atk_sw": { "length": 7 }
+        },
+        "offset": {
+            "x": 0,
+            "y": -48
+        }
+    }
+}

@@ -1,6 +1,9 @@
+import quests from "./quests";
+
 export default class Quest {
-    constructor(origin) {
-        this.origin = origin;
+    constructor(questid) {
+        this.questid = questid;
+        this.origin = quests[questid];
         this.data = {};
     }
 

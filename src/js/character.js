@@ -1,36 +1,38 @@
+import characters from './characters';
+
 // 이 클래스에서는 캐릭터의 보여지는 부분은 표현하지 않는다
 // 위치나 현재 애니메이션 상태등도 처리하지 않는다
 // 캐릭터의 스탯과 장비에 대한 부분만 처리한다 
 export default class Character {
-    constructor(data) {
-
+    constructor(index) {
         this.level = 1;
+        const data = characters[index];
         this.data = data;
         
-        this.baseMaxHealth = data.getStat('health', this.level);
+        this.baseMaxHealth = this.getStat('health', this.level);
         this.plusMaxHealth = 0;
         
         this.health = this.maxHealth;
 
-        this.baseStrength = data.getStat('strength', this.level);
+        this.baseStrength = this.getStat('strength', this.level);
         this.plusStrength = 0;
 
-        this.baseIntellect = data.getStat('intellect', this.level);
+        this.baseIntellect = this.getStat('intellect', this.level);
         this.plusIntellect = 0;
 
-        this.baseAgility = data.getStat('agility', this.level);
+        this.baseAgility = this.getStat('agility', this.level);
         this.plusAgility = 0;
 
-        this.baseStamina = data.getStat('stamina', this.level);
+        this.baseStamina = this.getStat('stamina', this.level);
         this.plusStamina = 0;
 
-        this.baseSpeed = data.getStat('speed', this.level);
+        this.baseSpeed = this.getStat('speed', this.level);
         this.plusSpeed = 0;
 
-        this.baseCritical = data.getStat('critical', this.level);
+        this.baseCritical = this.getStat('critical', this.level);
         this.plusCritical = 0;
 
-        this.baseRegist = data.getStat('regist', this.level);
+        this.baseRegist = this.getStat('regist', this.level);
         this.plusRegist = 0;
 
         this.equipments = {
@@ -48,6 +50,16 @@ export default class Character {
         this.armorPotential = 0.5;
 
         this.skills = data.skills;
+    }
+    
+    getStat(stat, level) {
+        if (level < 1) {
+            throw Error('invalid level: ' + level)
+        }
+
+        // base 가 level 1 일때의 상태이다
+        const delta = level - 1;
+        return (this.data.base[stat] || 0) + delta * (this.data.levelup[stat] || 0)
     }
 
     get name() {

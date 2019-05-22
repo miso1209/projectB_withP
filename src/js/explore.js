@@ -101,10 +101,6 @@ export default class Explore {
         }
     }
 
-    onForegroundClick(event) {
-        // ui 클릭을 만들어야 한다
-    }
-
     onTileSelected(x, y) {
         // 해당 타일이 이동가능한 타일인가?
         const target =  this.game.stage.getObjectAt(x, y);

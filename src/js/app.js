@@ -118,12 +118,7 @@ export default class App {
         game.resourceManager.add("shield.png", "assets/shield.png");
         game.resourceManager.add("arrow.png", "assets/arrow.png");
 
-        game.loadCommon(() => {
-            this.start();
-        });
-    }
 
-    start() {
         // 게임을 시작한다
         this.game.setStorage(this.storage);
         this.dev.setGame(this.game);

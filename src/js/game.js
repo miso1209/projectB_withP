@@ -14,9 +14,7 @@ import ScriptPlay from './cutscene/scriptplay';
 import idle from './cutscene/idle';
 import Combiner from './combiner';
 import ItemTable from './resources/item-table';
-import CharacterTable from './resources/chararacter-table';
 import Character from './character';
-import QuestTable from './resources/quest-table';
 import Quest from './quest';
 
 export default class Game extends EventEmitter {
@@ -31,21 +29,13 @@ export default class Game extends EventEmitter {
         this.screenHeight = height;
 
         // 렌더링 레이어를 설정한다
-        this.background = new PIXI.Container();
         this.gamelayer = new PIXI.Container(); // 게임용
-        this.foreground = new PIXI.Container(); // UI 
-
-        pixi.stage.addChild(this.background);
         pixi.stage.addChild(this.gamelayer);
-        pixi.stage.addChild(this.foreground);
 
         // 클릭 이벤트
         this.gamelayer.mouseup = this.onGameClick.bind(this);
         this.gamelayer.interactive = true;
 
-        this.foreground.mouseup = this.onForegroundClick.bind(this);
-        this.foreground.interactive = true;
-    
         // 암전용 블랙스크린을 설치한다
         const blackScreen = new PIXI.Sprite(PIXI.Texture.WHITE);
         blackScreen.width = width + 128;
@@ -62,32 +52,12 @@ export default class Game extends EventEmitter {
         
         this.resourceManager = new ResourceManager();
         this.itemTable = new ItemTable();
-        this.charTable = new CharacterTable();
-        this.questTable = new QuestTable();
         this.combiner = new Combiner();
+       
     }
 
     setStorage(storage) {
         this.storage = storage;
-    }
-
-    // 아이템과 캐릭터 데이터등을 미리 로딩을 한다
-    loadCommon(next) {
-        this.resourceManager.add("items", "assets/json/items.json");
-        this.resourceManager.add("characters", "assets/json/characters.json");
-        this.resourceManager.add("recipe", "assets/json/recipe.json");
-        this.resourceManager.add("quest", "assets/json/quest.json");
-
-        this.resourceManager.load((resources) => {
-            this.itemTable.init(resources.items.data);
-            this.charTable.init(resources.characters.data);
-            this.combiner.addRecipes(resources.recipe.data, this.itemTable);
-            this.questTable.init(resources.quest.data);
-
-            if (next) {
-                next();
-            }
-        });
     }
 
     initPlayer() {
@@ -105,7 +75,7 @@ export default class Game extends EventEmitter {
 
         // 퀘스트 정보를 등록한다
         for (const questId in this.storage.data.quests) {
-            const quest = new Quest(this.questTable.getData(questId));
+            const quest = new Quest(questId);
             quest.refresh(this.storage.data.quests[questId]);
             quest.registerEvent(this);
             this.player.quests[questId] = quest;
@@ -113,11 +83,11 @@ export default class Game extends EventEmitter {
 
 
         // TODO : 배틀 테스트를 위해서 추가한것인가?
-        this.player.characters.push(new Character(this.charTable.getData(1)));
-        this.player.characters.push(new Character(this.charTable.getData(2)));
-        this.player.characters.push(new Character(this.charTable.getData(3)));
-        this.player.characters.push(new Character(this.charTable.getData(4)));
-        this.player.characters.push(new Character(this.charTable.getData(5)));
+        this.player.characters.push(new Character(1));
+        this.player.characters.push(new Character(2));
+        this.player.characters.push(new Character(3));
+        this.player.characters.push(new Character(4));
+        this.player.characters.push(new Character(5));
         this.player.controlCharacter = this.player.characters[0];
     }
 
@@ -136,8 +106,7 @@ export default class Game extends EventEmitter {
         if (!this.storage.data.quests[questId]) {
             // 퀘스트를 가지고 있지 않다면 퀘스트를 추가한다
             // 가지고 있다면 추가하지 않는다.
-            const questCore = this.questTable.getData(questId);
-            const quest = new Quest(questCore);
+            const quest = new Quest(questId);
             this.storage.setQuest(questId, quest.data);
 
             // 퀘스트를 활성화시킨다
@@ -324,8 +293,8 @@ export default class Game extends EventEmitter {
 
             // 배틀을 사용한다
             const options = {
-                allies: [{ character: new Character(this.charTable.getData(1)), x: 0, y: 0}],
-                enemies: [{ character: new Character(this.charTable.getData(2)), x: 0, y: 0}],
+                allies: [{ character: new Character(1), x: 0, y: 0}],
+                enemies: [{ character: new Character(2), x: 0, y: 0}],
                 background: "battle_background.png",
                 battlefield: "battleMap1.png",
                 screenWidth: this.screenWidth,
@@ -354,12 +323,6 @@ export default class Game extends EventEmitter {
         }
     }
 
-    onForegroundClick(event) {
-        if (this.currentMode && this.currentMode.onForegroundClick) {
-            this.currentMode.onGameClick(event);
-        }
-    }
-
     update() {
         this.tweens.update();
         if (this.stage) {
@@ -375,31 +338,9 @@ export default class Game extends EventEmitter {
         return true;
     }
 
-    onDialog(callback) {
-        this.dialog_callback = callback;
-    }
-
-    onCutsceneStart(callback) {
-        this.cutscenestart_callback = callback;
-    }
-
-    onCutsceneEnd(callback) {
-        this.cutsceneend_callback = callback;
-    }
-
     getRecipes(category) {
         const recipes = this.combiner.getRecipes(category, this.player.inventory);
-        for (const recipe of recipes) {
-            if (!recipe.data)  {
-                recipe.data = this.itemTable.getData(recipe.item);
-            }
-
-            for (const mat of recipe.materials) {
-                if (!mat.data) {
-                    mat.data = this.itemTable.getData(mat.item);
-                }
-            }
-        }
+       
 
         return recipes;
     }

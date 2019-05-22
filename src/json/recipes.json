@@ -1,0 +1,31 @@
+{"1": {
+    "item": 1,
+    "materials": [
+        { "item":1, "count": 2 },
+        { "item":2, "count": 2 },
+        { "item":2, "count": 2 }
+    ]
+},"2": {
+    "item": 2,
+    "materials": [
+        { "item":1, "count": 2 },
+        { "item":1, "count": 2 },
+        { "item":1, "count": 2 }
+    ]
+}, "1001": {
+    "item": 1001,
+    "materials": [
+        { "item":2001, "count": 2 }
+    ]
+}, "1002": {
+    "item": 1002,
+    "materials": [
+        { "item":2001, "count": 4 }
+    ]
+}, "1003": {
+    "item": 1003,
+    "materials": [
+        { "item":2001, "count": 10 },
+        { "item":2002, "count": 4 }
+    ]
+}}

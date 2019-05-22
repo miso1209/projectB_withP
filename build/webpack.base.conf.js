@@ -26,6 +26,7 @@ module.exports = {
     extensions: ['.js'],
     alias: {
       assets: resolve('src/assets'),
+      json: resolve('src/json'),
     }
   },
   module: {
@@ -37,7 +38,16 @@ module.exports = {
       },
       {
         test: /\.json$/,
+        loader: 'json-loader',
+        include: [resolve('src/json')],
+        options: {
+          name: '[path][name].[ext]',
+        },
+      },
+      {
+        test: /\.json$/,
         loader: 'file-loader',
+        include: [resolve('src/assets')],
         options: {
           name: '[path][name].[ext]',
         },
