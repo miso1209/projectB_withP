@@ -1,7 +1,7 @@
 import { BattleUi } from "./battleui";
 import { STAGE_BASE_POSITION, CHARACTER_CAMP, TARGETING_TYPE, BATTLE_STATUS } from "./battledeclare";
 import BattleCharacter from "./battlecharacter";
-import MeleeSkill from "./skill/melee";
+import Skill from "./skill";
 import { BattleEffecter } from "./battleeffecter";
 import { DIRECTIONS } from "./define";
 import { EventEmitter } from "events";
@@ -11,7 +11,7 @@ import { EventEmitter } from "events";
 export class Battle extends EventEmitter {
     constructor(options) {
         super();
-        
+
         // options 에는 배틀의 생성정보가 담겨있다.
         this.stage = new PIXI.Container();
 
@@ -235,7 +235,9 @@ export class Battle extends EventEmitter {
     }
 
     getNormalSkill(character) {
-        const skill = new MeleeSkill();
+        // TODO : crunch 를 만들지 않아서 ... 
+        //const skill = Skill.New(character.skills.a);
+        const skill = Skill.New("melee");
 
         const allies = (character.camp === CHARACTER_CAMP.ALLY) ? this.allies : this.enemies;
         const enemies = (character.camp === CHARACTER_CAMP.ALLY) ? this.enemies : this.allies;

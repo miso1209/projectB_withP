@@ -1,9 +1,9 @@
-import Skill from "./skill";
+import SkillBase from "./skillbase";
 import Tweens from "../tweens";
 import { CHARACTER_CAMP, TARGETING_TYPE } from "../battledeclare";
 
 // MELEE SKILL
-export default class MeleeSkill extends Skill {
+export default class Melee extends SkillBase {
     constructor() {
         super(TARGETING_TYPE.ENEMY_FRONT_TANK);
 

@@ -5,120 +5,6 @@ import Tweens from "./tweens";
 import { DIRECTIONS } from "./define";
 import { MeleeSkill, CrouchSkill, RunAwaySkill, HealSkill, DoubleMeleeSkill, ArrowHighShotingSkill, ArrowShotingSkill, FireRainSkill, ProjectileSkill } from "./battleskill";
 
-// 캐릭터 로직
-export default class BattleCharacter extends PIXI.Container {
-    constructor(character) {
-        super();
-        this.character = character;
-       
-        this.tweens = new Tweens();
-
-        this.animation = new BattleAnimation(character);
-        this.progressBar = new BattleProgressBar();
-        this.progressBar.setPosition({
-            x: this.animation.width / 2,
-            y: -this.animation.height,
-        });
-
-        this.addChild(this.animation);
-        this.addChild(this.progressBar);
-
-        this.skills = [];
-
-        this.progressBar.setProgress(this.health / this.maxHealth);
-        // 캐릭터의 스피드대로 세팅한다
-        this.actionScore = 0;
-    }
-
-    setCamp(camp) {
-        this.camp = camp;
-    }
-
-    setGridPosition(x, y) {
-        this.gridPosition = {};
-        this.gridPosition.x = x;
-        this.gridPosition.y = y;
-    }
-
-    update(scene) {
-        this.tweens.update();
-        this.animation.update();
-
-        //this.updateSkills(scene);
-        //this.enqueueIdlePassiveSkill(scene);
-
-        // 액티브 스코어를 감소시킨다
-        --this.actionScore;
-    }
-
-    enqueueIdlePassiveSkill(scene) {
-        let selectedPassiveSkill = null;
-
-        this.skills.forEach((skill) => {
-            if(skill.isReady() && skill.activeType === ACTIVE_TYPE.PASSIVE && selectedPassiveSkill === null) {
-                selectedPassiveSkill = skill;
-            }
-        });
-
-        if (selectedPassiveSkill) {
-            selectedPassiveSkill.setWait();
-            scene.queue.enqueue(selectedPassiveSkill);
-        }
-    }
-
-    updateSkills(scene) {
-        this.skills.forEach((skill) => {
-            if (skill.status === SKILL_STATUS.IDLE && !scene.queue.hasItem() && this.health > 0) {
-                skill.delay();
-            }
-        });
-    }
-
-    onDamage(damage) {
-        this.character.health -= damage;
-        const healthRate = this.health / this.maxHealth;
-        this.progressBar.setProgress(healthRate);
-
-        this.animation.softRollBackTint(0xFF0000, 0.75);
-        this.animation.vibration(6, 0.5);
-    }
-
-    get health() {
-        return this.character.health;
-    }
-
-    get maxHealth() {
-        return this.character.maxHealth;
-    }
-
-    animation_attack() {
-        this.animation._setAnimation('atk_' + getDirectionName(this.animation.currentDir));
-        this.animation.anim.isLoop = false;
-    }
-
-    animation_idle() {
-        this.animation._setAnimation('idle_' + getDirectionName(this.animation.currentDir));
-        this.animation.anim.isLoop = true;
-    }
-
-    animation_walk() {
-        this.animation._setAnimation('walk_' + getDirectionName(this.animation.currentDir));
-        this.animation.anim.isLoop = true;
-    }
-
-    get attack() {
-        return this.character.attack;
-    }
-
-    get armor() {
-        return this.character.armor;
-    }
-
-    get isAlive() {
-        return this.character.health > 0;
-    }
-}
-
 // Battle Character의 Animation Sprite 처리를 하는 클래스.
 class BattleAnimation extends PIXI.Container {
     constructor(character) {
@@ -239,5 +125,95 @@ class BattleAnimation extends PIXI.Container {
         this.anim.position.x += scale;
         this.anim.position.y += scale;
         this.vibrationTween.addTween(this.anim.position, duration, {x: tx, y: ty}, 0, 'outBounce', true, null);
+    }
+}
+
+// 캐릭터 로직
+export default class BattleCharacter extends PIXI.Container {
+    constructor(character) {
+        super();
+        this.character = character;
+       
+        this.tweens = new Tweens();
+
+        this.animation = new BattleAnimation(character);
+        this.progressBar = new BattleProgressBar();
+        this.progressBar.setPosition({
+            x: this.animation.width / 2,
+            y: -this.animation.height,
+        });
+
+        this.addChild(this.animation);
+        this.addChild(this.progressBar);
+
+        this.progressBar.setProgress(this.health / this.maxHealth);
+        // 캐릭터의 스피드대로 세팅한다
+        this.actionScore = 0;
+    }
+
+    setCamp(camp) {
+        this.camp = camp;
+    }
+
+    setGridPosition(x, y) {
+        this.gridPosition = {};
+        this.gridPosition.x = x;
+        this.gridPosition.y = y;
+    }
+
+    update() {
+        this.tweens.update();
+        this.animation.update();
+        // 액티브 스코어를 감소시킨다
+        --this.actionScore;
+    }
+
+    onDamage(damage) {
+        this.character.health -= damage;
+        const healthRate = this.health / this.maxHealth;
+        this.progressBar.setProgress(healthRate);
+
+        this.animation.softRollBackTint(0xFF0000, 0.75);
+        this.animation.vibration(6, 0.5);
+    }
+
+
+    animation_attack() {
+        this.animation._setAnimation('atk_' + getDirectionName(this.animation.currentDir));
+        this.animation.anim.isLoop = false;
+    }
+
+    animation_idle() {
+        this.animation._setAnimation('idle_' + getDirectionName(this.animation.currentDir));
+        this.animation.anim.isLoop = true;
+    }
+
+    animation_walk() {
+        this.animation._setAnimation('walk_' + getDirectionName(this.animation.currentDir));
+        this.animation.anim.isLoop = true;
+    }
+
+    get health() {
+        return this.character.health;
+    }
+
+    get maxHealth() {
+        return this.character.maxHealth;
+    }
+
+    get attack() {
+        return this.character.attack;
+    }
+
+    get armor() {
+        return this.character.armor;
+    }
+
+    get isAlive() {
+        return this.character.health > 0;
+    }
+
+    get skills() {
+        return this.character.skills;
     }
 }
