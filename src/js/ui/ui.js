@@ -139,13 +139,15 @@ export default class DomUI extends EventEmitter {
         });
     
         loading.moveToCenter(130);
+
         modal.dom.appendChild(itemText);
         modal.dom.appendChild(loading.dom);
     }
 
     showItemAquire(itemId, result) {
         const pane = this.createContainer();
-        const itemAcquire = new Modal(pane, 360, 300, () => {
+        let domHeight = 300;
+        const itemAcquire = new Modal(pane, 360, domHeight, () => {
             this.removeContainer(pane);
             if (result) {
                 result();
@@ -176,7 +178,9 @@ export default class DomUI extends EventEmitter {
         itemSprite.style.position = 'absolute';
         itemSprite.style.left = (itemAcquire.dom.clientWidth / 2 - 36) + 'px';
         itemSprite.style.top = itemText.offsetTop + itemText.offsetHeight / 2 + 25 + 'px';
-    
+
+        itemAcquire.dom.style.top = '50%';
+        itemAcquire.dom.style.marginTop = domHeight * -0.5 + 'px';
         itemAcquire.dom.appendChild(itemSprite);
     }
 
@@ -184,6 +188,8 @@ export default class DomUI extends EventEmitter {
         const pane = this.createContainer();
         const inven = new Inventory(pane, inputs);
 
+        inven.moveToRight(70);
+        inven.onTabSelected(inven.tabs[0].category);
     }
 }
 

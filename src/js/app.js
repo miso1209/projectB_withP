@@ -51,7 +51,7 @@ export default class App {
         game.resourceManager.add("chatballon.png", "assets/ui/chatballon.png");
         game.resourceManager.add("chatballon_comma.png", "assets/ui/chatballon_comma.png");
         game.resourceManager.add("ending.png", "assets/ending.png");
-        game.resourceManager.add("inventory.png", "assets/inventory.png");
+        // game.resourceManager.add("inventory.png", "assets/inventory.png");
         game.resourceManager.add("combine.png", "assets/combine.png");
         game.resourceManager.add("combine_listitem.png", "assets/combine_listitem.png");
         game.resourceManager.add("combine_button.png", "assets/combine_button.png");
@@ -150,6 +150,8 @@ export default class App {
               }
 
         });
+
+        
     }
 
     update() {
