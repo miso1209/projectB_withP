@@ -5,34 +5,38 @@ export default class Quest {
         this.questid = questid;
         this.origin = quests[questid];
         this.data = {};
-    }
+        this.events = [];
 
-    refresh(data) {
-        this.data = data;
-    }
-
-    registerEvent(eventEmitter) {
         for(let i = 0; i < this.origin.objectives.length; ++i) {
             const objective = this.origin.objectives[i];
-            eventEmitter.on(objective.event, (...args) => {
+            const handler = (...args) => {
                 // 인자가 일치하면 카운트를 올린다
                 const srcArgs = objective.args || [];
                 let success = true;
-                for(let k = 0; k < srcArgs.legnth; ++k) {
+                for(let k = 0; k < srcArgs.length; ++k) {
                     success &= (srcArgs[k] === args[k]);
                 }
 
                 // 미션이 성공하면 데이터를 업데이트하고 저장을 하자
                 if (success) {
                     this.data[i] = (this.data[i] || 0) + 1;
-                    eventEmitter.emit("quest-update", this.questId, this.data);
                 }
+            };
+            this.events.push({
+                event: objective.event,
+                handler: handler,
             });
         }
     }
 
-    unregisterEvent(eventEmitter) {
-        
+    refresh(data) {
+        this.data = data;
+    }
+
+    foreEachEvent(callback) {
+        for(const event of this.events) {
+            callback(event.event, event.handler);
+        }
     }
 
     isAllObjectivesCompleted() {

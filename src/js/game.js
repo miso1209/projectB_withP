@@ -71,7 +71,7 @@ export default class Game extends EventEmitter {
         for (const questId in this.storage.data.quests) {
             const quest = new Quest(questId);
             quest.refresh(this.storage.data.quests[questId]);
-            quest.registerEvent(this);
+            quest.foreEachEvent(this.on.bind(this));
             this.player.quests[questId] = quest;
         }
 
@@ -109,7 +109,7 @@ export default class Game extends EventEmitter {
 
             // 퀘스트를 활성화시킨다
             this.player.quests[questId] = quest;
-            quest.registerEvent(this);
+            quest.foreEachEvent(this.on.bind(this));
         }
     }
 
