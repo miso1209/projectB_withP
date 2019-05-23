@@ -9,13 +9,13 @@ import {Battle}  from "./battle";
 import Explore  from "./explore";
 
 import { doorIn, doorOut } from './cutscene/door';
-import ScriptPlay from './cutscene/scriptplay';
-
 import idle from './cutscene/idle';
 import Combiner from './combiner';
-import ItemTable from './resources/item-table';
 import Character from './character';
 import Quest from './quest';
+
+import ScriptPlay from './cutscene/scriptplay';
+import ScriptParser from './scriptparser';
 
 export default class Game extends EventEmitter {
     constructor(pixi) {
@@ -51,7 +51,6 @@ export default class Game extends EventEmitter {
         this.currentMode = null;
         
         this.resourceManager = new ResourceManager();
-        this.itemTable = new ItemTable();
         this.combiner = new Combiner();
        
     }
@@ -63,11 +62,6 @@ export default class Game extends EventEmitter {
     initPlayer() {
         this.player = new Player();
         
-        if (!this.storage.hasAlreadyPlayed()) {
-            // 플레이어의 초기장비와 초기 캐릭터를 설정한다
-            this.storage.addItem(2001, 2);
-        }
-
         // 플레이어의 인벤토리에 복사한다
         for (const itemId in this.storage.data.inventory) {
             this.player.inventory.addItem(itemId, this.storage.data.inventory[itemId]);
@@ -81,6 +75,10 @@ export default class Game extends EventEmitter {
             this.player.quests[questId] = quest;
         }
 
+        // 인벤토리에 변화가 올때 캐릭터 정보를 저장한다
+        this.player.inventory.on('added', this.storage.addItem.bind(this.storage));
+        this.player.inventory.on('chagned', this.storage.updateItem.bind(this.storage));
+        this.player.inventory.on('remove', this.storage.removeItem.bind(this.storage));
 
         // TODO : 배틀 테스트를 위해서 추가한것인가?
         this.player.characters.push(new Character(1));
@@ -349,14 +347,14 @@ export default class Game extends EventEmitter {
     getInvenotryData() {
         const sortByCategory = {};
         // 카테고리별로 묶는다.
-        for(const itemId in this.player.inventory.items) {
-            const count = this.player.inventory.items[itemId];
+        this.player.inventory.forEach((item) => {
+            if (!sortByCategory[item.category]) {
+                sortByCategory[item.category] = [];
+            }
 
-            const data = this.itemTable.getData(itemId);
-            
-            sortByCategory[data.category] = sortByCategory[data.category] || [];
-            sortByCategory[data.category].push({ item: itemId, data: data, owned: count });
-        }
+            sortByCategory[item.category].push({ item: item.id, data: item.data, owned: item.count });
+        });
+      
 
         // 이것을 배열로 바꾼다
         const result = [];
@@ -365,5 +363,16 @@ export default class Game extends EventEmitter {
             result.push({ category: category, items: items });
         }
         return result;
+    }
+
+    runScript(script) {
+        const parsed = ScriptParser(script);
+        const func = this[parsed.name];
+
+        if (typeof(func) !== "function") {
+            throw Error("invalid command : " + parsed.name);
+        }
+
+        func(...this.args);
     }
 }

@@ -1,7 +1,10 @@
+import Item from "./item";
+import { EventEmitter } from "events";
 
 
-export default class Inventory {
+export default class Inventory extends EventEmitter{
     constructor() {
+        super();
         this.items = {};
     }
 
@@ -10,11 +13,10 @@ export default class Inventory {
         const item = this.items[itemId];
         if (item) {
             item.count += count;
+            this.emit('chagned', itemId, count);
         } else {
-            this.items[itemId] = {
-                id: itemId,
-                count: count
-            };
+            this.items[itemId] = new Item(itemId, count);
+            this.emit('added', itemId, count);
         }
     }
 
@@ -30,6 +32,9 @@ export default class Inventory {
         item.count -= count;
         if (item.count === 0) {
             delete this.items[itemId];
+            this.emit('removed', itemId);
+        } else {
+            this.emit('chagned', itemId, -count);
         }
     }
 
@@ -39,6 +44,16 @@ export default class Inventory {
             return item.count;
         } else {
             return 0;
+        }
+    }
+
+    getItem(itemId) {
+        return this.items[itemId];
+    }
+
+    forEach(callback) {
+        for(const itemId in this.items) {
+            callback(this.items[itemId]);
         }
     }
 }

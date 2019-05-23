@@ -1,4 +1,5 @@
 import characters from './characters';
+import ScriptParser from './scriptparser';
 
 // 이 클래스에서는 캐릭터의 보여지는 부분은 표현하지 않는다
 // 위치나 현재 애니메이션 상태등도 처리하지 않는다
@@ -9,30 +10,16 @@ export default class Character {
         const data = characters[index];
         this.data = data;
         
-        this.baseMaxHealth = this.getStat('health', this.level);
+       
         this.plusMaxHealth = 0;
-        
         this.health = this.maxHealth;
 
-        this.baseStrength = this.getStat('strength', this.level);
         this.plusStrength = 0;
-
-        this.baseIntellect = this.getStat('intellect', this.level);
         this.plusIntellect = 0;
-
-        this.baseAgility = this.getStat('agility', this.level);
         this.plusAgility = 0;
-
-        this.baseStamina = this.getStat('stamina', this.level);
         this.plusStamina = 0;
-
-        this.baseSpeed = this.getStat('speed', this.level);
         this.plusSpeed = 0;
-
-        this.baseCritical = this.getStat('critical', this.level);
         this.plusCritical = 0;
-
-        this.baseRegist = this.getStat('regist', this.level);
         this.plusRegist = 0;
 
         this.equipments = {
@@ -51,19 +38,51 @@ export default class Character {
 
         this.skills = data.skills;
     }
-    
-    getStat(stat, level) {
+
+    getParam(parameterName, level) {
         if (level < 1) {
             throw Error('invalid level: ' + level)
         }
 
         // base 가 level 1 일때의 상태이다
         const delta = level - 1;
-        return (this.data.base[stat] || 0) + delta * (this.data.levelup[stat] || 0)
+        return (this.data.base[parameterName] || 0) + delta * (this.data.levelup[parameterName] || 0)
     }
 
     get name() {
         return this.data.name;
+    }
+
+    get baseMaxHealth() {
+        return this.getParam('health', this.level);
+    }
+    
+    get baseStrength() {
+        return this.getParam('strength', this.level);
+    }
+    
+    get baseIntellect() {
+        return this.getParam('intellect', this.level);
+    }
+    
+    get baseAgility() {
+        return this.getParam('agility', this.level);
+    }
+
+    get baseStamina() {
+        return this.getParam('stamina', this.level);
+    }
+
+    get baseSpeed() {
+        return this.getParam('speed', this.level);
+    }
+    
+    get baseCritical() {
+        return this.getParam('critical', this.level);
+    }
+
+    get baseRegist() {
+        return this.getParam('regist', this.level);
     }
 
     get maxHealth() {
@@ -107,7 +126,7 @@ export default class Character {
         this.equipments[slot] = item;
         // 아이템 옵션을 적용한다
         for(const option of item.options) {
-            option.apply(this);
+            this.applyOption(option);
         }
     }
 
@@ -123,9 +142,47 @@ export default class Character {
             this.equipments[slot] = null;
             // 아이템 옵션을 적용한다
             for(const option of item.options) {
-                option.clear(this);
+                this.clearOption(option);
             }
         }
     }
-    
+
+    applyOption(option) {
+        // TODO : 매번 옵션을 파싱하지 않고 미리 캐싱해놓을필요가 있다
+        option = new ScriptParser(option);
+        switch(option.name) {
+            case "attack":
+                this.plusAttack += Number(option.args[0]);
+                break;
+            case "matic":
+                this.plusMagic += Number(option.args[0]);
+                break;
+            case "armor":
+                this.plusArmor += Number(option.args[0]);
+                break;
+            case "health":
+                this.health += Number(option.args[0]);
+                this.health = Math.min(target.maxHealth, target.health);
+                break;
+        }
+    }
+
+    clearOption(option) {
+        option =new ScriptParser(option);
+        switch(option.name) {
+            case "attack":
+                this.plusAttack -= Number(option.args[0]);
+                break;
+            case "matic":
+                this.plusMagic -= Number(option.args[0]);
+                break;
+            case "armor":
+                this.plusArmor -= Number(option.args[0]);
+                break;
+            case "health":
+                this.health -= Number(option.args[0]);
+                this.health = Math.max(0, target.health);
+                break;
+        }
+    }
 }

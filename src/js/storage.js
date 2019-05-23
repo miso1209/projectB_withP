@@ -28,14 +28,6 @@ export default class Storage {
         return this.data.player ? true : false;
     }
     
-    addItem(itemId, count) {
-        this.data.inventory[itemId] = (this.data.inventory[itemId] || 0 ) + count;
-        if (this.data.inventory[itemId] <= 0) {
-            delete this.data.inventory[itemId];
-        }
-        this.save();
-    }
-
     addTag(tag) {
         if (this.data.tags.indexOf(tag) < 0) {
             this.data.tags.push(tag);
@@ -45,6 +37,21 @@ export default class Storage {
 
     setQuest(questId, questData) {
         this.data.quests[questId] = questData;
+        this.save();
+    }
+
+    addItem(itemId, count) {
+        this.data.inventory[itemId] = count;
+        this.save();
+    }
+
+    updateItem(itemId, count) {
+        this.data.inventory[itemId] += count;
+        this.save();
+    }
+
+    removeItem(itemId) {
+        delete this.data.inventory[itemId];
         this.save();
     }
 }
