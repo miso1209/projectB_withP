@@ -1,4 +1,5 @@
 import { getDirectionFromName } from "../utils";
+import Cutscene from "../cutscene";
 
 // 포탈 이벤트
 export class Portal2 {

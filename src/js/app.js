@@ -166,6 +166,7 @@ export default class App {
         this.game.on('cutscene-start', this.startCutscene.bind(this))
         this.game.on('cutscene-end', this.endCutscene.bind(this))
         this.game.on('quest-update', this.questUpdated.bind(this))
+        this.game.on('item-acquire', this.showItemAcquired.bind(this))
 
         this.ui.on('inventory', this.openInventory.bind(this));
     }
@@ -176,7 +177,8 @@ export default class App {
             this.ui.showCraftUI(null, () => {
                 this.game.combine(item.item);
                 // 아이템 획득 UI 를 표시한다
-                this.ui.showItemAquire(item.item);
+                const inst = this.game.player.inventory.getItem(item.item);
+                this.ui.showItemAquire(inst);
             })
         });
     }
@@ -209,8 +211,10 @@ export default class App {
     questUpdated(id, data) {
         // 데이터를 저장한다
         this.storage.setQuest(id, data);
-
         // quset ui 를 업데이트한다
+    }
 
+    showItemAcquired(item) {
+        this.ui.showItemAquire(item);
     }
 }

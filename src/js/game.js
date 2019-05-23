@@ -14,8 +14,8 @@ import Combiner from './combiner';
 import Character from './character';
 import Quest from './quest';
 
-import ScriptPlay from './cutscene/scriptplay';
 import ScriptParser from './scriptparser';
+import Cutscene from './cutscene';
 
 export default class Game extends EventEmitter {
     constructor(pixi) {
@@ -89,30 +89,6 @@ export default class Game extends EventEmitter {
         this.player.controlCharacter = this.player.characters[0];
     }
 
-    hasTag(tag) {
-        return this.storage.data.tags.indexOf(tag) >= 0;
-    }
-
-    addTag(tag) {
-        this.storage.addTag(tag);
-        // 태그 추가 이벤트 트리거 
-        this.emit('addtag', tag);
-    }
-
-    addQuest(questId) {
-
-        if (!this.storage.data.quests[questId]) {
-            // 퀘스트를 가지고 있지 않다면 퀘스트를 추가한다
-            // 가지고 있다면 추가하지 않는다.
-            const quest = new Quest(questId);
-            this.storage.setQuest(questId, quest.data);
-
-            // 퀘스트를 활성화시킨다
-            this.player.quests[questId] = quest;
-            quest.foreEachEvent(this.on.bind(this));
-        }
-    }
-
     start() {
         this.initPlayer();
 
@@ -125,71 +101,71 @@ export default class Game extends EventEmitter {
 
         if (this.hasTag("newplayer")) {
             // 그냥 평범하게 집에 들어간다
-            this.playCutscene([
-                {
-                    command: "enterstage",
-                    arguments: ["house", "house-gate"],
-                }
-            ]);
+            this.playCutscene([{
+                "command": "enterstage",
+                "arguments": ["house", "house-gate"]
+            }]);
         } else {
             // 필드에 들어간다// 튜토리얼 컷신을 샘플로 작성해본다
-            const introCutscene = [
-                {
-                    command: "enterstage",
-                    arguments: ["house", "house-gate"],
-                }, {
-                    command: "delay",
-                    arguments: [0.5],
-                },  {
-                    command: "dialog",
-                    arguments: [
-                        { text: "누구 계신가요?", speaker: 1},
-                    ]
-                }, {
-                    command: "dialog",
-                    arguments: [
-                        { text: "(아무런 반응이 없다)" },
-                    ]
-                }, {
-                    command: 'goto',
-                    arguments: [3, 14]
-                }, {
-                    command: "dialog",
-                    arguments: [
-                        { text: "여긴 빈집인가?", speaker: 1},
-                        { text: "좋아!! 여기서부터 새출발이다!", speaker: 1},
-                    ]
-                }, {
-                    command: 'goto',
-                    arguments: [5, 8]
-                }, {
-                    command: "dialog",
-                    arguments: [
-                        
-                        { text: "우선 여기 테이블에 작업도구들을 준비해보자 ", speaker: 1}
-                    ]
-                }, { 
-                    command: "addquest",
-                    arguments: [1]
-                }, {
-                    command: "addtag",
-                    arguments: ["newplayer"]
-                }, 
-            ];
-            this.playCutscene(introCutscene);
+            this.playCutscene(1);
         }
     }
 
     playCutscene(script) {
-        if (this.cutscene) {
-            this.cutscene.stop();
+        if (typeof(script) === "number") {
+            script = Cutscene.fromData(script);
+        } else if (Number(script)) {
+            script = Cutscene.fromData(Number(script));
+        } else {
+            script = Cutscene.fromJSON(script);
         }
 
-        this.cutscene = new ScriptPlay(script);
-        this.cutscene.once('complete', () => {
-            this.cutscene = null;
-        })
-        this.cutscene.play(this);
+        this.emit("cutscene-start");
+        this.exploreMode.setInteractive(false);
+
+        const next = () => {
+            const func = script.next();
+            if (func) {
+                if (func.command === "dialog") {
+                    this.emit('dialog-show', func.arguments, next);
+
+                } else if (func.command === "delay") {
+                    const delay = func.arguments[0] * 1000;
+                    setTimeout(next, delay);
+
+                } else if (func.command === "enterstage") {
+                    const path = "assets/mapdata/" + func.arguments[0] + ".json";
+                    const eventName = func.arguments[1];  
+                    this.once('stageentercomplete', next);
+                    this.enterStage(path, eventName);
+
+                } else if (func.command === "leavestage") {
+                    const eventName = func.arguments[0];  
+                    this.once('stageleavecomplete', next);
+                    this.leaveStage(eventName);
+
+                } else if (func.command === "goto") {
+                    const x = func.arguments[0];  
+                    const y = func.arguments[1];  
+                    this.stage.once('moveend', next);
+                    this.stage.moveCharacter(this.exploreMode.controller, x, y);
+
+                } else if (func.command === "addtag") {
+                    this.addTag(...func.arguments);
+                    next();
+                } else if (func.command === "addquest") {
+                    this.addQuest(...func.arguments);
+                    next();
+                }
+            } else {
+                // 컷신플레이가 종료되었다
+                this.emit("cutscene-end");
+                this.exploreMode.setInteractive(true);
+            }
+        }
+
+        next();
+
     }
 
     buildStageEnterCutscene(eventName) {
@@ -271,7 +247,7 @@ export default class Game extends EventEmitter {
     leaveStage(eventName) {
         if (this.stage) {
             // 이벤트를 찾는다
-            this.currentMode.setInteractive(false);
+            this.exploreMode.setInteractive(false);
             const cutscene = this.buildStageLeaveCutscene(eventName);
             cutscene.play();
             cutscene.once('complete', () => {
@@ -338,8 +314,6 @@ export default class Game extends EventEmitter {
 
     getRecipes(category) {
         const recipes = this.combiner.getRecipes(category, this.player.inventory);
-       
-
         return recipes;
     }
 
@@ -364,15 +338,62 @@ export default class Game extends EventEmitter {
         }
         return result;
     }
-
+    
     runScript(script) {
-        const parsed = ScriptParser(script);
+        const parsed = new ScriptParser(script);
         const func = this[parsed.name];
 
         if (typeof(func) !== "function") {
             throw Error("invalid command : " + parsed.name);
         }
 
-        func(...this.args);
+        func.bind(this)(...parsed.args);
+    }
+
+    hasTag(tag) {
+        return this.storage.data.tags.indexOf(tag) >= 0;
+    }
+
+    addTag(tag) {
+        this.storage.addTag(tag);
+        // 태그 추가 이벤트 트리거 
+        this.emit('addtag', tag);
+    }
+
+    addItem(itemId, count) {
+        this.player.inventory.addItem(itemId, Number(count));
+        const item = this.player.inventory.getItem(itemId);
+        this.emit('item-acquire', item);
+    }
+
+    addQuest(questId) {
+
+        if (!this.storage.data.quests[questId]) {
+            // 퀘스트를 가지고 있지 않다면 퀘스트를 추가한다
+            // 가지고 있다면 추가하지 않는다.
+            const quest = new Quest(questId);
+            this.storage.setQuest(questId, quest.data);
+            this.player.quests[questId] = quest;
+
+            // 퀘스트를 활성화시킨다
+            quest.foreEachEvent(this.on.bind(this));
+        }
+    }
+
+    completeQuest(id) {
+        const quest = this.player.quests[id];
+        if (quest && quest.isAllObjectivesCompleted()){
+            // 이벤트 연결을 끊어놓는다
+            quest.foreEachEvent(this.removeListener.bind(this));
+
+            for(const reward of quest.rewards) {
+                this.runScript(reward.script);
+            }
+            
+            // 가지고 있는 퀘스트에서 제거한다. 
+            // TODO : 어딘가에 보관해야 할 것 같은데?
+            this.storage.completeQuest(id);
+            delete this.player.quests[id];
+        }
     }
 }

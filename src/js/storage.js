@@ -40,9 +40,15 @@ export default class Storage {
         this.save();
     }
 
+    completeQuest(questId) {
+        delete this.data.quests[questId];
+        this.save();
+    }
+
     addItem(itemId, count) {
         this.data.inventory[itemId] = count;
         this.save();
+        // 아이템 획득 ui 를 띄운다
     }
 
     updateItem(itemId, count) {

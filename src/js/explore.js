@@ -1,11 +1,9 @@
-import ScriptPlay from './cutscene/scriptplay';
 import AnimatedCharacter from './animatedcharacter';
 
 
 export default class Explore {
     constructor(game) {
         this.game = game;
-        this.cutscene = null;
         this.interactive = false;
     }
 
@@ -21,35 +19,10 @@ export default class Explore {
     }
 
     start() {
-        // 진입 컷신이 없을 수 있다.
-        if (this.cutscene) {
-            // 플레이어 컷
-            this.cutscene.once('complete', () => {
-                if (this.game.player.hasTag("tutorial")) {
-                    this.endCutscene();
-                } else {
-                    this.game.player.addTag("tutorial")
-                    this.cutscene = new ScriptPlay();
-                    this.cutscene.once('complete', () => { this.endCutscene(); });
-                    this.cutscene.play(this.game);
-                }
-            });
-            this.cutscene.play();
-        } else {
-            
-        }
+       
     }
 
-    startCutscene() {
-        this.setInteractive(false);
-        this.game.stage.showPathHighlight = false;
-    }
-
-    endCutscene() {
-        this.game.stage.showPathHighlight = true;
-        this.setInteractive(true);
-    }
-
+   
     onGameClick(event) {
         // ui 가 클릭되었는지 확인
 

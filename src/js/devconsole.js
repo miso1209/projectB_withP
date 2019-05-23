@@ -28,11 +28,23 @@ export default class DevConsole {
         return true;
     }
 
-    printquest() {
+    printQuest() {
         // 현재 퀘스트 상태를 출력한다
-        for (const qusetId in this.game.player.quests) {
-            const quest = this.game.player.quests[qusetId];
+        for (const questId in this.game.player.quests) {
+            const quest = this.game.player.quests[questId];
             console.log(quest.title, quest.description, quest.objectives, quest.rewards, quest.isAllObjectivesCompleted());
         }
+    }
+
+    addQuest(id) {
+        this.game.addQuest(id);
+    }
+
+    completeQuest() {
+        for (const questId in this.game.player.quests) {
+            this.game.completeQuest(questId);
+        }
+
+        return this.game.player.quests;
     }
 }

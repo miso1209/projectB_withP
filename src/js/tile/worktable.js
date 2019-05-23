@@ -1,6 +1,4 @@
 import Prop from './prop';
-import ScriptPlay from '../cutscene/scriptplay';
-import { DIRECTIONS } from '../define';
 
 export default class WorkTable extends Prop {
     constructor(x, y, tileData) {

@@ -6,6 +6,7 @@ import Dialog from "./dialog";
 import RecipeUI from "./recipeui";
 import ProgressUI from "./progressui";
 import Inventory from "./inventory";
+import ItemImage from "./component/itemimage";
 
 export default class DomUI extends EventEmitter {
     constructor() {
@@ -144,7 +145,7 @@ export default class DomUI extends EventEmitter {
         modal.dom.appendChild(loading.dom);
     }
 
-    showItemAquire(itemId, result) {
+    showItemAquire(item, result) {
         const pane = this.createContainer();
         let domHeight = 300;
         const itemAcquire = new Modal(pane, 360, domHeight, () => {
@@ -158,27 +159,17 @@ export default class DomUI extends EventEmitter {
         itemAcquire.addCloseButton();
         itemAcquire.addConfirmButton('확인');
     
-        let acquireText;
         const itemText = document.createElement('div');
         itemText.className = 'contents';
-    
-        if (itemId === 1) {
-            acquireText = "[열쇠조각 A]를 얻었다";
-        } else if (itemId === 2) {
-            acquireText = "[열쇠조각 B]를 얻었다";
-        } else if (itemId === 3) {
-            acquireText = "[철문열쇠]를 얻었다";
-        }
 
-        itemText.innerText = acquireText;
+        itemText.innerText = item.name;
         itemAcquire.dom.appendChild(itemText);
     
-        const itemSprite = document.createElement('img');
-        itemSprite.src = '/src/assets/items/item' + itemId + '.png';
+        const image = new ItemImage(item.data.image.texture, item.data.image.x, item.data.image.y);
+        const itemSprite = image.dom;
         itemSprite.style.position = 'absolute';
         itemSprite.style.left = (itemAcquire.dom.clientWidth / 2 - 36) + 'px';
         itemSprite.style.top = itemText.offsetTop + itemText.offsetHeight / 2 + 25 + 'px';
-
         itemAcquire.dom.style.top = '50%';
         itemAcquire.dom.style.marginTop = domHeight * -0.5 + 'px';
         itemAcquire.dom.appendChild(itemSprite);

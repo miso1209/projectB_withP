@@ -1,0 +1,68 @@
+{
+    "1":[{
+            "command": "enterstage",
+            "arguments": ["house", "house-gate"]
+        }, {
+            "command": "delay",
+            "arguments": [0.5]
+        },  {
+            "command": "dialog",
+            "arguments": [
+                { "text": "누구 계신가요?", "speaker": 1}
+            ]
+        }, {
+            "command": "dialog",
+            "arguments": [
+                { "text": "(아무런 반응이 없다)" }
+            ]
+        }, {
+            "command": "goto",
+            "arguments": [3, 14]
+        }, {
+            "command": "dialog",
+            "arguments": [
+                { "text": "여긴 빈집인가?", "speaker": 1},
+                { "text": "좋아!! 여기서부터 새출발이다!", "speaker": 1}
+            ]
+        }, {
+            "command": "goto",
+            "arguments": [5, 8]
+        }, {
+            "command": "dialog",
+            "arguments": [
+                
+                { "text": "우선 여기 테이블에 작업도구들을 준비해보자 ", "speaker": 1}
+            ]
+        }, { 
+            "command": "addquest",
+            "arguments": [1]
+        }, {
+            "command": "addtag",
+            "arguments": ["newplayer"]
+        }
+    ],
+    "2": [
+        { 
+            "command": "leavestage",
+            "arguments": [] 
+        }, {
+            "command": "enterstage",
+            "arguments": ["house", "room-gate"]
+        }, {
+            "command": "dialog",
+            "arguments": [ {"text":"이런, 누군가가 쓰러져있잖아", "speaker": 1}]
+        }, {
+            "command": "goto",
+            "arguments": [5, 13]
+        }, {
+            "command": "dialog",
+            "arguments": [
+                {"text": "으아아아!!!!!!", "speaker": 1},
+                {"text": "피.. 피가 엄청나다.", "speaker": 1},
+                {"text": "...", "speaker": 1},
+                {"text": "살려주면 바닥.. 닦아놓겠지?", "speaker": 1}
+            ]
+        }
+    ]
+}
+
