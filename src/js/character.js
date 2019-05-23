@@ -5,9 +5,10 @@ import ScriptParser from './scriptparser';
 // 위치나 현재 애니메이션 상태등도 처리하지 않는다
 // 캐릭터의 스탯과 장비에 대한 부분만 처리한다 
 export default class Character {
-    constructor(index) {
+    constructor(id) {
+        this.id = id;
         this.level = 1;
-        const data = characters[index];
+        const data = characters[id];
         this.data = data;
         
        
