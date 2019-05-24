@@ -163,7 +163,11 @@ export default class Character {
                 break;
             case "health":
                 this.health += Number(option.args[0]);
-                this.health = Math.min(target.maxHealth, target.health);
+                this.health = Math.min(this.maxHealth, this.health);
+                break;
+            case "maxHealth":
+                this.plusMaxHealth += Number(option.args[0]);
+                this.health = Math.min(this.maxHealth, this.health);
                 break;
         }
     }
@@ -181,8 +185,10 @@ export default class Character {
                 this.plusArmor -= Number(option.args[0]);
                 break;
             case "health":
-                this.health -= Number(option.args[0]);
-                this.health = Math.max(0, target.health);
+                break;
+            case "maxHealth":
+                this.plusMaxHealth -= Number(option.args[0]);
+                this.health = Math.max(0, this.health);
                 break;
         }
     }

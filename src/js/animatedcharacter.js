@@ -92,7 +92,7 @@ export default class AnimatedCharacter extends PIXI.Container {
 
     animate(name, isLoop) {
         this.setAnimation(name + '_' + getDirectionName(this.currentDir));
-        this.anim.isLoop = isLoop;
+        this.anim.loop = isLoop;
     }
 
     update() {
