@@ -117,7 +117,8 @@ export default class Inventory extends Panel {
 
                     const num = document.createElement('span');
                     num.className = 'inventory-itemCount';
-                    num.innerText = item.owned.count;
+                    num.innerText = item.owned;
+                    
                     slot.appendChild(num);
 
                     if (index === 0) {
@@ -140,15 +141,18 @@ export default class Inventory extends Panel {
 
         let total = this.storageContent.childNodes.length;
         let emptySlot = this.slotSize - total; 
-        if ( emptySlot % this.slotSize === 0 ) { // 24n
-            if (total === 0) {
-                this.addSlot(this.slotSize);
-            }
-        } else { // !24n
-            emptySlot = this.slotSize - Math.abs(emptySlot);
-        }
 
-        this.addSlot(emptySlot);
+        if (total === 0) {
+            emptySlot = this.slotSize;
+            this.addSlot(emptySlot);
+        } else {
+            if (total > this.slotSize) {
+                let page = Math.ceil(total/this.slotSize); 
+                this.addSlot(this.slotSize*page);
+            } else {
+                this.addSlot(emptySlot);
+            }
+        }
     }
 
     selectedItemDetail(item) {

@@ -224,6 +224,7 @@
 
 .slot-list-box li.active {
   border: 2px solid #ffd800;
+  border-radius: 8px;
 }
 
 .slot-list-box li:nth-child(6n) {

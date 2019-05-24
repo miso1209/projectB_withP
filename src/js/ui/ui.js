@@ -34,6 +34,7 @@ export default class DomUI extends EventEmitter {
         this.gnbContainer.appendChild(gnb);
 
         const menuData = [
+            {name:'캐릭터', event: "characters"},
             {name:'보관함', event: "inventory"},
             {name:'퀘스트', event: "quest"},
             {name:'설정', event: "options"}
@@ -168,8 +169,7 @@ export default class DomUI extends EventEmitter {
         const image = new ItemImage(item.data.image.texture, item.data.image.x, item.data.image.y);
         const itemSprite = image.dom;
         itemSprite.style.position = 'absolute';
-        itemSprite.style.left = (itemAcquire.dom.clientWidth / 2 - 36) + 'px';
-        itemSprite.style.top = itemText.offsetTop + itemText.offsetHeight / 2 + 25 + 'px';
+        itemAcquire.moveToCenter('0');
         itemAcquire.dom.style.top = '50%';
         itemAcquire.dom.style.marginTop = domHeight * -0.5 + 'px';
         itemAcquire.dom.appendChild(itemSprite);
