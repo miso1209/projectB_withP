@@ -971,6 +971,11 @@
                          "value":"nw"
                         }, 
                         {
+                         "name":"movable",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
                          "name":"name",
                          "type":"string",
                          "value":"house-gate"
@@ -1002,6 +1007,11 @@
                          "name":"direction",
                          "type":"string",
                          "value":"se"
+                        }, 
+                        {
+                         "name":"movable",
+                         "type":"bool",
+                         "value":true
                         }, 
                         {
                          "name":"name",
