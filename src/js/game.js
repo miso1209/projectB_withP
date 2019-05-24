@@ -16,6 +16,7 @@ import Quest from './quest';
 
 import ScriptParser from './scriptparser';
 import Cutscene from './cutscene';
+import UI from './ui/ui';
 
 export default class Game extends EventEmitter {
     constructor(pixi) {
@@ -36,6 +37,16 @@ export default class Game extends EventEmitter {
         this.gamelayer.mouseup = this.onGameClick.bind(this);
         this.gamelayer.interactive = true;
 
+        this.tweens = new Tweens();
+        this.combiner = new Combiner();
+        this.ui = new UI();
+
+        // 제거해야한다...
+        this.currentMode = null;
+        this.exploreMode = new Explore(this);
+
+        
+        // 나중에 UI 로 바꾸어야 한다
         // 암전용 블랙스크린을 설치한다
         const blackScreen = new PIXI.Sprite(PIXI.Texture.WHITE);
         blackScreen.width = width + 128;
@@ -45,15 +56,10 @@ export default class Game extends EventEmitter {
         blackScreen.tint = 0;
         pixi.stage.addChild(blackScreen);
         this.blackScreen = blackScreen;
-
-        this.tweens = new Tweens();
-        this.exploreMode = new Explore(this);
-        this.currentMode = null;
-        this.combiner = new Combiner();
     }
 
     // 더이상 콜백만들기가 싫어서 시험적으로 추가하는 비동기 함수들
-    async preload() {
+    async $preload() {
         const preloads = require('json/preloads.json');
         const loader = new Loader();   
         for(const r of preloads) {
@@ -99,6 +105,7 @@ export default class Game extends EventEmitter {
     start() {
         this.initPlayer();
 
+        // TODO : 마지막 플레이된 컷신을 찾아서 해당 컷신을 실행하도록 한다.
         if (this.hasTag("newplayer")) {
             // 그냥 평범하게 집에 들어간다
             this.playCutscene([{
@@ -112,22 +119,22 @@ export default class Game extends EventEmitter {
     }
 
     playCutscene(script) {
-        if (typeof(script) === "number") {
-            script = Cutscene.fromData(script);
-        } else if (Number(script)) {
+        if (Number(script)) {
             script = Cutscene.fromData(Number(script));
         } else {
             script = Cutscene.fromJSON(script);
         }
 
-        this.emit("cutscene-start");
+        this.ui.showTheaterUI(0.5);
+        this.ui.hideMenu();
         this.exploreMode.setInteractive(false);
+        if (this.stage) { this.stage.showPathHighlight = false; }
 
         const next = () => {
             const func = script.next();
             if (func) {
                 if (func.command === "dialog") {
-                    this.emit('dialog-show', func.arguments, next);
+                    this.ui.showDialog(func.arguments, next);
 
                 } else if (func.command === "delay") {
                     const delay = func.arguments[0] * 1000;
@@ -136,13 +143,11 @@ export default class Game extends EventEmitter {
                 } else if (func.command === "enterstage") {
                     const path = "assets/mapdata/" + func.arguments[0] + ".json";
                     const eventName = func.arguments[1];  
-                    this.once('stageentercomplete', next);
-                    this.enterStage(path, eventName);
+                    this.$enterStage(path, eventName).then(next);
 
                 } else if (func.command === "leavestage") {
                     const eventName = func.arguments[0];  
-                    this.once('stageleavecomplete', next);
-                    this.leaveStage(eventName);
+                    this.$leaveStage(eventName).then(next);
 
                 } else if (func.command === "goto") {
                     const x = func.arguments[0];  
@@ -159,20 +164,21 @@ export default class Game extends EventEmitter {
                 }
             } else {
                 // 컷신플레이가 종료되었다
-                this.emit("cutscene-end");
+                this.ui.hideTheaterUI(0.5);
+                this.ui.showMenu();
                 this.exploreMode.setInteractive(true);
+                if (this.stage) { this.stage.showPathHighlight = true; }
             }
         }
 
         next();
-
     }
 
     buildStageEnterCutscene(eventName) {
         const event = this.stage.findEventByName(eventName);
         if (event) {
             // 현재는 door 만 있다
-            return new doorIn(this, event.x, event.y, event.direction, 1);
+            return new doorIn(this, event.gridX, event.gridY, event.direction, 1);
         } else {
             return new idle();
         }
@@ -182,57 +188,46 @@ export default class Game extends EventEmitter {
         const event = this.stage.findEventByName(eventName);
         if (event) {
             // 현재는 door 만 있다
-            return new doorOut(this, event.x, event.y, event.direction, 1);
+            return new doorOut(this, event.gridX, event.gridY, event.direction, 1);
         } else {
             return new idle();
         }
     }
-
-    enterStage(stagePath, eventName) {
-
+    
+    async $enterStage(stagePath, eventName) {
         const stageName = path.basename(stagePath, ".json");
         const stage = new Stage();
-        stage.asyncLoad(stageName).then(() => {
-            // 스테이지의 줌레벨을 결정한다
-            stage.zoomTo(2, true);
-            this.stage = stage;
-            this.gamelayer.addChild(stage);
+        await stage.$Load(stageName);
+        stage.zoomTo(2, true);
 
-            // 페이드 인이 끝나면 게임을 시작한다
-            this.currentMode = this.exploreMode;
-            const event = this.stage.findEventByName(eventName);
-            if (event) {
-                this.currentMode.prepare(event.gridX, event.gridY);
-            } else {
-                this.currentMode.prepare(0, 0);
-            }
+        this.stage = stage;
+        this.gamelayer.addChild(stage);
 
-            // 진입 컷신을 사용한다
-            this.tweens.addTween(this.blackScreen, 0.5, { alpha: 0 }, 0, "easeOut", true, () => {
-                const cutscene = this.buildStageEnterCutscene(eventName)
-                cutscene.once('complete', () => { 
-                    this.currentMode.start();
-                    this.emit('stageentercomplete');
-                });
-                cutscene.play();
-            });
-        });
+        // 페이드 인이 끝나면 게임을 시작한다
+        this.currentMode = this.exploreMode;
+        
+        this.currentMode.start();
+        const cutscene = this.buildStageEnterCutscene(eventName)
+        // 임시 이동 코드...
+        this.stage.addCharacter(this.currentMode.controller, cutscene.gridX, cutscene.gridY);
+        this.stage.checkForFollowCharacter(this.currentMode.controller, true);
+        // 스테이지 타이틀을 띄운다
+        // 진입 컷신을 사용한다
+        await this.tweens.$addTween(this.blackScreen, 0.5, { alpha: 0 }, 0, "linear", true);
+        await cutscene.$play();
     }
 
-    leaveStage(eventName) {
-        if (this.stage) {
-            // 이벤트를 찾는다
-            this.exploreMode.setInteractive(false);
-            const cutscene = this.buildStageLeaveCutscene(eventName);
-            cutscene.play();
-            cutscene.once('complete', () => {
-                this.tweens.addTween(this.blackScreen, 0.5, { alpha: 1 }, 0, "easeIn", true, () => {
-                    // 바로 제거한다.
-                    this.gamelayer.removeChild(this.stage);
-                    this.emit('stageleavecomplete');
-                });
-            });
-        }
+    async $leaveStage(eventName) {
+        if (!this.stage) { return; }
+
+        // 이벤트를 찾는다
+        this.exploreMode.setInteractive(false);
+        const cutscene = this.buildStageLeaveCutscene(eventName);
+        
+        await cutscene.$play();
+        await this.tweens.$addTween(this.blackScreen, 0.5, { alpha: 1 }, 0, "easeIn", true);
+        this.gamelayer.removeChild(this.stage);
+        this.stage = null;
     }
 
     enterBattle() {
@@ -337,8 +332,11 @@ export default class Game extends EventEmitter {
 
     addItem(itemId, count) {
         this.player.inventory.addItem(itemId, Number(count));
-        const item = this.player.inventory.getItem(itemId);
-        this.emit('item-acquire', item);
+
+        // TODO : 아이템 획득내용을 보여주는 것은 별도의 큐로 만들어야 한다.
+        // 보상이 겹쳤을때 아이템 획득 보상과 다른 보상을 겹치게 하지 않아야 하는데, 특히 컷신을 획득창이 모두 보이고 나서 해야한다. 어떻게 하지?
+       /* const item = this.player.inventory.getItem(itemId);
+        this.emit('item-acquire', item);*/
     }
 
     addQuest(questId) {

@@ -71,10 +71,9 @@ export default class Stage extends PIXI.Container {
 
     // 로딩함수를 시험적으로 비동기로 만들어보자
     // TODO : 일단 만들어보는것이기 때문에 다른곳에도 적용할지는 천천히 고민해보자
-    async asyncLoad(name) {
+    async $Load(name) {
         const resourcePath = "assets/mapdata/";
-        console.log(name);
-
+        
         const loader = new Loader();
         loader.add('stage', resourcePath + name + ".json");
 

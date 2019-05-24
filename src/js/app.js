@@ -46,10 +46,10 @@ export default class App {
         this.dev.setGame(this.game);
         
         // TODO : ui 에서 ui2 로 변경중
-        this.ui = new UI();
-        this.setUICallback();
+        this.ui = this.game.ui;
+        //this.setUICallback();
 
-        this.game.preload().then(() => {
+        this.game.$preload().then(() => {
             this.game.start();
             this.update();
         });

@@ -7,19 +7,15 @@ export default class Explore {
         this.interactive = false;
     }
 
-    prepare(x, y) {
-        // 일단 플레이어 캐릭터중에 뭐를 화면에 보여줄지 결정해야한다
-        this.controller = new AnimatedCharacter(1);
-        this.controller.alpha = 0;
-        this.game.stage.addCharacter(this.controller, x, y);
-        this.game.stage.checkForFollowCharacter(this.controller, true);
-
-        this.game.stage.onTouchObject = this.onTouchObject.bind(this);
-        this.game.stage.onTileSelected = this.onTileSelected.bind(this);
-    }
-
     start() {
-       
+       // 일단 플레이어 캐릭터중에 뭐를 화면에 보여줄지 결정해야한다
+       this.controller = new AnimatedCharacter(1);
+       this.controller.alpha = 0;
+       this.game.stage.addCharacter(this.controller, 0, 0);
+       this.game.stage.checkForFollowCharacter(this.controller, true);
+
+       this.game.stage.onTouchObject = this.onTouchObject.bind(this);
+       this.game.stage.onTileSelected = this.onTileSelected.bind(this);
     }
 
    

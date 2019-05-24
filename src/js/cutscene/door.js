@@ -6,14 +6,16 @@ import { DIRECTIONS } from '../define';
 // 문에서 들어오는 방향으로 살짝 
 
 export class doorIn extends EventEmitter {
-    constructor(game, x , y, direction, margin) {
+    constructor(game, gridX , gridY, direction, margin) {
         super();
         this.game = game;
         this.direction = direction;
         this.margin = margin;
+        this.gridX = gridX;
+        this.gridY = gridY;
     }
     
-    play() {
+    async $play() {
         const stage = this.game.stage;
         const character = this.game.currentMode.controller;
         character.isMoving = true;
@@ -44,12 +46,10 @@ export class doorIn extends EventEmitter {
 
 
         stage.tweens.addTween(character, this.margin/4, { alpha: 1 }, 0, "linear", true);
-        stage.tweens.addTween(character.position, this.margin/2, { x: targetX, y: targetY }, 0, "linear", true, () => {
-            character.isMoving = false;
-            character.changeVisualToDirection(character.currentDir);
-            this.emit('complete');
-        });
-
+        await stage.tweens.$addTween(character.position, this.margin/2, { x: targetX, y: targetY }, 0, "linear", true);
+        
+        character.isMoving = false;
+        character.changeVisualToDirection(character.currentDir);
     }
 }
 
@@ -58,13 +58,11 @@ export class doorOut extends EventEmitter {
     constructor(game, x , y, direction, margin) {
         super();
         this.game = game;
-        x = x;
-        y = y;
         this.direction = direction;
         this.margin = margin;
     }
     
-    play() {
+    async $play() {
         const stage = this.game.stage;
         const character = this.game.currentMode.controller;
         const x = character.gridX;
@@ -95,10 +93,9 @@ export class doorOut extends EventEmitter {
 
 
         stage.tweens.addTween(character, this.margin/4, { alpha: 0 }, this.margin/4, "linear", true);
-        stage.tweens.addTween(character.position, this.margin/2, { x: targetX, y: targetY }, 0, "linear", true, () => {
-            character.isMoving = false;
-            character.changeVisualToDirection(this.direction);
-            this.emit('complete');
-        });
+        await stage.tweens.$addTween(character.position, this.margin/2, { x: targetX, y: targetY }, 0, "linear", true);
+        
+        character.isMoving = false;
+        character.changeVisualToDirection(this.direction);
     }
 }

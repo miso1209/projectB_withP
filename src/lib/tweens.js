@@ -80,6 +80,14 @@ export default class Tweens {
         this.fps = 60;
     }
 
+    $addTween(o, duration, vars, delay, easing, overwrite) {
+        return new Promise((resolve) => {
+            this.addTween(o, duration, vars, delay, easing, overwrite, () => {
+                resolve();
+            });
+        });
+    }
+
     addTween(o, duration, vars, delay, easing, overwrite, onComplete) {
         let v = null;
         for (const prop in vars) {
