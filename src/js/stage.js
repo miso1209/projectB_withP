@@ -1,14 +1,13 @@
+import EventEmitter from 'events';
+
 import { DIRECTIONS } from './define';
 import MoveEngine from './moveengine';
 import PathFinder from './pathfinder';
-
-import Tile from './tile/tile';
-import Prop from './tile/prop';
-import InventoryProp from './tile/inventory-prop';
-import Stove from './tile/stove';
-import WorkTable from './tile/worktable';
-import EventEmitter from 'events';
 import TiledMap from "./tiledmap";
+
+import Tile from './tile';
+import Prop from './prop';
+
 import { Portal2 } from './event/portal';
 import Loader from './loader';
 
@@ -230,21 +229,8 @@ export default class Stage extends PIXI.Container {
     
     newTile(x, y, tileData) {
         let tile;
-        if (tileData.objectType === "gate") {
-            tile = new Gate(x, y, tileData);
-        } else if (tileData.objectType === "chest") {
-            tile = new Chest(x, y, tileData);
-        }  else if (tileData.objectType === "anvil") {
-            tile = new Anvil(x, y, tileData);
-        } else if (tileData.type === "inventory") {
-            tile = new InventoryProp(x, y, tileData);
-        } else if (tileData.type === "stove") {
-            tile = new Stove(x, y, tileData);
-        } else if (tileData.type === "worktable") {
-            tile = new WorkTable(x, y, tileData);
-        } 
-        else if (tileData.type !== "groundtile") {
-            tile = new Prop(x, y, tileData);
+        if (tileData.type !== "groundtile") {
+            tile = Prop.New(tileData.type, x, y, tileData)
         } else {
             tile = new Tile(x, y, tileData);
         }
@@ -376,7 +362,7 @@ export default class Stage extends PIXI.Container {
         // 여기에 컨테이너에 추가된 순서로 정렬이 되어야 하는데 ... 이건 초기에 만들어두는것이 좋지 않을까?
         // --- 현재는 인터랙티브 프랍만 찾아서 필터링하고 있다
         for (const obj of this.objectMap) {
-            if (obj instanceof Prop && obj.isInteractive && props.indexOf(obj) < 0 ) {
+            if (obj && obj.isInteractive && props.indexOf(obj) < 0 ) {
                 props.push(obj);
             }
         }
@@ -448,7 +434,7 @@ export default class Stage extends PIXI.Container {
 
         if (path) {
             // 아웃라인을 제거한다
-            if (this.interactTarget instanceof Prop) {
+            if (this.interactTarget && this.interactTarget.isInteractive) {
                 this.interactTarget.hideOutline();
             }
 
@@ -456,7 +442,7 @@ export default class Stage extends PIXI.Container {
                 // 타겟을 설정한다
                 this.interactTarget = target;
                 // 아웃라인을 그린다
-                if (target instanceof Prop) {
+                if (target && target.isInteractive) {
                     target.showOutline();
                 }
             } else {
@@ -496,7 +482,7 @@ export default class Stage extends PIXI.Container {
             return;
         }
 
-        if (this.interactTarget instanceof Prop && path.length === 1) {
+        if (this.interactTarget && this.interactTarget.isInteractive && path.length === 1) {
             this.stopObject(obj);
             this.onObjMoveStepEnd(obj);
             return;
@@ -553,7 +539,7 @@ export default class Stage extends PIXI.Container {
         for (let j = Math.max(0, obj.gridY - distance); j <= Math.min(this.mapHeight-1, obj.gridY+distance); j++) {
             for (let i = Math.max(0, obj.gridX - distance); i <= Math.min(this.mapWidth-1, obj.gridX+distance); i++) {
                 const obj = this.getObjectAt(i, j);
-                if (obj instanceof Prop) {
+                if (obj && obj.isInteractive) {
                     obj.showName();
                     this.nameTiles.push(obj);
                 }
@@ -578,7 +564,7 @@ export default class Stage extends PIXI.Container {
                     this.onTouchObject(interactTarget);
                 }
 
-                if (interactTarget instanceof Prop) {
+                if (interactTarget && interactTarget.isInteractive) {
                     interactTarget.hideOutline();
                 }
             }
@@ -685,9 +671,9 @@ export default class Stage extends PIXI.Container {
         let targetIndex = null;
         for (let y = gridY; y < this.mapHeight; y++) {
             for (let x = gridX; x < this.mapWidth ; x++) {
-                const tile = this.objectMap[x + y * this.mapWidth];
-                if (tile instanceof Prop) {
-                    const i = this.objectContainer.getChildIndex(tile);
+                const prop = this.objectMap[x + y * this.mapWidth];
+                if (prop) {
+                    const i = this.objectContainer.getChildIndex(prop);
                     targetIndex = targetIndex !== null ? Math.min(i, targetIndex) : i;
                 }
             }

@@ -1,6 +1,6 @@
-import Prop from './prop';
+import PropBase from './propbase';
 
-export default class InventoryProp extends Prop {
+export default class Stove extends PropBase {
     constructor(x, y, tileData) {
         super(x, y, tileData);
 
@@ -9,10 +9,10 @@ export default class InventoryProp extends Prop {
     }
 
     touch(game) {
-       console.log('open inventory')
+       console.log('open stove')
     }
 
     getName() {
-        return "보관함";
+        return "스토브";
     }
 }
