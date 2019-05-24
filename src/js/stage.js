@@ -10,6 +10,7 @@ import WorkTable from './tile/worktable';
 import EventEmitter from 'events';
 import TiledMap from "./tiledmap";
 import { Portal2 } from './event/portal';
+import Loader from './loader';
 
 function hitTestRectangle(rect1, rect2) {
     return  (rect1.x < rect2.x + rect2.width &&
@@ -63,23 +64,56 @@ const isBoxInFront = function (box1, box2) {
 };
 
 export default class Stage extends PIXI.Container {
-    constructor(game, name, width, height, tileWidth, tileHeight) {
+    constructor() {
         super();
+        Object.assign(this, new EventEmitter());
+    }
 
-        this.game = game;
+    // 로딩함수를 시험적으로 비동기로 만들어보자
+    // TODO : 일단 만들어보는것이기 때문에 다른곳에도 적용할지는 천천히 고민해보자
+    async asyncLoad(name) {
+        const resourcePath = "assets/mapdata/";
+        console.log(name);
 
+        const loader = new Loader();
+        loader.add('stage', resourcePath + name + ".json");
+
+        const mapData = (await loader.asyncLoad()).stage.data;
+
+        // 맵데이터로부터 필요한 리소스를 전부 가져온다
+        // 나중에 클래스로 만들어야 할 것 같은데!?
+        for(const tileset of mapData.tilesets) {
+            if (tileset.image) {
+                // 타일셋이 이미지 하나를 타일링 해서 쓰고 있는 경우이다
+                loader.add(tileset.image, resourcePath + tileset.image);
+            }
+            if (tileset.tiles) {
+                // 타일마다 개별 이미지를 쓰는 경우도 있다
+                for(const tile of tileset.tiles) {
+                    if (tile.image) {
+                        loader.add(tile.image, resourcePath + tile.image);
+                    }
+                }
+            }
+        }
+
+        // 기타 리소스들을 읽어온다
+        await loader.asyncLoad();
+
+        const map = new TiledMap(mapData);
+        
         this.name = name;
+        this.mapWidth = map.width;
+        this.mapHeight = map.height;
+        this.TILE_WIDTH = map.tileWidth;
+        this.TILE_HEIGHT = map.tileHeight;
+        this.TILE_HALF_W = map.tileWidth / 2;
+        this.TILE_HALF_H = map.tileHeight / 2;
 
-        this.mapWidth = width;
-        this.mapHeight = height;
-        this.tileWidth = tileWidth;
-        this.tileHeight = tileHeight;
-        this.TILE_HALF_W = tileWidth / 2;
-        this.TILE_HALF_H = tileHeight / 2;
-
-        this.groundMap = new Array(height * width);
-        this.objectMap = new Array(height * width);
-        this.eventMap = new Array(height * width);
+        const arraySize = this.mapWidth * this.mapHeight;
+        this.groundMap = new Array(arraySize);
+        this.objectMap = new Array(arraySize);
+        this.eventMap = new Array(arraySize);
 
         this.alphaTiles = [];
         this.nameTiles = [];
@@ -113,55 +147,10 @@ export default class Stage extends PIXI.Container {
         };
 
         this.mapVisualWidthReal = this.getTilePosXFor(this.mapWidth - 1,this.mapHeight - 1) - this.getTilePosXFor(0,0);
-	    this.mapVisualHeightReal = this.getTilePosYFor(this.mapWidth - 1,0) - this.getTilePosYFor(0,this.mapHeight - 1);
-
-        this.currentFocusLocation = { x: this.mapWidth >> 1, y: this.mapHeight >> 1 };
-        this.centralizeToPoint(this.externalCenter.x, this.externalCenter.y, true);
+        this.mapVisualHeightReal = this.getTilePosYFor(this.mapWidth - 1,0) - this.getTilePosYFor(0,this.mapHeight - 1);
         
-        Object.assign(this, new EventEmitter());
-    }
-
-    zoomTo(scale, instantZoom) {
-        
-        this.externalCenter = this.externalCenter ? this.externalCenter : { x: (this.mapVisualWidthScaled >> 1), y: 0 };
-        const diff = { x: this.mapContainer.position.x + (this.mapVisualWidthScaled >> 1) - this.externalCenter.x, y: this.mapContainer.position.y - this.externalCenter.y };
-        const oldScale = this.currentScale;
-        
-        this.setScale(scale, instantZoom);
-        
-        const ratio = this.currentScale / oldScale;
-        this.centralizeToPoint(this.externalCenter.x + diff.x * ratio, this.externalCenter.y + diff.y * ratio, instantZoom);
-    }
-
-    setScale(s, instantZoom) {
-        this.currentScale = s;
-        this.mapVisualWidthScaled = this.mapVisualWidthReal * this.currentScale;
-        this.mapVisualHeightScaled = this.mapVisualHeightReal * this.currentScale;
-        
-        if (instantZoom) {
-            this.mapContainer.scale.set(this.currentScale);
-        } else {
-            this.tweens.addTween(this.mapContainer.scale, 0.5, { x: this.currentScale, y: this.currentScale }, 0, "easeInOut", true );
-        }
-    }
-
-    centralizeToPoint(px, py, instantRelocate) {
-        if (instantRelocate) {
-            this.mapContainer.position.x = px;
-            this.mapContainer.position.y = py;
-        }
-        else {
-            this.tweens.addTween(this.mapContainer.position, 0.5, { x: px, y: py }, 0, "easeInOut", true );
-        }
-    }
-
-    
-    load(mapData) {
-        const map = new TiledMap(mapData);
-        
-
-        // 타일셋의 레이어는 총 4종류이다.
-        for (const groupName in map.groups) {
+          // 타일셋의 레이어는 총 4종류이다.
+          for (const groupName in map.groups) {
             const group = map.groups[groupName];
             for (const layer of group.layers) {
                 // 레이어에 맞게 설정한다
@@ -172,7 +161,7 @@ export default class Stage extends PIXI.Container {
         // object 들의 렌더링 순서대로 빌드한다
         this.buildObjectRederOrder();
     }
-
+  
     loadLayer(layer, group, width, height) {
         // 타일맵을 설정한다
         for (let y = 0; y < height;++y) {
@@ -327,6 +316,41 @@ export default class Stage extends PIXI.Container {
             
         }
     }
+
+    zoomTo(scale, instantZoom) {
+        
+        this.externalCenter = this.externalCenter ? this.externalCenter : { x: (this.mapVisualWidthScaled >> 1), y: 0 };
+        const diff = { x: this.mapContainer.position.x + (this.mapVisualWidthScaled >> 1) - this.externalCenter.x, y: this.mapContainer.position.y - this.externalCenter.y };
+        const oldScale = this.currentScale;
+        
+        this.setScale(scale, instantZoom);
+        
+        const ratio = this.currentScale / oldScale;
+        this.centralizeToPoint(this.externalCenter.x + diff.x * ratio, this.externalCenter.y + diff.y * ratio, instantZoom);
+    }
+
+    setScale(s, instantZoom) {
+        this.currentScale = s;
+        this.mapVisualWidthScaled = this.mapVisualWidthReal * this.currentScale;
+        this.mapVisualHeightScaled = this.mapVisualHeightReal * this.currentScale;
+        
+        if (instantZoom) {
+            this.mapContainer.scale.set(this.currentScale);
+        } else {
+            this.tweens.addTween(this.mapContainer.scale, 0.5, { x: this.currentScale, y: this.currentScale }, 0, "easeInOut", true );
+        }
+    }
+
+    centralizeToPoint(px, py, instantRelocate) {
+        if (instantRelocate) {
+            this.mapContainer.position.x = px;
+            this.mapContainer.position.y = py;
+        }
+        else {
+            this.tweens.addTween(this.mapContainer.position, 0.5, { x: px, y: py }, 0, "easeInOut", true );
+        }
+    }
+
 
     onMouseUp(event) {
         this.checkForTileClick(event.data);
@@ -617,7 +641,6 @@ export default class Stage extends PIXI.Container {
 
     checkForFollowCharacter(obj, instantFollow) {
         if (true) {
-            this.currentFocusLocation = { c: obj.gridX, r: obj.gridY };
             const px = this.externalCenter.x - obj.position.x * this.currentScale;
             const py = this.externalCenter.y - obj.position.y * this.currentScale;
             

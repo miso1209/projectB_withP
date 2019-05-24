@@ -1,7 +1,7 @@
 import path from 'path';
 import { EventEmitter } from 'events';
 
-import ResourceManager from "./resource-manager";
+import Loader from "./loader";
 import Stage  from "./stage";
 
 import Player  from "./player";
@@ -49,10 +49,17 @@ export default class Game extends EventEmitter {
         this.tweens = new Tweens();
         this.exploreMode = new Explore(this);
         this.currentMode = null;
-        
-        this.resourceManager = new ResourceManager();
         this.combiner = new Combiner();
-       
+    }
+
+    // 더이상 콜백만들기가 싫어서 시험적으로 추가하는 비동기 함수들
+    async preload() {
+        const preloads = require('json/preloads.json');
+        const loader = new Loader();   
+        for(const r of preloads) {
+            loader.add(...r);
+        }
+        await loader.asyncLoad();
     }
 
     setStorage(storage) {
@@ -91,13 +98,6 @@ export default class Game extends EventEmitter {
 
     start() {
         this.initPlayer();
-
-        // 필요한 필드 캐릭터 정보를 로딩한다
-        const anim_path = "assets/sprite/character/" + this.player.controlCharacter.name;
-        for (const ani in this.player.controlCharacter.data.animations) {
-            this.resourceManager.add(anim_path + "/" + ani + ".json");
-        }
-        this.resourceManager.add("shadow.png", "assets/shadow.png");
 
         if (this.hasTag("newplayer")) {
             // 그냥 평범하게 집에 들어간다
@@ -190,56 +190,31 @@ export default class Game extends EventEmitter {
 
     enterStage(stagePath, eventName) {
 
-        this.resourceManager.add("stage", stagePath);
-        this.resourceManager.load((resources) => {
-            const resourcePath = path.dirname(stagePath) + '/';
+        const stageName = path.basename(stagePath, ".json");
+        const stage = new Stage();
+        stage.asyncLoad(stageName).then(() => {
+            // 스테이지의 줌레벨을 결정한다
+            stage.zoomTo(2, true);
+            this.stage = stage;
+            this.gamelayer.addChild(stage);
 
-            const mapData = resources["stage"].data; // 이것은 규칙을 정한다
-            // 맵데이터로부터 필요한 리소스를 전부 가져온다
-            // 나중에 클래스로 만들어야 할 것 같은데!?
-            for(const tileset of mapData.tilesets) {
-                if (tileset.image) {
-                    // 타일셋이 이미지 하나를 타일링 해서 쓰고 있는 경우이다
-                    this.resourceManager.add(tileset.image, resourcePath + tileset.image);
-                }
-                if (tileset.tiles) {
-                    // 타일마다 개별 이미지를 쓰는 경우도 있다
-                    for(const tile of tileset.tiles) {
-                        if (tile.image) {
-                            this.resourceManager.add(tile.image, resourcePath + tile.image);
-                        }
-                    }
-                }
+            // 페이드 인이 끝나면 게임을 시작한다
+            this.currentMode = this.exploreMode;
+            const event = this.stage.findEventByName(eventName);
+            if (event) {
+                this.currentMode.prepare(event.gridX, event.gridY);
+            } else {
+                this.currentMode.prepare(0, 0);
             }
 
-            this.resourceManager.load((resources) => {
-                const stageName = path.basename(stagePath, ".json");
-                const stage = new Stage(this, stageName, mapData.width, mapData.height, mapData.tilewidth, mapData.tileheight);
-                stage.load(mapData);
-                
-                 // 스테이지의 줌레벨을 결정한다
-                stage.zoomTo(2, true);
-                this.stage = stage;
-                this.gamelayer.addChild(stage);
-
-                // 페이드 인이 끝나면 게임을 시작한다
-                this.currentMode = this.exploreMode;
-                const event = this.stage.findEventByName(eventName);
-                if (event) {
-                    this.currentMode.prepare(event.gridX, event.gridY);
-                } else {
-                    this.currentMode.prepare(0, 0);
-                }
-
-                // 진입 컷신을 사용한다
-                this.tweens.addTween(this.blackScreen, 0.5, { alpha: 0 }, 0, "easeOut", true, () => {
-                    const cutscene = this.buildStageEnterCutscene(eventName)
-                    cutscene.once('complete', () => { 
-                        this.currentMode.start();
-                        this.emit('stageentercomplete');
-                    });
-                    cutscene.play();
+            // 진입 컷신을 사용한다
+            this.tweens.addTween(this.blackScreen, 0.5, { alpha: 0 }, 0, "easeOut", true, () => {
+                const cutscene = this.buildStageEnterCutscene(eventName)
+                cutscene.once('complete', () => { 
+                    this.currentMode.start();
+                    this.emit('stageentercomplete');
                 });
+                cutscene.play();
             });
         });
     }

@@ -10,6 +10,9 @@ export default class TiledMap {
         this.width = mapData.height;
         this.height = mapData.width;
 
+        this.tileWidth = mapData.tilewidth;
+        this.tileHeight = mapData.tileheight;
+
         // 타일셋을 먼저 등록한다
         const tileset = this.createTileSet(mapData);
         const groups = [];
