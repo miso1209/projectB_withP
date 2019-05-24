@@ -39,7 +39,6 @@ export default class BattleCharacter extends PIXI.Container {
 
     update() {
         this.animation.update();
-        this.buffManager.update();
         // 액티브 스코어를 감소시킨다
         --this.actionScore;
     }
