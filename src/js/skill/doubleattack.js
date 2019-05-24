@@ -27,18 +27,18 @@ export default class DouobleAttack extends SkillBase {
                 this.owner.animation_shieldAttack();
                 break;
             } 
-            case 40: {
+            case 25: {
                 // TODO : 데미지 계산 공식을 어디서 가져와야 할까??
                 // 추후 slash effect 를 방패타격 이펙트로만 바꿔주면 될듯하다.
                 this.addEffect(this.target, { name: 'slash', animation: true, animationLength: 8, removeFrame: 60, speed: 0.5 });
                 this.hit(this.owner, this.target);
                 break;
             }
-            case 68: {
+            case 50: {
                 this.owner.animation_attack();
                 break;
             }
-            case 110: {
+            case 79: {
                 // TODO : 데미지 계산 공식을 어디서 가져와야 할까??
                 this.addEffect(this.target, { name: 'slash', animation: true, animationLength: 8, removeFrame: 60, speed: 0.5 });
                 this.hit(this.owner, this.target);
@@ -46,15 +46,15 @@ export default class DouobleAttack extends SkillBase {
                 // TODO: 방어력 증가시키는 버프를 적용해야 하는데.. 아직 버프시스템이 없다.
                 break;
             }
-            case 150: {
+            case 104: {
                 this.owner.animation_idle();
                 break;
             }
-            case 151: {
+            case 105: {
                 this.tweens.addTween(this.owner.position, 0.15, { x: this.originX, y: this.originY }, 0, "easeOut", true );
                 break;
             }
-            case 161: {
+            case 115: {
                 this.done();
                 break;
             }

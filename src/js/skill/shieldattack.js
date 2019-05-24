@@ -27,22 +27,22 @@ export default class ShieldAttack extends SkillBase {
                 this.owner.animation_shieldAttack();
                 break;
             } 
-            case 40: {
+            case 25: {
                 // TODO : 데미지 계산 공식을 어디서 가져와야 할까??
                 // 추후 slash effect 를 방패타격 이펙트로만 바꿔주면 될듯하다.
                 this.addEffect(this.target, { name: 'slash', animation: true, animationLength: 8, removeFrame: 60, speed: 0.5 });
                 this.hit(this.owner, this.target);
                 break;
             }
-            case 68: {
+            case 50: {
                 this.owner.animation_idle();
                 break;
             }
-            case 71: {
+            case 51: {
                 this.tweens.addTween(this.owner.position, 0.15, { x: this.originX, y: this.originY }, 0, "easeOut", true );
                 break;
             }
-            case 81: {
+            case 61: {
                 this.done();
                 break;
             }

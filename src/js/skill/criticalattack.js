@@ -1,7 +1,7 @@
 import SkillBase from "./skillbase";
 import { CHARACTER_CAMP, TARGETING_TYPE } from "../battledeclare";
 
-export default class WandAttack extends SkillBase {
+export default class CriticalAttack extends SkillBase {
     constructor() {
         super(TARGETING_TYPE.ENEMY_FRONT_TANK);
 
@@ -29,7 +29,6 @@ export default class WandAttack extends SkillBase {
             } 
             case 30: {
                 // TODO : 데미지 계산 공식을 어디서 가져와야 할까??
-                // 완드 공격 이펙트로 변경하면 될 것 같다.
                 this.addEffect(this.target, { name: 'slash', animation: true, animationLength: 8, removeFrame: 60, speed: 0.5 });
                 this.hit(this.owner, this.target);
                 break;

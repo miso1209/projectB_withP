@@ -2,9 +2,9 @@
 import SkillBase from "./skillbase";
 import { TARGETING_TYPE, CHARACTER_CAMP } from "../battledeclare";
 
-export default class Heal extends SkillBase {
+export default class AntiPower extends SkillBase {
     constructor() {
-        super(TARGETING_TYPE.ALLY_ALL);
+        super(TARGETING_TYPE.ENEMY_ALL);
 
         this.tweens = new Tweens();
     }

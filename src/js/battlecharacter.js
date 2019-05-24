@@ -11,6 +11,7 @@ export default class BattleCharacter extends PIXI.Container {
         this.character = character;
        
         this.animation = new AnimatedCharacter(character.id);
+
         this.progressBar = new BattleProgressBar();
         this.progressBar.setPosition({
             x: this.animation.width / 2,
@@ -21,6 +22,7 @@ export default class BattleCharacter extends PIXI.Container {
         this.addChild(this.progressBar);
 
         this.progressBar.setProgress(this.health / this.maxHealth);
+        this.possibleOfBattle = true;
         // 캐릭터의 스피드대로 세팅한다
         this.actionScore = 0;
     }
@@ -37,6 +39,7 @@ export default class BattleCharacter extends PIXI.Container {
 
     update() {
         this.animation.update();
+        this.buffManager.update();
         // 액티브 스코어를 감소시킨다
         --this.actionScore;
     }

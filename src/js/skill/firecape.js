@@ -2,9 +2,9 @@
 import SkillBase from "./skillbase";
 import { TARGETING_TYPE, CHARACTER_CAMP } from "../battledeclare";
 
-export default class Heal extends SkillBase {
+export default class FireCape extends SkillBase {
     constructor() {
-        super(TARGETING_TYPE.ALLY_ALL);
+        super(TARGETING_TYPE.SELF);
 
         this.tweens = new Tweens();
     }
@@ -24,24 +24,22 @@ export default class Heal extends SkillBase {
                 break;
             }
             case 11: {
-                this.owner.animation_magic();
+                this.owner.animation_attack();
                 break;
             }
-            case 30: {
-                this.targets.forEach((target) => {
-                    this.addEffect(target, { name: 'healeffect', animation: true, animationLength: 25, removeFrame: 52, speed: 0.7 });
-                });
+            case 51: {
+                this.addEffect(this.owner, { name: 'firerainprop', animation: true, animationLength: 7, removeFrame: 15, speed: 0.5 });
                 break;
             }
-            case 55: {
+            case 75: {
                 this.owner.animation_idle();
                 break;
             }
-            case 56: {
+            case 76: {
                 this.tweens.addTween(this.owner.position, 0.15, { x: this.originX, y: this.originY }, 0, "easeOut", true );
                 break;
             }
-            case 66: {
+            case 86: {
                 this.done();
                 break;
             }

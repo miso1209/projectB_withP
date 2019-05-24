@@ -27,21 +27,21 @@ export default class Slash extends SkillBase {
                 this.owner.animation_attack();
                 break;
             } 
-            case 45: {
+            case 30: {
                 // TODO : 데미지 계산 공식을 어디서 가져와야 할까??
                 this.addEffect(this.target, { name: 'slash', animation: true, animationLength: 8, removeFrame: 60, speed: 0.5 });
                 this.hit(this.owner, this.target);
                 break;
             }
-            case 78: {
+            case 55: {
                 this.owner.animation_idle();
                 break;
             }
-            case 81: {
+            case 56: {
                 this.tweens.addTween(this.owner.position, 0.15, { x: this.originX, y: this.originY }, 0, "easeOut", true );
                 break;
             }
-            case 91: {
+            case 66: {
                 this.done();
                 break;
             }

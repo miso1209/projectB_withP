@@ -33,25 +33,35 @@ export default class FireRain extends SkillBase {
             }
             case 75: {
                 let delay = 0;
+
                 this.targets.forEach((target) => {
                     const fireBall = this.addEffect(this.owner, { name: 'fireBall.png', animation: false, removeFrame: 60 });
                     fireBall.position.y -= 500;
-                    fireBall.rotation = Math.atan2(target.position.y - fireBall.position.y, target.position.x - fireBall.position.x);
+
+                    const dist = {
+                        x: target.position.x - fireBall.position.x,
+                        y: target.position.y - fireBall.position.y
+                    }
+                    fireBall.rotation = Math.atan2(dist.y, dist.x);
     
                     const toX = target.position.x + target.width / 2;
                     const toY = target.position.y - target.height / 2;
-    
-                    this.tweens.addTween(fireBall, 0.1, { alpha: 0 }, delay + 0.15, "easeOut", true );
-                    this.tweens.addTween(fireBall.position, 0.25, { x: toX, y: toY }, delay, "easeOut", true , () => {
-                        this.addEffect(target, { name: 'explosion', animation: true, animationLength: 16, removeFrame: 60, speed: 0.5 });
-                        this.hit(this.owner, target);
-                    });
+                    this.tweens.addTween(fireBall.position, 0.25, { x: toX, y: toY }, delay, "easeOut", false );
+                    this.tweens.addTween(fireBall, 0.07, { alpha: 0 }, delay + 0.18, "linear", false );
+
                     delay += 0.1;
                 });
                 break;
             }
             case 88: {
                 this.owner.animation_idle();
+                break;
+            }
+            case 100: {
+                this.targets.forEach((target) => {
+                    this.addEffect(target, { name: 'explosion', animation: true, animationLength: 16, removeFrame: 60, speed: 0.5 });
+                    this.hit(this.owner, target);
+                });
                 break;
             }
             case 91: {

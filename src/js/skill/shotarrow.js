@@ -1,12 +1,13 @@
 
 import SkillBase from "./skillbase";
-import { TARGETING_TYPE } from "../battledeclare";
+import { TARGETING_TYPE, FRAME_PER_SEC } from "../battledeclare";
 
 export default class ShotArrow extends SkillBase {
     constructor() {
         super(TARGETING_TYPE.ENEMY_BACK_CARRY);
 
         this.tweens = new Tweens();
+        this.updater = new Updater();
     }
 
     onFrame(frame) {
@@ -21,14 +22,30 @@ export default class ShotArrow extends SkillBase {
 
                 const toX = this.target.position.x + this.target.width / 2;
                 const toY = this.target.position.y - this.target.height / 2;
+                
+                const duration = 25;
 
-                // rotation x 속도, y속도 어덯게 알아서 주지..? getter, setter로 어떻게 처리가 가능할지도 모르겠는데.. 우선 보류.
-                // x, 속도, y속도 구할 수 있다. => 사실 x속도는 등속이니까 그대로, y 속도만 arrowYEase함수 미분하면 알 수 있을것 같은데..
-                // 어떻게 즉각즉각 y속도에 대한 값으로 rotation을 구해서 줄 수 있을까?.. 목표값 또한 어떻게 알아낼껀데..?
-                // 가라로 그냥 로테이션 돌려도 잘 안보일지 모르겠다는 생각이 좀 드는 것 같다.. 왜냐면 궤적이 비슷하지 않을까? => 응, 아니야.
-                this.tweens.addTween(arrow, 0.02, { alpha: 0 }, 0.48, "easeOut", true );
-                this.tweens.addTween(arrow.position, 0.5, { x: toX }, 0, "linear", false );
-                this.tweens.addTween(arrow.position, 0.5, { y: toY }, 0, "arrrowYEase", false );
+                const dist = {
+                    x: toX - arrow.position.x,
+                    y: toY - arrow.position.y
+                };
+
+                const gravity = 1;
+
+                const speed = {
+                    x: dist.x / duration,
+                    y: (dist.y / duration) - ((duration-1)/2*gravity)
+                }
+
+                this.updater.add(duration, () => {
+                    arrow.position.x += speed.x;
+                    arrow.position.y += speed.y;
+                    arrow.rotation = Math.atan2(speed.y, speed.x);
+
+                    speed.y += gravity;
+                });
+
+                this.tweens.addTween(arrow, 0.1, { alpha: 0 }, duration / FRAME_PER_SEC, "easeOut", true );
                 break;
             }
             case 65: {
@@ -46,5 +63,6 @@ export default class ShotArrow extends SkillBase {
         }
 
         this.tweens.update();
+        this.updater.update();
     }
 }

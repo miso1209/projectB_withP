@@ -9,6 +9,9 @@ import Runaway from './runaway';
 import FireRain from './firerain';
 import Heal from './heal';
 import ArrowOfTracker from './arrowoftracker';
+import CriticalAttack from './criticalattack';
+import AntiPower from './antipower';
+import FireCape from './firecape';
 
 export default class Skill {
     static factory = {};
@@ -45,6 +48,9 @@ Skill.Register("doubleAttack", () => {
 Skill.Register("fireBolt", () => { 
     return new FireBolt(); 
 });
+Skill.Register("fireCape", () => { 
+    return new FireCape(); 
+});
 Skill.Register("fireRain", () => { 
     return new FireRain(); 
 });
@@ -53,6 +59,9 @@ Skill.Register("fireRain", () => {
 Skill.Register("shotArrow", () => { 
     return new ShotArrow(); 
 });
+Skill.Register("criticalAttack", () => { 
+    return new CriticalAttack(); 
+});
 Skill.Register("arrowOfTracker", () => { 
     return new ArrowOfTracker(); 
 });
@@ -60,6 +69,9 @@ Skill.Register("arrowOfTracker", () => {
 // Healer
 Skill.Register("wandAttack", () => {
     return new WandAttack();
+});
+Skill.Register("antiPower", () => {
+    return new AntiPower();
 });
 Skill.Register("heal", () => {
     return new Heal();

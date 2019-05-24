@@ -1,12 +1,13 @@
 
 import SkillBase from "./skillbase";
-import { TARGETING_TYPE, CHARACTER_CAMP } from "../battledeclare";
+import { TARGETING_TYPE, CHARACTER_CAMP, FRAME_PER_SEC } from "../battledeclare";
 
 export default class ArrowOfTracker extends SkillBase {
     constructor() {
         super(TARGETING_TYPE.ENEMY_MIN_HP);
 
         this.tweens = new Tweens();
+        this.updater = new Updater();
     }
 
     onFrame(frame) {
@@ -24,40 +25,59 @@ export default class ArrowOfTracker extends SkillBase {
                 break;
             }
             case 11: {
-                // 번쩍 이펙트? 뭐 이펙트는 추후 추가.. 중요한건 화살 높이와 rotation처리 어떻게 할래..?
                 this.owner.animation_attack();
                 break;
             } 
-            case 50: {
-                // 높이랑 rotation처리 어떻게 하면 좋을까..??
+            case 30: {
                 const arrow = this.addEffect(this.owner, { name: 'arrow.png', animation: false, removeFrame: 60 });
 
                 const toX = this.target.position.x + this.target.width / 2;
                 const toY = this.target.position.y - this.target.height / 2;
+                
+                const duration = 50;
 
-                this.tweens.addTween(arrow, 0.02, { alpha: 0 }, 0.48, "easeOut", true );
-                this.tweens.addTween(arrow.position, 0.5, { x: toX }, 0, "linear", false );
-                this.tweens.addTween(arrow.position, 0.5, { y: toY }, 0, "arrrowYEase", false );
+                const dist = {
+                    x: toX - arrow.position.x,
+                    y: toY - arrow.position.y
+                };
+
+                const gravity = 1.6;
+
+                const speed = {
+                    x: dist.x / duration,
+                    y: (dist.y / duration) - ((duration-1)/2*gravity)
+                }
+
+                this.updater.add(duration, () => {
+                    arrow.position.x += speed.x;
+                    arrow.position.y += speed.y;
+                    arrow.rotation = Math.atan2(speed.y, speed.x);
+
+                    speed.y += gravity;
+                });
+
+                this.tweens.addTween(arrow, 0.1, { alpha: 0 }, duration / FRAME_PER_SEC, "easeOut", true );
                 break;
             }
-            case 75: {
+            case 80: {
                 this.addEffect(this.target, { name: 'shoted', animation: true, animationLength: 18, removeFrame: 60, speed: 0.5 });
                 this.hit(this.owner, this.target);
                 break;
             }
-            case 90: {
+            case 95: {
                 this.owner.animation_idle();
             }
-            case 91: {
+            case 96: {
                 this.tweens.addTween(this.owner.position, 0.15, { x: this.originX, y: this.originY }, 0, "easeOut", true );
                 break;
             }
-            case 101: {
+            case 106: {
                 this.done();
                 break;
             }
         }
 
         this.tweens.update();
+        this.updater.update();
     }
 }

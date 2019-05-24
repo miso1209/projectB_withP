@@ -267,8 +267,8 @@ export default class Game extends EventEmitter {
 
             // 배틀을 사용한다
             const options = {
-                allies: [{ character: new Character(1), x: 0, y: 0}],
-                enemies: [{ character: new Character(2), x: 0, y: 0}],
+                allies: [{ character: new Character(1), x: 0, y: 0},{ character: new Character(2), x: 1, y: 0},{ character: new Character(3), x: 0, y: 1},{ character: new Character(4), x: 1, y: 1}],
+                enemies: [{ character: new Character(5), x: 0, y: 0},{ character: new Character(1), x: 1, y: 0},{ character: new Character(2), x: 0, y: 1},{ character: new Character(3), x: 1, y: 1}],
                 background: "battle_background.png",
                 battlefield: "battleMap1.png",
                 screenWidth: this.screenWidth,
