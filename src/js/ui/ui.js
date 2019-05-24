@@ -7,6 +7,7 @@ import RecipeUI from "./recipeui";
 import ProgressUI from "./progressui";
 import Inventory from "./inventory";
 import ItemImage from "./component/itemimage";
+import CharacterSelect from "./characterSelect";
 
 export default class DomUI extends EventEmitter {
     constructor() {
@@ -34,7 +35,7 @@ export default class DomUI extends EventEmitter {
         this.gnbContainer.appendChild(gnb);
 
         const menuData = [
-            {name:'캐릭터', event: "characters"},
+            {name:'캐릭터', event: "characterselect"},
             {name:'보관함', event: "inventory"},
             {name:'퀘스트', event: "quest"},
             {name:'설정', event: "options"}
@@ -122,7 +123,8 @@ export default class DomUI extends EventEmitter {
 
     showCraftUI(itemId, result) {
         const pane = this.createContainer();
-        const modal = new Modal(pane, 360, 300, () => {
+        let domHeight = 300;
+        const modal = new Modal(pane, 360, domHeight, () => {
             result(itemId);
             this.removeContainer(pane);
         });
@@ -131,17 +133,22 @@ export default class DomUI extends EventEmitter {
         modal.addCloseButton();
         modal.addConfirmButton('조합완료');
     
+        modal.dom.style.top = '50%';
+        modal.dom.style.marginTop = domHeight * -0.5 + 'px';
+
         const itemText = document.createElement('div');
         itemText.className = 'contents';
         itemText.innerText = "아이템을 조합중";
         itemText.style.top = '60px';
-    
-        const loading = new ProgressUI(modal.dom, 2, (onComplete)=>{
+
+        let interval = 10; // 1 ~ 10
+
+        const loading = new ProgressUI(modal.dom, interval, (onComplete)=>{
             itemText.innerText = "아이템 조합 성공!"
         });
     
         loading.moveToCenter(130);
-
+        
         modal.dom.appendChild(itemText);
         modal.dom.appendChild(loading.dom);
     }
@@ -156,19 +163,24 @@ export default class DomUI extends EventEmitter {
             }
         });
         
-        itemAcquire.addTitle('NEW ITEM');
+        itemAcquire.addTitle('아이템 획득');
         itemAcquire.addCloseButton();
         itemAcquire.addConfirmButton('확인');
     
         const itemText = document.createElement('div');
         itemText.className = 'contents';
-
+        itemText.style.top = 'auto';
+        itemText.style.bottom = '70px';
         itemText.innerText = item.name;
         itemAcquire.dom.appendChild(itemText);
-    
-        const image = new ItemImage(item.data.image.texture, item.data.image.x, item.data.image.y);
+        // item.data.image.texture
+        const image = new ItemImage('items@2.png', item.data.image.x, item.data.image.y);
         const itemSprite = image.dom;
         itemSprite.style.position = 'absolute';
+        itemSprite.style.left = '0';
+        itemSprite.style.right = '0';
+        itemSprite.style.margin = '90px auto 0';
+
         itemAcquire.moveToCenter('0');
         itemAcquire.dom.style.top = '50%';
         itemAcquire.dom.style.marginTop = domHeight * -0.5 + 'px';
@@ -182,5 +194,11 @@ export default class DomUI extends EventEmitter {
         inven.moveToRight(70);
         inven.onTabSelected(inven.tabs[0].category);
     }
-}
 
+    showCharacterSelect(inputs) {
+        const pane = this.createContainer();
+        const pickme = new CharacterSelect(pane, inputs, (ok)=>{
+            console.log(ok);
+        });
+    }
+}

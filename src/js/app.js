@@ -96,6 +96,7 @@ export default class App {
         this.game.on('item-acquire', this.showItemAcquired.bind(this))
 
         this.ui.on('inventory', this.openInventory.bind(this));
+        this.ui.on('characterselect', this.openCharacterSelect.bind(this));
     }
 
     openCombiner(data) {
@@ -143,5 +144,10 @@ export default class App {
 
     showItemAcquired(item) {
         this.ui.showItemAquire(item);
+    }
+
+    openCharacterSelect() {
+        const inputs = this.game.player.characters;
+        this.ui.showCharacterSelect(inputs);
     }
 }

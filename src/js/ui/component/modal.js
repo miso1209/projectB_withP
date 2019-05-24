@@ -3,6 +3,7 @@ import NineBox from "./ninebox";
 import Button from "./button";
 import Tab from './tab';
 
+
 export default class Modal extends Panel {
     constructor(pane, width, height, callback) {
         super();
@@ -21,7 +22,7 @@ export default class Modal extends Panel {
     }
     
     addConfirmButton(text) {
-        const confirmBtn = new Button(text);
+        const confirmBtn = new Button(text, 'submit');
         this.dom.appendChild(confirmBtn.dom);
         this.confirmBtn = confirmBtn;
         confirmBtn.moveToCenter(0);
@@ -39,7 +40,7 @@ export default class Modal extends Panel {
         const title = document.createElement('h1');
         title.innerText = text;
         title.className = 'title';
-        this.dom.id = text;
+        // this.dom.id = text;
         this.dom.appendChild(title);
     
         this.subTitle = document.createElement('h2');

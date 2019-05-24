@@ -85,6 +85,7 @@ body.battle .gnbContainer.battleMode {
 #theater.show {
   opacity: 1;
 }
+
 #theater::before{
   content: '';
   display: block;
@@ -111,6 +112,12 @@ body.battle .gnbContainer.battleMode {
 }
 
 
+#theater.dim {
+  z-index: 9999;
+  background-color: rgba(0,0,0,1);
+}
+
+
 button, .button {
   width: 118px;
   height: 44px;
@@ -129,22 +136,26 @@ button span {
   line-height: 44px;
   pointer-events: none;
   text-shadow: 2px 2px 1px #111; 
+  vertical-align: middle;
 }
 
 .submit {
   background: url(~assets/ui/button_s2.png) no-repeat;
 }
 
-.button._small {
+.buttonS {
   width: 75px;
   height: 35px;
-  /* padding: 5px 0; */
   background: url(~assets/ui/btn_1.png) no-repeat;
   background-size: contain;
 }
 
-.button._small span {
+.buttonS span{
   line-height: 35px;
+}
+
+.buttonS:hover, .buttonS:active {
+  opacity: 0.7;
 }
 
 .tabPane {
@@ -501,7 +512,7 @@ button.isAvailable, .isAvailable.button:active  {
 
 button.disabled {
   background-color: #f9f9f9;
-  background-blend-mode: luminosity;
+  background-blend-mode: darken;
   pointer-events: none;
 }
 
@@ -509,6 +520,9 @@ button.disabled span {
   pointer-events: none;
 }
 
+/* 
+  아이템 조합 
+*/
 .combineItem {
   display: flex;
   flex-wrap: wrap;
@@ -522,15 +536,6 @@ button.disabled span {
   clear: both;
   width: 100%;
   height: 0;
-}
-
-.img {
-  transform: perspective(1px) translateZ(0);
-  backface-visibility: hidden;
-}
-
-.img span {
-  display: block;
 }
 
 .combineItem .itemImg {
@@ -617,6 +622,21 @@ button.disabled span {
   overflow: hidden;
 }
 
+
+/* 아이템 이미지 */
+.img {
+  transform: perspective(1px) translateZ(0);
+  backface-visibility: hidden;
+}
+
+.img span {
+  display: block;
+}
+
+/* 
+  inventory 
+*/
+
 .inventory-detail {
   padding: 20px 10px;
   text-align: center;
@@ -660,3 +680,102 @@ button.disabled span {
   font-weight: bold;
   color: #fff;
 }
+
+
+/* 캐릭터 선택창 */
+.characterDesc {
+  border-radius: 15px;
+  background-color: #1f130a;
+  padding: 10px 20px;
+}
+
+.characterDesc p {
+  font-size: 15px;
+  line-height: 1.5;
+  color: #fff;
+}
+
+.characterList {
+  margin: 10px auto 0;
+
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: space-between;
+  justify-items: start;
+}
+
+.characterList .doll {
+  position: relative;
+  min-width: 25%;
+  /* min-width: 96px; */
+  height: 96px;
+  padding: 5px;
+
+  margin-top: 20px;
+  border: 2px solid transparent;
+  transition: border 0.3s;
+}
+
+.doll .tilebg {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  
+  width: 70px;
+  height: 65px;
+  margin: 0 auto;
+  background: url(~assets/ui/characterbg.png) no-repeat -96px 0;
+}
+
+.doll .profileImg {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 25px;
+
+  width: 64px;
+  height: 96px;
+
+  margin: 0 auto;
+  transition: all 0.5s linear;
+
+}
+
+.doll .profileImg::after{
+  display: block;
+  content: '';
+}
+
+.doll .name {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+/* .doll:hover:after, .doll.active:after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: -10px;
+  left: 0;
+  right: 0;
+
+  background: url(~assets/ui/prompt.png);
+  width: 20px;
+  height: 20px;
+  margin: 0 auto;
+  background-size: cover;
+} */
+
+.doll:hover, .doll.active {
+  border: 2px solid #ffd800;
+}
+
+/* .doll:hover .profileImg, .doll.active .profileImg{
+  width: 64px;
+  height: 96px;
+  bottom: 30px;
+} */
