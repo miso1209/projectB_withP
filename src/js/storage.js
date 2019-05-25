@@ -63,7 +63,8 @@ export default class Storage {
     }
 
     updateCharacter(data) {
-        this.characters[data.id] = data;
+        console.log(this.data);
+        this.data.characters[data.id] = data;
         this.save();
     }
 }

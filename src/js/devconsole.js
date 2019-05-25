@@ -47,4 +47,10 @@ export default class DevConsole {
 
         return this.game.player.quests;
     }
+
+    test1() {
+        // 디버깅용
+        console.log(this.game.player.characters[0].equip);
+        this.game.player.characters[0].equip("weapon", 1);
+    }
 }

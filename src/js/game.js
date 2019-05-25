@@ -86,6 +86,13 @@ export default class Game extends EventEmitter {
 
     initPlayer() {
         this.player = new Player();
+
+        // 가지고 있는 캐릭터를 등록한다
+        for(const charId in this.storage.data.characters) {
+            const c = new Character(charId);
+            c.load(charId);
+            this.player.characters.push(c);
+        }
         
         // 플레이어의 인벤토리에 복사한다
         for (const itemId in this.storage.data.inventory) {
@@ -286,6 +293,17 @@ export default class Game extends EventEmitter {
         }
         if (this.currentMode) {
             this.currentMode.update();
+        }
+
+        // 캐릭터 데이터를 저장해야 하는지 확인
+        if (this.player) {
+            for (const c of this.player.characters) {
+                if (c.isDirty()) {
+                    c.clearDirty();
+                    this.storage.updateCharacter(c.save());
+                }
+            }
+           
         }
     }
 

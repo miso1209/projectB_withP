@@ -22,4 +22,8 @@ export default class Item {
     get description() {
         return this.data.description;
     }
+
+    get options() {
+        return this.data.options;
+    }
 }

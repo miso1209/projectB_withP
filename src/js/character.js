@@ -118,7 +118,8 @@ export default class Character {
         return Math.floor(this.stamina * this.armorPotential) + this.plusArmor;
     }
 
-    equip(slot, item) {
+    equip(slot, itemId) {
+        const item = new Item(itemId);
         if (!this.canEquip(slot, item)) {
             throw Error("can not equip item :" + item.name + " at " +  slot);
         }
@@ -249,6 +250,7 @@ export default class Character {
         }
 
         return {
+            id: this.id,
             level: this.level,
             exp: this.exp,
             equips: equips

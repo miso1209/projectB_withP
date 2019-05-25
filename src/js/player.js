@@ -9,6 +9,7 @@ export default class Player {
         this.inventory = new Inventory();
         // 자신이 가지고 있는 캐릭터 목록
         this.characters = [];
+        this.party = null; // 파티 클래스를 만들어서 처리를 한다
         // 대표 캐릭터 자신이 가지고 있는 캐릭터 중에 하나를 골라서 필드 캐리터로 사용한다
         // 캐릭터 로딩을 언제 어떻게 해야할까... 게임 시작시에 미리 데이터를 로딩해야 할 것 같다. 
         // 캐릭터 팩토리를 다시 만들어야 할듯
