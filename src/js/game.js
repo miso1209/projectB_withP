@@ -56,6 +56,18 @@ export default class Game extends EventEmitter {
         blackScreen.tint = 0;
         pixi.stage.addChild(blackScreen);
         this.blackScreen = blackScreen;
+        
+        // ui 이벤트 연결
+        // 어느 시점에 해야 좋을까?
+        this.ui.on('inventory', () => {
+            // 게임에서 인벤토리 데이터를 얻어온다
+            const inputs = this.getInvenotryData();
+            this.ui.showInventory(inputs);
+        });
+        this.ui.on('characterselect', ()=> {
+            const inputs = this.player.characters;
+            this.ui.showCharacterSelect(inputs);
+        });
     }
 
     // 더이상 콜백만들기가 싫어서 시험적으로 추가하는 비동기 함수들

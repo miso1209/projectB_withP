@@ -1,5 +1,6 @@
 import characters from './characters';
 import ScriptParser from './scriptparser';
+import Item from './item';
 
 // 이 클래스에서는 캐릭터의 보여지는 부분은 표현하지 않는다
 // 위치나 현재 애니메이션 상태등도 처리하지 않는다
@@ -8,6 +9,7 @@ export default class Character {
     constructor(id) {
         this.id = id;
         this.level = 1;
+        this.exp = 0;
         const data = characters[id];
         this.data = data;
         
@@ -38,6 +40,8 @@ export default class Character {
         this.armorPotential = 0.5;
 
         this.skills = data.skills;
+
+        this.dirty = false;
     }
 
     getParam(parameterName, level) {
@@ -129,6 +133,9 @@ export default class Character {
         for(const option of item.options) {
             this.applyOption(option);
         }
+        
+        // 상태가 변했으므로 업데이트를 해야한다
+        this.makeDirty();
     }
 
     canEquip(slot, item) {
@@ -145,6 +152,9 @@ export default class Character {
             for(const option of item.options) {
                 this.clearOption(option);
             }
+
+            // 상태가 변했으므로 업데이트를 해야한다
+            this.makeDirty();
         }
     }
 
@@ -191,5 +201,69 @@ export default class Character {
                 this.health = Math.max(0, this.health);
                 break;
         }
+    }
+
+    // exp 를 추가한다
+    increaseExp(exp) {
+        this.exp += exp;
+        while(this.maxexp <= exp) {
+            // 레벨업을 한다
+            this.level++;
+            // 이벤트를 외부에 알린다
+        }
+        // 업데이트 된 내용을 저장하도록 한다
+        this.makeDirty();
+    }
+
+    get maxexp() {
+        // TODO : 레벨 테이블을 나중에 개별 수치로 빼야한다.
+        // 일단은 함수로 처리한다
+        // 1레벨에서 5, 60레벨에서 백만이 되도록 2차함수를 만든다.
+        const x = this.level;
+        const a = -0.04;
+        const b = 4.04;
+        const result = x*x + a*x + b;
+        return Math.floor(result);
+    }
+
+    load(data) {
+        // 레벨, 경험치, 장비, 스킬내용을 올린다
+        this.level = data.level;
+        this.exp = data.exp;
+        for (const slot in data.equips) {
+            const itemId = data.equips[slot];
+            const item = new Item(itemId); 
+            this.equip(item);
+        }
+        this.clearDirty();
+    }
+
+    save() {
+        // 저장용 데이터를 생성한다
+        const equips = {};
+        for (const slot in this.equipments) {
+            const item = this.equipments[slot];
+            if (item) {
+                equips[slot] = item.id;
+            } 
+        }
+
+        return {
+            level: this.level,
+            exp: this.exp,
+            equips: equips
+        }
+    }
+
+    makeDirty() {
+        this.dirty = true;
+    }
+
+    isDirty() {
+        return this.dirty;
+    }
+
+    clearDirty() {
+        return this.dirty = false;
     }
 }

@@ -10,6 +10,7 @@ export default class Storage {
 
     resetData() {
         this.data = {};
+        this.data.characters = {};
         this.data.inventory = {};
         this.data.tags = [];
         this.data.quests = {};
@@ -58,6 +59,11 @@ export default class Storage {
 
     removeItem(itemId) {
         delete this.data.inventory[itemId];
+        this.save();
+    }
+
+    updateCharacter(data) {
+        this.characters[data.id] = data;
         this.save();
     }
 }
