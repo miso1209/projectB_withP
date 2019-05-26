@@ -1,11 +1,9 @@
 import Item from "./item";
-import { EventEmitter } from "events";
 
-
-export default class Inventory extends EventEmitter{
+export default class Inventory {
     constructor() {
-        super();
         this.items = {};
+        this.dirty = false;
     }
 
     addItem(itemId, count) {
@@ -13,11 +11,11 @@ export default class Inventory extends EventEmitter{
         const item = this.items[itemId];
         if (item) {
             item.count += count;
-            this.emit('chagned', itemId, count);
         } else {
             this.items[itemId] = new Item(itemId, count);
-            this.emit('added', itemId, count);
         }
+
+        this.makeDirty();
     }
 
     deleteItem(itemId, count) {
@@ -32,10 +30,9 @@ export default class Inventory extends EventEmitter{
         item.count -= count;
         if (item.count === 0) {
             delete this.items[itemId];
-            this.emit('removed', itemId);
-        } else {
-            this.emit('chagned', itemId, -count);
         }
+
+        this.makeDirty();
     }
 
     getCount(itemId) {
@@ -55,5 +52,32 @@ export default class Inventory extends EventEmitter{
         for(const itemId in this.items) {
             callback(this.items[itemId]);
         }
+    }
+    
+    load(data) {
+        for (const itemId in data) {
+            this.addItem(itemId, data[itemId]);
+        }
+        this.clearDirty();
+    }
+
+    save() {
+        const result = {};
+        for (const itemId in this.items) {
+            result[itemId] = this.items[itemId].count;
+        }
+        return result;
+    }
+
+    makeDirty() {
+        this.dirty = true;
+    }
+
+    isDirty() {
+        return this.dirty;
+    }
+
+    clearDirty() {
+        return this.dirty = false;
     }
 }

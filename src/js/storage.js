@@ -47,19 +47,8 @@ export default class Storage {
         this.save();
     }
 
-    addItem(itemId, count) {
-        this.data.inventory[itemId] = count;
-        this.save();
-        // 아이템 획득 ui 를 띄운다
-    }
-
-    updateItem(itemId, count) {
-        this.data.inventory[itemId] += count;
-        this.save();
-    }
-
-    removeItem(itemId) {
-        delete this.data.inventory[itemId];
+    updateInventory(data) {
+        this.data.inventory = data;
         this.save();
     }
 

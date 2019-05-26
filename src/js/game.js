@@ -72,6 +72,8 @@ export default class Game extends EventEmitter {
             }
             this.ui.showCharacterSelect(inputs);
         });
+
+        // 게임 알림을 알려주는 notificatin 큐를 만든다
     }
 
     // 더이상 콜백만들기가 싫어서 시험적으로 추가하는 비동기 함수들
@@ -128,9 +130,7 @@ export default class Game extends EventEmitter {
         }
         
         // 플레이어의 인벤토리에 복사한다
-        for (const itemId in this.storage.data.inventory) {
-            this.player.inventory.addItem(itemId, this.storage.data.inventory[itemId]);
-        }
+        this.player.inventory.load(this.storage.data.inventory);
 
         // 퀘스트 정보를 등록한다
         for (const questId in this.storage.data.quests) {
@@ -142,11 +142,6 @@ export default class Game extends EventEmitter {
 
         
         this.player.controlCharacter = this.storage.data.controlCharacter;
-        
-        // 인벤토리에 변화가 올때 캐릭터 정보를 저장한다
-        this.player.inventory.on('added', this.storage.addItem.bind(this.storage));
-        this.player.inventory.on('chagned', this.storage.updateItem.bind(this.storage));
-        this.player.inventory.on('remove', this.storage.removeItem.bind(this.storage));
 
     }
 
@@ -354,6 +349,11 @@ export default class Game extends EventEmitter {
                     c.clearDirty();
                     this.storage.updateCharacter(c.save());
                 }
+            }
+
+            if (this.player.inventory.isDirty()) {
+                this.storage.updateInventory(this.player.inventory.save());
+                this.player.inventory.clearDirty();
             }
            
         }
