@@ -17,6 +17,7 @@ import Quest from './quest';
 import ScriptParser from './scriptparser';
 import Cutscene from './cutscene';
 import UI from './ui/ui';
+import Encounter from './encounter';
 
 export default class Game extends EventEmitter {
     constructor(pixi) {
@@ -65,7 +66,10 @@ export default class Game extends EventEmitter {
             this.ui.showInventory(inputs);
         });
         this.ui.on('characterselect', ()=> {
-            const inputs = this.player.characters;
+            const inputs = [];
+            for (const cid in this.player.characters) {
+                inputs.push(this.player.characters[cid]);
+            }
             this.ui.showCharacterSelect(inputs);
         });
     }
@@ -85,13 +89,42 @@ export default class Game extends EventEmitter {
     }
 
     initPlayer() {
-        this.player = new Player();
+        if (!this.storage.data) {
+            // 캐릭터 데이터를 초기화한다
+            this.storage.resetData();
+            // TODO : 배틀 테스트를 위해서 추가한것인가?
+            this.storage.data.characters[1] = { level: 1, exp: 0, equips: {}};
+            this.storage.data.characters[2] = { level: 1, exp: 0, equips: {}};
+            this.storage.data.characters[3] = { level: 1, exp: 0, equips: {}};
+            this.storage.data.characters[4] = { level: 1, exp: 0, equips: {}};
+            this.storage.data.characters[5] = { level: 1, exp: 0, equips: {}};
 
+            // 파티 등록
+            this.storage.data.party[0] = 1;
+            this.storage.data.party[1] = 2;
+            this.storage.data.party[2] = 3;
+            this.storage.data.party[3] = 4;
+            this.storage.data.party[4] = 5;
+
+            // 필드에 보이는 캐릭터
+            this.storage.data.controlCharacter = 1;
+
+            this.storage.save();
+        }
+
+        this.player = new Player();
+            
         // 가지고 있는 캐릭터를 등록한다
         for(const charId in this.storage.data.characters) {
             const c = new Character(charId);
-            c.load(charId);
-            this.player.characters.push(c);
+            c.load(this.storage.data.characters[charId]);
+            this.player.characters[charId] = c;
+        }
+
+        // 파티멤버를 등록한다
+        for(let i = 0; i < this.storage.data.party.length; ++i) {
+            const member = this.storage.data.party[i];
+            this.player.party.set(i, member);
         }
         
         // 플레이어의 인벤토리에 복사한다
@@ -107,18 +140,14 @@ export default class Game extends EventEmitter {
             this.player.quests[questId] = quest;
         }
 
+        
+        this.player.controlCharacter = this.storage.data.controlCharacter;
+        
         // 인벤토리에 변화가 올때 캐릭터 정보를 저장한다
         this.player.inventory.on('added', this.storage.addItem.bind(this.storage));
         this.player.inventory.on('chagned', this.storage.updateItem.bind(this.storage));
         this.player.inventory.on('remove', this.storage.removeItem.bind(this.storage));
 
-        // TODO : 배틀 테스트를 위해서 추가한것인가?
-        this.player.characters.push(new Character(1));
-        this.player.characters.push(new Character(2));
-        this.player.characters.push(new Character(3));
-        this.player.characters.push(new Character(4));
-        this.player.characters.push(new Character(5));
-        this.player.controlCharacter = this.player.characters[0];
     }
 
     start() {
@@ -251,17 +280,39 @@ export default class Game extends EventEmitter {
 
     enterBattle() {
         if (this.currentMode instanceof Explore) {
+            // 나중에 encounter 를 인자로 넣어주어야 한다
+            // "test" 는 스테이지 이름으로 변경
+            const encounter = new Encounter("test");
+
             // 기존 스테이지를 보이지 않게 한다 (스테이지를 떠날 필요는없다)
             this.gamelayer.removeChild(this.stage);
+            
+            // 인카운터 정보를 이용해서 배틀 데이터를 만든다
+            const enemies = [];
+            for (let i = 0; i < encounter.monsters.length; ++i) {
+                const c = encounter.monsters[i];
+                if (c) {
+                    enemies.push({
+                        character: new Character(c),
+                        x: encounter.columnOf(i),
+                        y: encounter.rowOf(i)
+                    });
+                }
+            }
+
+            // 플레이어 파티 데이터를 작성한다
+            const allies = this.player.party.getBattleAllies();
 
             // 배틀을 사용한다
             const options = {
-                allies: [{ character: new Character(1), x: 0, y: 0},{ character: new Character(2), x: 1, y: 0},{ character: new Character(3), x: 0, y: 1},{ character: new Character(4), x: 1, y: 1}],
-                enemies: [{ character: new Character(5), x: 0, y: 0},{ character: new Character(1), x: 1, y: 0},{ character: new Character(2), x: 0, y: 1},{ character: new Character(3), x: 1, y: 1}],
+                allies: allies,
+                enemies: enemies,
                 background: "battle_background.png",
                 battlefield: "battleMap1.png",
                 screenWidth: this.screenWidth,
                 screenHeight: this.screenHeight,
+                rewards: encounter.rewards,
+                exp: encounter.exp,
             };
             this.currentMode = new Battle(options);
             this.currentMode.on('win', () => { this.leaveBattle(); });
@@ -297,7 +348,8 @@ export default class Game extends EventEmitter {
 
         // 캐릭터 데이터를 저장해야 하는지 확인
         if (this.player) {
-            for (const c of this.player.characters) {
+            for (const cid in this.player.characters) {
+                const c = this.player.characters[cid];
                 if (c.isDirty()) {
                     c.clearDirty();
                     this.storage.updateCharacter(c.save());

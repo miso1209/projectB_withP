@@ -4,13 +4,14 @@ export default class Storage {
             this.data = JSON.parse(localStorage.data);
             console.log("load data", this.data);
         } else {
-            this.resetData();
+            this.data = null;
         }
     }
 
     resetData() {
         this.data = {};
         this.data.characters = {};
+        this.data.party = [0, 0, 0, 0, 0, 0]; // 파티최대 숫자를 어딘가에?
         this.data.inventory = {};
         this.data.tags = [];
         this.data.quests = {};
@@ -26,7 +27,7 @@ export default class Storage {
     }
 
     hasAlreadyPlayed() {
-        return this.data.player ? true : false;
+        return this.data.alreadyPlayed;
     }
     
     addTag(tag) {
