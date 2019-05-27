@@ -14,10 +14,8 @@ export default class Monster extends PropBase {
         // 이 오브젝트는 일반적인 타일 데이터를 쓰지 않고 캐릭터외형 정보를 가져와서 출력한다
         const fieldChar = new AnimatedCharacter(monster.fieldCharacter.character);
         fieldChar.changeVisualToDirection(getDirectionFromName(field.direction));
-        fieldChar.animate('idle', true);
+        fieldChar.animate('walk', true);
         this.addChild(fieldChar);
-
-        this.tileTexture = fieldChar.anim;
 
         // TODO : 출력위치는 조정해야한다.
         this.src = monster;
@@ -26,5 +24,9 @@ export default class Monster extends PropBase {
     touch(game) {
         // 전투를 시작한다
         game.enterBattle(this.src);
+    }
+
+    showOutline() {
+        // 움직이는 스프라이트에는 외곽선을 그릴수 없다..
     }
 }
