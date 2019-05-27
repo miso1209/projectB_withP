@@ -17,7 +17,6 @@ import Quest from './quest';
 import ScriptParser from './scriptparser';
 import Cutscene from './cutscene';
 import UI from './ui/ui';
-import Encounter from './encounter';
 
 export default class Game extends EventEmitter {
     constructor(pixi) {
@@ -273,24 +272,20 @@ export default class Game extends EventEmitter {
         this.stage = null;
     }
 
-    enterBattle() {
+    enterBattle(monster) {
         if (this.currentMode instanceof Explore) {
-            // 나중에 encounter 를 인자로 넣어주어야 한다
-            // "test" 는 스테이지 이름으로 변경
-            const encounter = new Encounter("test");
-
             // 기존 스테이지를 보이지 않게 한다 (스테이지를 떠날 필요는없다)
             this.gamelayer.removeChild(this.stage);
             
             // 인카운터 정보를 이용해서 배틀 데이터를 만든다
             const enemies = [];
-            for (let i = 0; i < encounter.monsters.length; ++i) {
-                const c = encounter.monsters[i];
+            for (let i = 0; i < monster.battleCharacters.length; ++i) {
+                const c = monster.battleCharacters[i];
                 if (c) {
                     enemies.push({
                         character: new Character(c),
-                        x: encounter.columnOf(i),
-                        y: encounter.rowOf(i)
+                        x: monster.columnOf(i),
+                        y: monster.rowOf(i)
                     });
                 }
             }
@@ -306,8 +301,8 @@ export default class Game extends EventEmitter {
                 battlefield: "battleMap1.png",
                 screenWidth: this.screenWidth,
                 screenHeight: this.screenHeight,
-                rewards: encounter.rewards,
-                exp: encounter.exp,
+                rewards: monster.rewards,
+                exp: monster.exp,
             };
             this.currentMode = new Battle(options);
             this.currentMode.on('win', () => { this.leaveBattle(); });

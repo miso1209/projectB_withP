@@ -1,0 +1,18 @@
+{
+    "house": [{
+        "field": {
+            "character": 5,
+            "direction": "se",
+            "x": 2,
+            "y": 4
+        },
+        "battle": {
+            "characters": [5,1,2,3,0,0]
+        },
+        "exp": 3,
+        "rewards": [
+            "additem(1001, 1)"
+        ],
+        "description": "테스트용 몬스터 세트"
+    }]
+}

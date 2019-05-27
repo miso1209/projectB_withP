@@ -2,7 +2,7 @@ import Loader from './loader';
 import Storage from './storage';
 import DevConsole from './devconsole';
 import Game from './game';
-import UI from './ui/ui';
+import Monster from './monster';
 
 export default class App {
     constructor() {
@@ -62,7 +62,7 @@ export default class App {
                 // 스테이지를 변경한다
                 if (this.game.currentMode === this.game.exploreMode) {
                     this.ui.hideMenu();
-                    this.game.enterBattle();
+                    this.game.enterBattle(Monster.GetByStage("house")[0]);
                 } else {
                     this.game.leaveBattle();
                     this.ui.showMenu();

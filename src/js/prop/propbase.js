@@ -30,6 +30,7 @@ export default class PropBase extends PIXI.Container {
 
         this.movable = options.movable || false;
         this.transperancy = options.transperancy;
+        this.flipX = this.flipX;
     }
 
     showOutline() {
@@ -47,8 +48,10 @@ export default class PropBase extends PIXI.Container {
             
             this.outline = new PIXI.Sprite(PIXI.Texture.fromCanvas(canvas));
             this.outline.visible = false;
-            this.outline.position.x = this.tileTexture.position.x - lineWidth;
-            this.outline.position.y = this.tileTexture.position.y - lineWidth;
+            this.outline.position.x = this.tileTexture.position.x - lineWidth * this.tileTexture.scale.x;
+            this.outline.position.y = this.tileTexture.position.y - lineWidth * this.tileTexture.scale.y;
+            this.outline.scale.copy(this.tileTexture.scale);
+            //this.outline.anchor.set(this.tileTexture.anchor);
             this.addChildAt(this.outline, 0); // 먼저 그려야 한다
         }
 
@@ -71,8 +74,6 @@ export default class PropBase extends PIXI.Container {
             const style = new PIXI.TextStyle({fontSize: 1, fill : 0xffffff, align : 'center' });
             const text = new PIXI.Text(this.getName(), style);
             const textMetrics = PIXI.TextMetrics.measureText(this.getName(), style);
-            text.position.x = this.tileTexture.width / 2;
-            text.position.y = this.tileTexture.height / 4;
             text.anchor.x = 0.5;
             text.anchor.y = 0.5;
 
@@ -85,18 +86,21 @@ export default class PropBase extends PIXI.Container {
             box.anchor.y = 0.5;
             box.width = textMetrics.width + 1;
             box.height = textMetrics.height + 1;
-            box.position.x = this.tileTexture.width / 2;
-            box.position.y = this.tileTexture.height / 4;
 
+            // TODO : 이미지가 아니라 프랍자체에 붙여야 한다.
             this.nametag = new PIXI.Container();
-
-            text.scale.set(0.5);
-            box.scale.set(0.5);
-            
             this.nametag.addChild(box);
             this.nametag.addChild(text);
-            this.tileTexture.addChild(this.nametag);
+            this.nametag.position.x = this.tileTexture.width / 2;
+            this.nametag.position.y = -this.tileTexture.height / 2;
+            this.addChild(this.nametag);
             this.nametag.visible = false;
+
+            if (this.flipX) {
+                this.nametag.scale.set(-0.5, 0.5);
+            } else {
+                this.nametag.scale.set(0.5, 0.5);
+            }
         }
 
         this.nametag.visible = true;

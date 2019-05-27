@@ -10,6 +10,7 @@ import Prop from './prop';
 
 import { Portal2 } from './event/portal';
 import Loader from './loader';
+import Monster from './monster';
 
 function hitTestRectangle(rect1, rect2) {
     return  (rect1.x < rect2.x + rect2.width &&
@@ -154,6 +155,17 @@ export default class Stage extends PIXI.Container {
                 // 레이어에 맞게 설정한다
                 this.loadLayer(layer, group.name, map.width, map.height);
             }
+        }
+
+        // 몬스터 프랍을 설정한다
+        const monsters = Monster.GetByStage(name);
+        for (const monster of monsters) {
+            const cx = monster.fieldCharacter.x;
+            const cy = monster.fieldCharacter.y;
+            const options = {  type: "monster", src: monster };
+            
+            const prop = this.newTile(cx, cy, options);
+            this.objectMap[cx + cy * this.mapWidth] = prop;
         }
 
         // object 들의 렌더링 순서대로 빌드한다
