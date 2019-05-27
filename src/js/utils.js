@@ -31,3 +31,9 @@ export function getDirectionFromName(dir) {
         return DIRECTIONS.SW;
     }
 }
+
+export function $sleep(time) {
+    return new Promise((resolve) => {
+        resolve(time);
+    });
+}

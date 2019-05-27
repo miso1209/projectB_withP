@@ -5,9 +5,8 @@ import { DIRECTIONS } from '../define';
 // 현재 필드에서의 들어오는 문과 진입 방향을 찾는다
 // 문에서 들어오는 방향으로 살짝 
 
-export class doorIn extends EventEmitter {
+export class doorIn {
     constructor(game, gridX , gridY, direction, margin) {
-        super();
         this.game = game;
         this.direction = direction;
         this.margin = margin;
@@ -54,9 +53,8 @@ export class doorIn extends EventEmitter {
 }
 
 
-export class doorOut extends EventEmitter {
+export class doorOut {
     constructor(game, x , y, direction, margin) {
-        super();
         this.game = game;
         this.direction = direction;
         this.margin = margin;

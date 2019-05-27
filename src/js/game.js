@@ -8,8 +8,6 @@ import Player  from "./player";
 import {Battle}  from "./battle";
 import Explore  from "./explore";
 
-import { doorIn, doorOut } from './cutscene/door';
-import idle from './cutscene/idle';
 import Combiner from './combiner';
 import Character from './character';
 import Quest from './quest';
@@ -17,6 +15,7 @@ import Quest from './quest';
 import ScriptParser from './scriptparser';
 import Cutscene from './cutscene';
 import UI from './ui/ui';
+import Portal from './portal';
 
 export default class Game extends EventEmitter {
     constructor(pixi) {
@@ -150,10 +149,12 @@ export default class Game extends EventEmitter {
         // TODO : 마지막 플레이된 컷신을 찾아서 해당 컷신을 실행하도록 한다.
         if (this.hasTag("newplayer")) {
             // 그냥 평범하게 집에 들어간다
-            this.playCutscene([{
-                "command": "enterstage",
-                "arguments": ["house", "house-gate"]
-            }]);
+            this.ui.showTheaterUI(0.5);
+            this.$enterStage("assets/mapdata/house.json", "house-gate").then(() => {
+                this.exploreMode.interactive = true;
+                this.stage.showPathHighlight = true;
+                this.ui.hideTheaterUI(0.5);
+            });
         } else {
             // 필드에 들어간다// 튜토리얼 컷신을 샘플로 작성해본다
             this.playCutscene(1);
@@ -206,10 +207,18 @@ export default class Game extends EventEmitter {
                 }
             } else {
                 // 컷신플레이가 종료되었다
-                this.ui.hideTheaterUI(0.5);
-                this.ui.showMenu();
-                this.exploreMode.setInteractive(true);
-                if (this.stage) { this.stage.showPathHighlight = true; }
+                //this.ui.hideTheaterUI(0.5);
+                //this.ui.showMenu();
+
+                const t = async () => {
+                    const path = "assets/mapdata/" + this.stage.name + ".json";
+                    await this.$leaveStage();
+                    await this.$enterStage(path);
+                }
+                t();
+                //if (this.stage) { this.stage.showPathHighlight = true; }
+
+
             }
         }
 
@@ -220,9 +229,9 @@ export default class Game extends EventEmitter {
         const event = this.stage.findEventByName(eventName);
         if (event) {
             // 현재는 door 만 있다
-            return new doorIn(this, event.gridX, event.gridY, event.direction, 1);
+            return Portal.New('doorin', this, event.gridX, event.gridY, event.direction, 1);
         } else {
-            return new idle();
+            return Portal.New('default');
         }
     }
 
@@ -230,15 +239,16 @@ export default class Game extends EventEmitter {
         const event = this.stage.findEventByName(eventName);
         if (event) {
             // 현재는 door 만 있다
-            return new doorOut(this, event.gridX, event.gridY, event.direction, 1);
+            return Portal.New('doorout', this, event.gridX, event.gridY, event.direction, 1);
         } else {
-            return new idle();
+            return Portal.New('default');
         }
     }
     
     async $enterStage(stagePath, eventName) {
         const stageName = path.basename(stagePath, ".json");
         const stage = new Stage();
+        console.log(stagePath, stageName);
         await stage.$Load(stageName);
         stage.zoomTo(2, true);
 
