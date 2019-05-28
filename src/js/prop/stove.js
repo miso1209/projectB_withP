@@ -9,7 +9,9 @@ export default class Stove extends PropBase {
     }
 
     touch(game) {
-       console.log('open stove')
+        game.ui.showDialog([
+            { text: "차갑게 식어있다" }
+        ], () => {});
     }
 
     getName() {

@@ -169,6 +169,7 @@ export default class Game extends EventEmitter {
                 this.exploreMode.interactive = true;
                 this.stage.showPathHighlight = true;
                 this.ui.hideTheaterUI(0.5);
+                this.ui.showMenu();
             });
         }
     }
