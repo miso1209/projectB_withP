@@ -8,6 +8,8 @@ import ProgressUI from "./progressui";
 import Inventory from "./inventory";
 import ItemImage from "./component/itemimage";
 import CharacterSelect from "./characterSelect";
+import CharacterDetail from "./characterDetail";
+
 
 export default class DomUI extends EventEmitter {
     constructor() {
@@ -197,8 +199,20 @@ export default class DomUI extends EventEmitter {
 
     showCharacterSelect(inputs) {
         const pane = this.createContainer();
-        const pickme = new CharacterSelect(pane, inputs, (ok)=>{
+        
+        const characterSelect = new CharacterSelect(pane, inputs, (ok)=>{
             console.log(ok);
         });
+        
+        characterSelect.moveToLeft(100);
+        const characterDetail = new CharacterDetail(pane, 1);
+        characterDetail.moveToRight(110);
+    }
+
+    showCharacterDatail(playerID) {
+        const pane = this.createContainer();
+        const characterDetail = new CharacterDetail(pane, playerID);
+        characterDetail.addTitle('캐릭터 정보');
+        characterDetail.addCloseButton();
     }
 }

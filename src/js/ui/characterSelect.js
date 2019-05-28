@@ -17,20 +17,18 @@ export default class CharacterSelect extends Panel {
 
     pickme.addTitle('캐릭터 선택창');
     pickme.addCloseButton();
-    pickme.addConfirmButton('자세히보기','submit');
     pane.classList.add('screen');
 
-    this.prevButton = new Button('Prev', 'buttonS');
-    this.prevButton.moveToBottom(20);
-    this.prevButton.moveToLeft(20);
-    this.nextButton = new Button('Next', 'buttonS');
-    this.nextButton.moveToBottom(20);
-    this.nextButton.moveToRight(20);
-    
-    pickme.dom.appendChild(this.prevButton.dom);
-    pickme.dom.appendChild(this.nextButton.dom);
-    
+    this.prevButton = new Button('', 'paging');
+    this.prevButton.dom.classList.add('prev');
+    this.prevButton.moveToLeft(10);
+    this.prevButton.dom.style.top = '50%';
 
+    this.nextButton = new Button('', 'paging');
+    this.nextButton.dom.classList.add('next');
+    this.nextButton.moveToRight(10);
+    this.nextButton.dom.style.top = '50%';
+    
     const wrap = document.createElement('div');
     wrap.className = 'contents';
     wrap.style.top = '50px';
@@ -89,6 +87,9 @@ export default class CharacterSelect extends Panel {
     wrap.appendChild(characterDesc);
     wrap.appendChild(characterList);
 
+    pickme.dom.appendChild(this.prevButton.dom);
+    pickme.dom.appendChild(this.nextButton.dom);
+
     pane.appendChild(this.dom);
   }
 
@@ -102,25 +103,23 @@ class Doll {
     const doll = document.createElement('div');
     doll.classList.add('doll');
 
-    this.path = '/src/assets/';
+    this.path = '/src/assets/sprite/';
     this.path = `${this.path}${item.data.name}/${item.data.name}_idle_sw.png`;
 
-    if(item.data.name === 'hector') {
-      this.path = '/src/assets/night/idle_sw.png';
-    }
     const name = new MakeDom('p', 'name', item.data.displayname);
+    const imgWrap = new MakeDom('p', 'imgWrap', null);
     const profile = new MakeDom('img', 'profileImg', null);
     profile.src = this.path;
 
-    // profile.style.width = '32px';
-    // profile.style.height = '48px';
+    imgWrap.style.width = '32px';
+    imgWrap.style.height = '48px';
 
     this.stage = new MakeDom('p', 'tilebg', null);
-    
+    imgWrap.appendChild(profile);
     // equipments
     doll.appendChild(this.stage);
     doll.appendChild(name);
-    doll.appendChild(profile);
+    doll.appendChild(imgWrap);
 
     this.dom = doll;
   }
