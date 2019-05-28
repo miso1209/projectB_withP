@@ -10,6 +10,7 @@ export default class Quest {
         for(let i = 0; i < this.origin.objectives.length; ++i) {
             const objective = this.origin.objectives[i];
             const handler = (...args) => {
+                console.log(args);
                 // 인자가 일치하면 카운트를 올린다
                 const srcArgs = objective.args || [];
                 let success = true;

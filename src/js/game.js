@@ -16,6 +16,8 @@ import ScriptParser from './scriptparser';
 import Cutscene from './cutscene';
 import UI from './ui/ui';
 import Portal from './portal';
+import Notification from './notification';
+import Item from './item';
 
 export default class Game extends EventEmitter {
     constructor(pixi) {
@@ -72,6 +74,7 @@ export default class Game extends EventEmitter {
         });
 
         // 게임 알림을 알려주는 notificatin 큐를 만든다
+        this.notification = new Notification();
     }
 
     // 더이상 콜백만들기가 싫어서 시험적으로 추가하는 비동기 함수들
@@ -105,6 +108,9 @@ export default class Game extends EventEmitter {
             this.storage.data.party[2] = 3;
             this.storage.data.party[3] = 4;
             this.storage.data.party[4] = 5;
+
+            // 현지 진행해야하는 컷신 아이디를 적는다
+            this.storage.data.cutscene = 1;
 
             // 필드에 보이는 캐릭터
             this.storage.data.controlCharacter = 1;
@@ -152,7 +158,11 @@ export default class Game extends EventEmitter {
         this.initPlayer();
 
         // TODO : 마지막 플레이된 컷신을 찾아서 해당 컷신을 실행하도록 한다.
-        if (this.hasTag("newplayer")) {
+        if (this.storage.data.cutscene) {
+            // 필드에 들어간다// 튜토리얼 컷신을 샘플로 작성해본다
+            this.playCutscene(this.storage.data.cutscene);
+            
+        } else {
             // 그냥 평범하게 집에 들어간다
             this.ui.showTheaterUI(0.5);
             this.$enterStage("assets/mapdata/house.json", "house-gate").then(() => {
@@ -160,13 +170,19 @@ export default class Game extends EventEmitter {
                 this.stage.showPathHighlight = true;
                 this.ui.hideTheaterUI(0.5);
             });
-        } else {
-            // 필드에 들어간다// 튜토리얼 컷신을 샘플로 작성해본다
-            this.playCutscene(1);
         }
     }
 
     playCutscene(script) {
+        //=========================================
+        this.storage.data.cutscene = Number(script);
+        this.storage.save();
+        //=========================================
+
+        this.onNotify({ type:"cutscene", script: script });
+    }
+
+    _playCutscene(script) {
         if (Number(script)) {
             script = Cutscene.fromData(Number(script));
         } else {
@@ -221,6 +237,11 @@ export default class Game extends EventEmitter {
                     this.ui.showMenu();
                     this.exploreMode.interactive = true;
                     if (this.stage) { this.stage.showPathHighlight = true; }
+
+                    this.onNotification = false;
+
+                    this.storage.data.cutscene = null;
+                    this.storage.save();
                 }
 
                 t();
@@ -422,15 +443,16 @@ export default class Game extends EventEmitter {
         this.player.addTag(tag);
         // 저장하는 코드를 업데이트로 옮긴다
         this.storage.addTag(tag);
+
+        this.emit('addtag', tag);
     }
 
     addItem(itemId, count) {
         this.player.inventory.addItem(itemId, Number(count));
+        this.onNotify({ type:"item", item:itemId, count:count } );
 
-        // TODO : 아이템 획득내용을 보여주는 것은 별도의 큐로 만들어야 한다.
-        // 보상이 겹쳤을때 아이템 획득 보상과 다른 보상을 겹치게 하지 않아야 하는데, 특히 컷신을 획득창이 모두 보이고 나서 해야한다. 어떻게 하지?
-       /* const item = this.player.inventory.getItem(itemId);
-        this.emit('item-acquire', item);*/
+        // 퀘스트를 위한 이벤트 처리
+        this.emit('additem', itemId, count);
     }
 
     addQuest(questId) {
@@ -449,6 +471,7 @@ export default class Game extends EventEmitter {
 
     completeQuest(id) {
         const quest = this.player.quests[id];
+        console.log(quest, quest.isAllObjectivesCompleted());
         if (quest && quest.isAllObjectivesCompleted()){
             // 이벤트 연결을 끊어놓는다
             quest.foreEachEvent(this.removeListener.bind(this));
@@ -471,5 +494,26 @@ export default class Game extends EventEmitter {
 
     async $fadeIn(duration) {
         await this.tweens.$addTween(this.blackScreen, duration, { alpha: 0 }, 0, "linear", true);
+    }
+
+    onNotify(options) {
+        // TODO : 나중에 아이템 알람말고 다른 것도 필요하다
+        if (this.onNotification) {
+            this.notification.push(options);
+        } else {
+            if (options.type === "item") {
+                this.onNotification = true;
+                this.ui.showItemAquire(new Item(options.item, options.count), () => {
+                    this.onNotification = false;
+                    const next = this.notification.pop();
+                    if (next) {
+                        this.onNotify(next);
+                    }
+                });
+            } else if (options.type === "cutscene") {
+                this.onNotification = true;
+                this._playCutscene(options.script);
+            }
+        }
     }
 }
