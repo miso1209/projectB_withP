@@ -8,6 +8,12 @@ export default class WorkTable extends PropBase {
         this.upgraded = false;
     }
 
+    applyTag(tag) {
+        if (tag === "worktable") {
+            this.upgrade();
+        }
+    }
+
     upgrade() {
         // 업그레이드를 한다
         this.tileTexture.texture = PIXI.Texture.fromFrame("house-worktable-upgrade.png");
@@ -31,18 +37,20 @@ export default class WorkTable extends PropBase {
             // 업그레이드 하시겠습니까 모달.을 띄운다
             game.ui.showConfirmModal("업그레이드 하시겠습니까?", (confirmed) => {
                 if (confirmed === "ok") {
-                    game.addTag("worktable");
-                    this.upgrade();
+                    const t = async () => {
+                        game.addTag("worktable");
+                        game.exploreMode.interactive = false;
+                        await game.$fadeOut(1);
+                        this.upgrade();
+                        await game.$fadeIn(1);
+                        game.exploreMode.interactive = true;
+
+                    };
+
+                    t();
                 }
             });
         }
     }
 
-    getName() {
-        if (this.upgraded) {
-            return '작업대';
-        } else {
-            return '빈탁자';
-        }
-    }
 }

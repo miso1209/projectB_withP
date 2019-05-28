@@ -1,8 +1,16 @@
+import { DstAlphaFactor } from "three";
+
 export default class Storage {
     constructor() {
+        this.VERSION = 0.2;
+
         if (localStorage.data) {
             this.data = JSON.parse(localStorage.data);
-            console.log("load data", this.data);
+            if (this.data.version !== this.VERSION) {
+                // 변환할 방법을 찾아야 한다.
+                this.data = this.convertVersion(this.data);
+            }
+            
         } else {
             this.data = null;
         }
@@ -10,11 +18,18 @@ export default class Storage {
 
     resetData() {
         this.data = {};
+        this.data.version = this.VERSION;
         this.data.characters = {};
         this.data.party = [0, 0, 0, 0, 0, 0]; // 파티최대 숫자를 어딘가에?
         this.data.inventory = {};
         this.data.tags = [];
         this.data.quests = {};
+    }
+
+    convertVersion(src) {
+        // TODO 나중에 버전 체인을 하도록 한다.
+        this.resetData();
+        return this.data;
     }
 
     save() {
@@ -26,10 +41,6 @@ export default class Storage {
         this.resetData();
     }
 
-    hasAlreadyPlayed() {
-        return this.data.alreadyPlayed;
-    }
-    
     addTag(tag) {
         if (this.data.tags.indexOf(tag) < 0) {
             this.data.tags.push(tag);
@@ -53,7 +64,6 @@ export default class Storage {
     }
 
     updateCharacter(data) {
-        console.log(this.data);
         this.data.characters[data.id] = data;
         this.save();
     }

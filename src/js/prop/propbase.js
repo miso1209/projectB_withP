@@ -51,7 +51,7 @@ export default class PropBase extends PIXI.Container {
             this.outline.position.x = this.tileTexture.position.x - lineWidth * this.tileTexture.scale.x;
             this.outline.position.y = this.tileTexture.position.y - lineWidth * this.tileTexture.scale.y;
             this.outline.scale.copy(this.tileTexture.scale);
-            //this.outline.anchor.set(this.tileTexture.anchor);
+            
             this.addChildAt(this.outline, 0); // 먼저 그려야 한다
         }
 
@@ -116,4 +116,6 @@ export default class PropBase extends PIXI.Container {
         // override 
         return null;
     }
+
+    applyTag(tag) {}
 }

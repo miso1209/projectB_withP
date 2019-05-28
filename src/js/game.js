@@ -113,6 +113,11 @@ export default class Game extends EventEmitter {
         }
 
         this.player = new Player();
+
+        // 태그정보를 로딩한다
+        for(const tag of this.storage.data.tags) {
+            this.player.addTag(tag);
+        }
             
         // 가지고 있는 캐릭터를 등록한다
         for(const charId in this.storage.data.characters) {
@@ -206,19 +211,19 @@ export default class Game extends EventEmitter {
                     next();
                 }
             } else {
-                // 컷신플레이가 종료되었다
-                //this.ui.hideTheaterUI(0.5);
-                //this.ui.showMenu();
-
-                const t = async () => {
-                    const path = "assets/mapdata/" + this.stage.name + ".json";
-                    await this.$leaveStage();
-                    await this.$enterStage(path);
+                const t = async() => {
+                    // 컷신플레이가 종료되었다
+                    // 암전후 다시 밝아진다.
+                    await this.$fadeOut(1);
+                    this.ui.hideTheaterUI();
+                    await this.$fadeIn(1);
+                    
+                    this.ui.showMenu();
+                    this.exploreMode.interactive = true;
+                    if (this.stage) { this.stage.showPathHighlight = true; }
                 }
+
                 t();
-                //if (this.stage) { this.stage.showPathHighlight = true; }
-
-
             }
         }
 
@@ -231,7 +236,7 @@ export default class Game extends EventEmitter {
             // 현재는 door 만 있다
             return Portal.New('doorin', this, event.gridX, event.gridY, event.direction, 1);
         } else {
-            return Portal.New('default');
+            return Portal.New('default', this, this.exploreMode.lastX, this.exploreMode.lastY);
         }
     }
 
@@ -241,15 +246,17 @@ export default class Game extends EventEmitter {
             // 현재는 door 만 있다
             return Portal.New('doorout', this, event.gridX, event.gridY, event.direction, 1);
         } else {
-            return Portal.New('default');
+            return Portal.New('default', this, this.exploreMode.controller.gridX, this.exploreMode.controller.gridY);
         }
     }
     
     async $enterStage(stagePath, eventName) {
         const stageName = path.basename(stagePath, ".json");
         const stage = new Stage();
-        console.log(stagePath, stageName);
-        await stage.$Load(stageName);
+        await stage.$load(stageName);
+        for(const tag of this.player.tags) {
+            stage.applyTag(tag);
+        }
         stage.zoomTo(2, true);
 
         this.stage = stage;
@@ -265,7 +272,7 @@ export default class Game extends EventEmitter {
         this.stage.checkForFollowCharacter(this.currentMode.controller, true);
         // 스테이지 타이틀을 띄운다
         // 진입 컷신을 사용한다
-        await this.tweens.$addTween(this.blackScreen, 0.5, { alpha: 0 }, 0, "linear", true);
+        await this.$fadeIn(0.5);
         await cutscene.$play();
     }
 
@@ -277,7 +284,7 @@ export default class Game extends EventEmitter {
         const cutscene = this.buildStageLeaveCutscene(eventName);
         
         await cutscene.$play();
-        await this.tweens.$addTween(this.blackScreen, 0.5, { alpha: 1 }, 0, "easeIn", true);
+        await this.$fadeOut(0.5);
         this.gamelayer.removeChild(this.stage);
         this.stage = null;
     }
@@ -408,13 +415,13 @@ export default class Game extends EventEmitter {
     }
 
     hasTag(tag) {
-        return this.storage.data.tags.indexOf(tag) >= 0;
+        return this.player.hasTag(tag);
     }
 
     addTag(tag) {
+        this.player.addTag(tag);
+        // 저장하는 코드를 업데이트로 옮긴다
         this.storage.addTag(tag);
-        // 태그 추가 이벤트 트리거 
-        this.emit('addtag', tag);
     }
 
     addItem(itemId, count) {
@@ -455,5 +462,14 @@ export default class Game extends EventEmitter {
             this.storage.completeQuest(id);
             delete this.player.quests[id];
         }
+    }
+
+    //나중에 UI 로 뺴야 한다
+    async $fadeOut(duration) {
+        await this.tweens.$addTween(this.blackScreen, duration, { alpha: 1 }, 0, "linear", true);
+    }
+
+    async $fadeIn(duration) {
+        await this.tweens.$addTween(this.blackScreen, duration, { alpha: 0 }, 0, "linear", true);
     }
 }

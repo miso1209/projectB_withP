@@ -16,6 +16,9 @@ export default class Player {
         this.quests = {};
         // 대표 캐릭터 자신이 가지고 있는 캐릭터 중에 하나를 골라서 필드 캐리터로 사용한다
         this.controlCharacter = null;
+        
+        // 태그정보
+        this.tags = [];
     }
 
     addTag(tag) {

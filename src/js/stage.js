@@ -71,7 +71,7 @@ export default class Stage extends PIXI.Container {
 
     // 로딩함수를 시험적으로 비동기로 만들어보자
     // TODO : 일단 만들어보는것이기 때문에 다른곳에도 적용할지는 천천히 고민해보자
-    async $Load(name) {
+    async $load(name) {
         const resourcePath = "assets/mapdata/";
         
         const loader = new Loader();
@@ -163,7 +163,7 @@ export default class Stage extends PIXI.Container {
             const cx = monster.fieldCharacter.x;
             const cy = monster.fieldCharacter.y;
             const options = {  type: "monster", src: monster };
-            
+
             const prop = this.newTile(cx, cy, options);
             this.objectMap[cx + cy * this.mapWidth] = prop;
         }
@@ -311,6 +311,15 @@ export default class Stage extends PIXI.Container {
             // 역순으로 뒤에 있는 것을 먼저 추가한다
             this.objectContainer.addChild(obj);
             
+        }
+    }
+
+    applyTag(tag) {
+        // 각 프랍들에게 tag 를 적용한다
+        for(const prop of this.objectMap) {
+            if (prop) {
+                prop.applyTag(tag);
+            }
         }
     }
 
