@@ -451,7 +451,22 @@ export default class Stage extends PIXI.Container {
         // 다음 위치에서부터 시작을 한다
         const startX = character.currentTargetTile ? character.currentTargetTile.x : character.gridX;
         const startY = character.currentTargetTile ? character.currentTargetTile.y : character.gridY;
-        const path  = this.pathFinder.solve(startX, startY, x, y, ignoreTarget);
+        let path = this.pathFinder.solve(startX, startY, x, y, ignoreTarget);
+        if (target) {
+            // 타겟이 있다면 타겟의 사이즈만큼을 계산해서 가장 가까운 곳으로 이동한다
+            for(let j = target.ymin; j <= target.ymax; ++j ) {
+                for(let i = target.xmin; i < target.xmax; ++i ) {
+                    const candidate = this.pathFinder.solve(startX, startY, i, j, ignoreTarget);
+                    if(!candidate) {
+                        // do nothing
+                    } else if (!path) {
+                        path = candidate;
+                    } else if (candidate.length < path.length) {
+                        path = candidate;
+                    }
+                }
+            }
+        } 
 
         if (path) {
             // 아웃라인을 제거한다
@@ -459,7 +474,7 @@ export default class Stage extends PIXI.Container {
                 this.interactTarget.hideOutline();
             }
 
-            if (path[0].x === x && path[0].y === y) {
+            if (target) {
                 // 타겟을 설정한다
                 this.interactTarget = target;
                 // 아웃라인을 그린다

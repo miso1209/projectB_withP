@@ -472,7 +472,6 @@ export default class Game extends EventEmitter {
 
     completeQuest(id) {
         const quest = this.player.quests[id];
-        console.log(quest, quest.isAllObjectivesCompleted());
         if (quest && quest.isAllObjectivesCompleted()){
             // 이벤트 연결을 끊어놓는다
             quest.foreEachEvent(this.removeListener.bind(this));
