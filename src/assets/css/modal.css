@@ -109,7 +109,6 @@
   background:url('~assets/ui/dialog/nineBox_09.png') no-repeat;
 }
 
-
 .contents {
   position: absolute;
   top: 70px;
@@ -164,12 +163,13 @@
 
 .flexWrap .flex-left {
   float: left;
+  /* width: 28%; */
   width: 28%;
 }
 
 .flexWrap .flex-right {
   float: right;
-  min-width: 67%;
+  /* min-width: 67%; */
   min-height: 330px;
   width: 490px;
   padding: 0 10px 10px;

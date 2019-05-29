@@ -158,6 +158,21 @@ button span {
   opacity: 0.7;
 }
 
+.paging{
+  background: url(~assets/ui/paging.png) no-repeat 0 0;
+  width: 32px;
+  height: 54px;
+}
+.paging.prev {
+  background-position: 0 0;
+}
+.paging.next {
+  background-position: -33px 0;
+}
+
+.paging:hover, .paging:active {
+  opacity: 0.7;
+}
 .tabPane {
   position: absolute;
   left: -100px;
@@ -350,12 +365,12 @@ button span {
 }
 
 .skillItems, .equipItems {
-  clear: both;
+  display: flex;
+  flex-wrap: wrap;
   display: block;
 }
 
-.skillItems p, .equipItems p {
-  float: left;
+.skillItems .img, .equipItems .img {
   margin-right: 10px;
   overflow: visible;
 }
@@ -514,6 +529,11 @@ button.disabled {
   background-color: #f9f9f9;
   background-blend-mode: darken;
   pointer-events: none;
+}
+
+.paging.disabled {
+  background-color: transparent;
+  opacity: 0.5;
 }
 
 button.disabled span {
@@ -684,6 +704,7 @@ button.disabled span {
 
 /* 캐릭터 선택창 */
 .characterDesc {
+  position: relative !important;
   border-radius: 15px;
   background-color: #1f130a;
   padding: 10px 20px;
@@ -696,25 +717,35 @@ button.disabled span {
 }
 
 .characterList {
-  margin: 10px auto 0;
-
+  position: relative !important;
+  min-height: 330px;
+  padding: 0 20px;
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-evenly;
   justify-items: start;
+  background: url(~assets/ui/bg.png) no-repeat;
+  background-size: cover;
+  border-radius: 15px;
 }
 
 .characterList .doll {
   position: relative;
   min-width: 25%;
-  /* min-width: 96px; */
-  height: 96px;
+  min-height: 96px;
   padding: 5px;
 
-  margin-top: 20px;
+  margin: 10px 5px;
   border: 2px solid transparent;
+  border-radius: 10px;
   transition: border 0.3s;
+}
+
+.doll:hover, .doll.active {
+  border: 2px solid #ffd800;
+  box-shadow: 2px 2px 2px rgba(0,0,0,0.7);
+  border-radius: 10px;
 }
 
 .doll .tilebg {
@@ -727,25 +758,43 @@ button.disabled span {
   height: 65px;
   margin: 0 auto;
   background: url(~assets/ui/characterbg.png) no-repeat -96px 0;
+  opacity: 0;
 }
 
-.doll .profileImg {
+.doll .imgWrap {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 25px;
-
-  width: 64px;
-  height: 96px;
-
+  top: 15px;
+  z-index: 11;
+  width: 32px;
+  height: 48px;
   margin: 0 auto;
-  transition: all 0.5s linear;
-
+  overflow: hidden;
 }
 
-.doll .profileImg::after{
-  display: block;
+
+.doll .profileImg {
+  width: auto;
+  height: inherit;
+  vertical-align: bottom;
+  margin: 0 auto;
+}
+
+.imgWrap::after{
   content: '';
+  display: inline-block;
+  position: absolute;
+  bottom: 0;
+  z-index: -11;
+  left: 0;
+  right: 0;
+  width: 54px;
+  height: 15px;
+  margin: 0 auto;
+  border-radius: 70%;
+  background-color: rgba(0,0,0,0.2);
+  z-index: 1111;
 }
 
 .doll .name {
@@ -753,7 +802,11 @@ button.disabled span {
   left: 0;
   right: 0;
   bottom: 0;
+  padding: 10px 0;
+  font-size: 15px;
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.7);
 }
+
 
 /* .doll:hover:after, .doll.active:after {
   content: '';
@@ -770,12 +823,22 @@ button.disabled span {
   background-size: cover;
 } */
 
-.doll:hover, .doll.active {
-  border: 2px solid #ffd800;
-}
 
 /* .doll:hover .profileImg, .doll.active .profileImg{
   width: 64px;
   height: 96px;
   bottom: 30px;
 } */
+
+.doll:hover .imgWrap, .doll.active .imgWrap {
+  width: 64px;
+  height: 96px;
+  transition: all 0.5s linear;
+} 
+
+.pickme > .contents {
+
+  padding: 10px 0;
+  left: 45px;
+  right: 45px;
+}

@@ -203,10 +203,6 @@ export default class DomUI extends EventEmitter {
         const characterSelect = new CharacterSelect(pane, inputs, (ok)=>{
             console.log(ok);
         });
-        
-        characterSelect.moveToLeft(100);
-        const characterDetail = new CharacterDetail(pane, 1);
-        characterDetail.moveToRight(110);
     }
 
     showCharacterDatail(playerID) {
