@@ -200,15 +200,15 @@ export default class DomUI extends EventEmitter {
     showCharacterSelect(inputs) {
         const pane = this.createContainer();
         
-        const characterSelect = new CharacterSelect(pane, inputs, (ok)=>{
-            console.log(ok);
+        const characterSelect = new CharacterSelect(pane, inputs, (info)=>{
+            // console.log(info);
+            this.showCharacterDatail(info);
         });
     }
 
-    showCharacterDatail(playerID) {
+    showCharacterDatail(player) {
         const pane = this.createContainer();
-        const characterDetail = new CharacterDetail(pane, playerID);
-        characterDetail.addTitle('캐릭터 정보');
-        characterDetail.addCloseButton();
+        const characterDetail = new CharacterDetail(pane, player);
+        
     }
 }

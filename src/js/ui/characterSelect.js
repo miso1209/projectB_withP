@@ -11,8 +11,8 @@ export default class CharacterSelect extends Panel {
 
     // todo 현재 배틀용 캐릭터 데이터를 받아와서 작업. 이후 정제된 데이터로 수정한다.
     this.inputs = inputs;
-    this.selected = null;
     this.result = result;
+    this.selected = null;
     
     const pickme = new Modal(pane, 800, 460, null);
     this.dom = pickme.dom;
@@ -25,13 +25,13 @@ export default class CharacterSelect extends Panel {
     this.prevButton = new Button('', 'paging');
     this.prevButton.dom.classList.add('prev');
     this.prevButton.dom.classList.add('disabled');
-    this.prevButton.moveToLeft(-35);
+    this.prevButton.moveToLeft(-45);
     this.prevButton.dom.style.top = '50%';
 
     this.nextButton = new Button('', 'paging');
     this.nextButton.dom.classList.add('next');
     this.nextButton.dom.classList.add('disabled');
-    this.nextButton.moveToRight(-35);
+    this.nextButton.moveToRight(-45);
     this.nextButton.dom.style.top = '50%';
     
     const wrap = document.createElement('div');
@@ -82,8 +82,6 @@ export default class CharacterSelect extends Panel {
       equipItems.appendChild(itemIcon.dom);
     });
 
-
-    
     this.stat_health = new MakeDom('p', 'stat', null);
     
     // 자세히 보기 버튼 콜백
@@ -91,23 +89,27 @@ export default class CharacterSelect extends Panel {
     moreButton.moveToCenter(10);
     moreButton.moveToBottom(10);
     moreButton.dom.addEventListener('click', (ok)=> {
-      // console.log(this.selected);
+      // todo 
+      pane.parentNode.removeChild(pane);
       return this.result(this.selected);
     });
 
     characterDesc.appendChild(this.portrait);
     characterDesc.appendChild(this.descClass);
     characterDesc.appendChild(this.descName);
-
     characterDesc.appendChild(this.stat_health);
-
     characterDesc.appendChild(equipItems);
     characterDesc.appendChild(moreButton.dom);
     
     // characterList
+    const characterListWrap = new MakeDom('div', 'characterListWrap', null);
+    characterListWrap.classList.add('flex-left');
+    characterListWrap.style.width = '430px';
+    characterDesc.appendChild(characterListWrap);
+
     const characterList = new MakeDom('div', 'characterList', null);
-    characterList.classList.add('flex-left');
-    characterList.style.width = '430px';
+    characterList.style.width = '410px';
+    
     let selected = null;
     let index = 0;
     let n = 0;
@@ -148,11 +150,10 @@ export default class CharacterSelect extends Panel {
     // paging
     characterList.appendChild(this.prevButton.dom);
     characterList.appendChild(this.nextButton.dom);
+    characterListWrap.appendChild(characterList);
 
-    // button
-    wrap.appendChild(characterList);
+    wrap.appendChild(characterListWrap);
     wrap.appendChild(characterDesc);
-
     pane.appendChild(this.dom);
   }
 
@@ -166,7 +167,6 @@ export default class CharacterSelect extends Panel {
     this.descName.innerText = this.selected.name;
     this.portrait.src = path + this.selected.portrait;
     this.stat_health.innerText = 'Health : ' + this.selected.base.health;
-
   }
 }
 

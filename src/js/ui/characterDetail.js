@@ -2,22 +2,25 @@ import Panel from "./component/panel";
 import Modal from "./component/modal";
 import ItemImage from "./component/itemimage";
 import Button from "./component/button";
-
-
+import MakeDom from "./component/makedom";
 
 export default class CharacterDetail extends Panel {
   constructor(pane, input) {
     super();
-    const statUI = new Modal(pane, 360, 460);
-    
-    statUI.className = 'statUI';
 
+    const statUI = new Modal(pane, 360, 460);
+    pane.classList.add('screen');
+    
+    statUI.addTitle('캐릭터 정보');
+    statUI.addCloseButton();
+    statUI.className = 'statUI';
+    
     this.input = input;
+    console.log(this.input);
+
      // 캐릭터 정보
      let playerId = 1;
-     const profile = new Profile(playerId);
-     profile.moveToCenter(50);
-     statUI.dom.appendChild(profile.dom);
+     const profile = new MakeDom('div', 'profile')
 
 
     // 캐릭터 스탯 정보 - 임시..
@@ -25,9 +28,13 @@ export default class CharacterDetail extends Panel {
     const contents = document.createElement('div');
     contents.classList.add('contents');
     contents.classList.add('contents-box');
-    contents.classList.add('column-2'); // 3단으로 할 때는 column-3
-    contents.style.top = profile.dom.offsetTop + 130 + 'px';
-  
+    // contents.style.top = profile.dom.offsetTop + 130 + 'px';
+    contents.style.bottom = '100px';
+    contents.style.top = 'auto';
+
+    const playerName = new MakeDom('p', 'playerName', this.input.displayname);
+    contents.appendChild(playerName);
+
     statData.push("HP : 33");
     statData.push("MP : 3");
     statData.push("STRENGTH : 10");
@@ -37,7 +44,6 @@ export default class CharacterDetail extends Panel {
     statData.push("RANGE : 100");
     statData.push("SPEED : 200");
 
-  
     statData.forEach(text => {
       let stat = document.createElement('p');
       stat.innerText = text;
@@ -75,7 +81,6 @@ export default class CharacterDetail extends Panel {
       itemName.innerText = item.item;
   
       itemIcon.dom.style.display = 'inline-block';
-      // itemIcon.dom.append(itemName);
       equipItems.appendChild(itemIcon.dom);
     });
   
@@ -88,10 +93,6 @@ export default class CharacterDetail extends Panel {
       x: 4,
       y: 6,
       skill: 'Avoid'
-    // }, {
-    //   x: 2,
-    //   y: 6,
-    //   skill: 'poison'
     }];
   
     const skillItems = document.createElement('div');
@@ -117,6 +118,8 @@ export default class CharacterDetail extends Panel {
     statUI.dom.appendChild(equipItems);
     statUI.dom.appendChild(skillItems);
   
+    
+
     // 버튼
     const equip_btn = new Button('EQUIP');
     equip_btn.moveToLeft(20);
@@ -140,45 +143,38 @@ export default class CharacterDetail extends Panel {
 }
 
 
-class Profile extends Panel {
-  constructor(playerId) {
-    super();
+// class Profile extends Panel {
+//   constructor(player) {
+//     super();
+    
+//     console.log(player);
+//     return;
 
-    let profile = document.createElement('div');
-    profile.className = 'profile';
 
-    let profileImg = document.createElement('img');
-    let name = document.createElement('strong');
-    let level = document.createElement('span');
+//     let profile = document.createElement('div');
+//     profile.className = 'profile';
 
-    name.className = 'profile-name';
-    level.className = 'profile-level';
+//     let profileImg = document.createElement('img');
+//     let name = document.createElement('strong');
+//     let level = document.createElement('span');
 
-    let lv_value = null;
+//     name.className = 'profile-name';
+//     level.className = 'profile-level';
 
-    if (playerId === 1) {
-      name.innerText = 'Hector';
-      lv_value = 1;
-    } else if (playerId === 2) {
-      name.innerText = 'Elid';
-      lv_value = 2;
-    } else {
-      name.innerText = 'Miluda';
-      lv_value = 10;
-    }
-    level.innerText = 'LV.' + lv_value;
+//     let lv_value = null;
+//     level.innerText = 'LV.' + lv_value;
 
-    this.profile = profile;
-    this.name = name;
-    this.level = level;
+//     this.profile = profile;
+//     this.name = name;
+//     this.level = level;
 
-    profileImg.src = `/src/assets/player${playerId}_active.png`;
-    profile.style.position = 'absolute';
+//     profileImg.src = `/src/assets/${player.portrait}`
+//     profile.style.position = 'absolute';
 
-    this.profile.append(profileImg);
-    this.profile.append(level);
-    this.profile.append(name);
+//     this.profile.append(profileImg);
+//     this.profile.append(level);
+//     this.profile.append(name);
 
-    this.dom = this.profile;
-  }
-}
+//     this.dom = this.profile;
+//   }
+// }

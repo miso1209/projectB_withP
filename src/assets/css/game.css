@@ -705,6 +705,7 @@ button.disabled span {
 /* 캐릭터 선택창 */
 .characterDesc {
   position: relative !important;
+  min-height: 330px;
   border-radius: 15px;
   background-color: #1f130a;
   padding: 10px 20px;
@@ -718,16 +719,33 @@ button.disabled span {
 
 .characterList {
   position: relative !important;
-  min-height: 330px;
+  min-height: 320px;
+  margin: 0 auto;
   padding: 0 20px;
+  z-index: 2;
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
   justify-content: space-evenly;
   justify-items: start;
-  background: url(~assets/ui/bg.png) no-repeat;
+  background: url(~assets/ui/bg.png) #887d6b no-repeat;
   background-size: cover;
-  border-radius: 15px;
+  border-radius: 10px;
+}
+
+.characterListWrap::after{
+  content: '';
+  display: block;
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 430px;
+  height: 340px;
+  background: url(~assets/ui/bg_frame.png) no-repeat;
+  background-size: contain;
 }
 
 .characterList .doll {

@@ -156,22 +156,19 @@
 
 .flexWrap .flex-left,
 .flexWrap .flex-right {
-  
   position: static;
   height: 100%;
+  
 }
 
 .flexWrap .flex-left {
   float: left;
-  /* width: 28%; */
   width: 28%;
 }
 
 .flexWrap .flex-right {
   float: right;
-  /* min-width: 67%; */
-  min-height: 330px;
-  width: 490px;
+  width: 67%;
   padding: 0 10px 10px;
   background-color: #281b10;
   border-radius: 10px;
