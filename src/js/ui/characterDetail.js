@@ -8,60 +8,50 @@ export default class CharacterDetail extends Panel {
   constructor(pane, input) {
     super();
 
-    const statUI = new Modal(pane, 360, 460);
+    const statUI = new Modal(pane, 800, 460);
     pane.classList.add('screen');
-    
+
     statUI.addTitle('캐릭터 정보');
     statUI.addCloseButton();
     statUI.className = 'statUI';
     
     this.input = input;
+
     console.log(this.input);
+    
+    const contentsWrap = document.createElement('div');
+    contentsWrap.classList.add('contents');
 
      // 캐릭터 정보
-     let playerId = 1;
-     const profile = new MakeDom('div', 'profile')
-
+     const profile = new MakeDom('img', 'profile', null);
+     profile.src = 'src/assets/' + this.input.portrait;
 
     // 캐릭터 스탯 정보 - 임시..
-    let statData = [];
     const contents = document.createElement('div');
-    contents.classList.add('contents');
     contents.classList.add('contents-box');
-    // contents.style.top = profile.dom.offsetTop + 130 + 'px';
-    contents.style.bottom = '100px';
-    contents.style.top = 'auto';
+    contents.style.marginTop = '30px';
 
     const playerName = new MakeDom('p', 'playerName', this.input.displayname);
     contents.appendChild(playerName);
 
-    statData.push("HP : 33");
-    statData.push("MP : 3");
-    statData.push("STRENGTH : 10");
-    statData.push("DEFFENSE : 300");
-    statData.push("RANGE : 100");
-    statData.push("SPEED : 200");
-    statData.push("RANGE : 100");
-    statData.push("SPEED : 200");
-
-    statData.forEach(text => {
+    for(let baseStat in this.input.base) {
       let stat = document.createElement('p');
-      stat.innerText = text;
+      stat.innerText = `${baseStat} : ${this.input.base[baseStat]}`;
       contents.appendChild(stat);
-    });
+    }
   
     // 현재 캐릭터 장비정보
     const equipItemsData = [{
-      x: 12,
-      y: 6,
-      item: 'Wond'
+      x: 4,
+      y: 9,
+      item: 'Weapon'
     }, {
-      x: 20,
-      y: 2,
+      x: 6,
+      y: 12,
       item: 'Armor'
     }, {
-      x: 10,
-      y: 10,
+      x: 9,
+      y: 3,
       item: 'Ring'
     }];
     
@@ -69,7 +59,6 @@ export default class CharacterDetail extends Panel {
   
     equipItems.className = 'equipItems';
     equipItems.style.position = 'absolute';
-    equipItems.style.bottom = contents.offsetTop + contents.offsetHeight + 20 + 'px';
     equipItems.style.left = '30px';
     equipItems.style.top = '100px';
   
@@ -98,7 +87,6 @@ export default class CharacterDetail extends Panel {
     const skillItems = document.createElement('div');
     skillItems.className = 'skillItems';
     skillItems.style.position = 'absolute';
-    skillItems.style.bottom = contents.offsetTop + contents.offsetHeight + 20 + 'px';
     skillItems.style.right = '30px';
     skillItems.style.top = '100px';
   
@@ -115,20 +103,24 @@ export default class CharacterDetail extends Panel {
       skillItems.appendChild(itemIcon.dom);
     });
   
-    statUI.dom.appendChild(equipItems);
-    statUI.dom.appendChild(skillItems);
+
+    contentsWrap.appendChild(profile);
+    contentsWrap.appendChild(equipItems);
+    contentsWrap.appendChild(skillItems);
+    contentsWrap.appendChild(contents);
+
+    statUI.dom.appendChild(contentsWrap);
   
-    
 
     // 버튼
-    const equip_btn = new Button('EQUIP');
+    const equip_btn = new Button('아이템 장착');
     equip_btn.moveToLeft(20);
     equip_btn.moveToBottom(20);
     equip_btn.dom.classList.add('_small');
     equip_btn.dom.style.margin = '0 auto';
   
   
-    const skill_btn = new Button('SKILL');
+    const skill_btn = new Button('스킬');
     skill_btn.moveToRight(20);
     skill_btn.moveToBottom(20);
     skill_btn.dom.classList.add('_small');
@@ -136,7 +128,6 @@ export default class CharacterDetail extends Panel {
    
     this.dom = statUI.dom;
   
-    statUI.dom.appendChild(contents);
     statUI.dom.appendChild(equip_btn.dom);
     statUI.dom.appendChild(skill_btn.dom);
   }

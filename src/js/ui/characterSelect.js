@@ -25,19 +25,20 @@ export default class CharacterSelect extends Panel {
     this.prevButton = new Button('', 'paging');
     this.prevButton.dom.classList.add('prev');
     this.prevButton.dom.classList.add('disabled');
-    this.prevButton.moveToLeft(-45);
+    this.prevButton.moveToLeft(-35);
     this.prevButton.dom.style.top = '50%';
 
     this.nextButton = new Button('', 'paging');
     this.nextButton.dom.classList.add('next');
     this.nextButton.dom.classList.add('disabled');
-    this.nextButton.moveToRight(-45);
+    this.nextButton.moveToRight(-35);
     this.nextButton.dom.style.top = '50%';
     
     const wrap = document.createElement('div');
     wrap.classList.add('contents');
     wrap.classList.add('flexWrap');
     wrap.style.top = '80px';
+
     this.dom.appendChild(wrap);
 
     // characterDetail 
@@ -50,9 +51,8 @@ export default class CharacterSelect extends Panel {
     this.descName = document.createElement('p');
     this.portrait = document.createElement('img');
 
-
     // 현재 캐릭터 데이터에는 장비정보가 없어서 하드코딩.
-    // 캐릭터 장비정보
+    // 캐릭터 장비정보 임시데이터
     const equipItemsData = [{
       x: 4,
       y: 9,
@@ -89,7 +89,6 @@ export default class CharacterSelect extends Panel {
     moreButton.moveToCenter(10);
     moreButton.moveToBottom(10);
     moreButton.dom.addEventListener('click', (ok)=> {
-      // todo 
       pane.parentNode.removeChild(pane);
       return this.result(this.selected);
     });
@@ -148,8 +147,8 @@ export default class CharacterSelect extends Panel {
     });
 
     // paging
-    characterList.appendChild(this.prevButton.dom);
-    characterList.appendChild(this.nextButton.dom);
+    characterListWrap.appendChild(this.prevButton.dom);
+    characterListWrap.appendChild(this.nextButton.dom);
     characterListWrap.appendChild(characterList);
 
     wrap.appendChild(characterListWrap);

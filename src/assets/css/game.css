@@ -718,7 +718,6 @@ button.disabled span {
 }
 
 .characterList {
-  position: relative !important;
   min-height: 320px;
   margin: 0 auto;
   padding: 0 20px;
@@ -728,14 +727,41 @@ button.disabled span {
   flex-direction: row;
   justify-content: space-evenly;
   justify-items: start;
+  opacity: 1;
+  transition: all 0.3s linear;
+}
+
+.characterList.next {
+    transform: translate(-175px, 200px);
+    opacity: 0.3;
+}
+
+.characterListWrap{
+  position: relative !important;
+  width: 430px;
+}
+
+.characterListWrap::before{
+  content: '';
+  display: block;
+
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  right: 0;
+  bottom: 0;
+  width: 415px;
+  height: 320px;
+  opacity: 0.7;
   background: url(~assets/ui/bg.png) #887d6b no-repeat;
+  border-radius: 5px;
   background-size: cover;
-  border-radius: 10px;
 }
 
 .characterListWrap::after{
   content: '';
   display: block;
+
   position: absolute;
   z-index: -1;
   top: 0;
@@ -748,7 +774,7 @@ button.disabled span {
   background-size: contain;
 }
 
-.characterList .doll {
+.doll {
   position: relative;
   min-width: 25%;
   min-height: 96px;
