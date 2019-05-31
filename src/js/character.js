@@ -54,6 +54,10 @@ export default class Character {
         return (this.data.base[parameterName] || 0) + delta * (this.data.levelup[parameterName] || 0)
     }
 
+    get displayName() {
+        return this.data.displayname;
+    }
+
     get name() {
         return this.data.name;
     }
@@ -207,8 +211,9 @@ export default class Character {
     // exp 를 추가한다
     increaseExp(exp) {
         this.exp += exp;
-        while(this.maxexp <= exp) {
+        while(this.maxexp <= this.exp) {
             // 레벨업을 한다
+            this.exp -= this.maxexp;
             this.level++;
             // 이벤트를 외부에 알린다
         }

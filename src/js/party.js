@@ -12,9 +12,17 @@ export default class Party {
     }
 
     getBattleAllies() {
-        return [{ character: new Character(1), x: 0, y: 0},
-            { character: new Character(2), x: 1, y: 0},
-            { character: new Character(3), x: 0, y: 1},
-            { character: new Character(4), x: 1, y: 1}];
+        const allies = [];
+
+        // 임시로 좌표 임의설정.
+        this.members.forEach((member, i) => {
+            allies.push({
+                character: member,
+                x: i % 3,
+                y: Math.floor(i / 3)
+            });
+        });
+
+        return allies;
     }
 }

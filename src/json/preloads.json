@@ -16,6 +16,18 @@
     ["ending_victory.png", "assets/ending_victory.png"],
     ["battleMap1.png", "assets/battleMap1.png"],
     ["battle_background.png", "assets/battle_background.png"],
+        
+    ["items.png", "assets/items/items.png"],
+    ["nineBox_01.png", "assets/ui/modal/nineBox_01.png"],
+    ["nineBox_02.png", "assets/ui/modal/nineBox_02.png"],
+    ["nineBox_03.png", "assets/ui/modal/nineBox_03.png"],
+    ["nineBox_04.png", "assets/ui/modal/nineBox_04.png"],
+    ["nineBox_05.png", "assets/ui/modal/nineBox_05.png"],
+    ["nineBox_06.png", "assets/ui/modal/nineBox_06.png"],
+    ["nineBox_07.png", "assets/ui/modal/nineBox_07.png"],
+    ["nineBox_08.png", "assets/ui/modal/nineBox_08.png"],
+    ["nineBox_09.png", "assets/ui/modal/nineBox_09.png"],
+    ["btn_close.png", "assets/ui/btn_close.png"],
 
     ["assets/sprite/warrior/warrior_atk_sw.json"],
     ["assets/sprite/warrior/warrior_atk_nw.json"],

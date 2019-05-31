@@ -134,8 +134,11 @@ export default class Game extends EventEmitter {
 
         // 파티멤버를 등록한다
         for(let i = 0; i < this.storage.data.party.length; ++i) {
-            const member = this.storage.data.party[i];
-            this.player.party.set(i, member);
+            const memberID = this.storage.data.party[i];
+
+            if (memberID !== 0) {
+                this.player.party.set(i, this.player.characters[memberID]);
+            }
         }
         
         // 플레이어의 인벤토리에 복사한다
@@ -342,10 +345,27 @@ export default class Game extends EventEmitter {
                 screenHeight: this.screenHeight,
                 rewards: monster.rewards,
                 exp: monster.exp,
+                gold: monster.gold,
             };
             this.currentMode = new Battle(options);
-            this.currentMode.on('win', () => { this.leaveBattle(); });
-            this.currentMode.on('lose', () => { this.leaveBattle(); });
+
+            // 보상을 여기서 추가해야 할 것 같다 battle에서 주는것은 아닐 것 같다.
+            this.currentMode.on('win', () => {
+                // 경험치 추가.
+                allies.forEach((ally) => {
+                    ally.character.increaseExp(monster.exp);
+                });
+
+                // 아이템 추가
+                for (let itemID in monster.rewards) {
+                    this.player.inventory.addItem(itemID, monster.rewards[itemID]);
+                }
+            });
+            this.currentMode.on('lose', () => {});
+            this.currentMode.on('closebattle', () => {
+                this.leaveBattle();
+            });
+
             this.gamelayer.addChild(this.currentMode.stage);
         }
     }

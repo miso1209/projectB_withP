@@ -1,5 +1,3 @@
-import { DstAlphaFactor } from "three";
-
 export default class Storage {
     constructor() {
         this.VERSION = 0.2;

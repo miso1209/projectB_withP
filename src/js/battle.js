@@ -1,4 +1,4 @@
-import { BattleUi } from "./battleui";
+import { BattleUI } from "./battleui";
 import { STAGE_BASE_POSITION, CHARACTER_CAMP, TARGETING_TYPE, BATTLE_STATUS } from "./battledeclare";
 import BattleCharacter from "./battlecharacter";
 import Skill from "./skill";
@@ -59,14 +59,22 @@ export class Battle extends EventEmitter {
         }
 
         // ui 임시 설정
-        this.ui = new BattleUi({ w: options.screenWidth, h: options.screenHeight}, this.allies);
-        this.stage.addChild(this.ui);
+        this.ui = new BattleUI({ w: options.screenWidth, h: options.screenHeight}, this.allies);
+
+        // special skill 이벤트 emit받아서 사용 하는데.. => 죽었을 시 발동, 쿨타임 0 문제 해결해야 할 듯 하다.
+        this.ui.on('specialskill', (character) => {
+            this.specialSkillQueue.push(character);
+        });
+        this.stage.addChild(this.ui.container);
 
         this.activeSkill = null;
         this.specialSkillQueue = [];
+        this.pause = false;
 
         // 이전투가 끝났을때 최종보상
-        this.reward = options.reward;
+        this.rewards = options.rewards;
+        this.exp = options.exp;
+        this.gold = options.gold;
 
         this.setScale(2);
         this.focusCenter();
@@ -101,6 +109,23 @@ export class Battle extends EventEmitter {
     }
 
     update() {
+        // 기본 스킬들 업데이트
+        this.ui.update();
+        this.effects.update();
+        
+        for (const bchar of this.allies){
+            bchar.update();
+        }
+
+        for (const bchar of this.enemies){
+            bchar.update();
+        }
+
+        // 전투 종료 시 정지.
+        if (this.pause) {
+            return ;
+        }
+
         if (!this.activeSkill) {
             let nextSkill = null;
             // 스페셜 스킬이 예약되어 있는가
@@ -133,26 +158,32 @@ export class Battle extends EventEmitter {
         if (this.activeSkill.isFinished) {
             this.activeSkill = null;
             // 배틀 상태를 체크
-            const battleStatus = this.getBattleStatus()
+            const battleStatus = this.getBattleStatus();
             if (battleStatus === BATTLE_STATUS.WIN) {
                 // 이겼다
+                this.pause = true;
+                const reward = {
+                    gold: this.gold,
+                    items: this.rewards,
+                    exp: this.exp,
+                    characters: this.allies
+                };
+
+                this.ui.showReward(reward);
                 this.emit('win');
+
+                this.ui.on('closereward', () => {
+                    this.emit('closebattle');
+                });
             } else if (battleStatus === BATTLE_STATUS.LOSE) {
                 // 졌다
+                this.pause = true;
                 this.emit('lose');
-            }
-        }
-        
-        // 기본 스킬들 업데이트
-        this.ui.update();
-        this.effects.update();
-        
-        for (const bchar of this.allies){
-            bchar.update();
-        }
 
-        for (const bchar of this.enemies){
-            bchar.update();
+                this.ui.on('closereward', () => {
+                    this.emit('closebattle');
+                });
+            }
         }
     }
 

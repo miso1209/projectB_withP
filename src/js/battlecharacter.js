@@ -50,6 +50,10 @@ export default class BattleCharacter extends PIXI.Container {
 
         this.animation.colorBlink(0xFF0000, 0.75);
         this.animation.vibration(6, 0.5);
+
+        if (this.health <= 0) {
+            this.alpha = 0;
+        }
     }
 
     // 현재 Warrior만 들고있는데.. 이런것은 어떻게 처리하지.. 원래 모든 캐릭터가 통일된 animation을 들고 있어야 할듯한데..
@@ -102,5 +106,17 @@ export default class BattleCharacter extends PIXI.Container {
 
     get skills() {
         return this.character.skills;
+    }
+
+    get displayName() {
+        return this.character.displayName;
+    }
+
+    get exp() {
+        return this.character.exp;
+    }
+
+    get maxExp() {
+        return this.character.maxexp;
     }
 }

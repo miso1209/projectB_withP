@@ -27,6 +27,10 @@ export default class Monster {
         return this.origin.exp;
     }
 
+    get gold() {
+        return this.origin.gold;
+    }
+
     get rewards() {
         return this.origin.rewards;
     }
