@@ -850,31 +850,14 @@
          "margin":0,
          "name":"object1x1",
          "spacing":0,
-         "tilecount":3,
-         "tileheight":46,
+         "tilecount":2,
+         "tileheight":39,
          "tiles":[
                 {
                  "id":0,
                  "image":"castle_box.png",
                  "imageheight":39,
                  "imagewidth":32,
-                 "properties":[
-                        {
-                         "name":"xsize",
-                         "type":"int",
-                         "value":1
-                        }, 
-                        {
-                         "name":"ysize",
-                         "type":"int",
-                         "value":1
-                        }]
-                }, 
-                {
-                 "id":1,
-                 "image":"castle_drawer.png",
-                 "imageheight":46,
-                 "imagewidth":49,
                  "properties":[
                         {
                          "name":"xsize",
@@ -904,7 +887,7 @@
                          "value":1
                         }]
                 }],
-         "tilewidth":49
+         "tilewidth":32
         }],
  "tilewidth":32,
  "type":"map",
