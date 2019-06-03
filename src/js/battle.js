@@ -69,7 +69,7 @@ export class Battle extends EventEmitter {
 
         // ui 임시 설정
         this.ui = new BattleUI({ w: options.screenWidth, h: options.screenHeight}, this.allies);
-        this.ui.showBattleLogo('battle_start_logo.png', () => {
+        this.ui.showBattleLogo('battle_start_logo.png', true, () => {
             this.pause = false;
         });
 
@@ -88,7 +88,7 @@ export class Battle extends EventEmitter {
         this.exp = options.exp;
         this.gold = options.gold;
 
-        this.setScale(2);
+        this.setScale(1.5);
         this.focusCenter();
     }
 
@@ -114,7 +114,7 @@ export class Battle extends EventEmitter {
     }
 
     focusCenter() {
-        const offsetX = 41;
+        const offsetX = 0;
         const offsetY = -20;
         this.container.position.x = (this.screenSize.width - this.battlefield.width * this.container.scale.x) / 2 + offsetX;
         this.container.position.y = (this.screenSize.height - this.battlefield.height * this.container.scale.y) / 2 + offsetY;
@@ -149,9 +149,8 @@ export class Battle extends EventEmitter {
                 // 이겼다
                 this.pause = true;
                 this.emit('win');
-                this.clearCharacterBuffs();
 
-                this.ui.showBattleLogo('victory_logo.png', () => {
+                this.ui.showBattleLogo('victory_logo.png', false, () => {
                     const reward = {
                         gold: this.gold,
                         items: this.rewards,
@@ -165,15 +164,18 @@ export class Battle extends EventEmitter {
                 this.ui.on('closeReward', () => {
                     this.emit('closeBattle');
                 });
+
+                return;
             } else if (battleStatus === BATTLE_STATUS.LOSE) {
                 // 졌다
                 this.pause = true;
                 this.emit('lose');
-                this.clearCharacterBuffs();
 
-                this.ui.showBattleLogo('defeat_logo.png', () => {
+                this.ui.showBattleLogo('defeat_logo.png', false, () => {
                     this.emit('closeBattle');
                 });
+                
+                return;
             }
         }
 
@@ -223,6 +225,11 @@ export class Battle extends EventEmitter {
         for (const bchar of this.enemies){
             bchar.clearBuff();
         }
+    }
+
+    leave() {
+        // 배틀을 떠나기 전 호출, 전투중에 있던 버프를 모두 지운다.
+        this.clearCharacterBuffs();
     }
 
     nextCharacter() {

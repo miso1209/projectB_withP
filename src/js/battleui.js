@@ -32,7 +32,7 @@ export class BattleUI extends EventEmitter {
         this.container.addChild(this.activeUI);
     }
 
-    showBattleLogo(name, callback) {
+    showBattleLogo(name, hasEffect, callback) {
         const battleLogo = new PIXI.Sprite(PIXI.Texture.fromFrame(name));
         battleLogo.anchor.x = 0.5;
         battleLogo.anchor.y = 0.5;
@@ -40,8 +40,11 @@ export class BattleUI extends EventEmitter {
         battleLogo.position.y = this.screenSize.h / 2;
         this.container.addChild(battleLogo);
 
+        if (hasEffect) {
+            this.tweens.addTween(battleLogo.scale, 0.5, {x: 5, y: 5}, 0.8, 'easeOut', false, null);
+        }
         this.tweens.addTween(battleLogo.position, 0.5, {x: this.screenSize.w / 2}, 0, 'easeOut', false, null);
-        this.tweens.addTween(battleLogo, 0.5, {alpha: 0}, 1, 'easeOut', false, () => {
+        this.tweens.addTween(battleLogo, 0.5, {alpha: 0}, 0.8, 'easeOut', false, () => {
             this.container.removeChild(battleLogo);
             callback();
         });
@@ -381,8 +384,8 @@ class CharacterRewardUI extends Window {
         this.expText.position.y = this.size.height - this.expText.height;
         this.addChild(this.expText);
 
-        // 레벨업시 붙인다.
-        if (character.exp + exp >= character.maxExp) {
+        // 레벨업시 붙인다. ( exp 이미 올려두었는데.. 현재 exp가 오른 exp보다 작다는 것은 레벨업 했다는 것이다.)
+        if (character.exp < exp) {
             this.levelUpText = getText(`Level Up!`, { fontSize: 18 });
             this.levelUpText.position.x = this.size.width / 2;
             this.levelUpText.position.y = this.size.height - this.levelUpText.height/2;

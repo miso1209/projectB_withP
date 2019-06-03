@@ -377,6 +377,7 @@ export default class Game extends EventEmitter {
     leaveBattle() {
         if (this.currentMode instanceof Battle) {
             // 기존 스테이지를 보이지 않게 한다 (스테이지를 떠날 필요는없다)
+            this.currentMode.leave();
             this.gamelayer.removeChild(this.currentMode.stage);
             this.gamelayer.addChild(this.stage);
             // 배틀을 사용한다

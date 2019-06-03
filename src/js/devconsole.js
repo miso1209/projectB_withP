@@ -28,6 +28,10 @@ export default class DevConsole {
         return true;
     }
 
+    setScale(scale) {
+        this.game.stage.zoomTo(scale,false);
+    }
+
     printQuest() {
         // 현재 퀘스트 상태를 출력한다
         for (const questId in this.game.player.quests) {
