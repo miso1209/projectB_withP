@@ -31,7 +31,7 @@
          "name":"bottom",
          "opacity":1,
          "type":"group",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -53,7 +53,7 @@
          "name":"ground",
          "opacity":1,
          "type":"group",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -109,7 +109,7 @@
          "name":"event",
          "opacity":1,
          "type":"group",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }],
@@ -155,8 +155,7 @@
                          "name":"ysize",
                          "type":"int",
                          "value":2
-                        }],
-                 "type":"groundtile"
+                        }]
                 }, 
                 {
                  "id":1,
