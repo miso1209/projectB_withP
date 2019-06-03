@@ -10,21 +10,25 @@ export default class BattleCharacter extends PIXI.Container {
         super();
         this.character = character;
        
+        this.turnAction = new TurnAction();
+        this.buffContainer = new PIXI.Container();
         this.animation = new AnimatedCharacter(character.id);
 
         this.progressBar = new BattleProgressBar();
+        this.progressBar.show();
         this.progressBar.setPosition({
             x: this.animation.width / 2,
             y: -this.animation.height,
         });
 
         this.addChild(this.animation);
+        this.addChild(this.buffContainer);
         this.addChild(this.progressBar);
 
         this.progressBar.setProgress(this.health / this.maxHealth);
-        this.possibleOfBattle = true;
         // 캐릭터의 스피드대로 세팅한다
-        this.actionScore = 0;
+        this.actionScore = 1 / this.speed;
+        this.buffs = {};
     }
 
     setCamp(camp) {
@@ -39,20 +43,61 @@ export default class BattleCharacter extends PIXI.Container {
 
     update() {
         this.animation.update();
-        // 액티브 스코어를 감소시킨다
-        --this.actionScore;
+
+        for (const name in this.buffs) {
+            const buff = this.buffs[name];
+            buff.update();
+        }
+    }
+
+    nextTurn() {
+        this.turnAction.nextTurn();
+    }
+
+    clearBuff() {
+        for (const name in this.buffs) {
+            this.removeBuff(name);
+        }
+    }
+
+    addBuff(name, duration, buff) {
+        if (!this.buffs[name]) {
+            this.buffs[name] = buff;
+            this.character.applyOption(this.buffs[name].option);
+            this.buffContainer.addChild(this.buffs[name]);
+        }
+
+        this.turnAction.addAction(name, duration, () => {
+            this.removeBuff(name);
+        });
+        
+        this.updateProgressBar();
+    }
+
+    removeBuff(name) {
+        if (this.buffs[name]) {
+            this.buffContainer.removeChild(this.buffs[name]);
+            this.character.clearOption(this.buffs[name].option);
+            delete this.buffs[name];
+        }
+    }
+
+    updateProgressBar() {
+        const healthRate = this.health / this.maxHealth;
+        this.progressBar.setProgress(healthRate);
     }
 
     onDamage(damage) {
         this.character.health -= damage;
-        const healthRate = this.health / this.maxHealth;
-        this.progressBar.setProgress(healthRate);
+        this.updateProgressBar();
 
         this.animation.colorBlink(0xFF0000, 0.75);
         this.animation.vibration(6, 0.5);
 
         if (this.health <= 0) {
-            this.alpha = 0;
+            this.clearBuff();
+            this.animation.hide(0.5, false);
+            this.progressBar.hide();
         }
     }
 
@@ -96,8 +141,16 @@ export default class BattleCharacter extends PIXI.Container {
         return this.character.attack;
     }
 
+    get magic() {
+        return this.character.magic;
+    }
+
     get armor() {
         return this.character.armor;
+    }
+
+    get speed() {
+        return this.character.speed;
     }
 
     get isAlive() {
@@ -118,5 +171,31 @@ export default class BattleCharacter extends PIXI.Container {
 
     get maxExp() {
         return this.character.maxexp;
+    }
+}
+
+class TurnAction {
+    constructor() {
+        this.actions = {};
+    }
+
+    nextTurn() {
+        for(const name in this.actions) {
+            const action = this.actions[name];
+
+            if (action.duration === 0) {
+                action.doneAction();
+                delete this.actions[name];
+            } else {
+                action.duration--;
+            }
+        }
+    }
+
+    addAction(name, duration, doneAction) {
+        this.actions[name] = {
+            duration,
+            doneAction
+        };
     }
 }

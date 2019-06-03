@@ -122,6 +122,10 @@ export default class Character {
         return Math.floor(this.stamina * this.armorPotential) + this.plusArmor;
     }
 
+    get speed() {
+        return this.baseSpeed + this.plusSpeed;
+    }
+
     equip(slot, itemId) {
         const item = new Item(itemId);
         if (!this.canEquip(slot, item)) {

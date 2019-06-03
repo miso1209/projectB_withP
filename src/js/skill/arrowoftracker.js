@@ -61,7 +61,7 @@ export default class ArrowOfTracker extends SkillBase {
             }
             case 80: {
                 this.addEffect(this.target, { name: 'shoted', animation: true, animationLength: 18, removeFrame: 60, speed: 0.5 });
-                this.hit(this.owner, this.target);
+                this.hit(this.owner.attack, this.target);
                 break;
             }
             case 95: {

@@ -60,7 +60,7 @@ export default class FireRain extends SkillBase {
             case 100: {
                 this.targets.forEach((target) => {
                     this.addEffect(target, { name: 'explosion', animation: true, animationLength: 16, removeFrame: 60, speed: 0.5 });
-                    this.hit(this.owner, target);
+                    this.hit(this.owner.magic, target);
                 });
                 break;
             }

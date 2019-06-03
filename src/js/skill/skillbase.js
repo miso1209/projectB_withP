@@ -39,8 +39,9 @@ export default class Skill {
         this.effects.addFontEffect(...args);
     }
 
-    hit(attacker, target) {
-        const damage = Math.round(attacker.attack - target.armor);
+    hit(attack, target) {
+        let damage = Math.round(attack - target.armor);
+        damage = damage<=0?0:damage;
         this.addFontEffect({target: target, outputText: '-' + damage});
         target.onDamage(damage);
     }

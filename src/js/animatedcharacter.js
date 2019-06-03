@@ -131,6 +131,24 @@ export default class AnimatedCharacter extends PIXI.Container {
         this.anim.tint = (this.anim.tint & 0xFFFF00) | (b);
     }
 
+    show(duration, direct) {
+        if (direct) {
+            this.alpha = 1;
+            this.visible = true;
+        } else {
+            this.tweens.addTween(this, duration, {alpha: 1}, 0, 'linear', false, null);
+        }
+    }
+
+    hide(duration, direct) {
+        if (direct) {
+            this.alpha = 0;
+            this.visible = false;
+        } else {
+            this.tweens.addTween(this, duration, {alpha: 0}, 0, 'linear', false, null);
+        }
+    }
+
     // 캐릭터 anim의 position 건드리는데.. anim x 건드리는 애랑 같이 사용할 경우 문제될 수 있다.
     vibration(scale, duration) {
         // 캐릭터는 container 에 의해서 흔들린다

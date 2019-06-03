@@ -1,6 +1,7 @@
 
 import SkillBase from "./skillbase";
 import { TARGETING_TYPE, CHARACTER_CAMP } from "../battledeclare";
+import BaseBuff from "../buff/basebuff";
 
 export default class Heal extends SkillBase {
     constructor() {
@@ -29,6 +30,10 @@ export default class Heal extends SkillBase {
             }
             case 30: {
                 this.targets.forEach((target) => {
+                    target.addBuff("heal", 0, new BaseBuff({
+                        option: "health(50)",
+                        isAnimation: false,
+                    }));
                     this.addEffect(target, { name: 'healeffect', animation: true, animationLength: 25, removeFrame: 52, speed: 0.7 });
                 });
                 break;

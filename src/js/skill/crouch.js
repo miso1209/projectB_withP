@@ -1,5 +1,6 @@
 import SkillBase from "./skillbase";
 import { TARGETING_TYPE } from "../battledeclare";
+import BlinkEffectBuff from "../buff/blinkeffectbuff";
 
 export default class Crouch extends SkillBase {
     constructor() {
@@ -16,7 +17,19 @@ export default class Crouch extends SkillBase {
                 break;
             }
             case 11: {
-                // TODO: 방어력 증가시키는 버프를 적용해야 하는데.. 아직 버프시스템이 없다.
+                this.owner.addBuff("crouch", 20, new BlinkEffectBuff({
+                    option: "armor(25)",
+                    isAnimation: true,
+                    sprite: 'barrier',
+                    animationLength: 63,
+                    loop: true,
+                    speed: 0.5,
+                    offset: {
+                        x: this.owner.animation.width / 2,
+                        y: -this.owner.animation.height / 2
+                    }
+                }));
+
                 this.owner.animation_crouch();
                 break;
             }

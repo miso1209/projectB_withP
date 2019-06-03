@@ -7,12 +7,15 @@ import { EventEmitter } from "events";
 export class BattleUI extends EventEmitter {
     constructor(screenSize, characters) {
         super();
+        this.tweens = new Tweens();
         this.container = new PIXI.Container();
+        this.screenSize = screenSize;
 
         const offset = {
             x: -20,
             y: -20,
         }
+
         this.activeUI = new BattlePortraitsContainer(characters);
         this.activeUI.setPosition({
             x: (screenSize.w - this.activeUI.width) + offset.x,
@@ -29,6 +32,21 @@ export class BattleUI extends EventEmitter {
         this.container.addChild(this.activeUI);
     }
 
+    showBattleLogo(name, callback) {
+        const battleLogo = new PIXI.Sprite(PIXI.Texture.fromFrame(name));
+        battleLogo.anchor.x = 0.5;
+        battleLogo.anchor.y = 0.5;
+        battleLogo.position.x = this.screenSize.w + battleLogo.width;
+        battleLogo.position.y = this.screenSize.h / 2;
+        this.container.addChild(battleLogo);
+
+        this.tweens.addTween(battleLogo.position, 0.5, {x: this.screenSize.w / 2}, 0, 'easeOut', false, null);
+        this.tweens.addTween(battleLogo, 0.5, {alpha: 0}, 1, 'easeOut', false, () => {
+            this.container.removeChild(battleLogo);
+            callback();
+        });
+    }
+
     showReward(reward) {
         if (this.rewardUI) {
             this.container.removeChild(this.rewardUI);
@@ -38,7 +56,7 @@ export class BattleUI extends EventEmitter {
         this.rewardUI.closeBtn.interactive = true;
         this.rewardUI.closeBtn.on('click', () => {
             this.hideReward();
-            this.emit('closereward');
+            this.emit('closeReward');
         });
 
         this.container.addChild(this.rewardUI);
@@ -50,6 +68,7 @@ export class BattleUI extends EventEmitter {
     }
 
     update() {
+        this.tweens.update();
         this.activeUI.update();
         if (this.rewardUI) {
             this.rewardUI.update();

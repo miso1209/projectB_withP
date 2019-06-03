@@ -7,7 +7,7 @@
             "y": 4
         },
         "battle": {
-            "characters": [5,1,2,3,4,2]
+            "characters": [5,1,2,3,4,0]
         },
         "gold": 200,
         "exp": 3,

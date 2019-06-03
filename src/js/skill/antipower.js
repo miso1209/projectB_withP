@@ -1,6 +1,7 @@
 
 import SkillBase from "./skillbase";
 import { TARGETING_TYPE, CHARACTER_CAMP } from "../battledeclare";
+import BlinkEffectBuff from "../buff/blinkeffectbuff";
 
 export default class AntiPower extends SkillBase {
     constructor() {
@@ -29,7 +30,20 @@ export default class AntiPower extends SkillBase {
             }
             case 30: {
                 this.targets.forEach((target) => {
-                    this.addEffect(target, { name: 'healeffect', animation: true, animationLength: 25, removeFrame: 52, speed: 0.7 });
+                    target.addBuff("antiPower", 10, new BlinkEffectBuff({
+                        option: "attack(-15)",
+                        isAnimation: true,
+                        sprite: 'antipowerloop',
+                        animationLength: 32,
+                        loop: true,
+                        speed: 0.5,
+                        offset: {
+                            x: this.owner.animation.width / 2,
+                            y: -this.owner.animation.height / 2
+                        }
+                    }));
+
+                    this.addEffect(target, { name: 'antipower', animation: true, animationLength: 16, removeFrame: 52, speed: 0.7 });
                 });
                 break;
             }

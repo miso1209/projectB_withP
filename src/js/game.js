@@ -362,7 +362,7 @@ export default class Game extends EventEmitter {
                 }
             });
             this.currentMode.on('lose', () => {});
-            this.currentMode.on('closebattle', () => {
+            this.currentMode.on('closeBattle', () => {
                 this.leaveBattle();
             });
 

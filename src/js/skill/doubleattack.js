@@ -1,5 +1,6 @@
 import SkillBase from "./skillbase";
 import { CHARACTER_CAMP, TARGETING_TYPE } from "../battledeclare";
+import BlinkEffectBuff from "../buff/blinkeffectbuff";
 
 export default class DouobleAttack extends SkillBase {
     constructor() {
@@ -31,7 +32,7 @@ export default class DouobleAttack extends SkillBase {
                 // TODO : 데미지 계산 공식을 어디서 가져와야 할까??
                 // 추후 slash effect 를 방패타격 이펙트로만 바꿔주면 될듯하다.
                 this.addEffect(this.target, { name: 'slash', animation: true, animationLength: 8, removeFrame: 60, speed: 0.5 });
-                this.hit(this.owner, this.target);
+                this.hit(this.owner.attack, this.target);
                 break;
             }
             case 50: {
@@ -39,11 +40,21 @@ export default class DouobleAttack extends SkillBase {
                 break;
             }
             case 79: {
-                // TODO : 데미지 계산 공식을 어디서 가져와야 할까??
+                this.owner.addBuff("doubleAttack", 10, new BlinkEffectBuff({
+                    option: "armor(25)",
+                    isAnimation: true,
+                    sprite: 'barrier',
+                    animationLength: 63,
+                    loop: true,
+                    speed: 0.5,
+                    offset: {
+                        x: this.owner.animation.width / 2,
+                        y: -this.owner.animation.height / 2
+                    }
+                }));
+
                 this.addEffect(this.target, { name: 'slash', animation: true, animationLength: 8, removeFrame: 60, speed: 0.5 });
-                this.hit(this.owner, this.target);
-                
-                // TODO: 방어력 증가시키는 버프를 적용해야 하는데.. 아직 버프시스템이 없다.
+                this.hit(this.owner.attack, this.target);
                 break;
             }
             case 104: {

@@ -1,5 +1,5 @@
 import { BattleUI } from "./battleui";
-import { STAGE_BASE_POSITION, CHARACTER_CAMP, TARGETING_TYPE, BATTLE_STATUS } from "./battledeclare";
+import { STAGE_BASE_POSITION, CHARACTER_CAMP, TARGETING_TYPE, BATTLE_STATUS, SCENE_STATUS } from "./battledeclare";
 import BattleCharacter from "./battlecharacter";
 import Skill from "./skill";
 import { BattleEffecter } from "./battleeffecter";
@@ -40,26 +40,38 @@ export class Battle extends EventEmitter {
         this.allies = [];
         this.enemies = [];
 
-        for(const c of options.allies) {
-            const battleChar = new BattleCharacter(c.character);
-            battleChar.setGridPosition(c.x, c.y);
-            battleChar.setCamp(CHARACTER_CAMP.ALLY);
-            this.allies.push(battleChar);
-
-            this.initCharacter(battleChar);
+        for (const c of options.allies) {
+            if (c.character.health > 0) {
+                const battleChar = new BattleCharacter(c.character);
+                battleChar.setGridPosition(c.x, c.y);
+                battleChar.setCamp(CHARACTER_CAMP.ALLY);
+                this.allies.push(battleChar);
+    
+                this.initCharacter(battleChar);
+            }
         }
         
         for(const c of options.enemies) {
-            const battleChar = new BattleCharacter(c.character);
-            battleChar.setGridPosition(c.x, c.y);
-            battleChar.setCamp(CHARACTER_CAMP.ENEMY);
-            this.enemies.push(battleChar);
-
-            this.initCharacter(battleChar);
+            if (c.character.health > 0) {
+                const battleChar = new BattleCharacter(c.character);
+                battleChar.setGridPosition(c.x, c.y);
+                battleChar.setCamp(CHARACTER_CAMP.ENEMY);
+                this.enemies.push(battleChar);
+            }
         }
+
+        // 그리는 순서 때문에 우선 이렇게 처리해둔다.
+        let enemyArray  = [].concat(this.enemies);
+        enemyArray = enemyArray.splice(3,3).concat(enemyArray.splice(0,3));
+        enemyArray.forEach((enemy) => {
+            this.initCharacter(enemy);
+        })
 
         // ui 임시 설정
         this.ui = new BattleUI({ w: options.screenWidth, h: options.screenHeight}, this.allies);
+        this.ui.showBattleLogo('battle_start_logo.png', () => {
+            this.pause = false;
+        });
 
         // special skill 이벤트 emit받아서 사용 하는데.. => 죽었을 시 발동, 쿨타임 0 문제 해결해야 할 듯 하다.
         this.ui.on('specialskill', (character) => {
@@ -69,7 +81,7 @@ export class Battle extends EventEmitter {
 
         this.activeSkill = null;
         this.specialSkillQueue = [];
-        this.pause = false;
+        this.pause = true;
 
         // 이전투가 끝났을때 최종보상
         this.rewards = options.rewards;
@@ -126,6 +138,45 @@ export class Battle extends EventEmitter {
             return ;
         }
 
+        // 스킬이 모두 종료되었으면 스킬을 종료하고 다음 스킬을 발동시킨다
+        if (!this.activeSkill || this.activeSkill.isFinished) {
+            this.notifyNextTurn();
+            this.activeSkill = null;
+
+            // 배틀 상태를 체크
+            const battleStatus = this.getBattleStatus();
+            if (battleStatus === BATTLE_STATUS.WIN) {
+                // 이겼다
+                this.pause = true;
+                this.emit('win');
+                this.clearCharacterBuffs();
+
+                this.ui.showBattleLogo('victory_logo.png', () => {
+                    const reward = {
+                        gold: this.gold,
+                        items: this.rewards,
+                        exp: this.exp,
+                        characters: this.allies
+                    };
+
+                    this.ui.showReward(reward);
+                });
+
+                this.ui.on('closeReward', () => {
+                    this.emit('closeBattle');
+                });
+            } else if (battleStatus === BATTLE_STATUS.LOSE) {
+                // 졌다
+                this.pause = true;
+                this.emit('lose');
+                this.clearCharacterBuffs();
+
+                this.ui.showBattleLogo('defeat_logo.png', () => {
+                    this.emit('closeBattle');
+                });
+            }
+        }
+
         if (!this.activeSkill) {
             let nextSkill = null;
             // 스페셜 스킬이 예약되어 있는가
@@ -154,39 +205,25 @@ export class Battle extends EventEmitter {
 
         // 기본 스킬을 업데이트 한다
         this.activeSkill.update();
-        // 스킬이 모두 종료되었으면 스킬을 종료하고 다음 스킬을 발동시킨다
-        if (this.activeSkill.isFinished) {
-            this.activeSkill = null;
-            // 배틀 상태를 체크
-            const battleStatus = this.getBattleStatus();
-            if (battleStatus === BATTLE_STATUS.WIN) {
-                // 이겼다
-                this.pause = true;
-                const reward = {
-                    gold: this.gold,
-                    items: this.rewards,
-                    exp: this.exp,
-                    characters: this.allies
-                };
+    }
 
-                this.ui.showReward(reward);
-                this.emit('win');
-
-                this.ui.on('closereward', () => {
-                    this.emit('closebattle');
-                });
-            } else if (battleStatus === BATTLE_STATUS.LOSE) {
-                // 졌다
-                this.pause = true;
-                this.emit('lose');
-
-                this.ui.on('closereward', () => {
-                    this.emit('closebattle');
-                });
-            }
+    notifyNextTurn() {
+        for (const bchar of this.allies){
+            bchar.nextTurn();
+        }
+        for (const bchar of this.enemies){
+            bchar.nextTurn();
         }
     }
 
+    clearCharacterBuffs() {
+        for (const bchar of this.allies){
+            bchar.clearBuff();
+        }
+        for (const bchar of this.enemies){
+            bchar.clearBuff();
+        }
+    }
 
     nextCharacter() {
         // 다음 행동 순서의 캐릭터를 가져온다
@@ -267,7 +304,7 @@ export class Battle extends EventEmitter {
     }
 
     getNormalSkill(character) {
-        const skill = Skill.New(character.skills.a);
+        const skill = Math.random()<0.5?Skill.New(character.skills.a):Skill.New(character.skills.b);
 
         const allies = (character.camp === CHARACTER_CAMP.ALLY) ? this.allies : this.enemies;
         const enemies = (character.camp === CHARACTER_CAMP.ALLY) ? this.enemies : this.allies;
@@ -278,7 +315,7 @@ export class Battle extends EventEmitter {
         skill.setEffects(this.effects);
 
         // 캐릭터의액선 스코어를 증가시킨다
-        character.actionScore += 10;
+        character.actionScore += 1 / character.speed;
 
         return skill;
     }
@@ -295,7 +332,7 @@ export class Battle extends EventEmitter {
         skill.setEffects(this.effects);
 
         // 캐릭터의액선 스코어를 증가시킨다
-        character.actionScore += 10;
+        character.actionScore += 1 / character.speed;
 
         return skill;
     }

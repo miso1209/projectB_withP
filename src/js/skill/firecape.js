@@ -1,6 +1,7 @@
 
 import SkillBase from "./skillbase";
 import { TARGETING_TYPE, CHARACTER_CAMP } from "../battledeclare";
+import BaseBuff from "../buff/basebuff";
 
 export default class FireCape extends SkillBase {
     constructor() {
@@ -28,6 +29,19 @@ export default class FireCape extends SkillBase {
                 break;
             }
             case 51: {
+                this.owner.addBuff("fireCape", 10, new BaseBuff({
+                    option: "armor(20)",
+                    isAnimation: true,
+                    sprite: 'firecape',
+                    animationLength: 58,
+                    loop: true,
+                    speed: 0.5,
+                    offset: {
+                        x: this.owner.animation.width / 2,
+                        y: -this.owner.animation.height / 2
+                    }
+                }));
+
                 this.addEffect(this.owner, { name: 'firerainprop', animation: true, animationLength: 7, removeFrame: 15, speed: 0.5 });
                 break;
             }
