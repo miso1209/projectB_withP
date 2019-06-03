@@ -69,7 +69,6 @@ export default class CharacterSelect extends Panel {
     
     const equipItems = document.createElement('div');
     equipItems.className = 'equipItems';
-    equipItems.style.paddingTop = '20px';
     
     equipItemsData.forEach(item => {
       let itemIcon = new ItemImage('items.png', item.x, item.y);
@@ -82,12 +81,25 @@ export default class CharacterSelect extends Panel {
       equipItems.appendChild(itemIcon.dom);
     });
 
+    const divWrap = new MakeDom('div', 'statWrap', null);
+    // stat -전투력 - 레벨 -exp -hp / max hp
     this.stat_health = new MakeDom('p', 'stat', null);
-    
+    this.stat_level = new MakeDom('p', 'stat_level', null);
+    this.stat_exp = new MakeDom('p', 'stat_exp', null);
+
+    // status 바 만들기.
+    // this.stat_hp = new MakeDom('p', 'stat_hp', null);
+
+    divWrap.appendChild(this.stat_health);
+    divWrap.appendChild(this.stat_level);
+    divWrap.appendChild(this.stat_exp);
+    // divWrap.appendChild(this.stat_hp);
+
     // 자세히 보기 버튼 콜백
     const moreButton = new Button('자세히보기', 'submit');
-    moreButton.moveToCenter(10);
-    moreButton.moveToBottom(10);
+    moreButton.dom.style.position = 'static';
+    // moreButton.moveToCenter(10);
+    // moreButton.moveToBottom(10);
     moreButton.dom.addEventListener('click', (ok)=> {
       pane.parentNode.removeChild(pane);
       return this.result(this.selected);
@@ -96,7 +108,9 @@ export default class CharacterSelect extends Panel {
     characterDesc.appendChild(this.portrait);
     characterDesc.appendChild(this.descClass);
     characterDesc.appendChild(this.descName);
-    characterDesc.appendChild(this.stat_health);
+    characterDesc.appendChild(divWrap);
+
+
     characterDesc.appendChild(equipItems);
     characterDesc.appendChild(moreButton.dom);
     
@@ -104,12 +118,11 @@ export default class CharacterSelect extends Panel {
     const characterListWrap = new MakeDom('div', 'characterListWrap', null);
     characterListWrap.classList.add('flex-left');
     characterListWrap.style.width = '430px';
-    characterDesc.appendChild(characterListWrap);
 
     const characterList = new MakeDom('div', 'characterList', null);
     characterList.style.width = '410px';
     
-    let selected = null;
+    let selectedDoll = null;
     let index = 0;
     let n = 0;
 
@@ -119,7 +132,7 @@ export default class CharacterSelect extends Panel {
 
       if (index === 0) {
         doll.dom.classList.add('active');
-        selected = doll.dom;
+        selectedDoll = doll.dom;
         this.select(input);
       }
       
@@ -135,11 +148,11 @@ export default class CharacterSelect extends Panel {
       doll.stage.style.backgroundPosition = `${posX}px 0`;
 
       doll.dom.addEventListener('click', function(){
-        if(selected) {
-          selected.classList.remove('active');
+        if(selectedDoll) {
+          selectedDoll.classList.remove('active');
         }
         doll.dom.classList.add('active');
-        selected = doll.dom;
+        selectedDoll = doll.dom;
       });
 
       doll.dom.addEventListener('click', this.select.bind(this, input));
@@ -157,15 +170,18 @@ export default class CharacterSelect extends Panel {
   }
 
   select(current) {
-    console.log(current.data);
+    console.log(current);
 
-    this.selected = current.data;
+    this.selected = current;
     const path = '/src/assets/';
 
-    this.descClass.innerText = this.selected.displayname;
+    this.descClass.innerText = this.selected.data.displayname;
     this.descName.innerText = this.selected.name;
-    this.portrait.src = path + this.selected.portrait;
-    this.stat_health.innerText = 'Health : ' + this.selected.base.health;
+    this.portrait.src = path + this.selected.data.portrait;
+
+    this.stat_health.innerText = 'Health : ' + this.selected.health;
+    this.stat_level.innerText = 'Lv.' + this.selected.level;
+    this.stat_exp.innerText = 'exp:' + this.selected.exp;
   }
 }
 

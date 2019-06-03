@@ -73,6 +73,10 @@ export default class Game extends EventEmitter {
             this.ui.showCharacterSelect(inputs);
         });
 
+        this.ui.on('zoomInOut', ()=>{
+            console.log('setscale --- ');
+        });
+
         // 게임 알림을 알려주는 notificatin 큐를 만든다
         this.notification = new Notification();
     }

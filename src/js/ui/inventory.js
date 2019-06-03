@@ -10,6 +10,7 @@ export default class Inventory extends Panel {
         this.inputs = inputs;
         const inventory = new Modal(pane, 800, 460);
         this.dom = inventory.dom;
+        this.dom.classList.add('inventory');
         
         inventory.addTitle('인벤토리');
         inventory.addCloseButton();
@@ -58,7 +59,6 @@ export default class Inventory extends Panel {
         scrollView.classList.add('scrollView');
         scrollView.classList.add('flex-right');
         scrollView.style.top = statContent.clientHeight + 100 + 'px';
-        scrollView.style.height = scrollHeight;
 
         const scrollBlind = document.createElement('div');
         scrollBlind.className = 'scrollBlind';

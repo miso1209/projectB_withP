@@ -7,6 +7,7 @@ export default class MakeDom {
     if(value !== null) {
       dom.innerText = value;
     }
+    
     this.dom = dom;
     return this.dom;
   }

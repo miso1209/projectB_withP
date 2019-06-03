@@ -1,6 +1,4 @@
 export default class Panel {
-    
-
     moveToCenter(_top) {
         this.dom.style.position = 'absolute';
         this.dom.style.left = '0px';

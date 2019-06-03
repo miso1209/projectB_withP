@@ -56,7 +56,6 @@ export default class ListBox extends Panel {
       scrollBlind.style.height = viewHeight;
       scrollBlind.style.width = viewWidth + '20px';
   
-      scrollView.style.height = viewHeight;
       scrollView.style.width = viewWidth;
   
       this.list = document.createElement('ul');

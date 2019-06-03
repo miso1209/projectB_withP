@@ -9,6 +9,7 @@
   margin: 0 auto;
 }
 
+/* Intro */
 .project_header {
   padding: 80px 0;
 }
@@ -19,6 +20,7 @@
   text-align: center;
   color: #fff;
 }
+/* .Intro */
 
 .gnbContainer {
   display: block;
@@ -40,7 +42,6 @@ body.battle .gnbContainer {
 body.battle .gnbContainer.battleMode {
   display: block;
 }
-
 
 .uiContainer, #theater {
   position: absolute;
@@ -98,6 +99,7 @@ body.battle .gnbContainer.battleMode {
   background: -webkit-linear-gradient(top, rgba(0,0,0,1) 30%,rgba(0,0,0,0) 100%); /* Chrome10-25,Safari5.1-6 */
   background: linear-gradient(to bottom, rgba(0,0,0,1) 30%,rgba(0,0,0,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 }
+
 #theater::after{
   content: '';
   display: block;
@@ -110,7 +112,6 @@ body.battle .gnbContainer.battleMode {
   background: -webkit-linear-gradient(bottom, rgba(0,0,0,1) 30%,rgba(0,0,0,0) 100%); /* Chrome10-25,Safari5.1-6 */
   background: linear-gradient(to top, rgba(0,0,0,1) 30%,rgba(0,0,0,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 }
-
 
 #theater.dim {
   z-index: 9999;
@@ -156,6 +157,8 @@ button span {
 
 .buttonS:hover, .buttonS:active {
   opacity: 0.7;
+  border-radius: 8px;
+  box-shadow: 1px 1px 6px rgba(0,0,0,0.5);
 }
 
 .paging{
@@ -244,6 +247,8 @@ button span {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+
+  text-align: right;
 }
 
 .gnb .tabBtn {
@@ -256,6 +261,14 @@ button span {
   width:118px;
   height:50px;
   background: url(~assets/ui/tabBtn_active.png) no-repeat;
+}
+
+.gnbContainer .zoomBtn {
+  position: static !important;
+  text-align: center;
+  opacity: 0;
+  margin: 20px 0 0 20px;
+  transition: opacity 0.3s;
 }
 
 .categoryWarp{
@@ -292,7 +305,6 @@ button span {
   color: #fff;
   overflow: hidden;
   padding: 0 0 5px;
-  /* border-bottom: 1px solid #fff; */
 }
 
 .stageTitle {
@@ -327,20 +339,26 @@ button span {
   padding: 10px 20px;
 }
 
-/* .btnInventory {
-  position: absolute;
-  width: 68px;
-  height: 67px;
-  background: url(~assets/btn_inventory.png) no-repeat;
-  background-size: contain;
-} */
-
 .tooltip {
   position: absolute;
   z-index: 111;
   background: url(~assets/ui/tooltip_box.png) no-repeat;
   background-size: contain;
 }
+
+/* 아이템 이미지 */
+.img {
+  display: inline-block;
+  transform: perspective(1px) translateZ(0);
+  backface-visibility: hidden;
+}
+.img span {
+  display: block;
+}
+._vm {
+  top: 50%;
+}
+
 .profile {
   position: relative;
   text-align: center;
@@ -365,13 +383,16 @@ button span {
 }
 
 .skillItems, .equipItems {
-  display: flex;
+  /* display: flex;
   flex-wrap: wrap;
-  display: block;
+  display: block; */
+
+  padding: 15px 0;
 }
 
 .skillItems .img, .equipItems .img {
-  margin-right: 10px;
+  margin-top: 10px;
+  display: block;
   overflow: visible;
 }
 
@@ -468,7 +489,6 @@ button span {
 /* loading - progress bar */
 .progressHolder {
   position: relative;
-
   width: 273px;
   height: 44px;
   padding: 10px;
@@ -477,7 +497,6 @@ button span {
 } 
 
 .progressbar { 
-  /* margin: 34px 22px 0; */
   max-width: 253px;
   width: 1%; 
   height: 23px; 
@@ -491,7 +510,6 @@ button span {
   top: 10px;
   left: 0;
   right: 0;
-
   text-align: center;
   font-size: 16px;
   line-height: 24px;
@@ -643,20 +661,7 @@ button.disabled span {
 }
 
 
-/* 아이템 이미지 */
-.img {
-  transform: perspective(1px) translateZ(0);
-  backface-visibility: hidden;
-}
-
-.img span {
-  display: block;
-}
-
-/* 
-  inventory 
-*/
-
+/* inventory  */
 .inventory-detail {
   padding: 20px 10px;
   text-align: center;

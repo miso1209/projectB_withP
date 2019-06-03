@@ -13,6 +13,19 @@
   transition: all 0.3s;
 }
 
+.iconBtn {
+  /* padding: 8px; */
+  border: 1px solid transparent;
+  border-radius: 5px;
+  transition: all 0.3s;
+}
+
+.iconBtn:hover, .iconBtn:active{
+  border: 1px solid #ffd800;
+  border-radius: 5px;
+}
+
+
 .modal {
   position: relative;
   z-index: 10;
@@ -163,15 +176,20 @@
 
 .flexWrap .flex-left {
   float: left;
-  width: 28%;
 }
 
 .flexWrap .flex-right {
   float: right;
-  width: 67%;
   padding: 0 10px 10px;
   background-color: #281b10;
   border-radius: 10px;
+}
+
+.inventory .flex-left {
+  width: 28%;
+}
+.inventory .flex-right {
+  width: 67%;
 }
 
 .flexWrap .flex-right .slot-list-box {

@@ -50,6 +50,18 @@ export default class DomUI extends EventEmitter {
                 this.emit(menu.event);
             });
         });
+
+        this.zoomBtn = document.createElement('button');
+        this.zoomBtn.classList.add('buttonS');
+        this.zoomBtn.classList.add('zoomBtn');
+        this.zoomBtn.innerText = 'x2';
+
+        this.gnbContainer.appendChild(this.zoomBtn);
+        this.showZoomBtn();
+
+        this.zoomBtn.addEventListener('click', () => {
+            this.emit('zoomInOut');
+        });
     }
 
     createContainer() {
@@ -86,6 +98,14 @@ export default class DomUI extends EventEmitter {
         this.theaterUI.classList.remove('show');
     }
 
+    showZoomBtn(){
+        this.zoomBtn.style.opacity = '1';
+    }
+
+    hideZoomBtn(){
+        this.zoomBtn.style.opacity = '0';
+    }
+
     showDialog(script, callback) {
         const pane = this.createContainer();
         const dialog = new Dialog(pane, 700, 140, script);
@@ -102,8 +122,9 @@ export default class DomUI extends EventEmitter {
         const confirmModal = new SystemModal(pane, 300, 200, text, result);
         confirmModal.dom.style.top = '50%';
         confirmModal.dom.style.marginTop = 200 * -0.5 + 'px';
+
+        confirmModal.contents.style.margin = '10% auto';
         confirmModal.contents.style.fontSize = '1.1rem';
-        confirmModal.contents.style.margin = '10% auto 0';
     }
 
     showCombineItemList(inputs, callback) { // 제작하기 버튼 콜백
@@ -126,6 +147,7 @@ export default class DomUI extends EventEmitter {
     showCraftUI(itemId, result) {
         const pane = this.createContainer();
         let domHeight = 300;
+
         const modal = new Modal(pane, 360, domHeight, () => {
             result(itemId);
             this.removeContainer(pane);
@@ -143,8 +165,7 @@ export default class DomUI extends EventEmitter {
         itemText.innerText = "아이템을 조합중";
         itemText.style.top = '60px';
 
-        let interval = 10; // 1 ~ 10
-
+        const interval = 10; // 1 ~ 10
         const loading = new ProgressUI(modal.dom, interval, (onComplete)=>{
             itemText.innerText = "아이템 조합 성공!"
         });
@@ -157,7 +178,7 @@ export default class DomUI extends EventEmitter {
 
     showItemAquire(item, result) {
         const pane = this.createContainer();
-        let domHeight = 300;
+        const domHeight = 300;
         const itemAcquire = new Modal(pane, 360, domHeight, () => {
             this.removeContainer(pane);
             if (result) {
@@ -174,8 +195,7 @@ export default class DomUI extends EventEmitter {
         itemText.style.top = 'auto';
         itemText.style.bottom = '70px';
         itemText.innerText = item.name;
-        itemAcquire.dom.appendChild(itemText);
-        // item.data.image.texture
+        
         const image = new ItemImage('items@2.png', item.data.image.x, item.data.image.y);
         const itemSprite = image.dom;
         itemSprite.style.position = 'absolute';
@@ -183,9 +203,11 @@ export default class DomUI extends EventEmitter {
         itemSprite.style.right = '0';
         itemSprite.style.margin = '90px auto 0';
 
-        itemAcquire.moveToCenter('0');
+        itemAcquire.moveToCenter(0);
         itemAcquire.dom.style.top = '50%';
         itemAcquire.dom.style.marginTop = domHeight * -0.5 + 'px';
+
+        itemAcquire.dom.appendChild(itemText);
         itemAcquire.dom.appendChild(itemSprite);
     }
 
@@ -199,9 +221,7 @@ export default class DomUI extends EventEmitter {
 
     showCharacterSelect(inputs) {
         const pane = this.createContainer();
-        
         const characterSelect = new CharacterSelect(pane, inputs, (info)=>{
-            // console.log(info);
             this.showCharacterDatail(info);
         });
     }
@@ -209,6 +229,5 @@ export default class DomUI extends EventEmitter {
     showCharacterDatail(player) {
         const pane = this.createContainer();
         const characterDetail = new CharacterDetail(pane, player);
-        
     }
 }

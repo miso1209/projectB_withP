@@ -4,7 +4,6 @@ export default class ProgressUI extends Panel {
     constructor(container, interval, onComplete) {
         super();
         this.pane = container;
-        this.pane.classList.add('loadingScene');
     
         // dom
         const holder = document.createElement('div');

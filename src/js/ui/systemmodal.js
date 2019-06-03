@@ -19,8 +19,8 @@ export default class SystemModal extends Panel {
         this.contents = descText;
         this.callback = callback;
     
-        const okButton = new Button('OK', 'submit');
-        const cancelButton = new Button('CANCEL');
+        const okButton = new Button('확인', 'submit');
+        const cancelButton = new Button('취소');
     
         confirmModal.dom.appendChild(okButton.dom);
         confirmModal.dom.appendChild(cancelButton.dom);

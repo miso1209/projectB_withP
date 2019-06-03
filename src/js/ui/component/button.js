@@ -1,7 +1,8 @@
 import Panel from "./panel";
+import ItemImage from "./itemimage";
 
 export default class Button extends Panel {
-    constructor(value, type) {
+    constructor(value, type, onclick) {
         super();
     
         const button = document.createElement('button');
@@ -19,6 +20,11 @@ export default class Button extends Panel {
         }
     
         this.dom = button;
+
+        if(onclick !== null) {
+            this.dom.addEventListener('click', onclick);
+        }
     }
 }
+
   

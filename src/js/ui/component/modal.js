@@ -40,7 +40,6 @@ export default class Modal extends Panel {
         const title = document.createElement('h1');
         title.innerText = text;
         title.className = 'title';
-        // this.dom.id = text;
         this.dom.appendChild(title);
     
         this.subTitle = document.createElement('h2');
