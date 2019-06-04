@@ -12,10 +12,6 @@ import { Portal2 } from './event/portal';
 import Loader from './loader';
 import Monster from './monster';
 
-//호영 변수설정
-var doorCount = 0;
-var widewallCount = 0;
-
 function hitTestRectangle(rect1, rect2) {
     return  (rect1.x < rect2.x + rect2.width &&
     rect1.x + rect1.width > rect2.x &&
@@ -105,6 +101,12 @@ export default class Stage extends PIXI.Container {
 
         const map = new TiledMap(mapData);
         
+        //호영 테스트 변수
+        this.doorCount = 0; // 스테이지 문 갯수
+        this.widewallCount = 0; // 넓은 벽 갯수
+        this.doorTarget = []; // 스테이지 문 타겟
+        //END 호영 테스트 변수
+
         this.name = name;
         this.mapWidth = map.width;
         this.mapHeight = map.height;
@@ -178,7 +180,6 @@ export default class Stage extends PIXI.Container {
     
     loadLayer(layer, group, width, height) {
         // 타일맵을 설정한다
-
         for (let y = 0; y < height;++y) {
             for (let x = 0; x < width;++x) {
                 const tile = layer[x +y * width];
@@ -249,38 +250,43 @@ export default class Stage extends PIXI.Container {
         //호영 테스트
         if( tileData.type == "random_wall"){ // 랜덤 벽일때
             var randomCount = 0; // 랜덤수 초기화
+            tileData.randomImage = new Array(tileData.imgCount); // 이미지 숫자로 랜덤이미지의 배열을 선언
+            for(var i=0; i < tileData.imgCount; i++){
+                tileData.randomImage[i] = eval('tileData.random_image'+i); // 카운트된 수의 랜덤 이미지 넘버를 각각의 배열에 넣는다.
+            }
 
-            if( tileData.fix == true ){ // 고정 이미지일때 
-                tileData.xsize = tileData.wall_xsize;
-                tileData.ysize = tileData.wall_ysize;
-                tileData.imageOffset = {x: tileData.x_position,y: tileData.y_position};
-                tileData.texture = PIXI.Texture.fromFrame(tileData.fix_wall);
-            } else {
-                tileData.randomImage = new Array(tileData.imgCount); // 이미지 숫자로 랜덤이미지의 배열을 선언
-                for(var i=0; i < tileData.imgCount; i++){
-                    tileData.randomImage[i] = eval('tileData.random_image'+i); // 카운트된 수의 랜덤 이미지 넘버를 각각의 배열에 넣는다.
+            randomCount = Math.floor( Math.random() * (tileData.randomImage.length)); // 랜덤하게 이미지를 선택한다.
+
+            if( tileData.widewall == true ) { // 그리는 벽이 넓은 벽일때
+
+                this.widewallCount += 1; //넓은 벽 갯수 카운트
+
+                if ( this.widewallCount == 4 && this.doorCount == 0 ) { // 마지막 넓은 벽 그릴때 문이 없으면
+                    randomCount = 0; // 문을 선택. 문은 항상 random_image0 값에 들어있다.
                 }
-                if( tileData.widewall == true ) { // 그리는 벽이 넓은 벽일때
-                    widewallCount += 1; //넓은 벽 갯수 카운트
-                    if ( widewallCount == 4 && doorCount == 0 ) { // 마지막 넓은 벽 그릴때 문이 없으면
-                        randomCount = 0; // 문을 선택. 문은 항상 random_image0 값에 들어있다.
-                    } else {
-                        randomCount = Math.floor( Math.random() * (tileData.randomImage.length)); // 랜덤하게 이미지를 선택한다.
+
+                if ( this.doorCount < 4 && randomCount == 0 ){ // 문의 갯수가 4개보다 작고 선택된 벽이 문일때
+                        this.doorCount += 1; //문 갯수를 카운트 한다.
+                        this.doorTarget.push(tileData.name);
                     }
-                    if ( doorCount < 4 && randomCount == 0 ){ // 문의 갯수가 4개보다 작고 선택된 벽이 문일때
-                        doorCount += 1; //문 갯수를 카운트 한다.
-                    }
-                }
-                if( tileData.randomImage[randomCount] == undefined ){ // 이미지가 1개이고 문이 선택되지 않았을때
-                    tileData.texture = false; //이미지를 그리지 않는다.
-                } else {
-                    tileData.texture = PIXI.Texture.fromFrame(tileData.randomImage[randomCount]); // 선택된 이미지를 그린다.
-                }
             }
             
-            tile = Prop.New(tileData.type, x, y, tileData)
+            if( tileData.randomImage[randomCount] == undefined ){ // 이미지가 1개이고 문이 선택되지 않았을때
+                tileData.texture = false; //이미지를 그리지 않는다.
+            } else {
+                tileData.texture = PIXI.Texture.fromFrame(tileData.randomImage[randomCount]); // 선택된 이미지를 그린다.
+            }
+            
+            tile = Prop.New(tileData.type, x, y, tileData);
+        
+        } else if( tileData.type == "door_portal"){
+            if ( this.doorTarget.indexOf(tileData.target) < 0 ){
+                tileData.texture = false;
+            }
+            tile = Prop.New(tileData.type, x, y, tileData);
+        }
         //END 호영 테스트
-        } else if (tileData.type !== "groundtile") {
+        else if (tileData.type !== "groundtile") {
             tile = Prop.New(tileData.type, x, y, tileData)
         } else {
             tile = new Tile(x, y, tileData);
