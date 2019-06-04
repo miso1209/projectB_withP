@@ -65,7 +65,6 @@ export default class Skill {
 
     setSkillData(data) {
         this.data = data;
-        console.log(data);
     }
 
     setTarget(target) {

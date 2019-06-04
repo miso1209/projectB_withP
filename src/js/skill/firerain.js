@@ -63,7 +63,6 @@ export default class FireRain extends SkillBase {
                 this.targets.forEach((target) => {
                     this.addEffect(target, { name: 'explosion', animation: true, animationLength: 16, removeFrame: 60, speed: 0.5 });
                     const damage = this.getCoefficientsResult(this.owner, this.coefficients[0]);
-                    console.log(`damage(${damage})`);
 
                     this.hit(damage, target);
                 });

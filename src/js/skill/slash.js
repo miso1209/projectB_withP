@@ -32,7 +32,6 @@ export default class Slash extends SkillBase {
                 // TODO : 데미지 계산 공식을 어디서 가져와야 할까??
                 this.addEffect(this.target, { name: 'slash', animation: true, animationLength: 8, removeFrame: 60, speed: 0.5 });
                 const damage = this.getCoefficientsResult(this.owner, this.coefficients[0]);
-                console.log(`damage(${damage})`);
 
                 this.hit(damage, this.target);
                 break;

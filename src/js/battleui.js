@@ -41,10 +41,10 @@ export class BattleUI extends EventEmitter {
         this.container.addChild(battleLogo);
 
         if (hasEffect) {
-            this.tweens.addTween(battleLogo.scale, 0.5, {x: 5, y: 5}, 0.8, 'easeOut', false, null);
+            this.tweens.addTween(battleLogo.scale, 0.5, {x: 5, y: 5}, 1.3, 'easeOut', false, null);
         }
-        this.tweens.addTween(battleLogo.position, 0.5, {x: this.screenSize.w / 2}, 0, 'easeOut', false, null);
-        this.tweens.addTween(battleLogo, 0.5, {alpha: 0}, 0.8, 'easeOut', false, () => {
+        this.tweens.addTween(battleLogo.position, 0.5, {x: this.screenSize.w / 2}, 0.5, 'easeOut', false, null);
+        this.tweens.addTween(battleLogo, 0.5, {alpha: 0}, 1.3, 'easeOut', false, () => {
             this.container.removeChild(battleLogo);
             callback();
         });

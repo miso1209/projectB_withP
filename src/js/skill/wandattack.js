@@ -31,9 +31,8 @@ export default class WandAttack extends SkillBase {
             case 30: {
                 // TODO : 데미지 계산 공식을 어디서 가져와야 할까??
                 // 완드 공격 이펙트로 변경하면 될 것 같다.
-                this.addEffect(this.target, { name: 'slash', animation: true, animationLength: 8, removeFrame: 60, speed: 0.5 });
+                this.addEffect(this.target, { name: 'wandattack', animation: true, animationLength: 12, removeFrame: 60, speed: 0.5 });
                 const damage = this.getCoefficientsResult(this.owner, this.coefficients[0]);
-                console.log(`damage(${damage})`);
 
                 this.hit(damage, this.target);
                 break;

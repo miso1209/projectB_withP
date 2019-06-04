@@ -62,9 +62,8 @@ export default class ArrowOfTracker extends SkillBase {
                 break;
             }
             case 80: {
-                this.addEffect(this.target, { name: 'shoted', animation: true, animationLength: 18, removeFrame: 60, speed: 0.5 });
+                this.addEffect(this.target, { name: 'arrowoftracker', animation: true, animationLength: 7, removeFrame: 60, speed: 0.2 });
                 const damage = this.getCoefficientsResult(this.owner, this.coefficients[0]);
-                console.log(`damage(${damage})`);
 
                 this.hit(damage, this.target);
                 break;

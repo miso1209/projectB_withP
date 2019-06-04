@@ -78,6 +78,12 @@
     ["assets/antipower.json"],
     ["assets/antipowerloop.json"],
     ["assets/shoted.json"],
+
+    ["assets/arrowoftracker.json"],
+    ["assets/shieldattack.json"],
+    ["assets/wandattack.json"],
+    ["assets/criticalattack.json"],
+
     ["fireBall.png", "assets/fireBall.png"],
     ["shield.png", "assets/shield.png"],
     ["arrow.png", "assets/arrow.png"],

@@ -36,7 +36,6 @@ export default class FireBolt extends SkillBase {
             case 40: {
                 this.addEffect(this.target, { name: 'explosion', animation: true, animationLength: 16, removeFrame: 60, speed: 0.5 });
                 const damage = this.getCoefficientsResult(this.owner, this.coefficients[0]);
-                console.log(`damage(${damage})`);
 
                 this.hit(damage, this.target);
                 break;
