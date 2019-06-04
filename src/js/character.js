@@ -95,19 +95,20 @@ export default class Character {
     }
 
     get maxHealth() {
-        return this.baseMaxHealth + this.plusMaxHealth;
+        // 소숫점의 체력은 버린다.
+        return Math.floor(this.baseMaxHealth + this.plusMaxHealth);
     }
 
     get strength() {
-        return this.baseStrength + this.plusStrength;
+        return Math.floor(this.baseStrength + this.plusStrength);
     }
 
     get intellect() {
-        return this.baseIntellect + this.plusIntellect;
+        return Math.floor(this.baseIntellect + this.plusIntellect);
     }
 
     get stamina() {
-        return this.baseStamina + this.plusStamina;
+        return Math.floor(this.baseStamina + this.plusStamina);
     }
 
     get attack() {
@@ -245,6 +246,7 @@ export default class Character {
             const item = new Item(itemId); 
             this.equip(item);
         }
+        this.health = this.maxHealth;
         this.clearDirty();
     }
 

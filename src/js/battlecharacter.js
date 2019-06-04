@@ -108,6 +108,10 @@ export default class BattleCharacter extends PIXI.Container {
 
     onDamage(damage) {
         this.character.health -= damage;
+        if (this.character.health < 0) {
+            this.character.health = 0;
+        }
+
         this.updateProgressBar();
 
         this.animation.colorBlink(0xFF0000, 0.75);

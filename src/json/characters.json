@@ -14,7 +14,7 @@
             "regist": 0
         },
         "levelup": {
-            "health": 0.5,
+            "health": 5,
             "strength": 0.5,
             "intellect": 0.5,
             "agility": 0.5,
@@ -59,11 +59,11 @@
             "regist": 0
         },
         "levelup": {
-            "health": 0.5,
-            "strength": 0.5,
-            "intellect": 0.5,
-            "agility": 0.5,
-            "stamina": 0.5,
+            "health": 7,
+            "strength": 0.7,
+            "intellect": 0.3,
+            "agility": 0.4,
+            "stamina": 0.6,
             "speed": 0,
             "critical": 0.1,
             "regist": 0.3
@@ -104,11 +104,11 @@
             "regist": 0
         },
         "levelup": {
-            "health": 0.5,
-            "strength": 0.5,
-            "intellect": 0.5,
-            "agility": 0.5,
-            "stamina": 0.5,
+            "health": 4,
+            "strength": 0.2,
+            "intellect": 0.7,
+            "agility": 0.3,
+            "stamina": 0.3,
             "speed": 0,
             "critical": 0.1,
             "regist": 0.3
@@ -149,11 +149,11 @@
             "regist": 0
         },
         "levelup": {
-            "health": 0.5,
-            "strength": 0.5,
+            "health": 5,
+            "strength": 0.6,
             "intellect": 0.5,
-            "agility": 0.5,
-            "stamina": 0.5,
+            "agility": 0.6,
+            "stamina": 0.6,
             "speed": 0,
             "critical": 0.1,
             "regist": 0.3
@@ -190,11 +190,11 @@
             "regist": 0
         },
         "levelup": {
-            "health": 0.5,
-            "strength": 0.5,
-            "intellect": 0.5,
-            "agility": 0.5,
-            "stamina": 0.5,
+            "health": 4,
+            "strength": 0.2,
+            "intellect": 0.75,
+            "agility": 0.4,
+            "stamina": 0.3,
             "speed": 0,
             "critical": 0.1,
             "regist": 0.3
