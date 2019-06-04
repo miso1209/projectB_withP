@@ -9,6 +9,7 @@ export default class BattleCharacter extends PIXI.Container {
     constructor(character) {
         super();
         this.character = character;
+        this.isGroggy = false;
        
         this.turnAction = new TurnAction();
         this.buffContainer = new PIXI.Container();
@@ -62,6 +63,10 @@ export default class BattleCharacter extends PIXI.Container {
     }
 
     nextTurn() {
+        if (!this.canFight) {
+            return;
+        }
+        
         if (this.coolTime > 0 && !this.isExtraSkillIn) {
             this.coolTime--;
         }
@@ -165,6 +170,10 @@ export default class BattleCharacter extends PIXI.Container {
 
     get speed() {
         return this.character.speed;
+    }
+
+    get canFight() {
+        return this.isAlive && !this.isGroggy;
     }
 
     get isAlive() {

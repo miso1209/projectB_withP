@@ -206,6 +206,12 @@ class BattleActivePortraitUI extends PIXI.Container {
 
         const activeRate = 1 - (this.character.coolTime / this.character.maxCoolTime);
         this.activeProgressBar.setProgress(activeRate);
+
+        if (activeRate < 1) {
+            this.portrait.tint = '0x505050';
+        } else {
+            this.portrait.tint = '0xffffff';
+        }
     }
 
     setScale(scale) {

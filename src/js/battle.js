@@ -190,7 +190,7 @@ export class Battle extends EventEmitter {
                 this.specialSkillQueue.splice(0, 1);
                 nextSkill = this.getSpeicalSkill(character);
 
-                if (character.isAlive) {
+                if (character.canFight) {
                     break;
                 }
             }
@@ -242,7 +242,7 @@ export class Battle extends EventEmitter {
         const list = this.allies.concat(this.enemies);
         for (const bchar of list) {
             // 살아있는 놈만 반환하도록 해둔다.
-            if (bchar.actionScore < score && bchar.isAlive) {
+            if (bchar.actionScore < score && bchar.canFight) {
                 selected = bchar;
                 score = bchar.actionScore;
             }
@@ -259,7 +259,7 @@ export class Battle extends EventEmitter {
                 // 상대의 순번이 빠른 상대를 고른다
                 for(let i = 0; i < enemies.length; ++i) {
                     const target = enemies[i];
-                    if (target.isAlive) {
+                    if (target.canFight) {
                         result.push(target);
                         break;
                     }
@@ -270,7 +270,7 @@ export class Battle extends EventEmitter {
                 // 상대의 순번이 느린 상대를 고른다
                 for(let i = enemies.length - 1; i >= 0; --i) {
                     const target = enemies[i];
-                    if (target.isAlive) {
+                    if (target.canFight) {
                         result.push(target);
                         break;
                     }
@@ -282,7 +282,7 @@ export class Battle extends EventEmitter {
                     let selectedHp = Number.MAX_SAFE_INTEGER;
                     let selected = null;
                     enemies.forEach((target) => {
-                        if (target.isAlive && target.health < selectedHp) {
+                        if (target.canFight && target.health < selectedHp) {
                             selectedHp = target.health;
                             selected = target;
                         }
@@ -296,7 +296,7 @@ export class Battle extends EventEmitter {
 
             case TARGETING_TYPE.ALLY_ALL:
                 allies.forEach((target) => {
-                    if( target.isAlive ) {
+                    if( target.canFight ) {
                         result.push(target);
                     }
                 });
@@ -304,7 +304,7 @@ export class Battle extends EventEmitter {
 
             case TARGETING_TYPE.ENEMY_ALL:
                 enemies.forEach((target) => {
-                    if( target.isAlive ) {
+                    if( target.canFight ) {
                         result.push(target);
                     }
                 });
@@ -341,17 +341,14 @@ export class Battle extends EventEmitter {
         skill.setTarget(targets);
         skill.setEffects(this.effects);
 
-        // 캐릭터의액선 스코어를 증가시킨다
-        character.actionScore += 1 / character.speed;
-
         return skill;
     }
 
     getBattleStatus() {
         // 아군과 전군중에 살아있는 쪽이 한명이라도 있는지 체크한다. (전멸 플래그 체크)
         const aliveCamp = { ally: false, enemy: false };
-        this.allies.forEach((character) => { aliveCamp.ally |= character.isAlive; });
-        this.enemies.forEach((character) => { aliveCamp.enemy |= character.isAlive; });
+        this.allies.forEach((character) => { aliveCamp.ally |= character.canFight; });
+        this.enemies.forEach((character) => { aliveCamp.enemy |= character.canFight; });
 
         // 둘다 살아있으면 노멀 상태, 한쪽이 전멸했아면 승패를 가른다
         if (aliveCamp.ally && aliveCamp.enemy) {

@@ -15,6 +15,7 @@ export default class Runaway extends SkillBase {
         switch(frame) {
             case 1: {
                 this.setCoolTime();
+                this.owner.isGroggy = true;
                 this.owner.animation_idle();
                 this.owner.alpha = 1;
                 this.originX = this.owner.position.x;
