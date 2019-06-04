@@ -29,6 +29,9 @@ export default class BattleCharacter extends PIXI.Container {
         // 캐릭터의 스피드대로 세팅한다
         this.actionScore = 1 / this.speed;
         this.buffs = {};
+
+        this.coolTime = 0;
+        this.maxCoolTime = 0;
     }
 
     setCamp(camp) {

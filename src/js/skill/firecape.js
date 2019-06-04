@@ -4,8 +4,9 @@ import { TARGETING_TYPE, CHARACTER_CAMP } from "../battledeclare";
 import BaseBuff from "../buff/basebuff";
 
 export default class FireCape extends SkillBase {
-    constructor() {
+    constructor(data) {
         super(TARGETING_TYPE.SELF);
+        this.setSkillData(data);
 
         this.tweens = new Tweens();
     }
@@ -29,8 +30,12 @@ export default class FireCape extends SkillBase {
                 break;
             }
             case 51: {
+                this.owner.removeBuff("fireCape");
+                const fireCape = this.getCoefficientsResult(this.owner, this.coefficients[0]);
+                console.log(`armor(${fireCape})`);
+
                 this.owner.addBuff("fireCape", 10, new BaseBuff({
-                    option: "armor(20)",
+                    option: `armor(${fireCape})`,
                     isAnimation: true,
                     sprite: 'firecape',
                     animationLength: 58,

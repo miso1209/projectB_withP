@@ -2,8 +2,9 @@ import SkillBase from "./skillbase";
 import { CHARACTER_CAMP, TARGETING_TYPE } from "../battledeclare";
 
 export default class CriticalAttack extends SkillBase {
-    constructor() {
+    constructor(data) {
         super(TARGETING_TYPE.ENEMY_FRONT_TANK);
+        this.setSkillData(data);
 
         this.tweens = new Tweens();
     }
@@ -30,7 +31,10 @@ export default class CriticalAttack extends SkillBase {
             case 30: {
                 // TODO : 데미지 계산 공식을 어디서 가져와야 할까??
                 this.addEffect(this.target, { name: 'slash', animation: true, animationLength: 8, removeFrame: 60, speed: 0.5 });
-                this.hit(this.owner.attack, this.target);
+                const damage = this.getCoefficientsResult(this.owner, this.coefficients[0]);
+                console.log(`damage(${damage})`);
+
+                this.hit(damage, this.target);
                 break;
             }
             case 55: {

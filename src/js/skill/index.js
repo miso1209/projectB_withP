@@ -13,6 +13,8 @@ import CriticalAttack from './criticalattack';
 import AntiPower from './antipower';
 import FireCape from './firecape';
 
+const skills = require('json/skills.json');
+
 export default class Skill {
     static factory = {};
     static Register(name, generator_func) {
@@ -21,58 +23,59 @@ export default class Skill {
 
     static New(name, ...args) {
         const func = Skill.factory[name];
-        return func(...args);
+        // 데이터를 넣어본다..
+        return func(skills[name], ...args);
     }
 }
 
 // Hector
-Skill.Register("crouch", () => {
-    return new Crouch();
+Skill.Register("crouch", (...arg) => {
+    return new Crouch(...arg);
 });
-Skill.Register("runaway", () => {
-    return new Runaway();
+Skill.Register("runaway", (...arg) => {
+    return new Runaway(...arg);
 });
 
 // Warrior
-Skill.Register("slash", () => { 
-    return new Slash(); 
+Skill.Register("slash", (...arg) => { 
+    return new Slash(...arg); 
 });
-Skill.Register("shieldAttack", () => {
-    return new ShieldAttack();
+Skill.Register("shieldAttack", (...arg) => {
+    return new ShieldAttack(...arg);
 });
-Skill.Register("doubleAttack", () => {
-    return new DouobleAttack();
+Skill.Register("doubleAttack", (...arg) => {
+    return new DouobleAttack(...arg);
 });
 
 // Wizzard
-Skill.Register("fireBolt", () => { 
-    return new FireBolt(); 
+Skill.Register("fireBolt", (...arg) => { 
+    return new FireBolt(...arg); 
 });
-Skill.Register("fireCape", () => { 
-    return new FireCape(); 
+Skill.Register("fireCape", (...arg) => { 
+    return new FireCape(...arg); 
 });
-Skill.Register("fireRain", () => { 
-    return new FireRain(); 
+Skill.Register("fireRain", (...arg) => { 
+    return new FireRain(...arg); 
 });
 
 // Archer
-Skill.Register("shotArrow", () => { 
-    return new ShotArrow(); 
+Skill.Register("shotArrow", (...arg) => { 
+    return new ShotArrow(...arg); 
 });
-Skill.Register("criticalAttack", () => { 
-    return new CriticalAttack(); 
+Skill.Register("criticalAttack", (...arg) => { 
+    return new CriticalAttack(...arg); 
 });
-Skill.Register("arrowOfTracker", () => { 
-    return new ArrowOfTracker(); 
+Skill.Register("arrowOfTracker", (...arg) => { 
+    return new ArrowOfTracker(...arg); 
 });
 
 // Healer
-Skill.Register("wandAttack", () => {
-    return new WandAttack();
+Skill.Register("wandAttack", (...arg) => {
+    return new WandAttack(...arg);
 });
-Skill.Register("antiPower", () => {
-    return new AntiPower();
+Skill.Register("antiPower", (...arg) => {
+    return new AntiPower(...arg);
 });
-Skill.Register("heal", () => {
-    return new Heal();
+Skill.Register("heal", (...arg) => {
+    return new Heal(...arg);
 });

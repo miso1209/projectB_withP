@@ -74,7 +74,13 @@ export default class Game extends EventEmitter {
         });
 
         this.ui.on('zoomInOut', ()=>{
-            console.log('setscale --- ');
+            if (this.stage.currentScale === 2) {
+                this.stage.zoomTo(1.5, true);
+            } else if (this.stage.currentScale === 1.5) {
+                this.stage.zoomTo(1, true);
+            } else {
+                this.stage.zoomTo(2, true);
+            }
         });
 
         // 게임 알림을 알려주는 notificatin 큐를 만든다

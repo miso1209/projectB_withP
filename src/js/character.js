@@ -27,7 +27,7 @@ export default class Character {
 
         this.equipments = {
             weapon: null,
-            amomr: null,
+            armor: null,
             accessory: null,
         };
 

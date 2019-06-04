@@ -3,8 +3,9 @@ import SkillBase from "./skillbase";
 import { TARGETING_TYPE, FRAME_PER_SEC } from "../battledeclare";
 
 export default class ShotArrow extends SkillBase {
-    constructor() {
+    constructor(data) {
         super(TARGETING_TYPE.ENEMY_BACK_CARRY);
+        this.setSkillData(data);
 
         this.tweens = new Tweens();
         this.updater = new Updater();
@@ -50,7 +51,10 @@ export default class ShotArrow extends SkillBase {
             }
             case 65: {
                 this.addEffect(this.target, { name: 'shoted', animation: true, animationLength: 18, removeFrame: 60, speed: 0.5 });
-                this.hit(this.owner.attack, this.target);
+                const damage = this.getCoefficientsResult(this.owner, this.coefficients[0]);
+                console.log(`damage(${damage})`);
+
+                this.hit(damage, this.target);
                 break;
             }
             case 80: {

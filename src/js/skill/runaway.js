@@ -2,8 +2,9 @@ import SkillBase from "./skillbase";
 import { CHARACTER_CAMP, TARGETING_TYPE } from "../battledeclare";
 
 export default class Runaway extends SkillBase {
-    constructor() {
+    constructor(data) {
         super(TARGETING_TYPE.ENEMY_FRONT_TANK);
+        this.setSkillData(data);
 
         this.tweens = new Tweens();
     }

@@ -4,8 +4,9 @@ import { TARGETING_TYPE, CHARACTER_CAMP } from "../battledeclare";
 import BlinkEffectBuff from "../buff/blinkeffectbuff";
 
 export default class AntiPower extends SkillBase {
-    constructor() {
+    constructor(data) {
         super(TARGETING_TYPE.ENEMY_ALL);
+        this.setSkillData(data);
 
         this.tweens = new Tweens();
     }
@@ -30,8 +31,12 @@ export default class AntiPower extends SkillBase {
             }
             case 30: {
                 this.targets.forEach((target) => {
+                    target.removeBuff("antiPower");
+                    const antiPower = this.getCoefficientsResult(this.target, this.coefficients[0]) * -1;
+                    console.log(`attack(${antiPower})`);
+
                     target.addBuff("antiPower", 10, new BlinkEffectBuff({
-                        option: "attack(-15)",
+                        option: `attack(${antiPower})`,
                         isAnimation: true,
                         sprite: 'antipowerloop',
                         animationLength: 32,

@@ -3,8 +3,9 @@ import SkillBase from "./skillbase";
 import { TARGETING_TYPE, CHARACTER_CAMP } from "../battledeclare";
 
 export default class FireRain extends SkillBase {
-    constructor() {
+    constructor(data) {
         super(TARGETING_TYPE.ENEMY_ALL);
+        this.setSkillData(data);
 
         this.tweens = new Tweens();
     }
@@ -60,7 +61,10 @@ export default class FireRain extends SkillBase {
             case 100: {
                 this.targets.forEach((target) => {
                     this.addEffect(target, { name: 'explosion', animation: true, animationLength: 16, removeFrame: 60, speed: 0.5 });
-                    this.hit(this.owner.magic, target);
+                    const damage = this.getCoefficientsResult(this.owner, this.coefficients[0]);
+                    console.log(`damage(${damage})`);
+
+                    this.hit(damage, target);
                 });
                 break;
             }

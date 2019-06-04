@@ -4,8 +4,9 @@ import { TARGETING_TYPE, CHARACTER_CAMP } from "../battledeclare";
 import BaseBuff from "../buff/basebuff";
 
 export default class Heal extends SkillBase {
-    constructor() {
+    constructor(data) {
         super(TARGETING_TYPE.ALLY_ALL);
+        this.setSkillData(data);
 
         this.tweens = new Tweens();
     }
@@ -30,8 +31,11 @@ export default class Heal extends SkillBase {
             }
             case 30: {
                 this.targets.forEach((target) => {
+                    const heal = this.getCoefficientsResult(target, this.coefficients[0]);
+                    console.log(`heal(${heal})`);
+
                     target.addBuff("heal", 0, new BaseBuff({
-                        option: "health(50)",
+                        option: `health(${heal})`,
                         isAnimation: false,
                     }));
                     this.addEffect(target, { name: 'healeffect', animation: true, animationLength: 25, removeFrame: 52, speed: 0.7 });

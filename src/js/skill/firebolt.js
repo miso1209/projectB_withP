@@ -3,8 +3,9 @@ import SkillBase from "./skillbase";
 import { TARGETING_TYPE } from "../battledeclare";
 
 export default class FireBolt extends SkillBase {
-    constructor() {
+    constructor(data) {
         super(TARGETING_TYPE.ENEMY_FRONT_TANK);
+        this.setSkillData(data);
 
         this.tweens = new Tweens();
     }
@@ -34,7 +35,10 @@ export default class FireBolt extends SkillBase {
             }
             case 40: {
                 this.addEffect(this.target, { name: 'explosion', animation: true, animationLength: 16, removeFrame: 60, speed: 0.5 });
-                this.hit(this.owner.magic, this.target);
+                const damage = this.getCoefficientsResult(this.owner, this.coefficients[0]);
+                console.log(`damage(${damage})`);
+
+                this.hit(damage, this.target);
                 break;
             }
             case 50: {

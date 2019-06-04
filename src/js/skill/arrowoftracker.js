@@ -3,8 +3,9 @@ import SkillBase from "./skillbase";
 import { TARGETING_TYPE, CHARACTER_CAMP, FRAME_PER_SEC } from "../battledeclare";
 
 export default class ArrowOfTracker extends SkillBase {
-    constructor() {
+    constructor(data) {
         super(TARGETING_TYPE.ENEMY_MIN_HP);
+        this.setSkillData(data);
 
         this.tweens = new Tweens();
         this.updater = new Updater();
@@ -61,7 +62,10 @@ export default class ArrowOfTracker extends SkillBase {
             }
             case 80: {
                 this.addEffect(this.target, { name: 'shoted', animation: true, animationLength: 18, removeFrame: 60, speed: 0.5 });
-                this.hit(this.owner.attack, this.target);
+                const damage = this.getCoefficientsResult(this.owner, this.coefficients[0]);
+                console.log(`damage(${damage})`);
+
+                this.hit(damage, this.target);
                 break;
             }
             case 95: {
