@@ -16,6 +16,7 @@ export default class BattleCharacter extends PIXI.Container {
 
         this.progressBar = new BattleProgressBar();
         this.progressBar.show();
+        this.progressBar.tinting('0xff0000');
         this.progressBar.setPosition({
             x: this.animation.width / 2,
             y: -this.animation.height,
@@ -31,7 +32,14 @@ export default class BattleCharacter extends PIXI.Container {
         this.buffs = {};
 
         this.coolTime = 0;
-        this.maxCoolTime = 0;
+        this.maxCoolTime = 1;
+        this.isExtraSkillIn = false;
+    }
+
+    extraSkillIn() {
+        this.coolTime = 1;
+        this.maxCoolTime = 1;
+        this.isExtraSkillIn = true;
     }
 
     setCamp(camp) {
@@ -54,6 +62,9 @@ export default class BattleCharacter extends PIXI.Container {
     }
 
     nextTurn() {
+        if (this.coolTime > 0 && !this.isExtraSkillIn) {
+            this.coolTime--;
+        }
         this.turnAction.nextTurn();
     }
 

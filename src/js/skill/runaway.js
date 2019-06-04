@@ -14,6 +14,7 @@ export default class Runaway extends SkillBase {
         // 프레임별로 실행해야 할 내용을 여기에 기록
         switch(frame) {
             case 1: {
+                this.setCoolTime();
                 this.owner.animation_idle();
                 this.owner.alpha = 1;
                 this.originX = this.owner.position.x;

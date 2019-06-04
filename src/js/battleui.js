@@ -83,7 +83,7 @@ export class BattleProgressBar extends PIXI.Container {
     constructor() {
         super();
         this.progressHolder = new PIXI.Sprite(PIXI.Texture.fromFrame("pbar.png"));
-        this.progressBar = new PIXI.Sprite(PIXI.Texture.fromFrame("pbar_r.png"));
+        this.progressBar = new PIXI.Sprite(PIXI.Texture.fromFrame("pbar_w.png"));
 
         this.progressHolder.position.y = -this.progressHolder.height / 2;
         this.progressHolder.position.x = -this.progressHolder.width / 2;
@@ -97,6 +97,10 @@ export class BattleProgressBar extends PIXI.Container {
         this.alpha = 0;
         this.addChild(this.progressHolder);
         this.addChild(this.progressBar);
+    }
+
+    tinting(tint) {
+        this.progressBar.tint = tint;
     }
 
     setProgress(rate) {
@@ -185,19 +189,23 @@ class BattleActivePortraitUI extends PIXI.Container {
         this.healthProgressBar.setScale({x: 2, y: 2});
         this.healthProgressBar.setPosition({x: this.portrait.width / 2, y: this.height + margin.y});
         this.healthProgressBar.show();
+        this.healthProgressBar.tinting('0xff0000');
         this.addChild(this.healthProgressBar);
 
         this.activeProgressBar = new BattleProgressBar();
         this.activeProgressBar.setScale({x: 2, y: 2});
         this.activeProgressBar.setPosition({x: this.portrait.width / 2, y: this.height + margin.y});
         this.activeProgressBar.show();
+        this.activeProgressBar.tinting('0xff7f00');
         this.addChild(this.activeProgressBar);
     }
 
     update() {
-      
         const healthRate = this.character.character.health / this.character.character.maxHealth;
         this.healthProgressBar.setProgress(healthRate);
+
+        const activeRate = 1 - (this.character.coolTime / this.character.maxCoolTime);
+        this.activeProgressBar.setProgress(activeRate);
     }
 
     setScale(scale) {

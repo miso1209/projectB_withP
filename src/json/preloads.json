@@ -52,6 +52,7 @@
 
     ["shadow.png", "assets/shadow.png"],
     ["pbar.png", "assets/pbar.png"],
+    ["pbar_w.png", "assets/pbar_w.png"],
     ["pbar_r.png", "assets/pbar_r.png"],
     ["pbar_g.png", "assets/pbar_g.png"],
     ["pbar_o.png", "assets/pbar_o.png"],

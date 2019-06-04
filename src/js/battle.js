@@ -75,7 +75,10 @@ export class Battle extends EventEmitter {
 
         // special skill 이벤트 emit받아서 사용 하는데.. => 죽었을 시 발동, 쿨타임 0 문제 해결해야 할 듯 하다.
         this.ui.on('specialskill', (character) => {
-            this.specialSkillQueue.push(character);
+            if (character.coolTime <= 0) {
+                character.extraSkillIn();
+                this.specialSkillQueue.push(character);
+            }
         });
         this.stage.addChild(this.ui.container);
 

@@ -5,6 +5,12 @@ export default class Skill {
         this.targetingType = targetingType;
         this.frame = 0;
     }
+
+    setCoolTime() {
+        this.owner.coolTime = this.coolTime;
+        this.owner.maxCoolTime = this.maxCoolTime;
+        this.owner.isExtraSkillIn = false;
+    }
     
     get coefficients() {
         return this.data.coefficients;
