@@ -16,112 +16,148 @@ export default class CharacterDetail extends Panel {
     statUI.className = 'statUI';
     statUI.dom.classList.add('characterDetail');
 
-    this.input = input.data;
+    this.selected = input;
 
-    console.log(this.input);
+    console.log(this.selected);
     
     const contentsWrap = document.createElement('div');
     contentsWrap.classList.add('contents');
     contentsWrap.classList.add('flexWrap');
+    contentsWrap.style.top = '80px';
 
-    const gearWrap = new MakeDom('div', 'gearWrap', null);
-    const statWrap = new MakeDom('div', 'statWrap', null);
+    const leftBox = new MakeDom('div');
+    const rightBox = new MakeDom('div');
 
-    gearWrap.classList.add('flex-left');
-    statWrap.classList.add('flex-right');
-    statWrap.classList.add('contents-box');
+    leftBox.classList.add('flex-left');
+    leftBox.classList.add('characterDesc');
 
-    gearWrap.style.position = 'relative';
-    gearWrap.style.width = '45%';
-    statWrap.style.width = '55%';
+    rightBox.classList.add('flex-right');
+    rightBox.classList.add('characterStat');
+    rightBox.classList.add('contents-box');
 
+    leftBox.style.position = 'relative';
+    leftBox.style.width = '50%';
+    rightBox.style.width = '50%';
 
-    const playerName = new MakeDom('p', 'playerName', this.input.displayname);
-    gearWrap.appendChild(playerName);
+    const titleWrap = new MakeDom('div', 'titleWrap', null);
+    this.descClass = new MakeDom('span', 'stat_class', null);
+    this.descName = new MakeDom('span', 'stat_name', null);
+    this.level = new MakeDom('span', 'stat_level', null);
+    this.level.style.paddingRight = '10px';
 
+    const infoWrap = new MakeDom('div', 'infoWrap', null);
 
     // 캐릭터 정보
-    const profile = new MakeDom('img', 'profile', null);
-    profile.src = 'src/assets/' + this.input.portrait;
+    this.portrait = new MakeDom('img', 'profile');
+    this.portrait.style.display = 'block';
+    this.portrait.style.margin = '30px auto 10px';
 
+    titleWrap.appendChild(this.level);
+    titleWrap.appendChild(this.descClass);
+    infoWrap.appendChild(this.portrait);
+    
+
+    // 캐릭터 정보
+    const profile = new MakeDom('img', 'profile');
+    profile.src = 'src/assets/' + this.selected.data.portrait;
+
+    // 장비
+    this.equipItems = document.createElement('ul');
+    this.equipItems.className = 'equipItems';
 
     // 캐릭터 스탯 정보 - 임시..
-    const contents = document.createElement('div');
-    contents.style.marginTop = '30px';
+    const statWrap = new MakeDom('ul', 'statWrap');
+    
+    const mainStats = new MakeDom('div', 'mainStat');
+    let statMagic = new MakeDom('span', 'stat', `마법 : ${this.selected.magicPotential}`);
+    let statAttack = new MakeDom('span', 'stat', `공격력 : ${this.selected.plusAttack}`);
+    let statArmor = new MakeDom('span', 'stat', `방어력 : ${this.selected.plusArmor}`);
 
+    mainStats.appendChild(statMagic);
+    mainStats.appendChild(statAttack);
+    mainStats.appendChild(statArmor);
 
-    for(let baseStat in this.input.base) {
-      let stat = document.createElement('p');
-      stat.innerText = `${baseStat} : ${this.input.base[baseStat]}`;
-      contents.appendChild(stat);
+    statWrap.appendChild(mainStats);
+
+    for(let base in this.selected.data.base) {
+      if ( base !== 'health') {
+        let baseStat = document.createElement('li');
+        let plusStat = document.createElement('span');
+
+        let text = base.charAt(0).toUpperCase() + base.slice(1);
+        let baseStatText = 'base' + text;
+        let plusStatText = 'plus' + text;
+
+        console.log(baseStatText, plusStatText);
+
+        baseStat.innerText = `${base} : ${this.selected[baseStatText]}`;
+        plusStat.innerText = `( + ${this.selected[plusStatText]} )`;
+        plusStat.style.paddingLeft = '10px';
+        plusStat.style.color = '#ffd800';
+        baseStat.appendChild(plusStat);
+        statWrap.appendChild(baseStat);
+      }
     }
-  
-    // 현재 캐릭터 장비정보
-    const equipItemsData = [{
-      x: 4,
-      y: 9,
-      item: 'Weapon'
-    }, {
-      x: 6,
-      y: 12,
-      item: 'Armor'
-    }, {
-      x: 9,
-      y: 3,
-      item: 'Ring'
-    }];
-    
-    const equipItems = document.createElement('div');
-    equipItems.className = 'equipItems';
-    equipItems.style.position = 'absolute';
-    equipItems.style.left = '30px';
-    equipItems.style.top = '0';
-  
-    equipItemsData.forEach(item => {
-      let itemIcon = new ItemImage('items.png', item.x, item.y);
-      itemIcon.dom.classList.add('iconBtn');
 
-      // todo : 이름부분 이미지 내에 붙이면 줄바꿈되버림.. 외부로 붙일 수 잇게 인자값을 추가하자.
-      // let itemName = document.createElement('span');
-      // itemName.innerText = item.item;
-      // itemIcon.dom.appendChild(itemName);
-      equipItems.appendChild(itemIcon.dom);
-    });
+    // const skillItems = document.createElement('div');
+    // skillItems.className = 'skillItems';
+    // skillItems.style.position = 'absolute';
+    // skillItems.style.right = '30px';
+    // skillItems.style.top = '0';
   
-    // 현재 캐릭터 스킬정보
-    const skillItemData = [{
-      x: 1,
-      y: 6,
-      skill: 'Attack'
-    }, {
-      x: 4,
-      y: 6,
-      skill: 'Avoid'
-    }];
-    
-    const skillItems = document.createElement('div');
-    skillItems.className = 'skillItems';
-    skillItems.style.position = 'absolute';
-    skillItems.style.right = '30px';
-    skillItems.style.top = '0';
-  
-    skillItemData.forEach(item => {
-      let itemIcon = new ItemImage('items.png', item.x, item.y);
-      itemIcon.dom.classList.add('iconBtn');
-      skillItems.appendChild(itemIcon.dom);
-    });
-  
-    gearWrap.appendChild(profile);
-    gearWrap.appendChild(equipItems);
-    gearWrap.appendChild(skillItems);
-    statWrap.appendChild(contents);
+    // skillItemData.forEach(item => {
+    //   let itemIcon = new ItemImage('items.png', item.x, item.y);
+    //   itemIcon.dom.classList.add('iconBtn');
+    //   skillItems.appendChild(itemIcon.dom);
+    // });
 
-    contentsWrap.appendChild(gearWrap);
-    contentsWrap.appendChild(statWrap);
+    leftBox.appendChild(titleWrap);
+    leftBox.appendChild(infoWrap);
+    leftBox.appendChild(this.equipItems);
+    // leftBox.appendChild(this.skillItems);
+    rightBox.appendChild(statWrap);
+
+    contentsWrap.appendChild(leftBox);
+    contentsWrap.appendChild(rightBox);
 
     statUI.dom.appendChild(contentsWrap);
-
     this.dom = statUI.dom;
+
+    this.update();
+  }
+
+  update() {
+    const path = '/src/assets/';
+    this.descClass.innerText = this.selected.data.displayname;
+    this.descName.innerText = this.selected.name;
+    this.portrait.src = path + this.selected.data.portrait;
+    this.level.innerText = 'Lv.' + this.selected.level;
+    this.updateEquip();
+  }
+
+
+  updateEquip(){
+    // 테스트용 데이터
+    this.equipItems.innerHTML = '';
+
+    let equipItemsData = [];
+    equipItemsData.push(this.selected.equipments.armor);
+    equipItemsData.push(this.selected.equipments.weapon);
+    equipItemsData.push(this.selected.equipments.accessory);
+
+    equipItemsData.forEach(item => {
+      if (item !== null) {
+        // let item = new Item(itemID);
+        let liWrap = new MakeDom('li', null, null);
+        let itemIcon = new ItemImage(item.data.image.texture, item.data.image.x, item.data.image.y);
+        itemIcon.dom.style.display = 'inline-block';
+
+        // let itemCategory = new MakeDom('span', 'itemCategory', item.category.toUpperCase());
+        // liWrap.appendChild(itemCategory);
+        liWrap.appendChild(itemIcon.dom);
+        this.equipItems.appendChild(liWrap);
+      } 
+    });
   }
 }
 

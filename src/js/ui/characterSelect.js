@@ -3,7 +3,6 @@ import Modal from "./component/modal";
 import MakeDom from "./component/makedom";
 import ItemImage from "./component/itemimage";
 import Button from "./component/button";
-import Item from "../item.js";
 import { stringify } from "querystring";
 
 export default class CharacterSelect extends Panel {
@@ -48,6 +47,8 @@ export default class CharacterSelect extends Panel {
     characterDesc.classList.add('characterDesc');
     characterDesc.classList.add('flex-right');
 
+    const infoWrap = new MakeDom('div', 'infoWrap', null);
+
     this.portrait = document.createElement('img');
     this.portrait.style.display = 'block';
     this.portrait.style.margin = '30px auto 10px';
@@ -61,22 +62,22 @@ export default class CharacterSelect extends Panel {
       return this.result(this.selected.id);
     });
 
-    const infoWrap = new MakeDom('div', 'infoWrap', null);
+    const titleWrap = new MakeDom('div', 'titleWrap', null);
+    
     this.descClass = new MakeDom('span', 'stat_class', null);
     this.descName = new MakeDom('span', 'stat_name', null);
-
     this.level = new MakeDom('span', 'stat_level', null);
     this.level.style.paddingRight = '10px';
     
     // status 바
-    const divWrap = new MakeDom('div', 'statWrap', null);
+    const statWrap = new MakeDom('div', 'statWrap', null);
     
     this.hp = new StatusBar(0, 10);
     this.exp = new StatusBar(0, 10);
     this.exp.setBar('exp');
 
-    divWrap.appendChild(this.hp.dom);
-    divWrap.appendChild(this.exp.dom);
+    statWrap.appendChild(this.hp.dom);
+    statWrap.appendChild(this.exp.dom);
 
     // 장비
     this.equipItems = document.createElement('ul');
@@ -84,24 +85,21 @@ export default class CharacterSelect extends Panel {
 
     // 자세히 보기 버튼 콜백
     const moreButton = new Button('자세히보기', 'submit');
-    // moreButton.dom.style.position = 'static';
-    // moreButton.dom.style.marginTop = '10px';
     moreButton.moveToCenter(0);
     moreButton.moveToBottom(15);
-
     moreButton.dom.addEventListener('click', (ok)=> {
       pane.parentNode.removeChild(pane);
       return this.result(this.selected);
     });
 
-    characterDesc.appendChild(this.portrait);
-    characterDesc.appendChild(this.recoveryBtn.dom);
+    titleWrap.appendChild(this.level);
+    titleWrap.appendChild(this.descClass);
+    infoWrap.appendChild(this.portrait);
+    infoWrap.appendChild(this.recoveryBtn.dom);
 
-    infoWrap.appendChild(this.level);
-    infoWrap.appendChild(this.descClass);
-
+    characterDesc.appendChild(titleWrap);
     characterDesc.appendChild(infoWrap);
-    characterDesc.appendChild(divWrap);
+    characterDesc.appendChild(statWrap);
 
     characterDesc.appendChild(this.equipItems);
     characterDesc.appendChild(moreButton.dom);
@@ -161,8 +159,6 @@ export default class CharacterSelect extends Panel {
   }
 
   select(current) {
-    console.log(current);
-
     this.selected = current;
     const path = '/src/assets/';
 
@@ -199,13 +195,16 @@ export default class CharacterSelect extends Panel {
   updateEquip(){
     // 테스트용 데이터
     this.equipItems.innerHTML = '';
-    let equipItemsData = [3, 4, 6];
-    // equipItemsData.push(current.equipments.armor);
-    // equipItemsData.push(current.equipments.weapon);
-    // equipItemsData.push(current.equipments.accessory);
-    equipItemsData.forEach(itemID => {
-      if (itemID !== null) {
-        let item = new Item(itemID);
+
+    let equipItemsData = [];
+    equipItemsData.push(this.selected.equipments.armor);
+    equipItemsData.push(this.selected.equipments.weapon);
+    equipItemsData.push(this.selected.equipments.accessory);
+
+    
+    equipItemsData.forEach(item => {
+      if (item !== null) {
+        // let item = new Item(itemID);
         let liWrap = new MakeDom('li', null, null);
         let itemIcon = new ItemImage(item.data.image.texture, item.data.image.x, item.data.image.y);
         itemIcon.dom.style.display = 'inline-block';
@@ -264,15 +263,12 @@ class StatusBar {
       this.progressBar.classList.add('progressbar');
 
       this.maxValue = maxValue;
-      this.visible = false;
-      
       this.progressHolder.appendChild(this.progressBar);
 
       this.rate = new MakeDom('span', 'progressRate', `${currentValue} / ${maxValue}`);
       this.progressHolder.appendChild(this.rate);
 
       this.dom = this.progressHolder;
-
       this.update(currentValue, maxValue);
   }
 

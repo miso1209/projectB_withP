@@ -384,31 +384,9 @@ button span {
   margin: 10px 0;
 }
 
-.characterDetail .skillItems, 
-.characterDetail .equipItems {
-  width: auto;
-} 
 
-.equipItems .itemCategory {
-  position: absolute;
-  opacity: 0.2;
-  bottom: -10px;
-  left: 0;
-  right: 0;
-}
 
-.equipItems li {
-  width: 33%;
-  position: relative;
-  display: inline-block;
-  margin: 10px 0 0;
-}
 
-.skillItems .img, .equipItems .img {
-  margin: 0 auto;
-  display: block;
-  overflow: visible;
-}
 
 .blinkAnim {
   animation: blink .3s steps(30, end) .3s 1 normal both;
@@ -422,6 +400,7 @@ button span {
   z-index: 1;
   margin: 0 auto;
 }
+
 .dialog .dialog-speaker {
   display: none;
 
@@ -485,11 +464,10 @@ button span {
 
 #SYSTEM .contents{
   top: 0;
-  /* max-height: 50%; */
   padding: 0 0;
-  /* overflow: hidden; */
   background-color: transparent;
 } 
+
 .contents-option {
   margin: 20px auto 10px;
 }
@@ -708,13 +686,17 @@ button.disabled span {
   padding: 10px 20px;
 }
 
+.flex-left.characterDesc {
+  background-color: transparent;
+}
+
 .characterDesc p {
   font-size: 15px;
   line-height: 1.5;
   color: #fff;
 }
 
-.characterDesc .infoWrap {
+.characterDesc .titleWrap {
   position: absolute;
   left: 0;
   right: 0;
@@ -728,10 +710,15 @@ button.disabled span {
   background-size: cover;
 }
 
-.characterDesc .infoWrap span {
+.characterDesc .titleWrap span {
   color: #333;
+  font-weight: 500;
 }
 
+.statWrap {
+  width: 100%;
+  padding: 0 15px;
+}
 
 .characterListWrap{
   position: relative !important;
@@ -873,6 +860,75 @@ button.disabled span {
   transition: all 0.5s linear;
 } 
 
+/* 캐릭터 상세창 */
+.equipItems .itemCategory {
+  display: block;
+  opacity: 0.2;
+}
+
+.equipItems li {
+  width: 32%;
+  min-height: 50px;
+  position: relative;
+  display: inline-block;
+  margin: 10px 0 0;
+
+  border: 1px solid transparent;
+  border-radius: 5px;
+}
+
+.equipItems li:not(:first-child){
+  margin-left: 3px;
+}
+
+.skillItems .img, .equipItems .img {
+  margin: 0 auto;
+  display: block;
+  overflow: visible;
+}
+
+.characterDetail .skillItems, 
+.characterDetail .equipItems {
+  position: absolute;
+  top: 30px;
+  width: 60px;
+} 
+
+.characterDetail .equipItems li {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 7px 10px;
+  background-color: rgba(1,1,1,.4);
+}
+
+.characterDetail .equipItems li:not(:first-child){
+  margin-top: 10px;
+}
+
+.equipItems li:hover, 
+.equipItems li:active,
+.equipItems li.active {
+  background-color: rgba(1,1,1,.8);
+}
+
+.characterDetail .statWrap {
+  width: auto;
+  text-align: left;
+  margin: 10px ;
+}
+
+.characterDetail .statWrap .mainStat {
+  margin: 0 0 20px;
+}
+
+.characterDetail .statWrap .mainStat span:not(:first-child) {
+  padding-left: 30px;
+}
+
+.characterDetail .statWrap li{
+  margin-bottom: 10px;
+}
 
 /* loading - progress bar */
 .progressHolder {
@@ -906,10 +962,6 @@ button.disabled span {
   text-shadow: 2px 0px 0px #333; 
 }
 
-.statWrap {
-  width: 100%;
-  padding: 0 15px;
-}
 
 /* statusbar */
 .progressHolder.status {
