@@ -42,6 +42,10 @@ export default class Character {
         this.skills = data.skills;
 
         this.dirty = false;
+
+        this.equip('weapon', '1');
+        this.equip('armor', '2');
+        this.equip('accessory', '5');
     }
 
     getParam(parameterName, level) {
@@ -243,8 +247,7 @@ export default class Character {
         this.exp = data.exp;
         for (const slot in data.equips) {
             const itemId = data.equips[slot];
-            const item = new Item(itemId); 
-            this.equip(item);
+            this.equip(slot, itemId);
         }
         this.health = this.maxHealth;
         this.clearDirty();
