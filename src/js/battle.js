@@ -46,6 +46,12 @@ export class Battle extends EventEmitter {
                 battleChar.setGridPosition(c.x, c.y);
                 battleChar.setCamp(CHARACTER_CAMP.ALLY);
                 this.allies.push(battleChar);
+                battleChar.on('specialskill', () => {
+                    if (battleChar.coolTime <= 0) {
+                        battleChar.extraSkillIn();
+                        this.specialSkillQueue.push(battleChar);
+                    }
+                });
     
                 this.initCharacter(battleChar);
             }
@@ -57,6 +63,12 @@ export class Battle extends EventEmitter {
                 battleChar.setGridPosition(c.x, c.y);
                 battleChar.setCamp(CHARACTER_CAMP.ENEMY);
                 this.enemies.push(battleChar);
+                battleChar.on('specialskill', () => {
+                    if (battleChar.coolTime <= 0) {
+                        battleChar.extraSkillIn();
+                        this.specialSkillQueue.push(battleChar);
+                    }
+                });
             }
         }
 
@@ -74,12 +86,6 @@ export class Battle extends EventEmitter {
         });
 
         // special skill 이벤트 emit받아서 사용 하는데.. => 죽었을 시 발동, 쿨타임 0 문제 해결해야 할 듯 하다.
-        this.ui.on('specialskill', (character) => {
-            if (character.coolTime <= 0) {
-                character.extraSkillIn();
-                this.specialSkillQueue.push(character);
-            }
-        });
         this.stage.addChild(this.ui.container);
 
         this.activeSkill = null;
@@ -101,14 +107,14 @@ export class Battle extends EventEmitter {
             character.position.x = STAGE_BASE_POSITION.ENEMY_X + character.gridPosition.x * 36 + character.gridPosition.y * 36;
             character.position.y = STAGE_BASE_POSITION.ENEMY_Y + character.gridPosition.x * 20 - character.gridPosition.y * 20;
             character.animation.changeVisualToDirection(DIRECTIONS.SW);
-            this.characters.addChild(character);
+            this.characters.addChild(character.container);
         }
 
         if (character.camp === CHARACTER_CAMP.ALLY) {
             character.position.x = STAGE_BASE_POSITION.PLAYER_X + character.gridPosition.x * 36 - character.gridPosition.y * 36;
             character.position.y = STAGE_BASE_POSITION.PLAYER_Y + character.gridPosition.x * 20 + character.gridPosition.y * 20;
             character.animation.changeVisualToDirection(DIRECTIONS.NE);
-            this.characters.addChild(character);
+            this.characters.addChild(character.container);
         }
     }
 
@@ -331,6 +337,10 @@ export class Battle extends EventEmitter {
     }
 
     getSpeicalSkill(character) {
+        if (!character.canFight) {
+            return null;
+        }
+        
         const skill = Skill.New(character.skills.extra);
         
         const allies = (character.camp === CHARACTER_CAMP.ALLY) ? this.allies : this.enemies;

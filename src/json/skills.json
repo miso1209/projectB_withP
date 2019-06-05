@@ -36,8 +36,8 @@
 
     "doubleAttack": {
         "description": "방패와 검으로 연속 공격한다.",
-        "coolTime": 10,
-        "maxCoolTime": 10,
+        "coolTime": 8,
+        "maxCoolTime": 8,
         "coefficients": [
             [
                 "attackCoefficient(0.8)",
@@ -100,8 +100,8 @@
 
     "arrowOfTracker": {
         "description": "활을 높게 쏘아올려 제일 체력이 약한적을 공격한다.",
-        "coolTime": 10,
-        "maxCoolTime": 10,
+        "coolTime": 6,
+        "maxCoolTime": 6,
         "coefficients": [
             [
                 "attackCoefficient(1.4)",
@@ -131,8 +131,8 @@
     
     "fireRain": {
         "description": "모든 적에게 화염구체를 떨어뜨려 공격한다.",
-        "coolTime": 10,
-        "maxCoolTime": 10,
+        "coolTime": 14,
+        "maxCoolTime": 14,
         "coefficients": [
             [
                 "magicCoefficient(0.5)",

@@ -26,8 +26,10 @@ export class BattleUI extends EventEmitter {
         this.activeUI.portraits.forEach((portrait) => {
             portrait.interactive = true;
             portrait.on('click', () => {
-                this.emit('specialskill', portrait.character);
-            })
+                if (portrait.character.canFight) {
+                    portrait.character.specialSkill();
+                }
+            });
         });
         this.container.addChild(this.activeUI);
     }

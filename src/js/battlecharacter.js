@@ -1,17 +1,20 @@
 import { BattleProgressBar } from "./battleui";
 import AnimatedCharacter from "./animatedcharacter";
+import { EventEmitter } from "events";
+import { CHARACTER_CAMP } from "./battledeclare";
 
 const PLAY_LOOP = true;
 const PLAY_ONCE = false;
 
 // 캐릭터 로직
-export default class BattleCharacter extends PIXI.Container {
+export default class BattleCharacter extends EventEmitter{
     constructor(character) {
         super();
         this.character = character;
         this.isGroggy = false;
        
         this.turnAction = new TurnAction();
+        this.container = new PIXI.Container();
         this.buffContainer = new PIXI.Container();
         this.animation = new AnimatedCharacter(character.id);
 
@@ -23,9 +26,9 @@ export default class BattleCharacter extends PIXI.Container {
             y: -this.animation.height,
         });
 
-        this.addChild(this.animation);
-        this.addChild(this.buffContainer);
-        this.addChild(this.progressBar);
+        this.container.addChild(this.animation);
+        this.container.addChild(this.buffContainer);
+        this.container.addChild(this.progressBar);
 
         this.progressBar.setProgress(this.health / this.maxHealth);
         // 캐릭터의 스피드대로 세팅한다
@@ -70,7 +73,17 @@ export default class BattleCharacter extends PIXI.Container {
         if (this.coolTime > 0 && !this.isExtraSkillIn) {
             this.coolTime--;
         }
+
+        // 지금은 적군일 경우 매턴 15% 확률로 스페셜 스킬을 시도한다. => 데이터로 빼야할듯 하다.
+        if (Math.random() < 0.15 && this.camp === CHARACTER_CAMP.ENEMY) {
+            this.specialSkill();
+        }
+
         this.turnAction.nextTurn();
+    }
+
+    specialSkill() {
+        this.emit('specialskill');
     }
 
     clearBuff() {
@@ -150,6 +163,26 @@ export default class BattleCharacter extends PIXI.Container {
 
     animation_walk() {
         this.animation.animate('walk', PLAY_LOOP);
+    }
+
+    get position() {
+        return this.container.position;
+    }
+
+    get width() {
+        return this.animation.width;
+    }
+
+    get height() {
+        return this.animation.height;
+    }
+
+    get alpha() {
+        return this.container.alpha;
+    }
+
+    set alpha(a) {
+        this.container.alpha = a;
     }
 
     get health() {
