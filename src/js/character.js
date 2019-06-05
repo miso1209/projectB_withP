@@ -131,6 +131,14 @@ export default class Character {
         return this.baseSpeed + this.plusSpeed;
     }
 
+    get class() {
+        return this.data.class;
+    }
+
+    get skillRate() {
+        return this.data.skillrate;
+    }
+
     equip(slot, itemId) {
         const item = new Item(itemId);
         if (!this.canEquip(slot, item)) {

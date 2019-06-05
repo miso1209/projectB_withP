@@ -30,6 +30,7 @@
             "b": "crouch",
             "extra": "runaway"
         },
+        "skillrate": 0.1,
         "animations": {
             "hector_idle_nw": { "length": 2 },
             "hector_idle_sw": { "length": 2 },
@@ -76,6 +77,7 @@
             "b": "shieldAttack",
             "extra": "doubleAttack"
         },
+        "skillrate": 0.1,
         "animations": {
             "warrior_idle_nw": { "length": 1 },
             "warrior_idle_sw": { "length": 1 },
@@ -122,6 +124,7 @@
             "b": "antiPower",
             "extra": "heal"
         },
+        "skillrate": 0.1,
         "animations": {
             "healer_idle_nw": { "length": 1 },
             "healer_idle_sw": { "length": 1 },
@@ -168,6 +171,7 @@
             "b": "criticalAttack",
             "extra": "arrowOfTracker"
         },
+        "skillrate": 0.1,
         "animations": {
             "miluda_idle_nw": { "length": 1 },
             "miluda_idle_sw": { "length": 1 },
@@ -210,6 +214,7 @@
             "b": "fireCape",
             "extra": "fireRain"
         },
+        "skillrate": 0.1,
         "animations": {
             "elid_idle_nw": { "length": 1 },
             "elid_idle_sw": { "length": 1 },

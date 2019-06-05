@@ -70,12 +70,13 @@ export default class BattleCharacter extends EventEmitter{
             return;
         }
         
+        // 캐릭터의 스킬 쿨타임 감소.
         if (this.coolTime > 0 && !this.isExtraSkillIn) {
             this.coolTime--;
         }
 
-        // 지금은 적군일 경우 매턴 15% 확률로 스페셜 스킬을 시도한다. => 데이터로 빼야할듯 하다.
-        if (Math.random() < 0.15 && this.camp === CHARACTER_CAMP.ENEMY) {
+        // 적군일 경우 매턴 캐릭터의 skillRate 확률로 스페셜 스킬을 시도한다.
+        if (Math.random() < this.skillRate && this.camp === CHARACTER_CAMP.ENEMY) {
             this.specialSkill();
         }
 
@@ -219,6 +220,10 @@ export default class BattleCharacter extends EventEmitter{
 
     get skills() {
         return this.character.skills;
+    }
+
+    get skillRate() {
+        return this.character.skillRate;
     }
 
     get displayName() {
