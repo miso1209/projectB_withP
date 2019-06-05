@@ -336,9 +336,13 @@ export default class Game extends EventEmitter {
             const enemies = [];
             for (let i = 0; i < monster.battleCharacters.length; ++i) {
                 const c = monster.battleCharacters[i];
-                if (c) {
+                if (c.id !== 0) {
+                    const enemy = new Character(c.id);
+                    enemy.level = c.level;
+                    enemy.health = enemy.maxHealth;
+                    
                     enemies.push({
-                        character: new Character(c),
+                        character: enemy,
                         x: monster.columnOf(i),
                         y: monster.rowOf(i)
                     });
