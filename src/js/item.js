@@ -23,6 +23,10 @@ export default class Item {
         return this.data.description;
     }
 
+    get classes() {
+        return this.data.classes;
+    }
+
     get options() {
         return this.data.options;
     }

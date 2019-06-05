@@ -2,6 +2,7 @@
     "1" : {
         "name": "hector",
         "displayname": "헥터",
+        "class": "warrior",
         "portrait": "player1_active.png",
         "base": {
             "health": 150,
@@ -47,6 +48,7 @@
     "2" : {
         "name": "warrior",
         "displayname": "전사",
+        "class": "warrior",
         "portrait": "player5_active.png",
         "base": {
             "health": 180,
@@ -92,6 +94,7 @@
     "3" : {
         "name": "healer",
         "displayname": "힐러",
+        "class": "healer",
         "portrait": "player4_active.png",
         "base": {
             "health": 100,
@@ -137,6 +140,7 @@
     "4" : {
         "name": "miluda",
         "displayname": "궁수",
+        "class": "archer",
         "portrait": "player3_active.png",
         "base": {
             "health": 130,
@@ -178,6 +182,7 @@
     "5" : {
         "name": "elid",
         "displayname": "마법사",
+        "class": "wizzard",
         "portrait": "player2_active.png",
         "base": {
             "health": 100,

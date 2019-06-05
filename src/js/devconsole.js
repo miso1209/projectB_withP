@@ -44,6 +44,14 @@ export default class DevConsole {
         this.game.addQuest(id);
     }
 
+    // Test
+    useItem(){
+        for (const cid in this.game.player.characters) {
+            const c = this.game.player.characters[cid];
+            this.game.useItem(1003,1,c);
+        }
+    }
+
     completeQuest() {
         for (const questId in this.game.player.quests) {
             this.game.completeQuest(questId);

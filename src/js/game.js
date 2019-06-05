@@ -500,6 +500,18 @@ export default class Game extends EventEmitter {
         this.emit('additem', itemId, count);
     }
 
+    useItem(itemId, count, target) {
+        this.player.inventory.deleteItem(itemId, Number(count));
+
+        // 여기서 옵션 처리해 주는게 맞는가?
+        const item = new Item(itemId, count);
+        if (item.category === 'consumables') {
+            target.applyOption(item.options);
+        }
+
+        this.emit('useitem', itemId, count);
+    }
+
     addQuest(questId) {
 
         if (!this.storage.data.quests[questId]) {
