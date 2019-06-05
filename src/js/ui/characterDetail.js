@@ -30,10 +30,11 @@ export default class CharacterDetail extends Panel {
     gearWrap.classList.add('flex-left');
     statWrap.classList.add('flex-right');
     statWrap.classList.add('contents-box');
-    
-    gearWrap.style.width = '50%';
+
     gearWrap.style.position = 'relative';
-    statWrap.style.width = '50%';
+    gearWrap.style.width = '45%';
+    statWrap.style.width = '55%';
+
 
     const playerName = new MakeDom('p', 'playerName', this.input.displayname);
     gearWrap.appendChild(playerName);

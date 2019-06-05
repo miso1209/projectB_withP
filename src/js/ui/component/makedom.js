@@ -7,15 +7,22 @@ export default class MakeDom {
     if(value !== null) {
       dom.innerText = value;
     }
-    
     this.dom = dom;
     return this.dom;
   }
+  setText(text) {
+    this.dom.innerText = text;
+  }
 
-  addClassName(_name) {
+  addClass(_name) {
     this.dom.classList.add(_name);
   }
-  removeclassName(_name) {
+
+  removeClass(_name) {
     this.dom.classList.remove(_name);
+  }
+
+  addID(_name) {
+    this.dom.id = _name;
   }
 }

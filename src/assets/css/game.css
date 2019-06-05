@@ -355,9 +355,6 @@ button span {
 .img span {
   display: block;
 }
-._vm {
-  top: 50%;
-}
 
 .profile {
   position: relative;
@@ -383,25 +380,34 @@ button span {
 }
 
 .skillItems, .equipItems {
-  /* display: flex;
-  flex-wrap: wrap;
-  display: block; */
+  width: 100%;
+  margin: 10px 0;
+}
 
-  padding: 15px 0;
+.characterDetail .skillItems, 
+.characterDetail .equipItems {
+  width: auto;
+} 
+
+.equipItems .itemCategory {
+  position: absolute;
+  opacity: 0.2;
+  bottom: -10px;
+  left: 0;
+  right: 0;
+}
+
+.equipItems li {
+  width: 33%;
+  position: relative;
+  display: inline-block;
+  margin: 10px 0 0;
 }
 
 .skillItems .img, .equipItems .img {
-  margin-top: 10px;
+  margin: 0 auto;
   display: block;
   overflow: visible;
-}
-
-.skillItems p span, .equipItems p span {
-  display: block;
-  margin-top: 35px;
-  font-size: 13px;
-  width: 42px;
-  color: #fff;
 }
 
 .blinkAnim {
@@ -479,44 +485,22 @@ button span {
 
 #SYSTEM .contents{
   top: 0;
-  max-height: 50%;
+  /* max-height: 50%; */
   padding: 0 0;
-  overflow: hidden;
+  /* overflow: hidden; */
   background-color: transparent;
 } 
-
-
-/* loading - progress bar */
-.progressHolder {
-  position: relative;
-  width: 273px;
-  height: 44px;
-  padding: 10px;
-  text-align: left; 
-  background: url(~assets/ui/progressHolder.png) no-repeat;
-} 
-
-.progressbar { 
-  max-width: 253px;
-  width: 1%; 
-  height: 23px; 
-  background: url(~assets/ui/progressbar.png) no-repeat;
-  background-size: cover;
-  transition: all 0.3s linear;
-} 
-
-.progressRate{
-  position: absolute;
-  top: 10px;
-  left: 0;
-  right: 0;
-  text-align: center;
-  font-size: 16px;
-  line-height: 24px;
-  color: #ffd800;
-  text-shadow: 2px 0px 0px #333; 
+.contents-option {
+  margin: 20px auto 10px;
 }
 
+.contents-option div:not(:first-child) {
+  margin-left: 15px;
+}
+.contents-option div + span {
+  font-size: 14px;
+  color: #ffd800;
+}
 
 /* 아이템 조합창 */
 .combineItemInfo {
@@ -708,8 +692,16 @@ button.disabled span {
 
 
 /* 캐릭터 선택창 */
+.pickme > .contents {
+  padding: 10px 0;
+  left: 45px;
+  right: 25px;
+}
+
 .characterDesc {
   position: relative !important;
+  
+  min-width: 260px;
   min-height: 330px;
   border-radius: 15px;
   background-color: #1f130a;
@@ -722,24 +714,24 @@ button.disabled span {
   color: #fff;
 }
 
-.characterList {
-  min-height: 320px;
+.characterDesc .infoWrap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -20px;
+  
+  width: 180px;
+
   margin: 0 auto;
-  padding: 0 20px;
-  z-index: 2;
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-  justify-content: space-evenly;
-  justify-items: start;
-  opacity: 1;
-  transition: all 0.3s linear;
+  padding: 10px 0;
+  background: url(~assets/ui/titleBg.png) no-repeat;
+  background-size: cover;
 }
 
-.characterList.next {
-    transform: translate(-175px, 200px);
-    opacity: 0.3;
+.characterDesc .infoWrap span {
+  color: #333;
 }
+
 
 .characterListWrap{
   position: relative !important;
@@ -777,6 +769,25 @@ button.disabled span {
   height: 340px;
   background: url(~assets/ui/bg_frame.png) no-repeat;
   background-size: contain;
+}
+
+.characterList {
+  min-height: 320px;
+  margin: 0 auto;
+  padding: 0 20px;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: space-evenly;
+  justify-items: start;
+  opacity: 1;
+  transition: all 0.3s linear;
+}
+
+.characterList.next {
+    transform: translate(-175px, 200px);
+    opacity: 0.3;
 }
 
 .doll {
@@ -830,7 +841,17 @@ button.disabled span {
   margin: 0 auto;
 }
 
-.imgWrap::after{
+.doll .name {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 10px 0;
+  font-size: 15px;
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.7);
+}
+
+.doll .imgWrap::after{
   content: '';
   display: inline-block;
   position: absolute;
@@ -846,48 +867,86 @@ button.disabled span {
   z-index: 1111;
 }
 
-.doll .name {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 10px 0;
-  font-size: 15px;
-  text-shadow: 1px 1px 1px rgba(0,0,0,0.7);
-}
-
-
-/* .doll:hover:after, .doll.active:after {
-  content: '';
-  display: block;
-  position: absolute;
-  top: -10px;
-  left: 0;
-  right: 0;
-
-  background: url(~assets/ui/prompt.png);
-  width: 20px;
-  height: 20px;
-  margin: 0 auto;
-  background-size: cover;
-} */
-
-
-/* .doll:hover .profileImg, .doll.active .profileImg{
-  width: 64px;
-  height: 96px;
-  bottom: 30px;
-} */
-
 .doll:hover .imgWrap, .doll.active .imgWrap {
   width: 64px;
   height: 96px;
   transition: all 0.5s linear;
 } 
 
-.pickme > .contents {
 
-  padding: 10px 0;
-  left: 45px;
-  right: 45px;
+/* loading - progress bar */
+.progressHolder {
+  position: relative;
+  width: 273px;
+  height: 44px;
+  padding: 10px;
+  text-align: left; 
+  background: url(~assets/ui/progressHolder.png) no-repeat;
+} 
+
+.progressbar { 
+  max-width: 253px;
+  width: 1%; 
+  height: 23px; 
+  background: url(~assets/ui/progressbar.png) no-repeat;
+  background-size: cover;
+  transition: all 0.3s linear;
+} 
+
+.progressRate{
+  position: absolute;
+  top: 10px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 16px;
+  line-height: 24px;
+  /* color: #ffd800; */
+  color: #fff;
+  text-shadow: 2px 0px 0px #333; 
+}
+
+.statWrap {
+  width: 100%;
+  padding: 0 15px;
+}
+
+/* statusbar */
+.progressHolder.status {
+  position: relative;
+  width: 100%;
+  height: 20px;
+  margin: 0 auto;
+  padding: 5px;
+  text-align: left; 
+  background: url(~assets/ui/progressHolder2.png) no-repeat;
+  background-size: contain;
+} 
+
+.progressHolder.status + .progressHolder.status {
+  margin-top: 5px;
+}
+
+.progressHolder.status .progressbar { 
+  width: 100%; 
+  height: 8px; 
+  background: url(~assets/ui/progressbar2.png) no-repeat;
+  background-size: cover;
+  transition: all 0.3s linear;
+} 
+
+.progressHolder.status .progressbar.exp {
+  background-color: rgba(81, 255, 0, 0.8);
+  background-blend-mode: luminosity;
+}
+
+.progressHolder.status .progressbar.mp {
+  background-color: rgba(33, 90, 248, 0.8);
+  background-blend-mode: luminosity;
+}
+
+.progressHolder.status .progressRate{
+  top: 3px;
+  font-size: 14px;
+  line-height: 1;
 }

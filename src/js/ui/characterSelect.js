@@ -3,17 +3,19 @@ import Modal from "./component/modal";
 import MakeDom from "./component/makedom";
 import ItemImage from "./component/itemimage";
 import Button from "./component/button";
-
+import Item from "../item.js";
+import { stringify } from "querystring";
 
 export default class CharacterSelect extends Panel {
-  constructor(pane, inputs, result) {
+  constructor(pane, inputs, inven, result) {
     super();
 
     // todo 현재 배틀용 캐릭터 데이터를 받아와서 작업. 이후 정제된 데이터로 수정한다.
     this.inputs = inputs;
     this.result = result;
     this.selected = null;
-    
+    this.inven = inven;
+
     const pickme = new Modal(pane, 800, 460, null);
     this.dom = pickme.dom;
     this.dom.classList.add('pickme');
@@ -37,7 +39,7 @@ export default class CharacterSelect extends Panel {
     const wrap = document.createElement('div');
     wrap.classList.add('contents');
     wrap.classList.add('flexWrap');
-    wrap.style.top = '80px';
+    wrap.style.top = '70px';
 
     this.dom.appendChild(wrap);
 
@@ -45,79 +47,68 @@ export default class CharacterSelect extends Panel {
     const characterDesc = new MakeDom('div', 'descWrap', null);
     characterDesc.classList.add('characterDesc');
     characterDesc.classList.add('flex-right');
-    characterDesc.style.width = '240px';
 
-    this.descClass = document.createElement('p');
-    this.descName = document.createElement('p');
     this.portrait = document.createElement('img');
+    this.portrait.style.display = 'block';
+    this.portrait.style.margin = '30px auto 10px';
 
-    // 현재 캐릭터 데이터에는 장비정보가 없어서 하드코딩.
-    // 캐릭터 장비정보 임시데이터
-    const equipItemsData = [{
-      x: 4,
-      y: 9,
-      item: 'Weapon'
-    }, {
-      x: 6,
-      y: 12,
-      item: 'Armor'
-    }, {
-      x: 9,
-      y: 3,
-      item: 'Ring'
-    }];
-    
-    const equipItems = document.createElement('div');
-    equipItems.className = 'equipItems';
-    
-    equipItemsData.forEach(item => {
-      let itemIcon = new ItemImage('items.png', item.x, item.y);
-      itemIcon.className = 'stat-item';
-  
-      let itemName = document.createElement('span');
-      itemName.innerText = item.item;
-  
-      itemIcon.dom.style.display = 'inline-block';
-      equipItems.appendChild(itemIcon.dom);
+    this.recoveryBtn = new Button('','iconBtn');
+    this.recoveryBtn.dom.classList.add('ico-life');
+    this.recoveryBtn.dom.style.top = '60px';
+    this.recoveryBtn.moveToRight(40);
+
+    this.recoveryBtn.dom.addEventListener('click', (ok)=> {
+      return this.result(this.selected.id);
     });
 
+    const infoWrap = new MakeDom('div', 'infoWrap', null);
+    this.descClass = new MakeDom('span', 'stat_class', null);
+    this.descName = new MakeDom('span', 'stat_name', null);
+
+    this.level = new MakeDom('span', 'stat_level', null);
+    this.level.style.paddingRight = '10px';
+    
+    // status 바
     const divWrap = new MakeDom('div', 'statWrap', null);
-    // stat -전투력 - 레벨 -exp -hp / max hp
-    this.stat_health = new MakeDom('p', 'stat', null);
-    this.stat_level = new MakeDom('p', 'stat_level', null);
-    this.stat_exp = new MakeDom('p', 'stat_exp', null);
+    
+    this.hp = new StatusBar(0, 10);
+    this.exp = new StatusBar(0, 10);
+    this.exp.setBar('exp');
 
-    // status 바 만들기.
-    // this.stat_hp = new MakeDom('p', 'stat_hp', null);
+    divWrap.appendChild(this.hp.dom);
+    divWrap.appendChild(this.exp.dom);
 
-    divWrap.appendChild(this.stat_health);
-    divWrap.appendChild(this.stat_level);
-    divWrap.appendChild(this.stat_exp);
-    // divWrap.appendChild(this.stat_hp);
+    // 장비
+    this.equipItems = document.createElement('ul');
+    this.equipItems.className = 'equipItems';
 
     // 자세히 보기 버튼 콜백
     const moreButton = new Button('자세히보기', 'submit');
-    moreButton.dom.style.position = 'static';
-    // moreButton.moveToCenter(10);
-    // moreButton.moveToBottom(10);
+    // moreButton.dom.style.position = 'static';
+    // moreButton.dom.style.marginTop = '10px';
+    moreButton.moveToCenter(0);
+    moreButton.moveToBottom(15);
+
     moreButton.dom.addEventListener('click', (ok)=> {
       pane.parentNode.removeChild(pane);
       return this.result(this.selected);
     });
 
     characterDesc.appendChild(this.portrait);
-    characterDesc.appendChild(this.descClass);
-    characterDesc.appendChild(this.descName);
+    characterDesc.appendChild(this.recoveryBtn.dom);
+
+    infoWrap.appendChild(this.level);
+    infoWrap.appendChild(this.descClass);
+
+    characterDesc.appendChild(infoWrap);
     characterDesc.appendChild(divWrap);
 
-
-    characterDesc.appendChild(equipItems);
+    characterDesc.appendChild(this.equipItems);
     characterDesc.appendChild(moreButton.dom);
     
     // characterList
     const characterListWrap = new MakeDom('div', 'characterListWrap', null);
     characterListWrap.classList.add('flex-left');
-    characterListWrap.style.width = '430px';
 
     const characterList = new MakeDom('div', 'characterList', null);
     characterList.style.width = '410px';
@@ -175,17 +166,68 @@ export default class CharacterSelect extends Panel {
     this.selected = current;
     const path = '/src/assets/';
 
-    this.descClass.innerText = this.selected.data.displayname;
-    this.descName.innerText = this.selected.name;
-    this.portrait.src = path + this.selected.data.portrait;
+    this.descClass.innerText = current.data.displayname;
+    this.descName.innerText = current.name;
+    this.portrait.src = path + current.data.portrait;
+    this.level.innerText = 'Lv.' + current.level;
 
-    this.stat_health.innerText = 'Health : ' + this.selected.health;
-    this.stat_level.innerText = 'Lv.' + this.selected.level;
-    this.stat_exp.innerText = 'exp:' + this.selected.exp;
+    this.updateStatus();
+    this.updateEquip();
+  }
+
+  updateStatus(){
+    
+    if (this.selected.health === 0) {
+      console.log('캐릭터 사망--부활물약?');
+      this.recoveryBtn.dom.classList.remove('half');
+      this.recoveryBtn.dom.classList.add('empty');
+      
+    } else if (this.selected.health < this.selected.maxHealth) {
+      console.log('체력포션 쓸래?');
+      this.recoveryBtn.dom.classList.remove('empty');
+      this.recoveryBtn.dom.classList.add('half');
+    } else {
+      this.recoveryBtn.dom.classList.remove('empty');
+      this.recoveryBtn.dom.classList.remove('half');
+      this.recoveryBtn.dom.disabled = 'disabled';
+    }
+
+    this.hp.update(this.selected.health, this.selected.maxHealth);
+    this.exp.update(this.selected.exp, this.selected.maxexp);
+  }
+
+  updateEquip(){
+    // 테스트용 데이터
+    this.equipItems.innerHTML = '';
+    let equipItemsData = [3, 4, 6];
+    // equipItemsData.push(current.equipments.armor);
+    // equipItemsData.push(current.equipments.weapon);
+    // equipItemsData.push(current.equipments.accessory);
+    equipItemsData.forEach(itemID => {
+      if (itemID !== null) {
+        let item = new Item(itemID);
+        let liWrap = new MakeDom('li', null, null);
+        let itemIcon = new ItemImage(item.data.image.texture, item.data.image.x, item.data.image.y);
+        itemIcon.dom.style.display = 'inline-block';
+
+        let itemCategory = new MakeDom('span', 'itemCategory', item.category.toUpperCase());
+        liWrap.appendChild(itemCategory);
+        liWrap.appendChild(itemIcon.dom);
+        this.equipItems.appendChild(liWrap);
+      } 
+    });
+  }
+
+  showConsumables(input) {
+    if (input !== null) {
+      console.log(input);
+      
+    }
   }
 }
 
-class Doll {
+
+export class Doll {
   constructor(item){ //캐릭터데이터-input
     const doll = document.createElement('div');
     doll.classList.add('doll');
@@ -212,6 +254,39 @@ class Doll {
   }
 }
 
+class StatusBar {
+  constructor(currentValue, maxValue) {
+      this.progressHolder = document.createElement('div');
+      this.progressHolder.classList.add('progressHolder');
+      this.progressHolder.classList.add('status');
 
+      this.progressBar = document.createElement('div');
+      this.progressBar.classList.add('progressbar');
 
+      this.maxValue = maxValue;
+      this.visible = false;
+      
+      this.progressHolder.appendChild(this.progressBar);
 
+      this.rate = new MakeDom('span', 'progressRate', `${currentValue} / ${maxValue}`);
+      this.progressHolder.appendChild(this.rate);
+
+      this.dom = this.progressHolder;
+
+      this.update(currentValue, maxValue);
+  }
+
+  update(currentValue, maxValue) {
+    this.maxValue = maxValue;
+    
+    let rate = Math.floor(currentValue * 100 / this.maxValue);
+    rate = rate > 99 ? 100 : rate;
+
+    this.progressBar.style.width = `${rate}%`;
+    this.rate.innerText = `${currentValue} / ${maxValue}`;
+  }
+
+  setBar(_type){
+    this.progressBar.classList.add(_type);
+  }
+}

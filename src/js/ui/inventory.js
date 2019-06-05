@@ -11,7 +11,7 @@ export default class Inventory extends Panel {
         const inventory = new Modal(pane, 800, 460);
         this.dom = inventory.dom;
         this.dom.classList.add('inventory');
-        
+
         inventory.addTitle('인벤토리');
         inventory.addCloseButton();
         pane.classList.add('screen');
@@ -51,9 +51,9 @@ export default class Inventory extends Panel {
         statContent.appendChild(this.itemDesc);
         statContent.appendChild(this.itemOptions);
 
-        // inventory.dom.appendChild(statContent);
         wrapper.appendChild(statContent);
         let scrollHeight = '320px';
+
         // IE 스크롤바 이슈 대응
         const scrollView = document.createElement('div');
         scrollView.classList.add('scrollView');
@@ -76,7 +76,6 @@ export default class Inventory extends Panel {
 
         scrollView.appendChild(scrollBlind);
         scrollBlind.appendChild(storageContent);
-        // inventory.dom.appendChild(scrollView);
         wrapper.appendChild(scrollView);
         inventory.dom.appendChild(wrapper);
     }

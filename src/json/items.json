@@ -17,6 +17,81 @@
         "subcategory": "medium-armor",
         "options": ["armor(5)"]
     },
+    "3":{
+        "id": 3,
+        "name": "견습자의 검",
+        "image": { "texture": "items.png", "x": 1, "y": 9 },
+        "description": "견습자용 검",
+        "category": "weapon",
+        "subcategory": "medium-armor",
+        "options": ["attack(11)"]
+    },
+    "4":{
+        "id": 4,
+        "name": "견습자의 갑옷",
+        "image": { "texture": "items.png", "x": 1, "y": 12 },
+        "description": "견습자용 갑옷",
+        "category": "armor",
+        "subcategory": "medium-armor",
+        "options": ["armor(6)"]
+    },
+    "5":{
+        "id": 5,
+        "name": "견습자의 반지",
+        "image": { "texture": "items.png", "x": 9, "y": 3 },
+        "description": "견습자의 목걸이와 세트",
+        "category": "accessory",
+        "subcategory": "accessory-ring",
+        "options": ["armor(+5)"]
+    },
+    "6":{
+        "id": 6,
+        "name": "견습자의 목걸이",
+        "image": { "texture": "items.png", "x": 1, "y": 1 },
+        "description": "견습자의 반지와 세트",
+        "category": "accessory",
+        "subcategory": "accessory-necklace",
+        "options": ["armor(+3)"]
+    },
+    "7":{
+        "id": 7,
+        "name": "여행자의 검",
+        "image": { "texture": "items.png", "x": 5, "y": 9 },
+        "description": "여행자의 갑옷과 세트",
+        "category": "weapon",
+        "subcategory": "medium-armor",
+        "options": ["attack(11)"]
+    },
+    "8":{
+        "id": 8,
+        "name": "여행자의 갑옷",
+        "image": { "texture": "items.png", "x": 6, "y": 12 },
+        "description": "여행자의 검과 세트",
+        "category": "armor",
+        "subcategory": "medium-armor",
+        "options": ["armor(6)"]
+    },
+    "9":{
+        "id": 9,
+        "name": "여행자의 반지",
+        "image": { "texture": "items.png", "x": 15, "y": 3 },
+        "description": "여행자의 목걸이와 세트",
+        "category": "accessory",
+        "subcategory": "accessory-ring",
+        "options": ["armor(+3)"]
+    },
+    "10":{
+        "id": 10,
+        "name": "여행자의 목걸이",
+        "image": { "texture": "items.png", "x": 2, "y": 1 },
+        "description": "여행자의 반지와 세트",
+        "category": "accessory",
+        "subcategory": "accessory-necklace",
+        "options": ["armor(+3)"]
+    },
+
+
+    
     "1001": {
         "id": 1001,
         "name": "소형 회복약",

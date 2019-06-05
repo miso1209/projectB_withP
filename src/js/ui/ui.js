@@ -9,7 +9,7 @@ import Inventory from "./inventory";
 import ItemImage from "./component/itemimage";
 import CharacterSelect from "./characterSelect";
 import CharacterDetail from "./characterDetail";
-
+import MakeDom from "./component/makedom";
 
 export default class DomUI extends EventEmitter {
     constructor() {
@@ -30,7 +30,7 @@ export default class DomUI extends EventEmitter {
         this.gnbContainer.className = 'gnbContainer';
         this.gnbContainer.style.top = this.gamePane.offsetTop + 'px';
         this.gnbContainer.style.opacity = '0';
-        document.body.appendChild(this.gnbContainer); 
+        document.body.appendChild(this.gnbContainer);
 
         const gnb = document.createElement('div');
         gnb.className = 'gnb';
@@ -57,8 +57,8 @@ export default class DomUI extends EventEmitter {
         this.zoomBtn.innerText = 'x2';
 
         this.gnbContainer.appendChild(this.zoomBtn);
-        this.showZoomBtn();
 
+        this.showZoomBtn();
         this.zoomBtn.addEventListener('click', () => {
             this.emit('zoomInOut');
         });
@@ -83,11 +83,13 @@ export default class DomUI extends EventEmitter {
     showMenu() {
         // 기본 ui 를 보여준다
         this.gnbContainer.style.opacity = '1';
+        this.gnbContainer.style.display = 'block';
     }
 
     hideMenu() {
         // 기본 ui 를 가린다
         this.gnbContainer.style.opacity = '0';
+        this.gnbContainer.style.display = 'none';
     }
 
     showTheaterUI(){
@@ -122,7 +124,29 @@ export default class DomUI extends EventEmitter {
         const confirmModal = new SystemModal(pane, 300, 200, text, result);
         confirmModal.dom.style.top = '50%';
         confirmModal.dom.style.marginTop = 200 * -0.5 + 'px';
+        confirmModal.contents.style.margin = '10% auto';
+        confirmModal.contents.style.fontSize = '1.1rem';
+    }
 
+    // 임시
+    showConsumableItems(text, items, result) {
+        const pane = this.createContainer();
+        const confirmModal = new SystemModal(pane, 300, 250, text, result);
+        confirmModal.dom.style.top = '50%';
+        confirmModal.dom.style.marginTop = 250 * -0.5 + 'px';
+
+        const options = new MakeDom('div', 'contents-option', null);
+        items.forEach((item) => {
+            console.log(item);
+            let option = new ItemImage(item.data.image.texture, item.data.image.x, item.data.image.y);
+            let count = new MakeDom('span', null, null);
+            count.innerText = `x${item.owned}`;
+            
+            options.appendChild(option.dom);
+            options.appendChild(count);
+        });
+
+        confirmModal.contents.appendChild(options);
         confirmModal.contents.style.margin = '10% auto';
         confirmModal.contents.style.fontSize = '1.1rem';
     }
@@ -219,10 +243,19 @@ export default class DomUI extends EventEmitter {
         inven.onTabSelected(inven.tabs[0].category);
     }
 
-    showCharacterSelect(inputs) {
+    showCharacterSelect(inputs, inven) {
         const pane = this.createContainer();
-        const characterSelect = new CharacterSelect(pane, inputs, (info)=>{
-            this.showCharacterDatail(info);
+        // 물약데이터
+        const characterSelect = new CharacterSelect(pane, inputs, inven, (info) => {
+            if (typeof(info) === "object") {
+                this.showCharacterDatail(info);
+            } else {
+                this.showConsumableItems('포션을 사용해서 체력을 회복하시겠습니까?', inven, (confirmed) => {
+                    if (confirmed === "ok") {
+                        console.log('포션 쓰기');
+                    } 
+                });
+            }
         });
     }
 

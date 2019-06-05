@@ -67,10 +67,11 @@ export default class Game extends EventEmitter {
         });
         this.ui.on('characterselect', ()=> {
             const inputs = [];
+            const invenData = this.getInventoryDataByCategory('consumables');
             for (const cid in this.player.characters) {
                 inputs.push(this.player.characters[cid]);
             }
-            this.ui.showCharacterSelect(inputs);
+            this.ui.showCharacterSelect(inputs, invenData);
         });
 
         this.ui.on('zoomInOut', ()=>{
@@ -81,6 +82,8 @@ export default class Game extends EventEmitter {
             } else {
                 this.stage.zoomTo(2, true);
             }
+
+            this.ui.zoomBtn.innerText = `x${this.stage.currentScale}`;
         });
 
         // 게임 알림을 알려주는 notificatin 큐를 만든다
@@ -453,6 +456,16 @@ export default class Game extends EventEmitter {
             const items = sortByCategory[category];
             result.push({ category: category, items: items });
         }
+        return result;
+    }
+
+    getInventoryDataByCategory(category) {
+        let result = [];
+        this.player.inventory.forEach((item) => {
+            if(item.category === category) {
+                result.push({ item: item.id, data: item.data, owned: item.count });
+            }
+        });
         return result;
     }
     
