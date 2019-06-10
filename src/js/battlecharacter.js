@@ -2,6 +2,7 @@ import { BattleProgressBar } from "./battleui";
 import AnimatedCharacter from "./animatedcharacter";
 import { EventEmitter } from "events";
 import { CHARACTER_CAMP } from "./battledeclare";
+import ScriptParser from "./scriptparser";
 
 const PLAY_LOOP = true;
 const PLAY_ONCE = false;
@@ -11,7 +12,10 @@ export default class BattleCharacter extends EventEmitter{
     constructor(character) {
         super();
         this.character = character;
+        // 전투불능
         this.isGroggy = false;
+        // 1 이상 == 공격불능 (중첩 가능해서 숫자로 남김.)
+        this.isStuned = 0;
        
         this.turnAction = new TurnAction();
         this.container = new PIXI.Container();
@@ -96,9 +100,12 @@ export default class BattleCharacter extends EventEmitter{
     addBuff(name, duration, buff) {
         if (!this.buffs[name]) {
             this.buffs[name] = buff;
-            this.buffs[name].options.forEach((option) => {
+            this.buffs[name].abilityOptions.forEach((option) => {
                 this.character.applyOption(option);
             });
+            this.buffs[name].statusOptions.forEach((option) => {
+                this.applyStatusOption(option);
+            })
             this.buffContainer.addChild(this.buffs[name]);
         }
 
@@ -112,10 +119,31 @@ export default class BattleCharacter extends EventEmitter{
     removeBuff(name) {
         if (this.buffs[name]) {
             this.buffContainer.removeChild(this.buffs[name]);
-            this.buffs[name].options.forEach((option) => {
+            this.buffs[name].abilityOptions.forEach((option) => {
                 this.character.clearOption(option);
             });
+            this.buffs[name].statusOptions.forEach((option) => {
+                this.clearStatusOption(option);
+            })
             delete this.buffs[name];
+        }
+    }
+
+    applyStatusOption(option) {
+        option = new ScriptParser(option);
+        switch(option.name) {
+            case "stun":
+                this.isStuned += Number(option.args[0]);
+                break;
+        }
+    }
+
+    clearStatusOption(option) {
+        option = new ScriptParser(option);
+        switch(option.name) {
+            case "stun":
+                this.isStuned -= Number(option.args[0]);
+                break;
         }
     }
 
@@ -224,6 +252,10 @@ export default class BattleCharacter extends EventEmitter{
 
     get canFight() {
         return this.isAlive && !this.isGroggy;
+    }
+
+    get canAction() {
+        return this.canFight && this.isStuned === 0;
     }
 
     get isAlive() {

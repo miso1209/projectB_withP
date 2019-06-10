@@ -3,7 +3,8 @@ import { loadAniTexture } from "../utils";
 export default class BaseBuff extends PIXI.Container{
     constructor(buffOption) {
         super();
-        this.options = buffOption.options;
+        this.abilityOptions = buffOption.abilityOptions;
+        this.statusOptions = buffOption.statusOptions;
 
         if (buffOption.isAnimation) {
             this.setAnimationSprite(buffOption);

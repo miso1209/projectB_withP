@@ -35,7 +35,8 @@ export default class AntiPower extends SkillBase {
                     const antiPower = this.calcSkillExpressions(this.target, this.skillExpressions[0]) * -1;
 
                     target.addBuff("antiPower", 10, new BlinkEffectBuff({
-                        options: [`attack(${antiPower})`, `magic(${antiPower})`],
+                        abilityOptions: [`attack(${antiPower})`, `magic(${antiPower})`],
+                        statusOptions: [],
                         isAnimation: true,
                         sprite: 'antipowerloop',
                         animationLength: 32,

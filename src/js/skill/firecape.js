@@ -34,7 +34,8 @@ export default class FireCape extends SkillBase {
                 const fireCape = this.calcSkillExpressions(this.owner, this.skillExpressions[0]);
 
                 this.owner.addBuff("fireCape", 10, new BaseBuff({
-                    options: [`armor(${fireCape})`],
+                    abilityOptions: [`armor(${fireCape})`],
+                    statusOptions: [],
                     isAnimation: true,
                     sprite: 'firecape',
                     animationLength: 58,

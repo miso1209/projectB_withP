@@ -35,7 +35,8 @@ export default class Heal extends SkillBase {
                     const heal = this.calcSkillExpressions(target, this.skillExpressions[0]);
 
                     target.addBuff("heal", 0, new BaseBuff({
-                        options: [`health(${heal})`],
+                        abilityOptions: [`health(${heal})`],
+                        statusOptions: [],
                         isAnimation: false,
                     }));
 

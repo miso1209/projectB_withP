@@ -63,6 +63,7 @@
     ["assets/sprite/healer/healer_walk_sw.json"],
     ["assets/sprite/healer/healer_walk_nw.json"],
     
+    ["assets/effects/stun.json"],
     ["assets/effects/slash_1.json"],
     ["assets/effects/shotingeffect.json"],
     ["assets/effects/healeffect.json"],

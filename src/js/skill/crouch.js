@@ -23,7 +23,8 @@ export default class Crouch extends SkillBase {
                 const armor = this.calcSkillExpressions(this.owner, this.skillExpressions[0]);
 
                 this.owner.addBuff("crouch", 20, new BlinkEffectBuff({
-                    options: [`armor(${armor})`],
+                    abilityOptions: [`armor(${armor})`],
+                    statusOptions: [],
                     isAnimation: true,
                     sprite: 'barrier',
                     animationLength: 63,

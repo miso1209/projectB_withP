@@ -218,7 +218,9 @@ export class Battle extends EventEmitter {
         }
 
         // 기본 스킬을 업데이트 한다
-        this.activeSkill.update();
+        if (this.activeSkill) {
+            this.activeSkill.update();
+        }
     }
 
     notifyNextTurn() {
@@ -323,6 +325,12 @@ export class Battle extends EventEmitter {
     }
 
     getNormalSkill(character) {
+        // 캐릭터의액선 스코어를 증가시킨다
+        character.actionScore += 1 / character.speed;
+        if (!character.canAction) {
+            return null;
+        }
+
         const skill = Math.random()<0.5?Skill.New(character.skills.a):Skill.New(character.skills.b);
 
         const allies = (character.camp === CHARACTER_CAMP.ALLY) ? this.allies : this.enemies;
@@ -333,14 +341,11 @@ export class Battle extends EventEmitter {
         skill.setTarget(targets);
         skill.setEffects(this.effects);
 
-        // 캐릭터의액선 스코어를 증가시킨다
-        character.actionScore += 1 / character.speed;
-
         return skill;
     }
 
     getSpeicalSkill(character) {
-        if (!character.canFight) {
+        if (!character.canAction) {
             return null;
         }
         
