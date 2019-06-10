@@ -384,7 +384,7 @@ export default class Game extends EventEmitter {
             });
 
             this.gamelayer.addChild(this.currentMode.stage);
-            this.emit('hideUI');
+            this.ui.hideMenu();
         }
     }
 
@@ -396,7 +396,7 @@ export default class Game extends EventEmitter {
             this.gamelayer.addChild(this.stage);
             // 배틀을 사용한다
             this.currentMode = this.exploreMode;
-            this.emit('showUI');
+            this.ui.showMenu();
         }
     }
 

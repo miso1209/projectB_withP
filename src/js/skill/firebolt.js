@@ -38,10 +38,6 @@ export default class FireBolt extends SkillBase {
                 let damage = this.calcSkillExpressions(this.owner, this.skillExpressions[0]);
 
                 const isCritical = this.isCritical(this.owner.critical);
-                if (isCritical) {
-                    damage = Math.round(damage * 1.5);
-                }
-
                 this.hit(damage, this.target, isCritical);
                 break;
             }

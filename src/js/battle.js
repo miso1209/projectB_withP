@@ -97,7 +97,7 @@ export class Battle extends EventEmitter {
         this.exp = options.exp;
         this.gold = options.gold;
 
-        this.setScale(1.5);
+        this.setScale(2);
         this.focusCenter();
     }
 

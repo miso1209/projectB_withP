@@ -65,12 +65,7 @@ export default class ArrowOfTracker extends SkillBase {
                 this.addEffect(this.target, { name: 'arrowoftracker', animation: true, animationLength: 7, removeFrame: 60, speed: 0.2 });
                 let damage = this.calcSkillExpressions(this.owner, this.skillExpressions[0]);
 
-                const isCritical = this.isCritical(this.owner.critical);
-                if (isCritical) {
-                    damage = Math.round(damage * 1.5);
-                }
-
-                this.hit(damage, this.target, isCritical);
+                this.hit(damage, this.target, this.isCritical(this.owner.critical));
                 break;
             }
             case 95: {

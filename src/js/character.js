@@ -42,10 +42,6 @@ export default class Character {
         this.skills = data.skills;
 
         this.dirty = false;
-
-        this.equip('weapon', '1');
-        this.equip('armor', '2');
-        this.equip('accessory', '5');
     }
 
     getParam(parameterName, level) {

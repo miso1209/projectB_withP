@@ -108,14 +108,15 @@ export default class Skill {
 
     hit(attack, target, isCritical) {
         let damage = Math.round(attack - target.armor);
+
         damage = damage<=0?0:damage;
 
         if (isCritical) {
-            this.addFontEffect({target: target, outputText: 'Critical', fontSize: 7, offset: { x: -5, y: -10 }});
-            this.addFontEffect({target: target, outputText: '-' + damage, color: '#FF0000'});
-        } else {
-            this.addFontEffect({target: target, outputText: '-' + damage});
+            damage = Math.round(damage * 1.5);
+            this.addFontEffect({target: target, outputText: 'Critical', fontSize: 7, offset: { x: -5, y: -10 }, color: '#FF0000'});
         }
+
+        this.addFontEffect({target: target, outputText: '-' + damage});
         
         target.onDamage(damage);
     }

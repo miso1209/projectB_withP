@@ -34,12 +34,7 @@ export default class WandAttack extends SkillBase {
                 this.addEffect(this.target, { name: 'wandattack', animation: true, animationLength: 12, removeFrame: 60, speed: 0.5 });
                 let damage = this.calcSkillExpressions(this.owner, this.skillExpressions[0]);
 
-                const isCritical = this.isCritical(this.owner.critical);
-                if (isCritical) {
-                    damage = Math.round(damage * 1.5);
-                }
-
-                this.hit(damage, this.target, isCritical);
+                this.hit(damage, this.target, this.isCritical(this.owner.critical));
                 break;
             }
             case 55: {

@@ -64,12 +64,7 @@ export default class FireRain extends SkillBase {
                     this.addEffect(target, { name: 'explosion', animation: true, animationLength: 16, removeFrame: 60, speed: 0.5 });
                     let damage = this.calcSkillExpressions(this.owner, this.skillExpressions[0]);
 
-                    const isCritical = this.isCritical(this.owner.critical);
-                    if (isCritical) {
-                        damage = Math.round(damage * 1.5);
-                    }
-    
-                    this.hit(damage, target, isCritical);
+                    this.hit(damage, target, this.isCritical(this.owner.critical));
                 });
                 break;
             }
