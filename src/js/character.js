@@ -135,8 +135,8 @@ export default class Character {
         return this.data.class;
     }
 
-    get skillRate() {
-        return this.data.skillrate;
+    get skillActiveProbability() {
+        return this.data.skillactiveprobability;
     }
 
     equip(slot, itemId) {

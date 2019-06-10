@@ -159,6 +159,7 @@ export class Battle extends EventEmitter {
                 this.pause = true;
                 this.emit('win');
 
+                // 승리 로고를 보이고, reward 추가한다.
                 this.ui.showBattleLogo('victory_logo.png', false, () => {
                     const reward = {
                         gold: this.gold,
@@ -170,6 +171,7 @@ export class Battle extends EventEmitter {
                     this.ui.showReward(reward);
                 });
 
+                // reward 창 종료 시, 배틀 떠난다.
                 this.ui.on('closeReward', () => {
                     this.emit('closeBattle');
                 });
@@ -180,6 +182,7 @@ export class Battle extends EventEmitter {
                 this.pause = true;
                 this.emit('lose');
 
+                // 패배 로고를 보이고, 배틀 떠난다.
                 this.ui.showBattleLogo('defeat_logo.png', false, () => {
                     this.emit('closeBattle');
                 });

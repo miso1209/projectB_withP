@@ -75,8 +75,8 @@ export default class BattleCharacter extends EventEmitter{
             this.coolTime--;
         }
 
-        // 적군일 경우 매턴 캐릭터의 skillRate 확률로 스페셜 스킬을 시도한다.
-        if (Math.random() < this.skillRate && this.camp === CHARACTER_CAMP.ENEMY) {
+        // 적군일 경우 매턴 캐릭터의 skillActiveProbability 확률로 스페셜 스킬을 시도한다.
+        if (Math.random() < this.skillActiveProbability && this.camp === CHARACTER_CAMP.ENEMY) {
             this.specialSkill();
         }
 
@@ -222,8 +222,8 @@ export default class BattleCharacter extends EventEmitter{
         return this.character.skills;
     }
 
-    get skillRate() {
-        return this.character.skillRate;
+    get skillActiveProbability() {
+        return this.character.skillActiveProbability;
     }
 
     get displayName() {

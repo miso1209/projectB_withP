@@ -42,9 +42,11 @@ export class BattleUI extends EventEmitter {
         battleLogo.position.y = this.screenSize.h / 2;
         this.container.addChild(battleLogo);
 
+        // 스케일 up 되면서 사라지는 이펙트가 있는가?
         if (hasEffect) {
             this.tweens.addTween(battleLogo.scale, 0.5, {x: 5, y: 5}, 1.3, 'easeOut', false, null);
         }
+        
         this.tweens.addTween(battleLogo.position, 0.5, {x: this.screenSize.w / 2}, 0.5, 'easeOut', false, null);
         this.tweens.addTween(battleLogo, 0.5, {alpha: 0}, 1.3, 'easeOut', false, () => {
             this.container.removeChild(battleLogo);
@@ -209,7 +211,9 @@ class BattleActivePortraitUI extends PIXI.Container {
         const activeRate = 1 - (this.character.coolTime / this.character.maxCoolTime);
         this.activeProgressBar.setProgress(activeRate);
 
-        if (activeRate < 1) {
+        if (!this.character.canFight){
+            this.portrait.tint = '0xFF9090';
+        } else if (activeRate < 1) {
             this.portrait.tint = '0x505050';
         } else {
             this.portrait.tint = '0xffffff';
