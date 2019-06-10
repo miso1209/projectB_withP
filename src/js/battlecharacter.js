@@ -194,6 +194,10 @@ export default class BattleCharacter extends EventEmitter{
         return this.character.maxHealth;
     }
 
+    get critical() {
+        return this.character.critical;
+    }
+
     get attack() {
         return this.character.attack;
     }

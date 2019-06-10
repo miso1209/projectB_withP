@@ -51,9 +51,14 @@ export default class ShotArrow extends SkillBase {
             }
             case 65: {
                 this.addEffect(this.target, { name: 'shoted', animation: true, animationLength: 18, removeFrame: 60, speed: 0.5 });
-                const damage = this.getCoefficientsResult(this.owner, this.coefficients[0]);
+                let damage = this.calcSkillExpressions(this.owner, this.skillExpressions[0]);
 
-                this.hit(damage, this.target);
+                const isCritical = this.isCritical(this.owner.critical);
+                if (isCritical) {
+                    damage = Math.round(damage * 1.5);
+                }
+
+                this.hit(damage, this.target, isCritical);
                 break;
             }
             case 80: {

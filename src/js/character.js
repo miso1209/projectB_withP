@@ -115,6 +115,10 @@ export default class Character {
         return Math.floor(this.baseStamina + this.plusStamina);
     }
 
+    get critical() {
+        return this.baseCritical + this.plusCritical;
+    }
+
     get attack() {
         return Math.floor(this.strength * this.attackPotential * 10) + this.plusAttack;
     }

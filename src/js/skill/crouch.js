@@ -20,7 +20,7 @@ export default class Crouch extends SkillBase {
             case 11: {
                 // 버프를 제거하고, 연산해서, 추가한다.
                 this.owner.removeBuff("crouch");
-                const armor = this.getCoefficientsResult(this.owner, this.coefficients[0]);
+                const armor = this.calcSkillExpressions(this.owner, this.skillExpressions[0]);
 
                 this.owner.addBuff("crouch", 20, new BlinkEffectBuff({
                     option: `armor(${armor})`,

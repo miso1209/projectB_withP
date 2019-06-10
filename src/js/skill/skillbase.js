@@ -12,8 +12,8 @@ export default class Skill {
         this.owner.isExtraSkillIn = false;
     }
     
-    get coefficients() {
-        return this.data.coefficients;
+    get skillExpressions() {
+        return this.data.skillExpressions;
     }
 
     // extra skil에만 들어있다.
@@ -25,11 +25,15 @@ export default class Skill {
         return this.data.maxCoolTime?this.data.maxCoolTime:1;
     }
 
+    isCritical(criticalProbability) {
+        return Math.random() < criticalProbability;
+    }
+
     // 계수에 대한 대상자의 능력치를 반환한다.
-    getCoefficientsResult(target, coefficients) {
+    calcSkillExpressions(target, skillExpression) {
         let result = 0;
-        coefficients.forEach((coefficient) => {
-            const scriptParser = new ScriptParser(coefficient);
+        skillExpression.forEach((script) => {
+            const scriptParser = new ScriptParser(script);
             result += this.getStat(target, scriptParser);
         });
 
@@ -102,10 +106,17 @@ export default class Skill {
         this.effects.addFontEffect(...args);
     }
 
-    hit(attack, target) {
+    hit(attack, target, isCritical) {
         let damage = Math.round(attack - target.armor);
         damage = damage<=0?0:damage;
-        this.addFontEffect({target: target, outputText: '-' + damage});
+
+        if (isCritical) {
+            this.addFontEffect({target: target, outputText: 'Critical', fontSize: 7, offset: { x: -5, y: -10 }});
+            this.addFontEffect({target: target, outputText: '-' + damage, color: '#FF0000'});
+        } else {
+            this.addFontEffect({target: target, outputText: '-' + damage});
+        }
+        
         target.onDamage(damage);
     }
 

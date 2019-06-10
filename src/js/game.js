@@ -340,7 +340,7 @@ export default class Game extends EventEmitter {
                     const enemy = new Character(c.id);
                     enemy.level = c.level;
                     enemy.health = enemy.maxHealth;
-                    
+
                     enemies.push({
                         character: enemy,
                         x: monster.columnOf(i),
@@ -384,6 +384,7 @@ export default class Game extends EventEmitter {
             });
 
             this.gamelayer.addChild(this.currentMode.stage);
+            this.emit('hideUI');
         }
     }
 
@@ -395,6 +396,7 @@ export default class Game extends EventEmitter {
             this.gamelayer.addChild(this.stage);
             // 배틀을 사용한다
             this.currentMode = this.exploreMode;
+            this.emit('showUI');
         }
     }
 

@@ -31,7 +31,7 @@ export default class FireCape extends SkillBase {
             }
             case 51: {
                 this.owner.removeBuff("fireCape");
-                const fireCape = this.getCoefficientsResult(this.owner, this.coefficients[0]);
+                const fireCape = this.calcSkillExpressions(this.owner, this.skillExpressions[0]);
 
                 this.owner.addBuff("fireCape", 10, new BaseBuff({
                     option: `armor(${fireCape})`,

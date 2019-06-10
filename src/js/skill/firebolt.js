@@ -22,7 +22,7 @@ export default class FireBolt extends SkillBase {
 
                 const dist = {
                     x: this.target.position.x - this.owner.position.x,
-                    y: this.target.position.y - this.owner.y
+                    y: this.target.position.y - this.owner.position.y
                 }
                 fireBall.rotation = Math.atan2(dist.y, dist.x);
 
@@ -35,9 +35,14 @@ export default class FireBolt extends SkillBase {
             }
             case 40: {
                 this.addEffect(this.target, { name: 'explosion', animation: true, animationLength: 16, removeFrame: 60, speed: 0.5 });
-                const damage = this.getCoefficientsResult(this.owner, this.coefficients[0]);
+                let damage = this.calcSkillExpressions(this.owner, this.skillExpressions[0]);
 
-                this.hit(damage, this.target);
+                const isCritical = this.isCritical(this.owner.critical);
+                if (isCritical) {
+                    damage = Math.round(damage * 1.5);
+                }
+
+                this.hit(damage, this.target, isCritical);
                 break;
             }
             case 50: {

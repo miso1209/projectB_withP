@@ -32,7 +32,7 @@ export default class AntiPower extends SkillBase {
             case 30: {
                 this.targets.forEach((target) => {
                     target.removeBuff("antiPower");
-                    const antiPower = this.getCoefficientsResult(this.target, this.coefficients[0]) * -1;
+                    const antiPower = this.calcSkillExpressions(this.target, this.skillExpressions[0]) * -1;
 
                     target.addBuff("antiPower", 10, new BlinkEffectBuff({
                         option: `attack(${antiPower})`,

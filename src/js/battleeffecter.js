@@ -49,14 +49,19 @@ export class BattleEffecter extends PIXI.Container {
         style.dropShadowDistance = 3;
         style.fontStyle = 'italic';
         style.fontWeight = 'bold';
-        style.fontSize = 18;
+        style.fontSize = options.fontSize?options.fontSize:18;
         style.fill = options.color ? options.color : "#ffffff";
+
+        const offset = {
+            x: options.offset?options.offset.x:0,
+            y: options.offset?options.offset.y:0
+        };
 
         const text = new PIXI.Text(options.outputText, style);
         text.anchor.x = 0.5;
         text.alpha = 0;
-        text.position.x = options.target.position.x + options.target.animation.width / 2 - 3;
-        text.position.y = options.target.position.y - options.target.animation.height / 2 - 3;
+        text.position.x = (options.target.position.x + options.target.animation.width / 2) + offset.x;
+        text.position.y = (options.target.position.y - options.target.animation.height / 2) + offset.y;
         this.detailEffectContainer.addChild(text);
 
         this.tweens.addTween(text.position, 0.5, {y: text.position.y - 15}, 0, "easeOut", true, null);
@@ -65,6 +70,8 @@ export class BattleEffecter extends PIXI.Container {
                 this.detailEffectContainer.removeChild(text);
             });
         });
+
+        return text;
     }
 }
 

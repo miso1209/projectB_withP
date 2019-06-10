@@ -54,18 +54,21 @@ export default class App {
             this.update();
         });
 
-
-
+        // game에서 오는 emit 어디서 처리해야 할지 몰라서 우선 여기에 둠.
+        this.game.on('showUI', () => {
+            this.ui.showMenu();
+        });
+        this.game.on('hideUI', () => {
+            this.ui.hideMenu();
+        });
 
         window.addEventListener("keydown", (e) => {
             if (e.keyCode === 66) { // b 키 전투 테스트는 여기서 하세요
                 // 스테이지를 변경한다
                 if (this.game.currentMode === this.game.exploreMode) {
-                    this.ui.hideMenu();
                     this.game.enterBattle(Monster.GetByStage("house")[0]);
                 } else {
                     this.game.leaveBattle();
-                    this.ui.showMenu();
                 }
             }
             if (e.keyCode === 68) { // d키 // ui 는 여기서 테스트

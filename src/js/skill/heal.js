@@ -32,7 +32,7 @@ export default class Heal extends SkillBase {
             }
             case 30: {
                 this.targets.forEach((target) => {
-                    const heal = this.getCoefficientsResult(target, this.coefficients[0]);
+                    const heal = this.calcSkillExpressions(target, this.skillExpressions[0]);
 
                     target.addBuff("heal", 0, new BaseBuff({
                         option: `health(${heal})`,

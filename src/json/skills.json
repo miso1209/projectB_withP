@@ -1,7 +1,7 @@
 {
     "crouch": {
         "description": "웅크려 앉아 맞는다. 방어력이 30% 증가한다.",
-        "coefficients": [
+        "skillExpressions": [
             [
                 "armorCoefficient(0.3)",
                 "armor(10)"
@@ -13,12 +13,12 @@
         "description": "전투에서 빠져나와 몸을 숨긴다.",
         "coolTime": 10,
         "maxCoolTime": 10,
-        "coefficients": []
+        "skillExpressions": []
     },
 
     "slash": {
         "description": "평범한 검격을 날린다.",
-        "coefficients": [
+        "skillExpressions": [
             [
                 "attackCoefficient(1.0)"
             ]
@@ -27,7 +27,7 @@
 
     "shieldAttack": {
         "description": "방패로 공격한다.",
-        "coefficients": [
+        "skillExpressions": [
             [
                 "attackCoefficient(0.8)"
             ]
@@ -38,7 +38,7 @@
         "description": "방패와 검으로 연속 공격한다.",
         "coolTime": 8,
         "maxCoolTime": 8,
-        "coefficients": [
+        "skillExpressions": [
             [
                 "attackCoefficient(0.8)",
                 "attack(5)"
@@ -52,7 +52,7 @@
 
     "wandAttack": {
         "description": "완드에 마력을 실어 가격한다.",
-        "coefficients": [
+        "skillExpressions": [
             [
                 "attackCoefficient(0.5)",
                 "magicCoefficient(0.5)"
@@ -61,7 +61,7 @@
     },
     "antiPower": {
         "description": "적의 공격력을 20만큼 낮춘다.",
-        "coefficients": [
+        "skillExpressions": [
             [
                 "magic(20)"
             ]
@@ -72,7 +72,7 @@
         "description": "아군의 체력을 30%만큼 회복한다.",
         "coolTime": 10,
         "maxCoolTime": 10,
-        "coefficients": [
+        "skillExpressions": [
             [
                 "maxHealthCoefficient(0.3)"
             ]
@@ -81,7 +81,7 @@
 
     "shotArrow": {
         "description": "화살을 쏴 후방의 적을 공격한다.",
-        "coefficients": [
+        "skillExpressions": [
             [
                 "attackCoefficient(1.2)"
             ]
@@ -90,7 +90,7 @@
 
     "criticalAttack": {
         "description": "단검으로 치명적인 일격을 가한다.",
-        "coefficients": [
+        "skillExpressions": [
             [
                 "attackCoefficient(1)",
                 "attack(10)"
@@ -102,7 +102,7 @@
         "description": "활을 높게 쏘아올려 제일 체력이 약한적을 공격한다.",
         "coolTime": 6,
         "maxCoolTime": 6,
-        "coefficients": [
+        "skillExpressions": [
             [
                 "attackCoefficient(1.4)",
                 "attack(10)"
@@ -112,7 +112,7 @@
 
     "fireBolt": {
         "description": "전방의 적에게 화염구체를 날려 공격한다.",
-        "coefficients": [
+        "skillExpressions": [
             [
                 "magicCoefficient(1.2)"
             ]
@@ -121,7 +121,7 @@
 
     "fireCape": {
         "description": "화염망토를 둘러 방어력을 증가시킨다.",
-        "coefficients": [
+        "skillExpressions": [
             [
                 "armorCoefficient(0.2)",
                 "armor(10)"
@@ -133,7 +133,7 @@
         "description": "모든 적에게 화염구체를 떨어뜨려 공격한다.",
         "coolTime": 14,
         "maxCoolTime": 14,
-        "coefficients": [
+        "skillExpressions": [
             [
                 "magicCoefficient(0.5)",
                 "magic(10)"

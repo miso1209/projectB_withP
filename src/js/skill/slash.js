@@ -31,9 +31,14 @@ export default class Slash extends SkillBase {
             case 30: {
                 // TODO : 데미지 계산 공식을 어디서 가져와야 할까??
                 this.addEffect(this.target, { name: 'slash', animation: true, animationLength: 8, removeFrame: 60, speed: 0.5 });
-                const damage = this.getCoefficientsResult(this.owner, this.coefficients[0]);
+                let damage = this.calcSkillExpressions(this.owner, this.skillExpressions[0]);
 
-                this.hit(damage, this.target);
+                const isCritical = this.isCritical(this.owner.critical);
+                if (isCritical) {
+                    damage = Math.round(damage * 1.5);
+                }
+
+                this.hit(damage, this.target, isCritical);
                 break;
             }
             case 55: {
