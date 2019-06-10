@@ -112,7 +112,7 @@ export default class Skill {
         damage = damage<=0?0:damage;
 
         if (isCritical) {
-            damage = Math.round(damage * 1.5);
+            damage = Math.round(damage * this.owner.criticalPotential);
             this.addFontEffect({target: target, outputText: 'Critical', fontSize: 7, offset: { x: -5, y: -10 }, color: '#FF0000'});
         }
 

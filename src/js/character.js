@@ -100,19 +100,50 @@ export default class Character {
     }
 
     get strength() {
-        return Math.floor(this.baseStrength + this.plusStrength);
+        return this.baseStrength + this.plusStrength;
+    }
+
+    // 민첩은 크리티컬 데미지에 사용한다. 100 Agility에 100% 추가데미지.
+    get agility() {
+        return this.baseAgility + this.plusAgility;
+    }
+
+    // REG 저항력을 어디에 사용해야 할까.. 꼭 있어야 할까?
+    get regist() {
+        return this.baseRegist + this.plusRegist;
     }
 
     get intellect() {
-        return Math.floor(this.baseIntellect + this.plusIntellect);
+        return this.baseIntellect + this.plusIntellect;
     }
 
     get stamina() {
-        return Math.floor(this.baseStamina + this.plusStamina);
+        return this.baseStamina + this.plusStamina;
     }
 
     get critical() {
-        return this.baseCritical + this.plusCritical;
+        return (this.baseCritical + this.plusCritical)>=1?1:(this.baseCritical + this.plusCritical);
+    }
+
+    // 기본적인 크리티컬 데미지는 1.2배로 한다.
+    get criticalPotential() {
+        return 1.2 + (this.agility / 100)
+    }
+
+    // 스킬계수를 포함하지 않은 그저 강함의 수치를 DPS처럼 나타내고싶다.
+    get strongFigure() {
+        // 기본적인 기대 데미지
+        const basicDmg = (this.attack>this.magic?this.attack:this.magic) * this.speed;
+        const nonCriticalDmg = basicDmg * (1 - this.critical);
+        const criticalDmg = (basicDmg * this.criticalPotential) * this.critical;
+
+        // 공격 기대 수치.
+        const resultDmg = nonCriticalDmg + criticalDmg;
+
+        // 방어 기대 수치
+        const resultDefense = this.maxHealth + this.armor;
+
+        return Math.round(resultDmg + resultDefense);
     }
 
     get attack() {

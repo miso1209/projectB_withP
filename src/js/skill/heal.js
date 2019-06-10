@@ -35,9 +35,11 @@ export default class Heal extends SkillBase {
                     const heal = this.calcSkillExpressions(target, this.skillExpressions[0]);
 
                     target.addBuff("heal", 0, new BaseBuff({
-                        option: `health(${heal})`,
+                        options: [`health(${heal})`],
                         isAnimation: false,
                     }));
+
+                    this.addFontEffect({target: target, outputText: `+${heal}`, color: '#66CC66'});
                     this.addEffect(target, { name: 'healeffect', animation: true, animationLength: 25, removeFrame: 52, speed: 0.7 });
                 });
                 break;

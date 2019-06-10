@@ -45,8 +45,9 @@ export default class DouobleAttack extends SkillBase {
             }
             case 79: {
                 this.owner.removeBuff("doubleAttack");
+                let armor = this.calcSkillExpressions(this.owner, this.skillExpressions[2]);
                 this.owner.addBuff("doubleAttack", 10, new BlinkEffectBuff({
-                    option: "armor(25)",
+                    options: [`armor(${armor})`],
                     isAnimation: true,
                     sprite: 'barrier',
                     animationLength: 63,
@@ -58,6 +59,7 @@ export default class DouobleAttack extends SkillBase {
                     }
                 }));
 
+                this.addFontEffect({target: this.owner, outputText: `Armor ▲`, fontSize: 7});
                 this.addEffect(this.target, { name: 'slash', animation: true, animationLength: 8, removeFrame: 60, speed: 0.5 });
                 let damage = this.calcSkillExpressions(this.owner, this.skillExpressions[1]);
 

@@ -34,7 +34,7 @@ export default class FireCape extends SkillBase {
                 const fireCape = this.calcSkillExpressions(this.owner, this.skillExpressions[0]);
 
                 this.owner.addBuff("fireCape", 10, new BaseBuff({
-                    option: `armor(${fireCape})`,
+                    options: [`armor(${fireCape})`],
                     isAnimation: true,
                     sprite: 'firecape',
                     animationLength: 58,
@@ -46,6 +46,7 @@ export default class FireCape extends SkillBase {
                     }
                 }));
 
+                this.addFontEffect({target: this.owner, outputText: `Armor ▲`, fontSize: 7});
                 this.addEffect(this.owner, { name: 'firerainprop', animation: true, animationLength: 7, removeFrame: 15, speed: 0.5 });
                 break;
             }

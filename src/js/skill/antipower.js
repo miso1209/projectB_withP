@@ -35,7 +35,7 @@ export default class AntiPower extends SkillBase {
                     const antiPower = this.calcSkillExpressions(this.target, this.skillExpressions[0]) * -1;
 
                     target.addBuff("antiPower", 10, new BlinkEffectBuff({
-                        option: `attack(${antiPower})`,
+                        options: [`attack(${antiPower})`, `magic(${antiPower})`],
                         isAnimation: true,
                         sprite: 'antipowerloop',
                         animationLength: 32,
@@ -47,6 +47,7 @@ export default class AntiPower extends SkillBase {
                         }
                     }));
 
+                    this.addFontEffect({target: target, outputText: `Damage ▼`, fontSize: 7});
                     this.addEffect(target, { name: 'antipower', animation: true, animationLength: 16, removeFrame: 52, speed: 0.7 });
                 });
                 break;

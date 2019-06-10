@@ -46,6 +46,9 @@
             [
                 "attackCoefficient(1.0)",
                 "attack(10)"
+            ],
+            [
+                "armor(10)"
             ]
         ]
     },

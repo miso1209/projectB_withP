@@ -96,7 +96,9 @@ export default class BattleCharacter extends EventEmitter{
     addBuff(name, duration, buff) {
         if (!this.buffs[name]) {
             this.buffs[name] = buff;
-            this.character.applyOption(this.buffs[name].option);
+            this.buffs[name].options.forEach((option) => {
+                this.character.applyOption(option);
+            });
             this.buffContainer.addChild(this.buffs[name]);
         }
 
@@ -110,7 +112,9 @@ export default class BattleCharacter extends EventEmitter{
     removeBuff(name) {
         if (this.buffs[name]) {
             this.buffContainer.removeChild(this.buffs[name]);
-            this.character.clearOption(this.buffs[name].option);
+            this.buffs[name].options.forEach((option) => {
+                this.character.clearOption(option);
+            });
             delete this.buffs[name];
         }
     }
@@ -196,6 +200,10 @@ export default class BattleCharacter extends EventEmitter{
 
     get critical() {
         return this.character.critical;
+    }
+
+    get criticalPotential() {
+        return this.character.criticalPotential
     }
 
     get attack() {

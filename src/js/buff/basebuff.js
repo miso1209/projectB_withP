@@ -1,36 +1,36 @@
 import { loadAniTexture } from "../utils";
 
 export default class BaseBuff extends PIXI.Container{
-    constructor(options) {
+    constructor(buffOption) {
         super();
-        this.option = options.option;
+        this.options = buffOption.options;
 
-        if (options.isAnimation) {
-            this.setAnimationSprite(options);
-        } else if (options.sprite) {
-            this.setSprite(options);
+        if (buffOption.isAnimation) {
+            this.setAnimationSprite(buffOption);
+        } else if (buffOption.sprite) {
+            this.setSprite(buffOption);
         }
     }
 
-    setAnimationSprite(options) {
-        this.sprite = new PIXI.extras.AnimatedSprite(loadAniTexture(`${options.sprite}_`, options.animationLength));
-        this.sprite.animationSpeed = options.speed;
-        this.sprite.loop = options.loop;
+    setAnimationSprite(buffOption) {
+        this.sprite = new PIXI.extras.AnimatedSprite(loadAniTexture(`${buffOption.sprite}_`, buffOption.animationLength));
+        this.sprite.animationSpeed = buffOption.speed;
+        this.sprite.loop = buffOption.loop;
         this.sprite.play();
         this.sprite.anchor.x = 0.5;
         this.sprite.anchor.y = 0.5;
-        this.sprite.position.x = options.offset.x;
-        this.sprite.position.y = options.offset.y;
+        this.sprite.position.x = buffOption.offset.x;
+        this.sprite.position.y = buffOption.offset.y;
         this.sprite.blendMode = PIXI.BLEND_MODES.ADD;
         this.addChild(this.sprite);
     }
 
-    setSprite(options) {
-        this.sprite = new PIXI.Sprite(PIXI.Texture.fromFrame(options.sprite));
+    setSprite(buffOption) {
+        this.sprite = new PIXI.Sprite(PIXI.Texture.fromFrame(buffOption.sprite));
         this.sprite.anchor.x = 0.5;
         this.sprite.anchor.y = 0.5;
-        this.sprite.position.x = options.offset.x;
-        this.sprite.position.y = options.offset.y;
+        this.sprite.position.x = buffOption.offset.x;
+        this.sprite.position.y = buffOption.offset.y;
         this.sprite.blendMode = PIXI.BLEND_MODES.ADD;
         this.addChild(this.sprite);
     }
