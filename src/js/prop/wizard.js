@@ -1,4 +1,5 @@
 import PropBase from './propbase';
+import { EventEmitter } from 'events';
 
 export default class Wizard extends PropBase {
     constructor(x, y, tileData) {
@@ -7,6 +8,9 @@ export default class Wizard extends PropBase {
         this.isInteractive = true;
         this.isOpened = false;
         this.alreadyParty = false;
+
+        this.emitter = new EventEmitter();
+        this.hasEmitter = true;
 
         // name tag의 offset을 설정할 수 있도록 한다.
         this.nameTagOffset = {
@@ -24,8 +28,8 @@ export default class Wizard extends PropBase {
     }
 
     delete() {
-        this.tileTexture.texture = null;
         this.alreadyParty = true;
+        this.emit('delete');
     }
 
     touch(game) {
@@ -46,6 +50,14 @@ export default class Wizard extends PropBase {
                 }
             });
         }
+    }
+
+    emit(...arg) {
+        this.emitter.emit(...arg);
+    }
+
+    on(...arg) {
+        this.emitter.on(...arg);
     }
 
     hideName() {

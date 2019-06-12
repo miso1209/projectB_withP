@@ -240,8 +240,37 @@ export default class Stage extends PIXI.Container {
                 const cy = y - j;
                 if (cx >= 0 && cy >= 0) {
                     this.objectMap[cx + cy * this.mapWidth] = tile;
+                    this.setObjectEmitter(tile);
                 }
             }
+        }
+    }
+
+    getTileMovable(x, y) {
+        let result = true;
+
+        if (this.groundMap[x + y * this.mapWidth]) {
+            result = result && this.groundMap[x + y * this.mapWidth];
+        }
+        
+        return result;
+    }
+
+    // Emitter가 있는 obj일 경우, emitter 설정해준다.
+    setObjectEmitter(obj) {
+        if (obj.hasEmitter) {
+            obj.on('delete', () => {
+                // 같은 그룹 ID 모두 제거하며, 해당 좌표의 그라운드가 있는지 판별하여 movable 넣어준다. => 어떤 때 문제가 발생할 수 있을까..?
+                for (let key in this.objectMap) {
+                    const deleteObj = this.objectMap[key];
+                    
+                    if (deleteObj && deleteObj.groupId && obj.groupId === deleteObj.groupId) {
+                        const groundTile = this.getGroundTileAt(deleteObj.gridX, deleteObj.gridY);
+                        this.pathFinder.setDynamicCell(deleteObj.gridX, deleteObj.gridY, groundTile?groundTile.movable:false);
+                        this.removeObjRefFromLocation(deleteObj);
+                    }
+                }
+            });
         }
     }
     
@@ -287,7 +316,7 @@ export default class Stage extends PIXI.Container {
         }
         //END 호영 테스트
         else if (tileData.type !== "groundtile") {
-            tile = Prop.New(tileData.type, x, y, tileData)
+            tile = Prop.New(tileData.type, x, y, tileData);
         } else {
             tile = new Tile(x, y, tileData);
         }

@@ -24,7 +24,7 @@ export default class MoveEngine {
 
         this.speedUnit = getUnit({ x: (px - o.position.x), y: (py - o.position.y) });
         
-        this.currentTarget = { x: px, y: py };
+        this.currentTarget = { x: px, y: pyㅜ };
     }
 
     getUnit(v) {
