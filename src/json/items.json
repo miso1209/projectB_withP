@@ -100,8 +100,6 @@
         "options": ["armor(+3)"]
     },
 
-
-    
     "1001": {
         "id": 1001,
         "name": "소형 회복약",
@@ -109,14 +107,16 @@
         "description": "체력을 소량 회복한다",
         "category": "consumables",
         "options": ["health(+10)"]
-    },"1002": {
+    },
+    "1002": {
         "id": 1002,
         "name": "중형 회복약",
         "image": { "texture": "items.png", "x": 8, "y": 0 },
         "description": "체력을 회복한다",
         "category": "consumables",
         "options": ["health(+50)"]
-    },"1003": {
+    },
+    "1003": {
         "id": 1003,
         "name": "대형 회복약",
         "image": { "texture": "items.png", "x": 14, "y": 0 },
@@ -124,6 +124,15 @@
         "category": "consumables",
         "options": ["health(+200)"]
     },
+    "1004": {
+        "id": 1004,
+        "name": "부활 물약",
+        "image": { "texture": "items.png", "x": 21, "y": 0 },
+        "description": "사망한 캐릭터를 부활시킨다",
+        "category": "consumables",
+        "options": ["health(100%)"]
+    },
+    
     "2001": {
         "id": 2001,
         "name": "약초",

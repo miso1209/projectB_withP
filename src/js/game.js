@@ -68,6 +68,10 @@ export default class Game extends EventEmitter {
             const inputs = this.getInvenotryData();
             this.ui.showInventory(inputs);
         });
+        this.ui.on('useItem', (itemId, count, target) => {
+            console.log(itemId, count, target);
+            this.useItem(itemId, count, target);
+        });
         this.ui.on('characterselect', ()=> {
             const inputs = [];
             const invenData = this.getInventoryDataByCategory('consumables');
@@ -75,6 +79,10 @@ export default class Game extends EventEmitter {
                 inputs.push(this.player.characters[cid]);
             }
             this.ui.showCharacterSelect(inputs, invenData);
+        });
+
+        this.ui.on('refresh', () => {
+            this.ui.playerInvenData = this.getInventoryDataByCategory('consumables');
         });
 
         this.ui.on('zoomInOut', ()=>{
@@ -182,7 +190,7 @@ export default class Game extends EventEmitter {
         } else {
             // 그냥 평범하게 집에 들어간다
             this.ui.showTheaterUI(0.5);
-            this.$enterStage("assets/mapdata/open_road_3.json", "road3-to-road2").then(() => {
+            this.$enterStage("assets/mapdata/house.json", "house-gate").then(() => {
                 this.exploreMode.interactive = true;
                 this.stage.showPathHighlight = true;
                 this.ui.hideTheaterUI(0.5);

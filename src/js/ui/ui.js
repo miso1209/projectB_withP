@@ -18,7 +18,7 @@ export default class DomUI extends EventEmitter {
         this.gamePane = document.getElementById('canvas');
         this.screenWidth = this.gamePane.screenWidth;
         this.screenHeight = this.gamePane.screenHeight;
-
+        
         // theatreUI 를 설정한다
         this.theaterUI = document.createElement('div');
         this.theaterUI.id = 'theater';
@@ -36,6 +36,12 @@ export default class DomUI extends EventEmitter {
         gnb.className = 'gnb';
         this.gnbContainer.appendChild(gnb);
 
+        const minimap = document.createElement('canvas');
+        minimap.classList.add('minimap');
+        // minimap.style.width = '118px';
+        // minimap.style.height = '90px';
+        gnb.appendChild(minimap);
+        
         const menuData = [
             {name:'캐릭터', event: "characterselect"},
             {name:'보관함', event: "inventory"},
@@ -50,18 +56,19 @@ export default class DomUI extends EventEmitter {
                 this.emit(menu.event);
             });
         });
+        
+        // TODO : zoom button delete
+        // this.zoomBtn = document.createElement('button');
+        // this.zoomBtn.classList.add('buttonS');
+        // this.zoomBtn.classList.add('zoomBtn');
+        // this.zoomBtn.innerText = 'x2';
+        // this.gnbContainer.appendChild(this.zoomBtn);
+        // this.showZoomBtn();
+        // this.zoomBtn.addEventListener('click', () => {
+        //     this.emit('zoomInOut');
+        // });
 
-        this.zoomBtn = document.createElement('button');
-        this.zoomBtn.classList.add('buttonS');
-        this.zoomBtn.classList.add('zoomBtn');
-        this.zoomBtn.innerText = 'x2';
-
-        this.gnbContainer.appendChild(this.zoomBtn);
-
-        this.showZoomBtn();
-        this.zoomBtn.addEventListener('click', () => {
-            this.emit('zoomInOut');
-        });
+        this.playerInvenData = null;
     }
 
     createContainer() {
@@ -129,23 +136,29 @@ export default class DomUI extends EventEmitter {
     }
 
     // 임시
-    showConsumableItems(text, items, result) {
+    showSystemModal(text, items, result) {
         const pane = this.createContainer();
-        const confirmModal = new SystemModal(pane, 300, 250, text, result);
+        const confirmModal = new SystemModal(pane, 300, 200, text, result);
         confirmModal.dom.style.top = '50%';
         confirmModal.dom.style.marginTop = 250 * -0.5 + 'px';
 
         const options = new MakeDom('div', 'contents-option', null);
-        items.forEach((item) => {
-            console.log(item);
-            let option = new ItemImage(item.data.image.texture, item.data.image.x, item.data.image.y);
+        if(items.length > 1) {
+            items.forEach((item) => {
+                let option = new ItemImage(item.data.image.texture, item.data.image.x, item.data.image.y);
+                let count = new MakeDom('span', null, null);
+                count.innerText = `x${item.owned}`;
+                options.appendChild(option.dom);
+                options.appendChild(count);
+            });
+        } else {
+            let option = new ItemImage(items.data.image.texture, items.data.image.x, items.data.image.y);
             let count = new MakeDom('span', null, null);
-            count.innerText = `x${item.owned}`;
-            
+            count.innerText = `x${items.owned}`;
             options.appendChild(option.dom);
             options.appendChild(count);
-        });
-
+        }
+        
         confirmModal.contents.appendChild(options);
         confirmModal.contents.style.margin = '10% auto';
         confirmModal.contents.style.fontSize = '1.1rem';
@@ -246,13 +259,21 @@ export default class DomUI extends EventEmitter {
     showCharacterSelect(inputs, inven) {
         const pane = this.createContainer();
         // 물약데이터
-        const characterSelect = new CharacterSelect(pane, inputs, inven, (info) => {
-            if (typeof(info) === "object") {
-                this.showCharacterDatail(info);
-            } else {
-                this.showConsumableItems('포션을 사용해서 체력을 회복하시겠습니까?', inven, (confirmed) => {
+        const characterSelect = new CharacterSelect(pane, inputs, (info) => {
+            this.showCharacterDatail(info);
+        });
+
+        // DOM이 있으면 날린다.
+        characterSelect.updateInvenItems(inven, (selected) => {
+            if (selected !== null) {
+                this.showSystemModal('포션을 사용하시겠습니까?', selected, (confirmed) => {
                     if (confirmed === "ok") {
-                        console.log('포션 쓰기');
+                        // console.log('포션 쓰기' + player);
+                        this.emit('useItem',selected.data.id, 1, characterSelect.selected);
+                        characterSelect.updateStatus(characterSelect.selected);
+                        
+                        this.emit('refresh');
+                        console.log(this.playerInvenData);
                     } 
                 });
             }

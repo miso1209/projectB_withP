@@ -1,7 +1,6 @@
 import Panel from "./component/panel";
 import Modal from "./component/modal";
 import ItemImage from "./component/itemimage";
-import Button from "./component/button";
 import MakeDom from "./component/makedom";
 
 export default class CharacterDetail extends Panel {
@@ -13,7 +12,6 @@ export default class CharacterDetail extends Panel {
 
     statUI.addTitle('캐릭터 정보');
     statUI.addCloseButton();
-    statUI.className = 'statUI';
     statUI.dom.classList.add('characterDetail');
 
     this.selected = input;
@@ -47,6 +45,7 @@ export default class CharacterDetail extends Panel {
 
     const infoWrap = new MakeDom('div', 'infoWrap', null);
 
+
     // 캐릭터 정보
     this.portrait = new MakeDom('img', 'profile');
     this.portrait.style.display = 'block';
@@ -55,7 +54,6 @@ export default class CharacterDetail extends Panel {
     titleWrap.appendChild(this.level);
     titleWrap.appendChild(this.descClass);
     infoWrap.appendChild(this.portrait);
-    
 
     // 캐릭터 정보
     const profile = new MakeDom('img', 'profile');
@@ -65,18 +63,21 @@ export default class CharacterDetail extends Panel {
     this.equipItems = document.createElement('ul');
     this.equipItems.className = 'equipItems';
 
+    // 스킬
+    this.skillItems = document.createElement('ul');
+    this.skillItems.className = 'skillItems';
+
     // 캐릭터 스탯 정보 - 임시..
     const statWrap = new MakeDom('ul', 'statWrap');
-    
     const mainStats = new MakeDom('div', 'mainStat');
-    let statMagic = new MakeDom('span', 'stat', `마법 : ${this.selected.magicPotential}`);
-    let statAttack = new MakeDom('span', 'stat', `공격력 : ${this.selected.plusAttack}`);
-    let statArmor = new MakeDom('span', 'stat', `방어력 : ${this.selected.plusArmor}`);
+
+    let statMagic = new MakeDom('span', 'stat', `마법 : ${this.selected.magic}`);
+    let statAttack = new MakeDom('span', 'stat', `공격력 : ${this.selected.attack}`);
+    let statArmor = new MakeDom('span', 'stat', `방어력 : ${this.selected.armor}`);
 
     mainStats.appendChild(statMagic);
     mainStats.appendChild(statAttack);
     mainStats.appendChild(statArmor);
-
     statWrap.appendChild(mainStats);
 
     for(let base in this.selected.data.base) {
@@ -88,8 +89,6 @@ export default class CharacterDetail extends Panel {
         let baseStatText = 'base' + text;
         let plusStatText = 'plus' + text;
 
-        console.log(baseStatText, plusStatText);
-
         baseStat.innerText = `${base} : ${this.selected[baseStatText]}`;
         plusStat.innerText = `( + ${this.selected[plusStatText]} )`;
         plusStat.style.paddingLeft = '10px';
@@ -99,22 +98,10 @@ export default class CharacterDetail extends Panel {
       }
     }
 
-    // const skillItems = document.createElement('div');
-    // skillItems.className = 'skillItems';
-    // skillItems.style.position = 'absolute';
-    // skillItems.style.right = '30px';
-    // skillItems.style.top = '0';
-  
-    // skillItemData.forEach(item => {
-    //   let itemIcon = new ItemImage('items.png', item.x, item.y);
-    //   itemIcon.dom.classList.add('iconBtn');
-    //   skillItems.appendChild(itemIcon.dom);
-    // });
-
     leftBox.appendChild(titleWrap);
     leftBox.appendChild(infoWrap);
     leftBox.appendChild(this.equipItems);
-    // leftBox.appendChild(this.skillItems);
+    leftBox.appendChild(this.skillItems);
     rightBox.appendChild(statWrap);
 
     contentsWrap.appendChild(leftBox);
@@ -132,12 +119,12 @@ export default class CharacterDetail extends Panel {
     this.descName.innerText = this.selected.name;
     this.portrait.src = path + this.selected.data.portrait;
     this.level.innerText = 'Lv.' + this.selected.level;
+
     this.updateEquip();
+    this.updateSkill();
   }
 
-
   updateEquip(){
-    // 테스트용 데이터
     this.equipItems.innerHTML = '';
 
     let equipItemsData = [];
@@ -145,17 +132,43 @@ export default class CharacterDetail extends Panel {
     equipItemsData.push(this.selected.equipments.weapon);
     equipItemsData.push(this.selected.equipments.accessory);
 
-    equipItemsData.forEach(item => {
-      if (item !== null) {
-        // let item = new Item(itemID);
-        let liWrap = new MakeDom('li', null, null);
-        let itemIcon = new ItemImage(item.data.image.texture, item.data.image.x, item.data.image.y);
+    console.log(equipItemsData);
+
+    equipItemsData.forEach(d => {
+
+      let liWrap = new MakeDom('li', null, null);
+      this.equipItems.appendChild(liWrap);
+      if (d !== null) {
+        let itemIcon = new ItemImage(d.data.image.texture, d.data.image.x, d.data.image.y);
         itemIcon.dom.style.display = 'inline-block';
 
-        // let itemCategory = new MakeDom('span', 'itemCategory', item.category.toUpperCase());
-        // liWrap.appendChild(itemCategory);
+        let descText = new MakeDom('span', 'descText', d.data.name);
+        liWrap.appendChild(descText);
         liWrap.appendChild(itemIcon.dom);
-        this.equipItems.appendChild(liWrap);
+      } else {
+        liWrap.classList.add('empty');
+      }
+    });
+  }
+
+  updateSkill(){
+    this.skillItems.innerHTML = '';
+
+    let skillItemsData = [];
+    skillItemsData.push(this.selected.skills.a);
+    skillItemsData.push(this.selected.skills.b);
+    skillItemsData.push(this.selected.skills.extra);
+
+    skillItemsData.forEach(d => {
+      if (d !== null) {
+        let liWrap = new MakeDom('li', null, null);
+        let skillIcon = new ItemImage('items.png', 2, 1);
+        skillIcon.dom.style.display = 'inline-block';
+
+        let descText = new MakeDom('span', 'descText', d.toUpperCase());
+        liWrap.appendChild(skillIcon.dom);
+        liWrap.appendChild(descText);
+        this.skillItems.appendChild(liWrap);
       } 
     });
   }

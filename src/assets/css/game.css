@@ -2,6 +2,16 @@
 @import './base.css';
 @import './modal.css';
 
+/* Intro */
+.project_header {
+  padding: 80px 0;
+}
+.project_header h1 {
+  font-size: 40px;
+  line-height: 1;
+  text-align: center;
+  color: #fff;
+}
 
 #Game, canvas {
   position: relative;
@@ -9,18 +19,64 @@
   margin: 0 auto;
 }
 
-/* Intro */
-.project_header {
-  padding: 80px 0;
+.intro {
+  display: block;
+  position: absolute;
+  z-index: 9999;
+  
+  top: 120px;
+  left: 0;
+  right: 0;
+  width: 980px;
+  height: 500px;
+  margin: 0 auto;
+  background: url(~assets/opening.png) no-repeat;
 }
 
-.project_header h1 {
-  font-size: 40px;
-  line-height: 1;
-  text-align: center;
-  color: #fff;
+.intro::after{
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: url(~assets/border.png) no-repeat;
+  pointer-events: none;
 }
+
+.intro .buttonWrap {
+  width: 412px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.intro .buttonWrap a {
+  display: block;
+  line-height: 1.2;
+  margin-top: 20px;
+
+  font-size: 20px;
+  text-shadow: 0px 0px 5px rgba(0,0,0,1);
+  color: #fff;
+  opacity: 0.7;
+}
+
+
+.intro .buttonWrap a:hover, 
+.intro .buttonWrap a.active {
+  background: url(~assets/ui/hoverbar.png) 50% 50% no-repeat;
+  opacity: 1;
+}
+
+.logo {
+  width: 399px;
+  height: 158px;
+  margin: 120px auto 30px;
+  background: url(~assets/logo.png) no-repeat;
+}
+
 /* .Intro */
+
 
 .gnbContainer {
   display: block;
@@ -32,6 +88,17 @@
   width: 980px;
   margin: 0 auto;
   transition: all 0.8s;
+}
+
+.minimap {
+  display: inline-block;
+
+  width: 110px;
+  height: 90px;
+  margin-bottom: 20px;
+
+  background-color: rgba(255,255,255,0.4);
+  border: 1px solid #fff;
 }
 
 /* 배틀모드 */
@@ -668,9 +735,8 @@ button.disabled span {
   color: #fff;
 }
 
-
 /* 캐릭터 선택창 */
-.pickme > .contents {
+.characterSelect > .contents {
   padding: 10px 0;
   left: 45px;
   right: 25px;
@@ -780,7 +846,7 @@ button.disabled span {
 .doll {
   position: relative;
   min-width: 25%;
-  min-height: 96px;
+  height: 140px;
   padding: 5px;
 
   margin: 10px 5px;
@@ -861,6 +927,65 @@ button.disabled span {
 } 
 
 /* 캐릭터 상세창 */
+.characterSelect .invenItems {
+  margin: 20px auto;
+}
+
+.characterSelect .invenItems li {
+  position: relative;
+  display: inline-block;
+  width: 54px;
+  height: 54px;
+  padding: 2px 0 0;
+  background: url(~assets/ui/slotBg.png) 0 0 no-repeat;
+  background-size: cover;
+
+  border-radius: 8px;
+  border: 1px solid transparent;
+}
+
+.characterSelect .invenItems li:not(:first-child) {
+  margin-left: 5px;
+}
+
+.characterSelect .invenItems li.empty {
+  width: 32px;
+  height: 32px;
+  background: url(~assets/items/items.png) 0 0 no-repeat;
+}
+.invenItems li.empty:nth-child(1) {
+  /* 소형포션 */
+  background-position: -416px -32px;
+}
+.invenItems li.empty:nth-child(2) {
+  /* 중형포션 */
+  background-position: -448px -32px;
+}
+.invenItems li.empty:nth-child(3) {
+  /* 대형포션 */
+  background-position: -480px -32px;
+}
+.invenItems li.empty:nth-child(4) {
+  /* 부활 */
+  background-position: -608px 0;
+}
+.invenItems li:hover, 
+.invenItems li:active,
+.invenItems li.active {
+  border-radius: 8px;
+  border: 1px solid #ffd800;
+}
+.invenItems li .img {
+  display: inline-block;
+}
+
+.invenItems li .itemCount{
+  position: absolute;
+  right: 5px;
+  bottom: 0;
+}
+
+
 .equipItems .itemCategory {
   display: block;
   opacity: 0.2;
@@ -887,29 +1012,78 @@ button.disabled span {
   overflow: visible;
 }
 
+/* 캐릭터 선택창 - dps */
+.characterDetail .info-dps{
+  color: red;
+}
+
 .characterDetail .skillItems, 
 .characterDetail .equipItems {
   position: absolute;
-  top: 30px;
+  top: -10px;
   width: 60px;
 } 
-
-.characterDetail .equipItems li {
+.characterDetail .equipItems {
+  left: 20px;
+}
+.characterDetail .skillItems {
+  right: 20px;
+}
+.characterDetail .equipItems li,
+.characterDetail .skillItems li {
+  position: relative;
   display: block;
   width: 100%;
   margin: 0;
-  padding: 7px 10px;
+  padding: 7px 2px;
+  min-height: 60px;
   background-color: rgba(1,1,1,.4);
 }
 
-.characterDetail .equipItems li:not(:first-child){
+.characterDetail .skillItems li{
+  min-height: 60px;
+  border-radius: 5px;
+}
+
+.characterDetail .equipItems li:not(:first-child),
+.characterDetail .skillItems li:not(:first-child){
   margin-top: 10px;
+}
+
+.characterSelect .equipItems li:not(:first-child) {
+  margin-left: 10px;
 }
 
 .equipItems li:hover, 
 .equipItems li:active,
-.equipItems li.active {
-  background-color: rgba(1,1,1,.8);
+.equipItems li.active,
+.skillItems li:hover, 
+.skillItems li:active,
+.skillItems li.active{
+  background-color: rgba(1,1,1,1);
+}
+
+.equipItems li.empty, 
+.skillItems li.empty {
+  padding: 0;
+
+  width: 60px;
+  height: 60px;
+  background: url(~assets/ui/symbols.png) 0 -64px no-repeat;
+  background-color: rgba(1,1,1,.4);
+}
+
+.characterDetail li .img {
+  z-index: 11;
+}
+.characterDetail li .descText {
+  font-size: 13px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0.5;
+  z-index: 1;
 }
 
 .characterDetail .statWrap {
@@ -919,7 +1093,7 @@ button.disabled span {
 }
 
 .characterDetail .statWrap .mainStat {
-  margin: 0 0 20px;
+  margin: 20px 0;
 }
 
 .characterDetail .statWrap .mainStat span:not(:first-child) {

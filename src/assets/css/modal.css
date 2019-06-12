@@ -24,10 +24,10 @@
   transition: all 0.3s;
 }
 
-.iconBtn:hover, .iconBtn:active{
+/* .iconBtn:hover, .iconBtn:active{
   border: 1px solid #ffd800;
   border-radius: 5px;
-}
+} */
 
 .ico-life {
   background: url('~assets/items/items.png') no-repeat -576px -96px;
@@ -405,7 +405,7 @@
 .list-cell .availableIcon {
   width: 32px;
   height: 32px;
-  background: url('~assets/ui/build.png') no-repeat;
+  background: url('~assets/ui/icons.png') -96px 0 no-repeat ;
 }
 
 .list-cell .availableIcon + .img {
