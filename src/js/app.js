@@ -2,7 +2,6 @@ import Loader from './loader';
 import Storage from './storage';
 import DevConsole from './devconsole';
 import Game from './game';
-import Monster from './monster';
 
 export default class App {
     constructor() {
@@ -54,15 +53,10 @@ export default class App {
             this.update();
         });
 
-        window.addEventListener("keydown", (e) => {
-            if (e.keyCode === 66) { // b 키 전투 테스트는 여기서 하세요
-                // 스테이지를 변경한다
-                if (this.game.currentMode === this.game.exploreMode) {
-                    this.game.enterBattle(Monster.GetByStage("house")[0]);
-                } else {
-                    this.game.leaveBattle();
-                }
-            }
+
+
+
+        window.addEventListener("keydown", async (e) => {
             if (e.keyCode === 68) { // d키 // ui 는 여기서 테스트
                 this.ui.showCombineItemList([
                     { category: 'armor', recipes: this.game.getRecipes('armor') },

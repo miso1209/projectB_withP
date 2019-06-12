@@ -18,6 +18,7 @@ import UI from './ui/ui';
 import Portal from './portal';
 import Notification from './notification';
 import Item from './item';
+import MapGenerator from './mapgenerator';
 
 export default class Game extends EventEmitter {
     constructor(pixi) {
@@ -46,6 +47,8 @@ export default class Game extends EventEmitter {
         this.currentMode = null;
         this.exploreMode = new Explore(this);
 
+        // 음.. 현재 층수를 기록해두는 변수 => 여기에 있는게 맞나..?
+        this.currentFloor = 0;
         
         // 나중에 UI 로 바꾸어야 한다
         // 암전용 블랙스크린을 설치한다
@@ -285,6 +288,23 @@ export default class Game extends EventEmitter {
             return Portal.New('default', this, this.exploreMode.controller.gridX, this.exploreMode.controller.gridY);
         }
     }
+
+    async $nextFloor(from) {
+        this.currentFloor++;
+        await this.$leaveStage(from);
+
+        const mapGenerator = new MapGenerator();
+        await mapGenerator.createMap(12);
+        const hall = mapGenerator.getHall();
+        let hallKey = '';
+        for (let key in hall.neighbor) {
+            hallKey = key;
+            break;
+        }
+        // ui로 몇층인지 보여주자.
+
+        await this.$enterStageIns(hall, hallKey);
+    }
     
     async $enterStage(stagePath, eventName) {
         const stageName = path.basename(stagePath, ".json");
@@ -310,6 +330,28 @@ export default class Game extends EventEmitter {
         // 진입 컷신을 사용한다
         await this.$fadeIn(0.5);
         await cutscene.$play();
+    }
+
+    async $enterStageIns(stage, eventName) {
+        stage.zoomTo(1.5, true);
+
+        this.stage = stage;
+        this.gamelayer.addChild(stage);
+
+        // 페이드 인이 끝나면 게임을 시작한다
+        this.currentMode = this.exploreMode;
+        
+        this.currentMode.start();
+        const cutscene = this.buildStageEnterCutscene(eventName)
+        // 임시 이동 코드...
+        this.stage.addCharacter(this.currentMode.controller, cutscene.gridX, cutscene.gridY);
+        this.stage.checkForFollowCharacter(this.currentMode.controller, true);
+        // 스테이지 타이틀을 띄운다
+        // 진입 컷신을 사용한다
+        await this.$fadeIn(0.5);
+        await cutscene.$play();
+        this.exploreMode.interactive = true;
+        this.stage.showPathHighlight = true;
     }
 
     async $leaveStage(eventName) {
@@ -518,7 +560,7 @@ export default class Game extends EventEmitter {
         if (item.category === 'consumables') {
             target.applyOption(item.options);
         }
-
+        
         this.emit('useitem', itemId, count);
     }
 

@@ -8,7 +8,7 @@ import TiledMap from "./tiledmap";
 import Tile from './tile';
 import Prop from './prop';
 
-import { Portal2 } from './event/portal';
+import { Portal2, Portal3, NextFloorPortal } from './event/portal';
 import Loader from './loader';
 import Monster from './monster';
 
@@ -64,8 +64,9 @@ const isBoxInFront = function (box1, box2) {
 };
 
 export default class Stage extends PIXI.Container {
-    constructor() {
+    constructor(neighbor) {
         super();
+        this.neighbor = neighbor;
         Object.assign(this, new EventEmitter());
     }
 
@@ -192,15 +193,42 @@ export default class Stage extends PIXI.Container {
                     } else if (group === "object") { 
                         this.setObjectTile(x, y, tile);
                     } else if (group === "event") {
-                        this.eventMap[x + y * width] = new Portal2(x, y, tile);
-                        // 포탈이벤트를 기본적으로 패스에 포함시킬수 없다
-                        this.pathFinder.setCell(x, y, false);
+                        if (tile.name === 'up' || tile.name === 'down' || tile.name === 'left' || tile.name === 'right') {
+                            if (this.neighbor[tile.name]) {
+                                this.eventMap[x + y * width] = new Portal3(x, y, tile);
+                                // 포탈이벤트를 기본적으로 패스에 포함시킬수 없다
+                                this.pathFinder.setCell(x, y, false);
+                            }
+                        } else if (tile.name === 'nextFloor') {
+                                this.eventMap[x + y * width] = new NextFloorPortal(x, y, tile);
+                                // 포탈이벤트를 기본적으로 패스에 포함시킬수 없다
+                                this.pathFinder.setCell(x, y, false);
+                        } else {
+                            this.eventMap[x + y * width] = new Portal2(x, y, tile);
+                            // 포탈이벤트를 기본적으로 패스에 포함시킬수 없다
+                            this.pathFinder.setCell(x, y, false);
+                        }
                     } else {
                         throw Error("invalid group :" + group);
                     }
                 }
             }
         }
+    }
+
+    setStagePortal(portals) {
+        const outDir = {
+            up: 'down',
+            left: 'right',
+            right: 'left',
+            down: 'up'
+        }
+        this.eventMap.forEach((event) => {
+            if(event) {
+                event.targetStage = portals[event.name];
+                event.to = outDir[event.name];
+            }
+        });
     }
 
     setBottomTile(x, y, src) {
@@ -287,17 +315,25 @@ export default class Stage extends PIXI.Container {
             randomCount = Math.floor( Math.random() * (tileData.randomImage.length)); // 랜덤하게 이미지를 선택한다.
 
             if( tileData.widewall == true ) { // 그리는 벽이 넓은 벽일때
-
-                this.widewallCount += 1; //넓은 벽 갯수 카운트
-
-                if ( this.widewallCount == 4 && this.doorCount == 0 ) { // 마지막 넓은 벽 그릴때 문이 없으면
+                // 벽이면 체크하고, 없으면 랜덤벽 만들자.
+                randomCount = Math.floor( Math.random() * (tileData.randomImage.length - 1)) + 1;
+                if (tileData.name === 'castle_wall_door1' && this.neighbor.up) {
+                    // up
+                    randomCount = 0; // 문을 선택. 문은 항상 random_image0 값에 들어있다.
+                } else if (tileData.name === 'castle_wall_door2' && this.neighbor.down) {
+                    // down
+                    randomCount = 0; // 문을 선택. 문은 항상 random_image0 값에 들어있다.
+                } else if (tileData.name === 'castle_wall_door3' && this.neighbor.left) {
+                    // left
+                    randomCount = 0; // 문을 선택. 문은 항상 random_image0 값에 들어있다.
+                } else if (tileData.name === 'castle_wall_door4' && this.neighbor.right) {
+                    // right
                     randomCount = 0; // 문을 선택. 문은 항상 random_image0 값에 들어있다.
                 }
 
-                if ( this.doorCount < 4 && randomCount == 0 ){ // 문의 갯수가 4개보다 작고 선택된 벽이 문일때
-                        this.doorCount += 1; //문 갯수를 카운트 한다.
-                        this.doorTarget.push(tileData.name);
-                    }
+                if ( randomCount === 0 ){ // 문의 갯수가 4개보다 작고 선택된 벽이 문일때
+                    this.doorTarget.push(tileData.name);
+                }
             }
             
             if( tileData.randomImage[randomCount] == undefined ){ // 이미지가 1개이고 문이 선택되지 않았을때
