@@ -47,7 +47,7 @@ export default class Game extends EventEmitter {
         this.currentMode = null;
         this.exploreMode = new Explore(this);
 
-        // 음.. 현재 층수를 기록해두는 변수 => 여기에 있는게 맞나..?
+        // 음.. 현재 층수를 기록해ㄱ는 변수 => 여기에 있는게 맞나..?
         this.currentFloor = 0;
         
         // 나중에 UI 로 바꾸어야 한다
@@ -367,8 +367,9 @@ export default class Game extends EventEmitter {
         this.stage = null;
     }
 
-    enterBattle(monster) {
+    async $enterBattle(monster) {
         if (this.currentMode instanceof Explore) {
+            await this.$fadeOut(0.5);
             // 기존 스테이지를 보이지 않게 한다 (스테이지를 떠날 필요는없다)
             this.gamelayer.removeChild(this.stage);
             
@@ -420,16 +421,18 @@ export default class Game extends EventEmitter {
             });
             this.currentMode.on('lose', () => {});
             this.currentMode.on('closeBattle', () => {
-                this.leaveBattle();
+                this.$leaveBattle();
             });
 
             this.gamelayer.addChild(this.currentMode.stage);
             this.ui.hideMenu();
+            await this.$fadeIn(0.5);
         }
     }
 
-    leaveBattle() {
+    async $leaveBattle() {
         if (this.currentMode instanceof Battle) {
+            await this.$fadeOut(0.5);
             // 기존 스테이지를 보이지 않게 한다 (스테이지를 떠날 필요는없다)
             this.currentMode.leave();
             this.gamelayer.removeChild(this.currentMode.stage);
@@ -437,6 +440,7 @@ export default class Game extends EventEmitter {
             // 배틀을 사용한다
             this.currentMode = this.exploreMode;
             this.ui.showMenu();
+            await this.$fadeIn(0.5);
         }
     }
 

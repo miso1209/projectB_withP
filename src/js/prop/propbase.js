@@ -83,8 +83,8 @@ export default class PropBase extends PIXI.Container {
             box.alpha = 0.3;
             box.anchor.x = 0.5;
             box.anchor.y = 0.5;
-            box.width = textMetrics.width + 1;
-            box.height = textMetrics.height + 1;
+            box.width = textMetrics.width + 2;
+            box.height = textMetrics.height;
 
             // TODO : 이미지가 아니라 프랍자체에 붙여야 한다.
             this.nametag = new PIXI.Container();

@@ -16,17 +16,80 @@ export default class Monster extends PropBase {
         fieldChar.changeVisualToDirection(getDirectionFromName(field.direction));
         fieldChar.animate('walk', true);
         this.addChild(fieldChar);
+        this.tileTexture = fieldChar;
 
         // TODO : 출력위치는 조정해야한다.
         this.src = monster;
+
+        // name tag의 offset을 설정할 수 있도록 한다.
+        this.nameTagOffset = {
+            x: 0,
+            y: (fieldChar.height / 2) + 5
+        };
+        // 초기에 이름을 보이고, hideName을 오버라이딩 하여, hide 하지 않도록 한다.
+        this.showName();
+
+        console.log(monster);
     }
 
     touch(game) {
         // 전투를 시작한다
-        game.enterBattle(this.src);
+        game.$enterBattle(this.src);
+    }
+
+    hideName() {
+
     }
 
     showOutline() {
         // 움직이는 스프라이트에는 외곽선을 그릴수 없다..
+    }
+
+    showName() {
+        if (!this.getName()) { 
+            return; 
+        }
+
+        if (!this.nametag) {
+
+            const style = new PIXI.TextStyle({fontSize: 1, fill : 0xffffff, align : 'center' });
+            const name = new PIXI.Text(this.getName(), style);
+            name.anchor.x = 0.5;
+            name.anchor.y = 0.5;
+
+            const dpsStyle = new PIXI.TextStyle({fontSize: 1, fill : 0xffffff, align : 'center' });
+            const dps = new PIXI.Text(this.getDPS(), dpsStyle);
+            dps.anchor.x = 0.5;
+            dps.anchor.y = 0.5;
+            dps.position.y += (name.height + dps.height)/2;
+
+            // TODO : 이미지가 아니라 프랍자체에 붙여야 한다.
+            this.nametag = new PIXI.Container();
+            this.nametag.addChild(name);
+            this.nametag.addChild(dps);
+            this.nametag.position.x = (this.tileTexture.width / 2) + (this.nameTagOffset?this.nameTagOffset.x:0);
+            this.nametag.position.y = -(this.tileTexture.height / 2) + (this.nameTagOffset?this.nameTagOffset.y:0);
+            this.addChild(this.nametag);
+            this.nametag.visible = false;
+
+            const scale = 1 / 1.5;
+            if (this.flipX) {
+                this.nametag.scale.set(-scale, scale);
+            } else {
+                this.nametag.scale.set(scale, scale);
+            }
+        }
+
+        this.nametag.visible = true;
+    }
+
+    // 가장 강한 녀석의 이름을 가져온다
+    getName() {
+        return "Monster";
+    }
+
+    // DPS는 파티의 DPS를 가져온다.
+    getDPS() {
+        return "전투력 100";
     }
 }
