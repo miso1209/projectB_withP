@@ -318,44 +318,71 @@ export default class Stage extends PIXI.Container {
         let tile;
         //호영 테스트
         if( tileData.type == "random_wall"){ // 랜덤 벽일때
-            var randomCount = 0; // 랜덤수 초기화
-            tileData.randomImage = new Array(tileData.imgCount); // 이미지 숫자로 랜덤이미지의 배열을 선언
+            
+            tileData.randomImage = new Array(tileData.imgCount?tileData.imgCount:0); // 이미지 숫자로 랜덤이미지의 배열을 선언
             for(var i=0; i < tileData.imgCount; i++){
                 tileData.randomImage[i] = eval('tileData.random_image'+i); // 카운트된 수의 랜덤 이미지 넘버를 각각의 배열에 넣는다.
             }
+            tileData.doorImage = new Array(tileData.doorCount?tileData.doorCount:0); // 이미지 숫자로 랜덤이미지의 배열을 선언
+            for(var i=0; i < tileData.doorCount; i++){
+                tileData.doorImage[i] = eval('tileData.door_image'+i); // 카운트된 수의 랜덤 이미지 넘버를 각각의 배열에 넣는다.
+            }
+            tileData.stairImage = new Array(tileData.stairCount?tileData.stairCount:0); // 이미지 숫자로 랜덤이미지의 배열을 선언
+            for(var i=0; i < tileData.stairCount; i++){
+                tileData.stairImage[i] = eval('tileData.stair_image'+i); // 카운트된 수의 랜덤 이미지 넘버를 각각의 배열에 넣는다.
+            }
 
-            randomCount = Math.floor( Math.random() * (tileData.randomImage.length)); // 랜덤하게 이미지를 선택한다.
+            let wallCount = Math.floor( Math.random() * (tileData.randomImage.length)); // 랜덤하게 이미지를 선택한다.
+            let doorCount = Math.floor( Math.random() * (tileData.doorImage.length)); // 랜덤하게 이미지를 선택한다.
+            let stairCount = Math.floor( Math.random() * (tileData.stairImage.length)); // 랜덤하게 이미지를 선택한다.
+
+            var randomProperties = {
+                id: wallCount,
+                imageArray: tileData.randomImage,
+                type: 'wall'
+            }; // 랜덤수 초기화
 
             if( tileData.widewall == true ) { // 그리는 벽이 넓은 벽일때
                 // 벽이면 체크하고, 없으면 랜덤벽 만들자.
-                randomCount = Math.floor( Math.random() * (tileData.randomImage.length - 1)) + 1;
                 if (tileData.name === 'castle_wall_door1' && (this.neighbor.up || this.neighbor.input == 'up')) {
                     // up
-                    randomCount = 0; // 문을 선택. 문은 항상 random_image0 값에 들어있다.
+                    randomProperties.id = doorCount; // 문을 선택. 문은 항상 random_image0 값에 들어있다.
+                    randomProperties.imageArray = tileData.doorImage;
+                    randomProperties.type = 'door';
                 } else if (tileData.name === 'castle_wall_door2' && (this.neighbor.down || this.neighbor.input == 'down')) {
                     // down
-                    randomCount = 0; // 문을 선택. 문은 항상 random_image0 값에 들어있다.
+                    randomProperties.id = doorCount; // 문을 선택. 문은 항상 random_image0 값에 들어있다.
+                    randomProperties.imageArray = tileData.doorImage;
+                    randomProperties.type = 'door';
                 } else if (tileData.name === 'castle_wall_door3' && (this.neighbor.left || this.neighbor.input == 'left')) {
                     // left
-                    randomCount = 0; // 문을 선택. 문은 항상 random_image0 값에 들어있다.
+                    randomProperties.id = doorCount; // 문을 선택. 문은 항상 random_image0 값에 들어있다.
+                    randomProperties.imageArray = tileData.doorImage;
+                    randomProperties.type = 'door';
                 } else if (tileData.name === 'castle_wall_door4' && (this.neighbor.right || this.neighbor.input == 'right')) {
                     // right
-                    randomCount = 0; // 문을 선택. 문은 항상 random_image0 값에 들어있다.
+                    randomProperties.id = doorCount; // 문을 선택. 문은 항상 random_image0 값에 들어있다.
+                    randomProperties.imageArray = tileData.doorImage;
+                    randomProperties.type = 'door';
                 } else if(tileData.name === 'castle_wall_door3' && this.neighbor.output == 'left') {
-                    randomCount = 2; // 문을 선택. 문은 항상 random_image0 값에 들어있다.
+                    randomProperties.id = stairCount; // 문을 선택. 문은 항상 random_image0 값에 들어있다.
+                    randomProperties.imageArray = tileData.stairImage;
+                    randomProperties.type = 'door';
                 } else if(tileData.name === 'castle_wall_door1' && this.neighbor.output == 'up') {
-                    randomCount = 2; // 문을 선택. 문은 항상 random_image0 값에 들어있다.
+                    randomProperties.id = stairCount; // 문을 선택. 문은 항상 random_image0 값에 들어있다.
+                    randomProperties.imageArray = tileData.stairImage;
+                    randomProperties.type = 'door';
                 }
 
-                if ( randomCount === 0 || (randomCount === 2 && this.neighbor.output !== '') ){ // 문의 갯수가 4개보다 작고 선택된 벽이 문일때
+                if ( randomProperties.type === 'door'){ // 문의 갯수가 4개보다 작고 선택된 벽이 문일때
                     this.doorTarget.push(tileData.name);
                 }
             }
             
-            if( tileData.randomImage[randomCount] == undefined ){ // 이미지가 1개이고 문이 선택되지 않았을때
+            if(randomProperties.imageArray[randomProperties.id] === undefined ){ // 이미지가 1개이고 문이 선택되지 않았을때
                 tileData.texture = false; //이미지를 그리지 않는다.
             } else {
-                tileData.texture = PIXI.Texture.fromFrame(tileData.randomImage[randomCount]); // 선택된 이미지를 그린다.
+                tileData.texture = PIXI.Texture.fromFrame(randomProperties.imageArray[randomProperties.id]); // 선택된 이미지를 그린다.
             }
             
             tile = Prop.New(tileData.type, x, y, tileData);
