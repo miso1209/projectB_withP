@@ -5,6 +5,7 @@ export default class BaseBuff extends PIXI.Container{
         super();
         this.abilityOptions = buffOption.abilityOptions;
         this.statusOptions = buffOption.statusOptions;
+        this.turnAction = buffOption.turnAction;
 
         if (buffOption.isAnimation) {
             this.setAnimationSprite(buffOption);
@@ -34,6 +35,12 @@ export default class BaseBuff extends PIXI.Container{
         this.sprite.position.y = buffOption.offset.y;
         this.sprite.blendMode = PIXI.BLEND_MODES.ADD;
         this.addChild(this.sprite);
+    }
+
+    nextTurn() {
+        if (this.turnAction) {
+            this.turnAction();
+        }
     }
 
     update() {

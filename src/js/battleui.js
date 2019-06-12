@@ -26,8 +26,8 @@ export class BattleUI extends EventEmitter {
         this.activeUI.portraits.forEach((portrait) => {
             portrait.interactive = true;
             portrait.on('click', () => {
-                if (portrait.character.canFight) {
-                    portrait.character.specialSkill();
+                if (portrait.character.canAction) {
+                    portrait.character.emitExtraSkill();
                 }
             });
         });
@@ -86,6 +86,26 @@ export class BattleUI extends EventEmitter {
 export class BattleProgressBar extends PIXI.Container {
     constructor() {
         super();
+        this.buffIcon = new BuffIcon({x:4, y:19});
+        this.buffIcon.position.x = -15;
+        this.buffIcon.position.y = -8;
+        this.addChild(this.buffIcon);
+
+        this.buffIcon = new BuffIcon({x:5, y:19});
+        this.buffIcon.position.x = -5;
+        this.buffIcon.position.y = -8;
+        this.addChild(this.buffIcon);
+
+        this.buffIcon = new BuffIcon({x:3, y:19});
+        this.buffIcon.position.x = 5;
+        this.buffIcon.position.y = -8;
+        this.addChild(this.buffIcon);
+
+        this.buffIcon = new BuffIcon({x:2, y:19});
+        this.buffIcon.position.x = 15;
+        this.buffIcon.position.y = -8;
+        this.addChild(this.buffIcon);
+        
         this.progressHolder = new PIXI.Sprite(PIXI.Texture.fromFrame("pbar.png"));
         this.progressBar = new PIXI.Sprite(PIXI.Texture.fromFrame("pbar_w.png"));
 
@@ -465,6 +485,29 @@ class ItemRewardUI extends Window {
     update() {
         this.tweens.update();
         this.goldText.text = `Gold : ${Math.round(this.gold)}`;
+    }
+}
+
+class BuffIcon extends PIXI.Container {
+    constructor(options) {
+        super();
+        this.options = options;
+
+        // crop
+        const IMAGE_SIZE = 32;
+        const baseTexture = PIXI.Texture.fromFrame('bufficons.png');
+        const itemtexture = new PIXI.Texture(baseTexture, new PIXI.Rectangle(this.options.x * IMAGE_SIZE, this.options.y * IMAGE_SIZE, IMAGE_SIZE, IMAGE_SIZE));
+        this.sprite = new PIXI.Sprite(itemtexture);
+        this.sprite.anchor.x = 0.5;
+        this.sprite.anchor.y = 0.5;
+        this.addChild(this.sprite);
+        this.scale.x = 0.3;
+        this.scale.y = 0.3;
+    }
+
+    setPosition(position) {
+        this.position.x = position.x;
+        this.position.y = position.y;
     }
 }
 

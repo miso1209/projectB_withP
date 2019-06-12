@@ -21,6 +21,7 @@
     ["battle_start_logo.png", "assets/battle_start_logo.png"],
     ["victory_logo.png", "assets/victory_logo.png"],
     ["defeat_logo.png", "assets/defeat_logo.png"],
+    ["bufficons.png", "assets/bufficons.png"],
 
     ["shadow.png", "assets/shadow.png"],
     ["pbar.png", "assets/pbar.png"],
@@ -78,7 +79,7 @@
     ["assets/effects/shieldattack.json"],
     ["assets/effects/wandattack.json"],
     ["assets/effects/criticalattack.json"],
-    ["fireBall.png", "assets/effects/fireBall.png"],
+    ["fireball.png", "assets/effects/fireball.png"],
     ["shield.png", "assets/effects/shield.png"],
     ["arrow.png", "assets/effects/arrow.png"]
 ]

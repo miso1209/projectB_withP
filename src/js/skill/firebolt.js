@@ -18,7 +18,7 @@ export default class FireBolt extends SkillBase {
                 break;
             }
             case 30: {
-                const fireBall = this.addEffect(this.owner, { name: 'fireBall.png', animation: false, removeFrame: 60 });
+                const fireBall = this.addEffect(this.owner, { name: 'fireball.png', animation: false, removeFrame: 60 });
 
                 const dist = {
                     x: this.target.position.x - this.owner.position.x,

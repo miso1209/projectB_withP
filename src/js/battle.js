@@ -46,10 +46,10 @@ export class Battle extends EventEmitter {
                 battleChar.setGridPosition(c.x, c.y);
                 battleChar.setCamp(CHARACTER_CAMP.ALLY);
                 this.allies.push(battleChar);
-                battleChar.on('specialskill', () => {
+                battleChar.on('extraskill', () => {
                     if (battleChar.coolTime <= 0) {
-                        battleChar.extraSkillIn();
-                        this.specialSkillQueue.push(battleChar);
+                        battleChar.enqueueExtraSkill();
+                        this.extraSkillQueue.push(battleChar);
                     }
                 });
     
@@ -63,10 +63,10 @@ export class Battle extends EventEmitter {
                 battleChar.setGridPosition(c.x, c.y);
                 battleChar.setCamp(CHARACTER_CAMP.ENEMY);
                 this.enemies.push(battleChar);
-                battleChar.on('specialskill', () => {
+                battleChar.on('extraskill', () => {
                     if (battleChar.coolTime <= 0) {
-                        battleChar.extraSkillIn();
-                        this.specialSkillQueue.push(battleChar);
+                        battleChar.enqueueExtraSkill();
+                        this.extraSkillQueue.push(battleChar);
                     }
                 });
             }
@@ -89,7 +89,7 @@ export class Battle extends EventEmitter {
         this.stage.addChild(this.ui.container);
 
         this.activeSkill = null;
-        this.specialSkillQueue = [];
+        this.extraSkillQueue = [];
         this.pause = true;
 
         // 이전투가 끝났을때 최종보상
@@ -124,7 +124,7 @@ export class Battle extends EventEmitter {
 
     focusCenter() {
         const offsetX = 0;
-        const offsetY = -20;
+        const offsetY = -0;
         this.container.position.x = (this.screenSize.width - this.battlefield.width * this.container.scale.x) / 2 + offsetX;
         this.container.position.y = (this.screenSize.height - this.battlefield.height * this.container.scale.y) / 2 + offsetY;
     }
@@ -147,9 +147,8 @@ export class Battle extends EventEmitter {
             return ;
         }
 
-        // 스킬이 모두 종료되었으면 스킬을 종료하고 다음 스킬을 발동시킨다
+        // 턴이 끝났을 시 전투 종료 판단.
         if (!this.activeSkill || this.activeSkill.isFinished) {
-            this.notifyNextTurn();
             this.activeSkill = null;
 
             // 배틀 상태를 체크
@@ -191,12 +190,15 @@ export class Battle extends EventEmitter {
             }
         }
 
+        // 스킬이 모두 종료되었으면 스킬을 종료하고 다음 스킬을 발동시킨다
         if (!this.activeSkill) {
             let nextSkill = null;
+            this.updateTurn();
+            
             // 스페셜 스킬이 예약되어 있는가
-            while (this.specialSkillQueue.length > 0 ){
-                const character = this.specialSkillQueue[0];
-                this.specialSkillQueue.splice(0, 1);
+            while (this.extraSkillQueue.length > 0 ){
+                const character = this.extraSkillQueue[0];
+                this.extraSkillQueue.splice(0, 1);
                 nextSkill = this.getSpeicalSkill(character);
 
                 if (character.canFight) {
@@ -223,7 +225,7 @@ export class Battle extends EventEmitter {
         }
     }
 
-    notifyNextTurn() {
+    updateTurn() {
         for (const bchar of this.allies){
             bchar.nextTurn();
         }

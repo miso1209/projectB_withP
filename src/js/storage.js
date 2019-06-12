@@ -46,6 +46,12 @@ export default class Storage {
         }
     }
 
+    addCharacter(id, character) {
+        if (!this.data.characters[id]) {
+            this.data.characters[id] = character;
+        }
+    }
+
     setQuest(questId, questData) {
         this.data.quests[questId] = questData;
         this.save();

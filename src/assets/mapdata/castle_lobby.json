@@ -450,7 +450,7 @@
                 }, 
                 {
                  "id":1,
-                 "image":"..\/sprite\/elid\/elid_idle_sw.png",
+                 "image":"elid_idle_sw.png",
                  "imageheight":48,
                  "imagewidth":32,
                  "type":"wizard"

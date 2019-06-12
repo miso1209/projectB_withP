@@ -1,5 +1,6 @@
 import Inventory from './inventory';
 import Party from './party';
+import Character from './character';
 
 // 플레이어랑 필드캐릭터랑 나중에 분리해야 한다 
 // 왜냐하면  필드캐릭터는 계속 변경이 될수 있는데, 플레이어는 안바뀌니까 ...
@@ -19,6 +20,11 @@ export default class Player {
         
         // 태그정보
         this.tags = [];
+    }
+
+    // 임시 설정.
+    addCharacter(id) {
+        this.characters[id] = new Character(id);
     }
 
     addTag(tag) {

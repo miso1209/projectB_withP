@@ -15,7 +15,7 @@
         "image": { "texture": "items.png", "x": 0, "y": 12 },
         "description": "흔히 볼 수 있는 평범한 갑옷",
         "category": "armor",
-        "classes": ["warrior", "wizzard", "healer", "archer"],
+        "classes": ["warrior", "wizard", "healer", "archer"],
         "subcategory": "medium-armor",
         "options": ["armor(5)"]
     },
@@ -35,7 +35,7 @@
         "image": { "texture": "items.png", "x": 1, "y": 12 },
         "description": "견습자용 갑옷",
         "category": "armor",
-        "classes": ["warrior", "wizzard", "healer", "archer"],
+        "classes": ["warrior", "wizard", "healer", "archer"],
         "subcategory": "medium-armor",
         "options": ["armor(6)"]
     },
@@ -45,7 +45,7 @@
         "image": { "texture": "items.png", "x": 9, "y": 3 },
         "description": "견습자의 목걸이와 세트",
         "category": "accessory",
-        "classes": ["warrior", "wizzard", "healer", "archer"],
+        "classes": ["warrior", "wizard", "healer", "archer"],
         "subcategory": "accessory-ring",
         "options": ["armor(+5)"]
     },
@@ -55,7 +55,7 @@
         "image": { "texture": "items.png", "x": 1, "y": 1 },
         "description": "견습자의 반지와 세트",
         "category": "accessory",
-        "classes": ["warrior", "wizzard", "healer", "archer"],
+        "classes": ["warrior", "wizard", "healer", "archer"],
         "subcategory": "accessory-necklace",
         "options": ["armor(+3)"]
     },
@@ -75,7 +75,7 @@
         "image": { "texture": "items.png", "x": 6, "y": 12 },
         "description": "여행자의 검과 세트",
         "category": "armor",
-        "classes": ["warrior", "wizzard", "healer", "archer"],
+        "classes": ["warrior", "wizard", "healer", "archer"],
         "subcategory": "medium-armor",
         "options": ["armor(6)"]
     },
@@ -85,7 +85,7 @@
         "image": { "texture": "items.png", "x": 15, "y": 3 },
         "description": "여행자의 목걸이와 세트",
         "category": "accessory",
-        "classes": ["warrior", "wizzard", "healer", "archer"],
+        "classes": ["warrior", "wizard", "healer", "archer"],
         "subcategory": "accessory-ring",
         "options": ["armor(+3)"]
     },
@@ -95,7 +95,7 @@
         "image": { "texture": "items.png", "x": 2, "y": 1 },
         "description": "여행자의 반지와 세트",
         "category": "accessory",
-        "classes": ["warrior", "wizzard", "healer", "archer"],
+        "classes": ["warrior", "wizard", "healer", "archer"],
         "subcategory": "accessory-necklace",
         "options": ["armor(+3)"]
     },

@@ -1,4 +1,3 @@
-
 export default class PropBase extends PIXI.Container {
     constructor(x, y, options) {
         super();
@@ -91,15 +90,16 @@ export default class PropBase extends PIXI.Container {
             this.nametag = new PIXI.Container();
             this.nametag.addChild(box);
             this.nametag.addChild(text);
-            this.nametag.position.x = this.tileTexture.width / 2;
-            this.nametag.position.y = -this.tileTexture.height / 2;
+            this.nametag.position.x = (this.tileTexture.width / 2) + (this.nameTagOffset?this.nameTagOffset.x:0);
+            this.nametag.position.y = -(this.tileTexture.height / 2) + (this.nameTagOffset?this.nameTagOffset.y:0);
             this.addChild(this.nametag);
             this.nametag.visible = false;
 
+            const scale = 1 / 1.5;
             if (this.flipX) {
-                this.nametag.scale.set(-0.5, 0.5);
+                this.nametag.scale.set(-scale, scale);
             } else {
-                this.nametag.scale.set(0.5, 0.5);
+                this.nametag.scale.set(scale, scale);
             }
         }
 

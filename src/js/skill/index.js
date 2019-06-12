@@ -47,7 +47,7 @@ Skill.Register("doubleAttack", (...arg) => {
     return new DouobleAttack(...arg);
 });
 
-// Wizzard
+// Wizard
 Skill.Register("fireBolt", (...arg) => { 
     return new FireBolt(...arg); 
 });

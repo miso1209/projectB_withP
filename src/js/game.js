@@ -112,15 +112,13 @@ export default class Game extends EventEmitter {
             this.storage.data.characters[1] = { level: 1, exp: 0, equips: {}};
             this.storage.data.characters[2] = { level: 1, exp: 0, equips: {}};
             this.storage.data.characters[3] = { level: 1, exp: 0, equips: {}};
-            this.storage.data.characters[4] = { level: 1, exp: 0, equips: {}};
-            this.storage.data.characters[5] = { level: 1, exp: 0, equips: {}};
 
             // 파티 등록
             this.storage.data.party[0] = 1;
             this.storage.data.party[1] = 2;
             this.storage.data.party[2] = 3;
-            this.storage.data.party[3] = 4;
-            this.storage.data.party[4] = 5;
+            this.storage.data.party[3] = 0;
+            this.storage.data.party[4] = 0;
 
             // 현지 진행해야하는 컷신 아이디를 적는다
             this.storage.data.cutscene = 1;
@@ -181,7 +179,7 @@ export default class Game extends EventEmitter {
         } else {
             // 그냥 평범하게 집에 들어간다
             this.ui.showTheaterUI(0.5);
-            this.$enterStage("assets/mapdata/house.json", "house-gate").then(() => {
+            this.$enterStage("assets/mapdata/open_road_3.json", "road3-to-road2").then(() => {
                 this.exploreMode.interactive = true;
                 this.stage.showPathHighlight = true;
                 this.ui.hideTheaterUI(0.5);
@@ -496,6 +494,12 @@ export default class Game extends EventEmitter {
         this.storage.addTag(tag);
 
         this.emit('addtag', tag);
+    }
+
+    addCharacter(id, character) {
+        this.player.addCharacter(id, character);
+        this.storage.addCharacter(id, character);
+        this.emit('addcharacter', id, character);
     }
 
     addItem(itemId, count) {

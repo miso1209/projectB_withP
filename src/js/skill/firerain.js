@@ -37,7 +37,7 @@ export default class FireRain extends SkillBase {
                 let delay = 0;
 
                 this.targets.forEach((target) => {
-                    const fireBall = this.addEffect(this.owner, { name: 'fireBall.png', animation: false, removeFrame: 60 });
+                    const fireBall = this.addEffect(this.owner, { name: 'fireball.png', animation: false, removeFrame: 60 });
                     fireBall.position.y -= 500;
 
                     const dist = {

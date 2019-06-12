@@ -44,22 +44,6 @@ export default class BattleCharacter extends EventEmitter{
         this.isExtraSkillIn = false;
     }
 
-    extraSkillIn() {
-        this.coolTime = 1;
-        this.maxCoolTime = 1;
-        this.isExtraSkillIn = true;
-    }
-
-    setCamp(camp) {
-        this.camp = camp;
-    }
-
-    setGridPosition(x, y) {
-        this.gridPosition = {};
-        this.gridPosition.x = x;
-        this.gridPosition.y = y;
-    }
-
     update() {
         this.animation.update();
 
@@ -67,6 +51,11 @@ export default class BattleCharacter extends EventEmitter{
             const buff = this.buffs[name];
             buff.update();
         }
+    }
+
+    updateProgressBar() {
+        const healthRate = this.health / this.maxHealth;
+        this.progressBar.setProgress(healthRate);
     }
 
     nextTurn() {
@@ -80,15 +69,36 @@ export default class BattleCharacter extends EventEmitter{
         }
 
         // 적군일 경우 매턴 캐릭터의 skillActiveProbability 확률로 스페셜 스킬을 시도한다.
-        if (Math.random() < this.skillActiveProbability && this.camp === CHARACTER_CAMP.ENEMY) {
-            this.specialSkill();
+        if (Math.random() < this.skillActiveProbability && this.camp === CHARACTER_CAMP.ENEMY && this.canAction) {
+            this.emitExtraSkill();
         }
 
+        // 버프에 다음턴 이라는 것을 알린다.
+        for (const name in this.buffs) {
+            const buff = this.buffs[name];
+            buff.nextTurn();
+        }
         this.turnAction.nextTurn();
     }
 
-    specialSkill() {
-        this.emit('specialskill');
+    enqueueExtraSkill() {
+        this.coolTime = 1;
+        this.maxCoolTime = 1;
+        this.isExtraSkillIn = true;
+    }
+
+    emitExtraSkill() {
+        this.emit('extraskill');
+    }
+
+    setCamp(camp) {
+        this.camp = camp;
+    }
+
+    setGridPosition(x, y) {
+        this.gridPosition = {};
+        this.gridPosition.x = x;
+        this.gridPosition.y = y;
     }
 
     clearBuff() {
@@ -100,12 +110,14 @@ export default class BattleCharacter extends EventEmitter{
     addBuff(name, duration, buff) {
         if (!this.buffs[name]) {
             this.buffs[name] = buff;
+            // 능력치 변경
             this.buffs[name].abilityOptions.forEach((option) => {
                 this.character.applyOption(option);
             });
+            // 상태이상 변경
             this.buffs[name].statusOptions.forEach((option) => {
                 this.applyStatusOption(option);
-            })
+            });
             this.buffContainer.addChild(this.buffs[name]);
         }
 
@@ -124,7 +136,7 @@ export default class BattleCharacter extends EventEmitter{
             });
             this.buffs[name].statusOptions.forEach((option) => {
                 this.clearStatusOption(option);
-            })
+            });
             delete this.buffs[name];
         }
     }
@@ -147,11 +159,6 @@ export default class BattleCharacter extends EventEmitter{
         }
     }
 
-    updateProgressBar() {
-        const healthRate = this.health / this.maxHealth;
-        this.progressBar.setProgress(healthRate);
-    }
-
     onDamage(damage) {
         this.character.health -= damage;
         if (this.character.health < 0) {
@@ -170,21 +177,18 @@ export default class BattleCharacter extends EventEmitter{
         }
     }
 
-    // 현재 Warrior만 들고있는데.. 이런것은 어떻게 처리하지.. 원래 모든 캐릭터가 통일된 animation을 들고 있어야 할듯한데..
+    // Animation
     animation_shieldAttack() {
         this.animation.animate('atk_2', PLAY_ONCE);
     }
 
-    // 현재 Hector만 들고있는데.. 이런것은 어떻게 처리하지.. 원래 모든 캐릭터가 통일된 animation을 들고 있어야 할듯한데..
     animation_crouch() {
         this.animation.animate('crouch', PLAY_ONCE);
     }
     
-    // 현재 Healer만 들고있는데.. 이런것은 어떻게 처리하지.. 원래 모든 캐릭터가 통일된 animation을 들고 있어야 할듯한데..
     animation_magic() {
         this.animation.animate('magic', PLAY_ONCE);
     }
-
 
     animation_attack() {
         this.animation.animate('atk', PLAY_ONCE);
@@ -198,6 +202,7 @@ export default class BattleCharacter extends EventEmitter{
         this.animation.animate('walk', PLAY_LOOP);
     }
 
+    // Getter
     get position() {
         return this.container.position;
     }
