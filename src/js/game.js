@@ -297,19 +297,15 @@ export default class Game extends EventEmitter {
         }
     }
 
-    async $nextFloor(from) {
+    async $nextFloor(from, dir) {
         this.currentFloor++;
+        console.log(`현재층은 ${this.currentFloor}층 입니다.`);
         await this.$leaveStage(from);
 
         const mapGenerator = new MapGenerator();
-        await mapGenerator.createMap(12);
+        await mapGenerator.createMap(6, dir);
         const hall = mapGenerator.getHall();
-        let hallKey = '';
-        for (let key in hall.neighbor) {
-            hallKey = key;
-            break;
-        }
-        // ui로 몇층인지 보여주자.
+        let hallKey = (dir === 'left'? 'right':'down');
 
         await this.$enterStageIns(hall, hallKey);
     }

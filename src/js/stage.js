@@ -8,7 +8,7 @@ import TiledMap from "./tiledmap";
 import Tile from './tile';
 import Prop from './prop';
 
-import { Portal2, Portal3, NextFloorPortal } from './event/portal';
+import { Portal2, Portal3, NextFloorPortal, Portal4 } from './event/portal';
 import Loader from './loader';
 import Monster from './monster';
 
@@ -194,10 +194,18 @@ export default class Stage extends PIXI.Container {
                         this.setObjectTile(x, y, tile);
                     } else if (group === "event") {
                         if (tile.name === 'up' || tile.name === 'down' || tile.name === 'left' || tile.name === 'right') {
-                            if (this.neighbor[tile.name]) {
+                            if (this.neighbor.output === tile.name) {
+                                this.eventMap[x + y * width] = new NextFloorPortal(x, y, tile);
+                                // 포탈이벤트를 기본적으로 패스에 포함시킬수 없다
+                                this.pathFinder.setCell(x, y, false);
+                            } else if (this.neighbor[tile.name]) {
                                 this.eventMap[x + y * width] = new Portal3(x, y, tile);
                                 // 포탈이벤트를 기본적으로 패스에 포함시킬수 없다
                                 this.pathFinder.setCell(x, y, false);
+                            } else {
+                                // 작동하지 않는 단지 위치를 알려주는 포탈.
+                                this.eventMap[x + y * width] = new Portal4(x, y, tile);
+                                this.pathFinder.setCell(x, y, true);
                             }
                         } else if (tile.name === 'nextFloor') {
                                 this.eventMap[x + y * width] = new NextFloorPortal(x, y, tile);
@@ -289,16 +297,20 @@ export default class Stage extends PIXI.Container {
         if (obj.hasEmitter) {
             obj.on('delete', () => {
                 // 같은 그룹 ID 모두 제거하며, 해당 좌표의 그라운드가 있는지 판별하여 movable 넣어준다. => 어떤 때 문제가 발생할 수 있을까..?
-                for (let key in this.objectMap) {
-                    const deleteObj = this.objectMap[key];
-                    
-                    if (deleteObj && deleteObj.groupId && obj.groupId === deleteObj.groupId) {
-                        const groundTile = this.getGroundTileAt(deleteObj.gridX, deleteObj.gridY);
-                        this.pathFinder.setDynamicCell(deleteObj.gridX, deleteObj.gridY, groundTile?groundTile.movable:false);
-                        this.removeObjRefFromLocation(deleteObj);
-                    }
-                }
+                this.deleteObj(obj);
             });
+        }
+    }
+
+    deleteObj(obj) {
+        for (let key in this.objectMap) {
+            const deleteObj = this.objectMap[key];
+            
+            if (deleteObj && deleteObj.groupId && obj.groupId === deleteObj.groupId) {
+                const groundTile = this.getGroundTileAt(deleteObj.gridX, deleteObj.gridY);
+                this.pathFinder.setDynamicCell(deleteObj.gridX, deleteObj.gridY, groundTile?groundTile.movable:false);
+                this.removeObjRefFromLocation(deleteObj);
+            }
         }
     }
     
@@ -317,21 +329,25 @@ export default class Stage extends PIXI.Container {
             if( tileData.widewall == true ) { // 그리는 벽이 넓은 벽일때
                 // 벽이면 체크하고, 없으면 랜덤벽 만들자.
                 randomCount = Math.floor( Math.random() * (tileData.randomImage.length - 1)) + 1;
-                if (tileData.name === 'castle_wall_door1' && this.neighbor.up) {
+                if (tileData.name === 'castle_wall_door1' && (this.neighbor.up || this.neighbor.input == 'up')) {
                     // up
                     randomCount = 0; // 문을 선택. 문은 항상 random_image0 값에 들어있다.
-                } else if (tileData.name === 'castle_wall_door2' && this.neighbor.down) {
+                } else if (tileData.name === 'castle_wall_door2' && (this.neighbor.down || this.neighbor.input == 'down')) {
                     // down
                     randomCount = 0; // 문을 선택. 문은 항상 random_image0 값에 들어있다.
-                } else if (tileData.name === 'castle_wall_door3' && this.neighbor.left) {
+                } else if (tileData.name === 'castle_wall_door3' && (this.neighbor.left || this.neighbor.input == 'left')) {
                     // left
                     randomCount = 0; // 문을 선택. 문은 항상 random_image0 값에 들어있다.
-                } else if (tileData.name === 'castle_wall_door4' && this.neighbor.right) {
+                } else if (tileData.name === 'castle_wall_door4' && (this.neighbor.right || this.neighbor.input == 'right')) {
                     // right
                     randomCount = 0; // 문을 선택. 문은 항상 random_image0 값에 들어있다.
+                } else if(tileData.name === 'castle_wall_door3' && this.neighbor.output == 'left') {
+                    randomCount = 2; // 문을 선택. 문은 항상 random_image0 값에 들어있다.
+                } else if(tileData.name === 'castle_wall_door1' && this.neighbor.output == 'up') {
+                    randomCount = 2; // 문을 선택. 문은 항상 random_image0 값에 들어있다.
                 }
 
-                if ( randomCount === 0 ){ // 문의 갯수가 4개보다 작고 선택된 벽이 문일때
+                if ( randomCount === 0 || (randomCount === 2 && this.neighbor.output !== '') ){ // 문의 갯수가 4개보다 작고 선택된 벽이 문일때
                     this.doorTarget.push(tileData.name);
                 }
             }
@@ -345,8 +361,21 @@ export default class Stage extends PIXI.Container {
             tile = Prop.New(tileData.type, x, y, tileData);
         
         } else if( tileData.type == "door_portal"){
-            if ( this.doorTarget.indexOf(tileData.target) < 0 ){
+            if ( this.doorTarget.indexOf(tileData.target) < 0 || tileData.name === this.neighbor.input ){
                 tileData.texture = false;
+                tileData.movable = true;
+            } else if (tileData.target === 'castle_wall_door1' && this.neighbor.input == 'up') {
+                tileData.texture = false;
+                tileData.movable = true;
+            } else if (tileData.target === 'castle_wall_door2' && this.neighbor.input == 'down') {
+                tileData.texture = false;
+                tileData.movable = true;
+            } else if (tileData.target === 'castle_wall_door3' && this.neighbor.input == 'left') {
+                tileData.texture = false;
+                tileData.movable = true;
+            } else if (tileData.target === 'castle_wall_door4' && this.neighbor.input == 'right') {
+                tileData.texture = false;
+                tileData.movable = true;
             }
             tile = Prop.New(tileData.type, x, y, tileData);
         }

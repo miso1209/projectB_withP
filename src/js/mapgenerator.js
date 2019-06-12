@@ -7,7 +7,9 @@ const MAP_DATA = {
     PASSAGE: ' # ',
     BOSS: ' B ',
     PORTAL: ' P ',
-    HALL: ' H '
+    HALL: ' H ',
+    INPUT: ' ● ',
+    OUTPUT: ' ◎ '
 };
 
 // Seed값을 가지고 랜덤생성 하던가, 데이터를 가지고 있어야 할 것 같다. 인스턴스로 다 들고있으니 너무 무식하고, 메모리 낭비가 심할 것.
@@ -15,9 +17,9 @@ export default class MapGenerator {
     constructor() {
     }
 
-    async createMap(roomCount) {
-        const width = 200;
-        const height = 200;
+    async createMap(roomCount, input) {
+        let width = 200;
+        let height = 200;
         const map = [];
 
         for (let y = 0; y < height; y++) {
@@ -28,10 +30,18 @@ export default class MapGenerator {
         }
 
         const startPosition = {
-            x: Math.round(Math.random() * (width - 1)),
-            y: Math.round(Math.random() * (height - 1))
+            x: Math.round(Math.random() * (width - 3)) + 1,
+            y: Math.round(Math.random() * (height - 3)) + 1
         };
         map[startPosition.y][startPosition.x] = MAP_DATA.HALL;
+
+        if(input === 'left') {
+            // hall 의 right가 비어있어야 함.
+            map[startPosition.y][startPosition.x + 1] = MAP_DATA.INPUT;
+        } else if(input === 'up') {
+            // hall 의 down이 비어있어야 함.
+            map[startPosition.y + 1][startPosition.x] = MAP_DATA.INPUT;
+        }
 
         const rooms = [startPosition];
 
@@ -85,10 +95,19 @@ export default class MapGenerator {
         }
 
         // 보스방 붙인다.
-        const leafRooms = this.getLeafRooms(map,rooms);
-        if (leafRooms.length > 0) {
-            const bossRoom = leafRooms[Math.round(Math.random()*(leafRooms.length-1))];
-            map[bossRoom.y][bossRoom.x] = MAP_DATA.BOSS;
+        // const leafRooms = this.getLeafRooms(map,rooms);
+        // if (leafRooms.length > 0) {
+        //     const bossRoom = leafRooms[Math.round(Math.random()*(leafRooms.length-1))];
+        //     map[bossRoom.y][bossRoom.x] = MAP_DATA.BOSS;
+        // }
+
+        // Stair Flow
+        const stairRoomPos = this.getStairRoomPos(map, rooms);
+        map[stairRoomPos.y][stairRoomPos.x] = MAP_DATA.BOSS;
+        if (map[stairRoomPos.y][stairRoomPos.x-1] === MAP_DATA.EMPTY) {
+            map[stairRoomPos.y][stairRoomPos.x-1] = MAP_DATA.OUTPUT;
+        } else if (map[stairRoomPos.y-1][stairRoomPos.x] === MAP_DATA.EMPTY) {
+            map[stairRoomPos.y-1][stairRoomPos.x] = MAP_DATA.OUTPUT;
         }
 
         // 포탈 붙인다.
@@ -145,16 +164,21 @@ export default class MapGenerator {
 
     async loadMap() {
         const room = 'castle_room';
+        const boss = 'castle_room_stair';
         const UDPassage = 'castle_path_nesw';
         const LRPassage = 'castle_path_nwse';
-        const realMap = [].concat(this.map);
+        let realMap = [];
+
+        for (let y=0; y<this.map.length;y++) {
+            realMap.push([].concat(this.map[y]));
+        }
 
         for (let y = 0; y < this.map.length; y++) {
             for (let x = 0; x < this.map[y].length; x++) {
                 // 여기 스테이지 뚫어줄 때, Path 어디서 어디인지 생성 해야한다.
                 const neighbor = this.getNeighbor(x,y);
                 if (this.map[y][x] === MAP_DATA.BOSS) {
-                    const stageName = path.basename(`assets/mapdata/${room}.json`, ".json");
+                    const stageName = path.basename(`assets/mapdata/${boss}.json`, ".json");
                     const stage = new Stage(neighbor);
                     await stage.$load(stageName);
     
@@ -192,6 +216,8 @@ export default class MapGenerator {
                     await stage.$load(stageName);
     
                     realMap[y][x] = stage;
+                } else if (this.map[y][x] === MAP_DATA.INPUT || this.map[y][x] === MAP_DATA.OUTPUT) {
+                    realMap[y][x] = null;
                 }
             }
         }
@@ -200,22 +226,41 @@ export default class MapGenerator {
     }
 
     getNeighbor(x,y) {
-        const result = {};
+        const result = {
+            input: '',
+            output: '',
+        };
 
-        if (this.map[y][x-1] !== undefined && this.map[y][x-1] !== MAP_DATA.EMPTY) {
+        if (this.map[y][x-1] !== undefined && this.map[y][x-1] !== MAP_DATA.EMPTY && this.map[y][x-1] !== MAP_DATA.INPUT && this.map[y][x-1] !== MAP_DATA.OUTPUT) {
             result.left = true;
+        } else if (this.map[y][x] === MAP_DATA.HALL && this.map[y][x-1] !== undefined && this.map[y][x-1] == MAP_DATA.INPUT) {
+            result.input = 'left';
+        } else if (this.map[y][x] === MAP_DATA.BOSS && this.map[y][x-1] !== undefined && this.map[y][x-1] == MAP_DATA.OUTPUT) {
+            result.output = 'left';
         }
 
-        if (this.map[y][x+1] !== undefined && this.map[y][x+1] !== MAP_DATA.EMPTY) {
+        if (this.map[y][x+1] !== undefined && this.map[y][x+1] !== MAP_DATA.EMPTY && this.map[y][x+1] !== MAP_DATA.INPUT && this.map[y][x+1] !== MAP_DATA.OUTPUT) {
             result.right = true;
+        } else if (this.map[y][x] === MAP_DATA.HALL && this.map[y][x+1] !== undefined && this.map[y][x+1] == MAP_DATA.INPUT) {
+            result.input = 'right';
+        } else if (this.map[y][x] === MAP_DATA.BOSS && this.map[y][x+1] !== undefined && this.map[y][x+1] == MAP_DATA.OUTPUT) {
+            result.output = 'right';
         }
 
-        if (this.map[y-1] !== undefined && this.map[y-1][x] !== MAP_DATA.EMPTY) {
+        if (this.map[y-1] !== undefined && this.map[y-1][x] !== MAP_DATA.EMPTY && this.map[y-1][x] !== MAP_DATA.INPUT && this.map[y-1][x] !== MAP_DATA.OUTPUT) {
             result.up = true;
+        } else if (this.map[y][x] === MAP_DATA.HALL && this.map[y-1] !== undefined && this.map[y-1][x] == MAP_DATA.INPUT) {
+            result.input = 'up';
+        } else if (this.map[y][x] === MAP_DATA.BOSS && this.map[y-1] !== undefined && this.map[y-1][x] == MAP_DATA.OUTPUT) {
+            result.output = 'up';
         }
 
-        if (this.map[y+1] !== undefined && this.map[y+1][x] !== MAP_DATA.EMPTY) {
+        if (this.map[y+1] !== undefined && this.map[y+1][x] !== MAP_DATA.EMPTY && this.map[y+1][x] !== MAP_DATA.INPUT && this.map[y+1][x] !== MAP_DATA.OUTPUT) {
             result.down = true;
+        } else if (this.map[y][x] === MAP_DATA.HALL && this.map[y+1] !== undefined && this.map[y+1][x] == MAP_DATA.INPUT) {
+            result.input = 'down';
+        } else if (this.map[y][x] === MAP_DATA.BOSS && this.map[y+1] !== undefined && this.map[y+1][x] == MAP_DATA.OUTPUT) {
+            result.output = 'down';
         }
 
         return result;
@@ -266,6 +311,76 @@ export default class MapGenerator {
         }
 
         return resultRooms;
+    }
+
+    getHallPos(map) {
+        const hallPos = {
+            x: null,
+            y: null
+        };
+
+        for (let y=0; y<map.length; y++) {
+            for (let x=0; x<map.length; x++) {
+                const mapData = map[y][x];
+
+                if(mapData == MAP_DATA.HALL) {
+                    hallPos.x = x;
+                    hallPos.y = y;
+                }
+            }
+        }
+
+        return hallPos;
+    }
+
+    getStairRoomPos(map, rooms) {
+        const resultRooms = [];
+
+        rooms.forEach((room) => {
+            let count = 0;
+
+            if (map[room.y][room.x] === MAP_DATA.HALL) {
+                count = 2;
+            }
+            if (map[room.y-1] == undefined || map[room.y][room.x -1] == undefined) {
+                count = 2;
+            }
+            if (map[room.y][room.x - 1] !== undefined && map[room.y][room.x - 1] === MAP_DATA.PASSAGE) {
+                count++;
+            }
+            if (map[room.y][room.x + 1] !== undefined && map[room.y][room.x + 1] === MAP_DATA.PASSAGE) {
+                count++;
+            }
+            if (map[room.y - 1] !== undefined && map[room.y - 1][room.x] === MAP_DATA.PASSAGE) {
+                count++;
+            }
+            if (map[room.y + 1] !== undefined && map[room.y + 1][room.x] === MAP_DATA.PASSAGE) {
+                count++;
+            }
+
+            if (count === 1) {
+                resultRooms.push(room);
+            }
+        });
+
+        const hallPos = this.getHallPos(map);
+        const bossPos = {
+            x: null,
+            y: null
+        };
+        let dist = -1;
+
+        resultRooms.forEach((room) => {
+            const compareDist = (hallPos.x - room.x)**2 + (hallPos.y - room.y)**2;
+
+            if (dist < compareDist) {
+                dist = compareDist;
+                bossPos.x = room.x;
+                bossPos.y = room.y;
+            }
+        });
+
+        return bossPos;
     }
 
     getLeafRooms(map, rooms) {
