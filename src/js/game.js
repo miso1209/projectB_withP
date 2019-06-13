@@ -190,7 +190,7 @@ export default class Game extends EventEmitter {
         } else {
             // 그냥 평범하게 집에 들어간다
             this.ui.showTheaterUI(0.5);
-            this.$enterStage("assets/mapdata/house.json", "house-gate").then(() => {
+            this.$enterStage("assets/mapdata/open_road_3.json", "road3-to-road2").then(() => {
                 this.exploreMode.interactive = true;
                 this.stage.showPathHighlight = true;
                 this.ui.hideTheaterUI(0.5);
@@ -298,12 +298,14 @@ export default class Game extends EventEmitter {
     }
 
     async $nextFloor(from, dir) {
+        // 5층씩 올라가도록 해본다.
         this.currentFloor++;
         console.log(`현재층은 ${this.currentFloor}층 입니다.`);
         await this.$leaveStage(from);
 
         const mapGenerator = new MapGenerator();
-        await mapGenerator.createMap(6, dir);
+        mapGenerator.setFloor(this.currentFloor);
+        await mapGenerator.createMap(dir);
         const hall = mapGenerator.getHall();
         let hallKey = (dir === 'left'? 'right':'down');
 

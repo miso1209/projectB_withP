@@ -381,6 +381,7 @@ export default class Stage extends PIXI.Container {
             
             if(randomProperties.imageArray[randomProperties.id] === undefined ){ // 이미지가 1개이고 문이 선택되지 않았을때
                 tileData.texture = false; //이미지를 그리지 않는다.
+                tileData.movable = true;
             } else {
                 tileData.texture = PIXI.Texture.fromFrame(randomProperties.imageArray[randomProperties.id]); // 선택된 이미지를 그린다.
             }
@@ -594,6 +595,12 @@ export default class Stage extends PIXI.Container {
             }
         }
         return null;
+    }
+
+    // 몬스터를 해당 좌표에 찍어낸다. 어디서 호출해야 하는가?
+    // 최초 Map Generator에서 생성 시, 몬스터를 찍어내도록 하는것은 어떨까?..
+    addMonster(monster, x, y) {
+
     }
 
     addCharacter(character, x, y) {
