@@ -1,6 +1,7 @@
 import PropBase from './propbase';
 import AnimatedCharacter from '../animatedcharacter';
 import { getDirectionFromName } from '../utils';
+import { EventEmitter } from 'events';
 
 export default class Monster extends PropBase {
     constructor(x, y, options) {
@@ -18,6 +19,9 @@ export default class Monster extends PropBase {
         this.addChild(fieldChar);
         this.tileTexture = fieldChar;
 
+        this.emitter = new EventEmitter();
+        this.hasEmitter = true;
+
         // TODO : 출력위치는 조정해야한다.
         this.src = monster;
 
@@ -28,13 +32,23 @@ export default class Monster extends PropBase {
         };
         // 초기에 이름을 보이고, hideName을 오버라이딩 하여, hide 하지 않도록 한다.
         this.showName();
-
-        console.log(monster);
     }
 
     touch(game) {
         // 전투를 시작한다
-        game.$enterBattle(this.src);
+        game.$enterBattle(this);
+    }
+
+    delete() {
+        this.emit('delete');
+    }
+
+    emit(...arg) {
+        this.emitter.emit(...arg);
+    }
+
+    on(...arg) {
+        this.emitter.on(...arg);
     }
 
     hideName() {

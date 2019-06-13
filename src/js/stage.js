@@ -164,17 +164,6 @@ export default class Stage extends PIXI.Container {
             }
         }
 
-        // 몬스터 프랍을 설정한다
-        const monsters = Monster.GetByStage(name);
-        for (const monster of monsters) {
-            const cx = monster.fieldCharacter.x;
-            const cy = monster.fieldCharacter.y;
-            const options = {  type: "monster", src: monster };
-
-            const prop = this.newTile(cx, cy, options);
-            this.objectMap[cx + cy * this.mapWidth] = prop;
-        }
-
         // object 들의 렌더링 순서대로 빌드한다
         this.buildObjectRederOrder();
     }
@@ -303,13 +292,19 @@ export default class Stage extends PIXI.Container {
     }
 
     deleteObj(obj) {
-        for (let key in this.objectMap) {
-            const deleteObj = this.objectMap[key];
-            
-            if (deleteObj && deleteObj.groupId && obj.groupId === deleteObj.groupId) {
-                const groundTile = this.getGroundTileAt(deleteObj.gridX, deleteObj.gridY);
-                this.pathFinder.setDynamicCell(deleteObj.gridX, deleteObj.gridY, groundTile?groundTile.movable:false);
-                this.removeObjRefFromLocation(deleteObj);
+        if (obj && !obj.groupId) {
+            const groundTile = this.getGroundTileAt(obj.gridX, obj.gridY);
+            this.pathFinder.setDynamicCell(obj.gridX, obj.gridY, groundTile?groundTile.movable:false);
+            this.removeObjRefFromLocation(obj);
+        } else {
+            for (let key in this.objectMap) {
+                const deleteObj = this.objectMap[key];
+                
+                if (deleteObj && deleteObj.groupId && obj.groupId === deleteObj.groupId) {
+                    const groundTile = this.getGroundTileAt(deleteObj.gridX, deleteObj.gridY);
+                    this.pathFinder.setDynamicCell(deleteObj.gridX, deleteObj.gridY, groundTile?groundTile.movable:false);
+                    this.removeObjRefFromLocation(deleteObj);
+                }
             }
         }
     }
@@ -600,7 +595,18 @@ export default class Stage extends PIXI.Container {
     // 몬스터를 해당 좌표에 찍어낸다. 어디서 호출해야 하는가?
     // 최초 Map Generator에서 생성 시, 몬스터를 찍어내도록 하는것은 어떨까?..
     addMonster(monster, x, y) {
+        // 임시 하드코딩. 다음엔 Generate 된 몬스터 파티를 받도록 하자.
+        const monsters = Monster.GetByStage('house');
+        for (const monster of monsters) {
+            const options = {  type: "monster", src: monster };
 
+            const prop = this.newTile(x, y, options);
+            this.pathFinder.setDynamicCell(prop.gridX, prop.gridY, false);
+
+            this.addObjRefToLocation(prop, x, y);
+            this.arrangeDepthsFromLocation(prop, x, y);
+            this.setObjectEmitter(prop);
+        }
     }
 
     addCharacter(character, x, y) {

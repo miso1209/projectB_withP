@@ -374,6 +374,8 @@ export default class Game extends EventEmitter {
     }
 
     async $enterBattle(monster) {
+        const monsterObj = monster;
+        monster = monster.src;
         if (this.currentMode instanceof Explore) {
             await this.$fadeOut(0.5);
             // 기존 스테이지를 보이지 않게 한다 (스테이지를 떠날 필요는없다)
@@ -415,6 +417,7 @@ export default class Game extends EventEmitter {
 
             // 보상을 여기서 추가해야 할 것 같다 battle에서 주는것은 아닐 것 같다.
             this.currentMode.on('win', () => {
+                monsterObj.delete();
                 // 경험치 추가.
                 allies.forEach((ally) => {
                     ally.character.increaseExp(monster.exp);
