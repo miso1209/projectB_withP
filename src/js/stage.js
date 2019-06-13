@@ -288,7 +288,60 @@ export default class Stage extends PIXI.Container {
                 // 같은 그룹 ID 모두 제거하며, 해당 좌표의 그라운드가 있는지 판별하여 movable 넣어준다. => 어떤 때 문제가 발생할 수 있을까..?
                 this.deleteObj(obj);
             });
+            obj.on('move', () => {
+                const path = this.getRandomPath(obj);
+                this.moveObj(obj, path);
+            });
         }
+    }
+
+    getRandomPath(obj) {
+        const tileList = [];
+        let toTile = null;
+
+        this.groundMap.forEach((tile) => {
+            if (tile) {
+                tileList.push(tile);
+            }
+        });
+
+        toTile = tileList[Math.round(Math.random() * (tileList.length-1))];
+        const path = [].concat(this.pathFinder.solve(obj.gridX, obj.gridY, toTile.gridX, toTile.gridY, false));
+
+        return path.reverse();
+    }
+
+    moveObj(obj, path) {
+        if (path.length === 0) {
+            obj.move();
+            return;
+        }
+        
+        obj.currentDirection = getDirection(obj.gridX, obj.gridY, path[0].x, path[0].y);
+        obj.tileTexture.isMoving = true;
+        obj.tileTexture.changeVisualToDirection(obj.currentDirection);
+
+        // 해당자리 Movable변경,
+        this.objectMap.splice(obj.gridX + obj.gridY * this.mapWidth, 1);
+        const groundTile = this.getGroundTileAt(obj.gridX, obj.gridY);
+        this.pathFinder.setDynamicCell(obj.gridX, obj.gridY, groundTile?groundTile.movable:false);
+
+        obj.gridX = path[0].x;
+        obj.gridY = path[0].y;
+        path.splice(0, 1);
+
+        const to = {
+            x: this.getTilePosXFor(obj.gridX, obj.gridY) - this.TILE_HALF_W,
+            y: this.getTilePosYFor(obj.gridX, obj.gridY) + this.TILE_HALF_H
+        };
+
+        this.objectMap[obj.gridX + obj.gridY * this.mapWidth] = obj;
+        this.pathFinder.setDynamicCell(obj.gridX, obj.gridY, false);
+
+        this.tweens.addTween(obj.position, 0.4, { x: to.x, y: to.y }, 0, "linear", true , () => {
+            this.arrangeDepthsFromLocation(obj, to.x, to.y);
+            this.moveObj(obj, path);
+        });
     }
 
     deleteObj(obj) {
@@ -885,6 +938,7 @@ export default class Stage extends PIXI.Container {
         this.addObjRefToLocation(obj, x, y);
     }
     
+    // 내일 여기 Depth 판정좀 봐보자.
     arrangeDepthsFromLocation(obj, gridX, gridY) {
         let targetIndex = null;
         for (let y = gridY; y < this.mapHeight; y++) {

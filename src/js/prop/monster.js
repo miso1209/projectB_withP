@@ -36,11 +36,16 @@ export default class Monster extends PropBase {
 
     touch(game) {
         // 전투를 시작한다
-        game.$enterBattle(this);
+        // game.$enterBattle(this);
+        this.move();
     }
 
     delete() {
         this.emit('delete');
+    }
+
+    move() {
+        this.emit('move');
     }
 
     emit(...arg) {
