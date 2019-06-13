@@ -258,7 +258,7 @@ button span {
   width:118px;
   height:50px;
   background: url(~assets/ui/tabBtn.png) no-repeat;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
   padding: 10px 10px;
   text-align: left;
   transition: all 0.3s;
@@ -450,8 +450,6 @@ button span {
   width: 100%;
   margin: 10px 0;
 }
-
-
 
 
 
@@ -756,10 +754,18 @@ button.disabled span {
   background-color: transparent;
 }
 
-.characterDesc p {
+.characterDesc .description {
+  padding: 15px 20px;
+
   font-size: 15px;
+  text-align: left;
   line-height: 1.5;
   color: #fff;
+}
+
+.description .desc-text {
+  font-size: 13px;
+  line-height: 1.5;
 }
 
 .characterDesc .titleWrap {
@@ -936,7 +942,7 @@ button.disabled span {
   display: inline-block;
   width: 54px;
   height: 54px;
-  padding: 2px 0 0;
+  padding: 4px 0 0;
   background: url(~assets/ui/slotBg.png) 0 0 no-repeat;
   background-size: cover;
 
@@ -953,6 +959,7 @@ button.disabled span {
   height: 32px;
   background: url(~assets/items/items.png) 0 0 no-repeat;
 }
+/* 비어있는 포션은 좌표고정 */
 .invenItems li.empty:nth-child(1) {
   /* 소형포션 */
   background-position: -416px -32px;
@@ -983,9 +990,11 @@ button.disabled span {
   position: absolute;
   right: 5px;
   bottom: 0;
+  max-width: 45px;
+  overflow: hidden;
 }
 
-
+/* 
 .equipItems .itemCategory {
   display: block;
   opacity: 0.2;
@@ -997,14 +1006,13 @@ button.disabled span {
   position: relative;
   display: inline-block;
   margin: 10px 0 0;
-
   border: 1px solid transparent;
   border-radius: 5px;
 }
 
 .equipItems li:not(:first-child){
   margin-left: 3px;
-}
+} */
 
 .skillItems .img, .equipItems .img {
   margin: 0 auto;
@@ -1038,6 +1046,7 @@ button.disabled span {
   padding: 7px 2px;
   min-height: 60px;
   background-color: rgba(1,1,1,.4);
+  border: 1px solid transparent;
 }
 
 .characterDetail .skillItems li{
@@ -1059,8 +1068,12 @@ button.disabled span {
 .equipItems li.active,
 .skillItems li:hover, 
 .skillItems li:active,
-.skillItems li.active{
+.skillItems li.active,
+.equipItems li.empty:hover,
+.equipItems li.empty:active,
+.equipItems li.empty.active {
   background-color: rgba(1,1,1,1);
+  border-color: #ffd800;
 }
 
 .equipItems li.empty, 
@@ -1071,6 +1084,8 @@ button.disabled span {
   height: 60px;
   background: url(~assets/ui/symbols.png) 0 -64px no-repeat;
   background-color: rgba(1,1,1,.4);
+  border: 1px solid transparent;
+  border-radius: 5px;
 }
 
 .characterDetail li .img {
@@ -1102,6 +1117,21 @@ button.disabled span {
 
 .characterDetail .statWrap li{
   margin-bottom: 10px;
+}
+
+.characterDetail .descBox {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -10px;
+
+  width: 300px;
+  height: 113px;
+  margin: 0 auto;
+
+  background: url(~assets/ui/descBox.png) no-repeat;
+  
+  background-size: contain;
 }
 
 /* loading - progress bar */

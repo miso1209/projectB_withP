@@ -20,20 +20,18 @@ export default class DomUI extends EventEmitter {
         this.screenHeight = this.gamePane.screenHeight;
         
         // theatreUI 를 설정한다
-        this.theaterUI = document.createElement('div');
+        this.theaterUI = new MakeDom('div');
         this.theaterUI.id = 'theater';
         this.theaterUI.style.top = this.gamePane.offsetTop + 'px';
         document.body.appendChild(this.theaterUI);
 
         // 메인 ui 를 설정한다
-        this.gnbContainer = document.createElement('div');
-        this.gnbContainer.className = 'gnbContainer';
+        this.gnbContainer = new MakeDom('div', 'gnbContainer');
         this.gnbContainer.style.top = this.gamePane.offsetTop + 'px';
         this.gnbContainer.style.opacity = '0';
         document.body.appendChild(this.gnbContainer);
 
-        const gnb = document.createElement('div');
-        gnb.className = 'gnb';
+        const gnb = new MakeDom('div', 'gnb');
         this.gnbContainer.appendChild(gnb);
 
         const minimap = document.createElement('canvas');
@@ -45,6 +43,7 @@ export default class DomUI extends EventEmitter {
         const menuData = [
             {name:'캐릭터', event: "characterselect"},
             {name:'보관함', event: "inventory"},
+            {name:'파티', event: "party"},
             {name:'퀘스트', event: "quest"},
             {name:'설정', event: "options"}
         ];
@@ -113,6 +112,30 @@ export default class DomUI extends EventEmitter {
 
     hideZoomBtn(){
         this.zoomBtn.style.opacity = '0';
+    }
+
+    showStageTitle(text) {
+        const title = document.createElement('h2');
+        title.className = 'stageTitle';
+        title.innerText = text;
+        // pane.appendChild(title);
+
+        const titleAnimation = title.animate([
+            { transform: 'scale(0)', opacity: 0 }, 
+            { transform: 'scale(1)', opacity: 1 }
+        ], { 
+            duration: 1500,
+            easing: 'ease-in-out'
+        });
+        
+        titleAnimation.play();
+
+        setTimeout(() => {
+            title.style.opacity = 0;
+        }, 3000);
+    }
+    
+    hideStageTitle(){
     }
 
     showDialog(script, callback) {
@@ -269,10 +292,10 @@ export default class DomUI extends EventEmitter {
                 this.showSystemModal('포션을 사용하시겠습니까?', selected, (confirmed) => {
                     if (confirmed === "ok") {
                         // console.log('포션 쓰기' + player);
-                        this.emit('useItem',selected.data.id, 1, characterSelect.selected);
+                        this.emit('useItem', selected.data.id, 1, characterSelect.selected);
                         characterSelect.updateStatus(characterSelect.selected);
                         
-                        this.emit('refresh');
+                        this.emit('refresh', 'consumables');
                         console.log(this.playerInvenData);
                     } 
                 });
@@ -282,6 +305,20 @@ export default class DomUI extends EventEmitter {
 
     showCharacterDatail(player) {
         const pane = this.createContainer();
-        const characterDetail = new CharacterDetail(pane, player);
+        const characterDetail = new CharacterDetail(pane, player, (result) => {
+            if(result !== null){
+                
+                console.log(result);
+                
+                this.emit('refresh', result);
+                this.showSystemModal('장비교체 테스트', this.playerInvenData, (confirmed) => {
+                    if (confirmed === "ok") {
+                        return;
+                        this.emit('equipItem', category, itemid, player.id);
+                        console.log(this.playerInvenData);
+                    } 
+                });
+            }
+        });
     }
 }

@@ -72,17 +72,24 @@ export default class Game extends EventEmitter {
             console.log(itemId, count, target);
             this.useItem(itemId, count, target);
         });
+        this.ui.on('equipItem', (itemCategory, itemId, cid ) => {
+            this.player.characters[cid].equip(itemCategory, itemId);
+        });
         this.ui.on('characterselect', ()=> {
             const inputs = [];
-            const invenData = this.getInventoryDataByCategory('consumables');
+            const consumableData = this.getInventoryDataByCategory('consumables');
             for (const cid in this.player.characters) {
                 inputs.push(this.player.characters[cid]);
             }
-            this.ui.showCharacterSelect(inputs, invenData);
+            this.ui.showCharacterSelect(inputs, consumableData);
         });
 
-        this.ui.on('refresh', () => {
-            this.ui.playerInvenData = this.getInventoryDataByCategory('consumables');
+        this.ui.on('refresh', (category) => {
+            this.ui.playerInvenData = this.getInventoryDataByCategory(category);
+        });
+
+        this.ui.on('stageTitle', (text) => {
+            this.ui.showStageTitle('어둠의 타워 999층', 1500);
         });
 
         this.ui.on('zoomInOut', ()=>{
@@ -173,10 +180,7 @@ export default class Game extends EventEmitter {
             quest.foreEachEvent(this.on.bind(this));
             this.player.quests[questId] = quest;
         }
-
-        
         this.player.controlCharacter = this.storage.data.controlCharacter;
-
     }
 
     start() {
@@ -190,6 +194,9 @@ export default class Game extends EventEmitter {
         } else {
             // 그냥 평범하게 집에 들어간다
             this.ui.showTheaterUI(0.5);
+            // 스테이지 타이틀 테스트
+            // this.ui.showStageTitle('아지트');
+            
             this.$enterStage("assets/mapdata/open_road_3.json", "road3-to-road2").then(() => {
                 this.exploreMode.interactive = true;
                 this.stage.showPathHighlight = true;

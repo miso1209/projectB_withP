@@ -4,6 +4,7 @@ import MakeDom from "./component/makedom";
 import ItemImage from "./component/itemimage";
 import Button from "./component/button";
 import { stringify } from "querystring";
+// import StatusBar from './progressui';
 
 export default class CharacterSelect extends Panel {
   constructor(pane, inputs, result) {
@@ -14,6 +15,8 @@ export default class CharacterSelect extends Panel {
     this.result = result;
     this.selected = null;
     
+    // console.log(inputs);
+
     const pickme = new Modal(pane, 800, 460, null);
     this.dom = pickme.dom;
     this.dom.classList.add('characterSelect');
@@ -94,7 +97,7 @@ export default class CharacterSelect extends Panel {
     moreButton.moveToCenter(0);
     moreButton.moveToBottom(15);
     moreButton.dom.addEventListener('click', (ok)=> {
-      pane.parentNode.removeChild(pane);
+      // pane.parentNode.removeChild(pane);
       return this.result(this.selected);
     });
 
@@ -207,9 +210,9 @@ export default class CharacterSelect extends Panel {
     // 테스트용 데이터
     this.invenItems.innerHTML = '';
     let csItems = [null,null,null,null];
-
     this.callback = result;
-    console.log(this.selected);
+
+    console.log('updateInvenItems');
 
     invenItemsData.forEach(item => {
       let liWrap = new MakeDom('li', null, null);

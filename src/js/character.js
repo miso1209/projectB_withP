@@ -1,6 +1,7 @@
 import characters from './characters';
 import ScriptParser from './scriptparser';
 import Item from './item';
+import Skill from "./skill";
 
 // 이 클래스에서는 캐릭터의 보여지는 부분은 표현하지 않는다
 // 위치나 현재 애니메이션 상태등도 처리하지 않는다
@@ -168,6 +169,18 @@ export default class Character {
 
     get skillActiveProbability() {
         return this.data.skillactiveprobability;
+    }
+
+    get skillA() {
+        return Skill.New(this.skills.a);
+    }
+
+    get skillB() {
+        return Skill.New(this.skills.b);
+    }
+
+    get skillExtra() {
+        return Skill.New(this.skills.extra);
     }
 
     equip(slot, itemId) {
