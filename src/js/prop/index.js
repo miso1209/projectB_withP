@@ -18,6 +18,7 @@ import WorkTable from './worktable';
 import StaticProp from './staticprop';
 import Monster from './monster';
 import Wizard from './wizard';
+import Chest from './chest';
 
 Prop.Register("default", (...args) => { return new StaticProp(...args); });
 Prop.Register("gate", (...args) => { return new Gate(...args); });
@@ -26,3 +27,4 @@ Prop.Register("stove", (...args) => { return new Stove(...args); });
 Prop.Register("worktable", (...args) => { return new WorkTable(...args); });
 Prop.Register("monster", (...args) => { return new Monster(...args); });
 Prop.Register("wizard", (...args) => { return new Wizard(...args); });
+Prop.Register("chest", (...args) => { return new Chest(...args); });

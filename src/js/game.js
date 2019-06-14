@@ -714,7 +714,7 @@ export default class Game extends EventEmitter {
                 options.items.forEach((item) => {
                     items.push(new Item(item.id, item.owned));
                 });
-                this.ui.showSystemModal('TEST TEXT', items);
+                this.ui.showSystemModal('TEST TEXT', items, () => {});
             }
         }
     }

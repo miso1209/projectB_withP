@@ -504,6 +504,15 @@ export default class Stage extends PIXI.Container {
                 tileData.movable = true;
             }
             tile = Prop.New(tileData.type, x, y, tileData);
+            if(tileData.target === 'castle_wall_door4') {
+                // console.log('down',tileData);
+                // console.log(tile);
+                // console.log('---------------------------------------');
+            } else if(tileData.target === 'castle_wall_door3') {
+                // console.log('left',tileData);
+                // console.log(tile);
+                // console.log('---------------------------------------');
+            }
         }
         //END 호영 테스트
         else if (tileData.type !== "groundtile") {
@@ -725,6 +734,22 @@ export default class Stage extends PIXI.Container {
             
             this.monsters.push(prop);
         }
+    }
+
+    addChest() {
+        const spawnPos = this.getRandomPositions();
+        const options = {
+            type: "chest",
+            texture: PIXI.Texture.fromFrame('castle_box.png'),
+            movable: false
+        };
+
+        const prop = this.newTile(spawnPos.x, spawnPos.y, options);
+        this.pathFinder.setDynamicCell(prop.gridX, prop.gridY, false);
+
+        this.addObjRefToLocation(prop, spawnPos.x, spawnPos.y);
+        this.arrangeDepthsFromLocation(prop, spawnPos.x, spawnPos.y);
+        this.setObjectEmitter(prop);
     }
 
     addCharacter(character, x, y) {
