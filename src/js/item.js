@@ -27,6 +27,10 @@ export default class Item {
         return this.data.classes;
     }
 
+    get owned() {
+        return this.count;
+    }
+
     get options() {
         return this.data.options;
     }

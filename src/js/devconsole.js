@@ -32,6 +32,12 @@ export default class DevConsole {
         this.game.addItem(id.toString(), count);
         return true;
     }
+    
+    addItems(...args) {
+        this.game.addItems(...args)
+        return true;
+    }
+
     onNotify(...args) {
         this.game.onNotify(...args);
     }

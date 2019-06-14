@@ -629,6 +629,16 @@ export default class Game extends EventEmitter {
         this.emit('additem', itemId, count);
     }
 
+    addItems(items) {
+        items.forEach((item) => {
+            this.player.inventory.addItem(item.id, Number(item.count));
+        });
+        this.onNotify({ type:"items", items:items } );
+
+        // 퀘스트를 위한 이벤트 처리
+        this.emit('additems', items);
+    }
+
     useItem(itemId, count, target) {
         this.player.inventory.deleteItem(itemId, Number(count));
 
@@ -699,9 +709,13 @@ export default class Game extends EventEmitter {
                 this.onNotification = true;
                 this._playCutscene(options.script);
             } 
-            // else if (options.type === 'items') {
-            //     this.ui.showSystemModal()
-            // }
+            else if (options.type === 'items') {
+                const items = [];
+                options.items.forEach((item) => {
+                    items.push(new Item(item.id, item.owned));
+                });
+                this.ui.showSystemModal('TEST TEXT', items);
+            }
         }
     }
 }
