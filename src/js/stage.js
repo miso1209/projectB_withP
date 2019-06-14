@@ -138,7 +138,7 @@ export default class Stage extends PIXI.Container {
         this.mapContainer.addChild(this.objectContainer);
 
         this.monsters = [];
-
+        this.player = null;
         
         this.interactive = true;
 
@@ -342,6 +342,26 @@ export default class Stage extends PIXI.Container {
 
         this.tweens.addTween(obj.position, 0.4, { x: to.x, y: to.y }, 0, "linear", true , () => {
             obj.tileTexture.isMoving = false;
+            // 여기에서 플레이어 전투 판정.. => 플레이어를 바라보고, 전투를 시작한다.
+            if (this.player) {
+                const dist = Math.sqrt((this.player.gridX - obj.gridX)**2 + (this.player.gridY - obj.gridY)**2);
+
+                // 범위안에 들어왔으니 전투씬 진입.
+                if (dist <= 4) {
+                    obj.stop();
+                    obj.changeVisualToDirection(obj.currentDirection);
+
+                    let path = [].concat(this.player.currentPath).reverse();
+                    path = [].concat(path.splice(0,2)).reverse();
+                    
+                    if (path.length > 0) {
+                        this.moveObjThrough(this.player, path);
+                    }
+
+                    this.emit('battle', obj);
+                }
+            }
+
             this.moveObj(obj, path);
         });
     }
@@ -683,6 +703,7 @@ export default class Stage extends PIXI.Container {
         // 오브젝트가 없는 곳에만 오브젝트를 추가할수 있다 (현재는)
         const px = this.getTilePosXFor(x, y);
         const py = this.getTilePosYFor(x, y);
+        this.player = character;
 
         character.position.x = px;
         character.position.y = py;

@@ -143,7 +143,7 @@ export default class MapGenerator {
         this.realMap = await this.loadMap();
         this.setPortal();
 
-        return map;
+        return this.realMap;
     }
 
     getHall() {

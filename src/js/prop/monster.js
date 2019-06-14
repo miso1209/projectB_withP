@@ -51,15 +51,19 @@ export default class Monster extends PropBase {
     }
 
     stop() {
+        this.tileTexture.isMoving = false;
         this.isStop = true;
     }
 
-    emit(...arg) {
-        this.emitter.emit(...arg);
+    emit(...args) {
+        this.emitter.emit(...args);
     }
 
-    on(...arg) {
-        this.emitter.on(...arg);
+    on(...args) {
+        this.emitter.on(...args);
+    }
+    changeVisualToDirection(...args) {
+        this.tileTexture.changeVisualToDirection(...args);
     }
 
     hideName() {

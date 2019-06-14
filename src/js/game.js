@@ -20,6 +20,7 @@ import Notification from './notification';
 import Item from './item';
 import MapGenerator from './mapgenerator';
 
+
 export default class Game extends EventEmitter {
     constructor(pixi) {
 
@@ -312,11 +313,35 @@ export default class Game extends EventEmitter {
 
         const mapGenerator = new MapGenerator();
         mapGenerator.setFloor(this.currentFloor);
-        await mapGenerator.createMap(dir);
+        const maps = await mapGenerator.createMap(dir);
         const hall = mapGenerator.getHall();
         let hallKey = (dir === 'left'? 'right':'down');
 
+        // 맵에 리스너 달아서 배틀 받는다..
+        for (let y=0; y<maps.length; y++) {
+            for (let x=0; x<maps[y].length;x++) {
+                const map = maps[y][x];
+                
+                if (map instanceof Stage) {
+                    map.on('battle', async (...args) => { await this.$objBattle(...args); });
+                }
+            }
+        }
+
         await this.$enterStageIns(hall, hallKey);
+    }
+
+    async $objBattle(obj) {
+        // Theater깔고 인풋 막는다.
+        this.ui.showTheaterUI(0.5);
+        this.ui.hideMenu();
+        this.exploreMode.setInteractive(false);
+
+        // await이 걸린 무엇인가의 컷씬처리같은게 일어나야할듯.
+        // 
+
+        this.exploreMode.setInteractive(true);
+        await this.$enterBattle(obj);
     }
     
     async $enterStage(stagePath, eventName) {
@@ -443,6 +468,7 @@ export default class Game extends EventEmitter {
             });
 
             this.gamelayer.addChild(this.currentMode.stage);
+            this.ui.hideTheaterUI(0.5);
             this.ui.hideMenu();
             await this.$fadeIn(0.5);
         }
