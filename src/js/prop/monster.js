@@ -8,6 +8,7 @@ export default class Monster extends PropBase {
         super(x,y, options);
 
         this.isInteractive = true;
+        this.isStop = false;
 
         // 몬스터는 에디터에서 정의된 것이 아니므로 별도로 필요한 옵션을 작성해준다
         const monster = options.src;
@@ -15,7 +16,7 @@ export default class Monster extends PropBase {
         // 이 오브젝트는 일반적인 타일 데이터를 쓰지 않고 캐릭터외형 정보를 가져와서 출력한다
         const fieldChar = new AnimatedCharacter(monster.fieldCharacter.character);
         fieldChar.changeVisualToDirection(getDirectionFromName(field.direction));
-        fieldChar.animate('walk', true);
+        fieldChar.animate('idle', true);
         this.addChild(fieldChar);
         this.tileTexture = fieldChar;
 
@@ -35,9 +36,7 @@ export default class Monster extends PropBase {
     }
 
     touch(game) {
-        // 전투를 시작한다
         // game.$enterBattle(this);
-        this.move();
     }
 
     delete() {
@@ -45,7 +44,14 @@ export default class Monster extends PropBase {
     }
 
     move() {
-        this.emit('move');
+        if (!this.tileTexture.isMoving) {
+            this.isStop = false;
+            this.emit('move');
+        }
+    }
+
+    stop() {
+        this.isStop = true;
     }
 
     emit(...arg) {

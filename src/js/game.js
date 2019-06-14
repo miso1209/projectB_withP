@@ -365,6 +365,7 @@ export default class Game extends EventEmitter {
         await cutscene.$play();
         this.exploreMode.interactive = true;
         this.stage.showPathHighlight = true;
+        stage.enter();
     }
 
     async $leaveStage(eventName) {
@@ -377,6 +378,7 @@ export default class Game extends EventEmitter {
         await cutscene.$play();
         await this.$fadeOut(0.5);
         this.gamelayer.removeChild(this.stage);
+        this.stage.leave();
         this.stage = null;
     }
 

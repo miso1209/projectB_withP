@@ -137,6 +137,8 @@ export default class Stage extends PIXI.Container {
         this.mapContainer.addChild(this.groundOverlay);
         this.mapContainer.addChild(this.objectContainer);
 
+        this.monsters = [];
+
         
         this.interactive = true;
 
@@ -312,6 +314,9 @@ export default class Stage extends PIXI.Container {
     }
 
     moveObj(obj, path) {
+        if (obj.isStop) {
+            return;
+        }
         if (path.length === 0) {
             obj.move();
             return;
@@ -322,24 +327,21 @@ export default class Stage extends PIXI.Container {
         obj.tileTexture.changeVisualToDirection(obj.currentDirection);
 
         // 해당자리 Movable변경,
-        this.objectMap.splice(obj.gridX + obj.gridY * this.mapWidth, 1);
         const groundTile = this.getGroundTileAt(obj.gridX, obj.gridY);
         this.pathFinder.setDynamicCell(obj.gridX, obj.gridY, groundTile?groundTile.movable:false);
-
-        obj.gridX = path[0].x;
-        obj.gridY = path[0].y;
-        path.splice(0, 1);
+        this.pathFinder.setDynamicCell(path[0].x, path[0].y, false);
 
         const to = {
-            x: this.getTilePosXFor(obj.gridX, obj.gridY) - this.TILE_HALF_W,
-            y: this.getTilePosYFor(obj.gridX, obj.gridY) + this.TILE_HALF_H
+            x: this.getTilePosXFor(path[0].x, path[0].y) - this.TILE_HALF_W,
+            y: this.getTilePosYFor(path[0].x, path[0].y) + this.TILE_HALF_H
         };
 
-        this.objectMap[obj.gridX + obj.gridY * this.mapWidth] = obj;
-        this.pathFinder.setDynamicCell(obj.gridX, obj.gridY, false);
+        this.arrangeObjLocation(obj, path[0].x, path[0].y);
+        this.arrangeDepthsFromLocation(obj, path[0].x, path[0].y);
+        path.splice(0, 1);
 
         this.tweens.addTween(obj.position, 0.4, { x: to.x, y: to.y }, 0, "linear", true , () => {
-            this.arrangeDepthsFromLocation(obj, to.x, to.y);
+            obj.tileTexture.isMoving = false;
             this.moveObj(obj, path);
         });
     }
@@ -645,6 +647,18 @@ export default class Stage extends PIXI.Container {
         return null;
     }
 
+    enter() {
+        this.monsters.forEach((monster) => {
+            monster.move();
+        });
+    }
+
+    leave() {
+        this.monsters.forEach((monster) => {
+            monster.stop();
+        });
+    }
+
     // 몬스터를 해당 좌표에 찍어낸다. 어디서 호출해야 하는가?
     // 최초 Map Generator에서 생성 시, 몬스터를 찍어내도록 하는것은 어떨까?..
     addMonster(monster, x, y) {
@@ -659,6 +673,8 @@ export default class Stage extends PIXI.Container {
             this.addObjRefToLocation(prop, x, y);
             this.arrangeDepthsFromLocation(prop, x, y);
             this.setObjectEmitter(prop);
+            
+            this.monsters.push(prop);
         }
     }
 
