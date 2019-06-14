@@ -1,5 +1,6 @@
 import { getDirectionFromName } from "../utils";
 import { DIRECTIONS } from "../define";
+import Explore from "../explore";
 
 // 포탈 이벤트
 export class Portal2 {

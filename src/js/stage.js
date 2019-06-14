@@ -297,6 +297,23 @@ export default class Stage extends PIXI.Container {
         }
     }
 
+    getRandomPositions() {
+        const tileList = [];
+
+        this.groundMap.forEach((tile) => {
+            if (tile && !this.getObjectAt(tile.gridX,tile.gridY)) {
+                tileList.push(tile);
+            }
+        });
+
+        const tile = tileList[Math.round(Math.random() * (tileList.length - 1))];
+
+        return {
+            x: tile.gridX,
+            y: tile.gridY
+        };
+    }
+
     getRandomPath(obj) {
         const tileList = [];
         let toTile = null;
@@ -308,7 +325,11 @@ export default class Stage extends PIXI.Container {
         });
 
         toTile = tileList[Math.round(Math.random() * (tileList.length-1))];
-        const path = [].concat(this.pathFinder.solve(obj.gridX, obj.gridY, toTile.gridX, toTile.gridY, false));
+        let path = [].concat(this.pathFinder.solve(obj.gridX, obj.gridY, toTile.gridX, toTile.gridY, false));
+
+        if (path && path[0] === null) {
+            path = [];
+        }
 
         return path.reverse();
     }
@@ -339,35 +360,36 @@ export default class Stage extends PIXI.Container {
         this.arrangeObjLocation(obj, path[0].x, path[0].y);
         this.arrangeDepthsFromLocation(obj, path[0].x, path[0].y);
         path.splice(0, 1);
+        // Monster Speed
+        const speed = 0.2;
 
-        this.tweens.addTween(obj.position, 0.4, { x: to.x, y: to.y }, 0, "linear", true , () => {
+        this.tweens.addTween(obj.position, speed, { x: to.x, y: to.y }, 0, "linear", true , () => {
             obj.tileTexture.isMoving = false;
-            // 여기에서 플레이어 전투 판정.. => 플레이어를 바라보고, 전투를 시작한다.
-            if (this.player) {
-                const dist = Math.sqrt((this.player.gridX - obj.gridX)**2 + (this.player.gridY - obj.gridY)**2);
-
-                // 범위안에 들어왔으니 전투씬 진입.
-                if (dist <= 4) {
-                    obj.stop();
-                    obj.changeVisualToDirection(obj.currentDirection);
-
-                    let path = [].concat(this.player.currentPath).reverse();
-                    path = [].concat(path.splice(0,2)).reverse();
-                    
-                    if (path.length > 0) {
-                        this.moveObjThrough(this.player, path);
-                    }
-
-                    this.emit('battle', obj);
-                }
-            }
-
             this.moveObj(obj, path);
         });
+
+        // 여기에서 플레이어 전투 판정.. => 플레이어를 바라보고, 전투를 시작한다.
+        if (this.player) {
+            const dist = Math.sqrt((this.player.gridX - obj.gridX)**2 + (this.player.gridY - obj.gridY)**2);
+
+            // 범위안에 들어왔으니 전투씬 진입.
+            if (dist <= 4 && !obj.isStop) {
+                obj.stop();
+                obj.changeVisualToDirection(obj.currentDirection);
+                this.stopObject(this.player);
+                this.onObjMoveStepEnd(this.player);
+
+                this.emit('battle', obj);
+            }
+        }
     }
 
     deleteObj(obj) {
         if (obj && !obj.groupId) {
+            const isMonsterIndex = this.monsters.indexOf(obj);
+            if (isMonsterIndex >= 0) {
+                this.monsters.splice(isMonsterIndex, 1);
+            }
             const groundTile = this.getGroundTileAt(obj.gridX, obj.gridY);
             this.pathFinder.setDynamicCell(obj.gridX, obj.gridY, groundTile?groundTile.movable:false);
             this.removeObjRefFromLocation(obj);
@@ -376,6 +398,10 @@ export default class Stage extends PIXI.Container {
                 const deleteObj = this.objectMap[key];
                 
                 if (deleteObj && deleteObj.groupId && obj.groupId === deleteObj.groupId) {
+                    const isMonsterIndex = this.monsters.indexOf(deleteObj);
+                    if (isMonsterIndex >= 0) {
+                        this.monsters.splice(isMonsterIndex, 1);
+                    }
                     const groundTile = this.getGroundTileAt(deleteObj.gridX, deleteObj.gridY);
                     this.pathFinder.setDynamicCell(deleteObj.gridX, deleteObj.gridY, groundTile?groundTile.movable:false);
                     this.removeObjRefFromLocation(deleteObj);
@@ -682,16 +708,17 @@ export default class Stage extends PIXI.Container {
     // 몬스터를 해당 좌표에 찍어낸다. 어디서 호출해야 하는가?
     // 최초 Map Generator에서 생성 시, 몬스터를 찍어내도록 하는것은 어떨까?..
     addMonster(monster, x, y) {
+        const spawnPos = this.getRandomPositions();
         // 임시 하드코딩. 다음엔 Generate 된 몬스터 파티를 받도록 하자.
         const monsters = Monster.GetByStage('house');
         for (const monster of monsters) {
             const options = {  type: "monster", src: monster };
 
-            const prop = this.newTile(x, y, options);
+            const prop = this.newTile(spawnPos.x, spawnPos.y, options);
             this.pathFinder.setDynamicCell(prop.gridX, prop.gridY, false);
 
-            this.addObjRefToLocation(prop, x, y);
-            this.arrangeDepthsFromLocation(prop, x, y);
+            this.addObjRefToLocation(prop, spawnPos.x, spawnPos.y);
+            this.arrangeDepthsFromLocation(prop, spawnPos.x, spawnPos.y);
             this.setObjectEmitter(prop);
             
             this.monsters.push(prop);

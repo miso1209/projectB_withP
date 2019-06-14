@@ -333,6 +333,7 @@ export default class Game extends EventEmitter {
 
     async $objBattle(obj) {
         // Theater깔고 인풋 막는다.
+        this.stage.interactTarget = null;
         this.ui.showTheaterUI(0.5);
         this.ui.hideMenu();
         this.exploreMode.setInteractive(false);
@@ -340,7 +341,6 @@ export default class Game extends EventEmitter {
         // await이 걸린 무엇인가의 컷씬처리같은게 일어나야할듯.
         // 
 
-        this.exploreMode.setInteractive(true);
         await this.$enterBattle(obj);
     }
     
@@ -396,6 +396,7 @@ export default class Game extends EventEmitter {
     async $leaveStage(eventName) {
         if (!this.stage) { return; }
 
+        this.stage.leave();
         // 이벤트를 찾는다
         this.exploreMode.setInteractive(false);
         const cutscene = this.buildStageLeaveCutscene(eventName);
@@ -403,17 +404,14 @@ export default class Game extends EventEmitter {
         await cutscene.$play();
         await this.$fadeOut(0.5);
         this.gamelayer.removeChild(this.stage);
-        this.stage.leave();
         this.stage = null;
     }
 
+    // if (!this.currentMode instanceof Explore) { return; }
     async $enterBattle(monster) {
         const monsterObj = monster;
         monster = monster.src;
         if (this.currentMode instanceof Explore) {
-            await this.$fadeOut(0.5);
-            // 기존 스테이지를 보이지 않게 한다 (스테이지를 떠날 필요는없다)
-            this.gamelayer.removeChild(this.stage);
             
             // 인카운터 정보를 이용해서 배틀 데이터를 만든다
             const enemies = [];
@@ -466,7 +464,10 @@ export default class Game extends EventEmitter {
             this.currentMode.on('closeBattle', () => {
                 this.$leaveBattle();
             });
-
+            
+            await this.$fadeOut(0.5);
+            // 기존 스테이지를 보이지 않게 한다 (스테이지를 떠날 필요는없다)
+            this.gamelayer.removeChild(this.stage);
             this.gamelayer.addChild(this.currentMode.stage);
             this.ui.hideTheaterUI(0.5);
             this.ui.hideMenu();
@@ -485,6 +486,7 @@ export default class Game extends EventEmitter {
             this.currentMode = this.exploreMode;
             this.ui.showMenu();
             await this.$fadeIn(0.5);
+            this.exploreMode.setInteractive(true);
         }
     }
 
