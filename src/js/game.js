@@ -73,8 +73,10 @@ export default class Game extends EventEmitter {
             console.log(itemId, count, target);
             this.useItem(itemId, count, target);
         });
-        this.ui.on('equipItem', (itemCategory, itemId, cid ) => {
+        this.ui.on('equipItem', (itemCategory, itemId, cid) => {
             this.player.characters[cid].equip(itemCategory, itemId);
+            // 장착한 아이템은 inventory에서 제거..를 여기서 해주는게 맞나?
+            // this.player.inventory.deleteItem(itemId, Number(1));
         });
         this.ui.on('characterselect', ()=> {
             const inputs = [];
@@ -85,12 +87,12 @@ export default class Game extends EventEmitter {
             this.ui.showCharacterSelect(inputs, consumableData);
         });
 
-        this.ui.on('refresh', (category) => {
+        this.ui.on('playerInvenData', (category) => {
             this.ui.playerInvenData = this.getFiteredInventoryData(category);
         });
 
         this.ui.on('stageTitle', (text) => {
-            this.ui.showStageTitle('어둠의 타워 999층', 1500);
+            this.ui.showStageTitle(text);
         });
 
         this.ui.on('zoomInOut', ()=>{
@@ -196,8 +198,8 @@ export default class Game extends EventEmitter {
             // 그냥 평범하게 집에 들어간다
             this.ui.showTheaterUI(0.5);
             // 스테이지 타이틀 테스트
-            // this.ui.showStageTitle('아지트');
-            
+            this.ui.showStageTitle('모험가의 집');
+
             this.$enterStage("assets/mapdata/open_road_3.json", "road3-to-road2").then(() => {
                 this.exploreMode.interactive = true;
                 this.stage.showPathHighlight = true;
@@ -212,7 +214,6 @@ export default class Game extends EventEmitter {
         this.storage.data.cutscene = Number(script);
         this.storage.save();
         //=========================================
-
         this.onNotify({ type:"cutscene", script: script });
     }
 
@@ -545,7 +546,6 @@ export default class Game extends EventEmitter {
             sortByCategory[item.category].push({ item: item.id, data: item.data, owned: item.count });
         });
       
-
         // 이것을 배열로 바꾼다
         const result = [];
         for(const category in sortByCategory) {
@@ -554,7 +554,9 @@ export default class Game extends EventEmitter {
         }
         return result;
     }
-
+    showStageTitle(text){
+        this.emit('stageTitle', text);
+    }
     /*
     filterOption = {
         category: string | null,

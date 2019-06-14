@@ -3,28 +3,27 @@ import Modal from "./component/modal";
 import MakeDom from "./component/makedom";
 import ItemImage from "./component/itemimage";
 import Button from "./component/button";
-import { stringify } from "querystring";
-// import StatusBar from './progressui';
+// import { stringify } from "querystring";
 
 export default class CharacterSelect extends Panel {
   constructor(pane, inputs, result) {
     super();
-
-    // todo 현재 배틀용 캐릭터 데이터를 받아와서 작업. 이후 정제된 데이터로 수정한다.
+    
+    // 캐릭터 전체
     this.inputs = inputs;
     this.result = result;
+    // 선택한 캐릭터 정보
     this.selected = null;
-    
-    // console.log(inputs);
 
-    const pickme = new Modal(pane, 800, 460, null);
-    this.dom = pickme.dom;
-    this.dom.classList.add('characterSelect');
-
-    pickme.addTitle('캐릭터 선택창');
-    pickme.addCloseButton();
+    // 모달
+    const modal = new Modal(pane, 800, 460, null);
+    modal.dom.classList.add('characterSelect');
+    modal.addTitle('캐릭터 선택창');
+    modal.addCloseButton();
+    this.dom = modal.dom;
     pane.classList.add('screen');
 
+    // 페이징버튼
     this.prevButton = new Button('', 'paging');
     this.prevButton.dom.classList.add('prev');
     this.prevButton.dom.classList.add('disabled');
@@ -37,14 +36,14 @@ export default class CharacterSelect extends Panel {
     this.nextButton.moveToRight(-35);
     this.nextButton.dom.style.top = '50%';
     
+    // 모달 내부 컨텐츠 영역
     const wrap = document.createElement('div');
     wrap.classList.add('contents');
     wrap.classList.add('flexWrap');
     wrap.style.top = '70px';
-
     this.dom.appendChild(wrap);
 
-    // characterDetail 
+    // 캐릭터 설명 - characterDesc
     const characterDesc = new MakeDom('div', 'descWrap', null);
     characterDesc.classList.add('characterDesc');
     characterDesc.classList.add('flex-right');
@@ -57,25 +56,23 @@ export default class CharacterSelect extends Panel {
     this.portrait.style.display = 'block';
     this.portrait.style.margin = '30px auto 10px';
 
+    // 현재 hp 상태 아이콘 -> TODO : 클래스아이콘으로 변경하자.
     this.recoveryBtn = new Button('','iconBtn');
     this.recoveryBtn.dom.classList.add('ico-life');
     this.recoveryBtn.dom.style.top = '60px';
     this.recoveryBtn.moveToRight(40);
-
-    // this.recoveryBtn.dom.addEventListener('click', (ok)=> {
+    // this.recoveryBtn.dom.addEventListener('click', ()=> {
     //   return this.result(this.selected.id);
     // });
 
     const titleWrap = new MakeDom('div', 'titleWrap', null);
-    
     this.descClass = new MakeDom('span', 'stat_class', null);
     this.descName = new MakeDom('span', 'stat_name', null);
     this.level = new MakeDom('span', 'stat_level', null);
     this.level.style.paddingRight = '10px';
     
-    // status 바
+    // hp, exp 상태바
     const statWrap = new MakeDom('div', 'statWrap', null);
-    
     this.hp = new StatusBar(0, 10);
     this.exp = new StatusBar(0, 10);
     this.exp.setBar('exp');
@@ -83,14 +80,10 @@ export default class CharacterSelect extends Panel {
     statWrap.appendChild(this.hp.dom);
     statWrap.appendChild(this.exp.dom);
 
-    // 포션 - 4개 
+    // 포션 - 최대 4개
     this.invenItems = document.createElement('ul');
     this.invenItems.className = 'invenItems';
 
-    // 장비 
-    // -- 장비가 없는 경우 좀 이상함 - 캐릭터 부상인 경우 포션을 바로 사용할 수 있게 하자.
-    this.equipItems = document.createElement('ul');
-    this.equipItems.className = 'equipItems';
 
     // 자세히 보기 버튼 콜백
     const moreButton = new Button('자세히보기', 'submit');
@@ -105,13 +98,11 @@ export default class CharacterSelect extends Panel {
     titleWrap.appendChild(this.descClass);
     infoWrap.appendChild(this.portrait);
     infoWrap.appendChild(this.recoveryBtn.dom);
-    // infoWrap.appendChild(this.dpsStat);
 
     characterDesc.appendChild(titleWrap);
     characterDesc.appendChild(infoWrap);
     characterDesc.appendChild(statWrap);
 
-    // characterDesc.appendChild(this.equipItems);
     characterDesc.appendChild(this.invenItems);
     characterDesc.appendChild(moreButton.dom);
     
@@ -167,6 +158,7 @@ export default class CharacterSelect extends Panel {
 
     wrap.appendChild(characterListWrap);
     wrap.appendChild(characterDesc);
+    
     pane.appendChild(this.dom);
   }
 
@@ -181,7 +173,6 @@ export default class CharacterSelect extends Panel {
 
     this.updateHealth();
     this.updateStatus(current);
-    // this.updateEquip();
   }
 
   updateHealth() {
@@ -206,45 +197,15 @@ export default class CharacterSelect extends Panel {
     this.exp.update(current.exp, current.maxexp);
   }
 
-  updateInvenItems(invenItemsData, result) {
-    // 테스트용 데이터
-    this.invenItems.innerHTML = '';
-    let csItems = [null,null,null,null];
-    this.callback = result;
-
-    console.log('updateInvenItems');
-
-    invenItemsData.forEach(item => {
-      let liWrap = new MakeDom('li', null, null);
-      this.invenItems.appendChild(liWrap);
-      
-      if (item !== null) {
-        let itemIcon = new ItemImage(item.data.image.texture, item.data.image.x, item.data.image.y);
-        itemIcon.dom.style.display = 'inline-block';
-
-        let itemCount = new MakeDom('span', 'itemCount', `x${item.owned}`);
-        itemCount.style.color = '#ffd800';
-
-        liWrap.appendChild(itemIcon.dom);
-        liWrap.appendChild(itemCount);
-        
-        if(this.callback !== null) {
-          liWrap.addEventListener('click', this.callback.bind(this, item));
-        }
-      }else {
-        liWrap.classList.add('empty');
-      }
-    });
-  }
-
-  updateInven(invenItemsData){
-    this.invenItems.innerHTML = '';
+  updateInvenItems(inven, result) {
     
-    invenItemsData.forEach(item => {
-      let liWrap = new MakeDom('li', null, null);
-      this.invenItems.appendChild(liWrap);
-      
+    this.callback = result;
+    
+    inven.forEach(item => {
       if (item !== null) {
+        let liWrap = new MakeDom('li');
+        this.invenItems.appendChild(liWrap);
+
         let itemIcon = new ItemImage(item.data.image.texture, item.data.image.x, item.data.image.y);
         itemIcon.dom.style.display = 'inline-block';
 
@@ -254,39 +215,35 @@ export default class CharacterSelect extends Panel {
         liWrap.appendChild(itemIcon.dom);
         liWrap.appendChild(itemCount);
         
-        if(this.callback !== null) {
+        if(this.callback) {
           liWrap.addEventListener('click', this.callback.bind(this, item));
         }
-      }else {
-        liWrap.classList.add('empty');
-      }
+      } 
     });
+    // } else {
+    //   let i = 0;
+    //   while (i < 4) {
+    //     ++i;
+    //     let liWrap = new MakeDom('li', 'empty');
+    //     let itemIcon = new MakeDom('span', 'img');
+    //     liWrap.appendChild(itemIcon);
+    //     this.invenItems.appendChild(liWrap);
+    //   }
+    // }
   }
 
-  updateEquip(){
-    this.equipItems.innerHTML = '';
-    let equipItemsData = [];
-    equipItemsData.push(this.selected.equipments.armor);
-    equipItemsData.push(this.selected.equipments.weapon);
-    equipItemsData.push(this.selected.equipments.accessory);
+  // updataInven(){
+  //   this.invenItems.innerHTML = '';
+  //   this.callback = result;
+  //   this.updateInvenItems();
 
-    equipItemsData.forEach(item => {
-      let liWrap = new MakeDom('li', null, null);
-      this.equipItems.appendChild(liWrap);
-
-      if (item !== null) {
-        let itemIcon = new ItemImage(item.data.image.texture, item.data.image.x, item.data.image.y);
-        itemIcon.dom.style.display = 'inline-block';
-
-        let itemCategory = new MakeDom('span', 'itemCategory', item.category.toUpperCase());
-        liWrap.appendChild(itemCategory);
-        liWrap.appendChild(itemIcon.dom);
-      }else {
-        liWrap.classList.add('empty');
-      }
-    });
-  }
+  //   console.log(this.inven);
+  // }
 }
+
+
+
+
 
 
 export class Doll {

@@ -216,6 +216,8 @@ button span {
   height: 35px;
   background: url(~assets/ui/btn_1.png) no-repeat;
   background-size: contain;
+  font-size: 14px;
+  text-shadow: 0px 1px 2px #111; 
 }
 
 .buttonS span{
@@ -766,6 +768,7 @@ button.disabled span {
 .description .desc-text {
   font-size: 13px;
   line-height: 1.5;
+  padding-top: 5px;
 }
 
 .characterDesc .titleWrap {
@@ -953,35 +956,40 @@ button.disabled span {
 .characterSelect .invenItems li:not(:first-child) {
   margin-left: 5px;
 }
+.characterSelect .invenItems li.empty{
+  padding: 8px 0;
+}
 
-.characterSelect .invenItems li.empty {
+.characterSelect .invenItems li.empty .img {
   width: 32px;
   height: 32px;
   background: url(~assets/items/items.png) 0 0 no-repeat;
 }
 /* 비어있는 포션은 좌표고정 */
-.invenItems li.empty:nth-child(1) {
+.invenItems li.empty:nth-child(1) .img{
   /* 소형포션 */
   background-position: -416px -32px;
 }
-.invenItems li.empty:nth-child(2) {
+.invenItems li.empty:nth-child(2) .img{
   /* 중형포션 */
   background-position: -448px -32px;
 }
-.invenItems li.empty:nth-child(3) {
+.invenItems li.empty:nth-child(3) .img{
   /* 대형포션 */
   background-position: -480px -32px;
 }
-.invenItems li.empty:nth-child(4) {
+.invenItems li.empty:nth-child(4) .img{
   /* 부활 */
   background-position: -608px 0;
 }
+
 .invenItems li:hover, 
 .invenItems li:active,
 .invenItems li.active {
   border-radius: 8px;
   border: 1px solid #ffd800;
 }
+
 .invenItems li .img {
   display: inline-block;
 }
@@ -1073,6 +1081,7 @@ button.disabled span {
 .equipItems li.empty:active,
 .equipItems li.empty.active {
   background-color: rgba(1,1,1,1);
+  border-radius: 8px;
   border-color: #ffd800;
 }
 
@@ -1107,11 +1116,14 @@ button.disabled span {
   margin: 10px ;
 }
 
-.characterDetail .statWrap .mainStat {
-  margin: 20px 0;
+.characterDetail .mainStat {
+  margin: 20px 10px;
+  padding: 10px 0;
+  background-color: #111;
+  border-radius: 8px;
 }
 
-.characterDetail .statWrap .mainStat span:not(:first-child) {
+.characterDetail .mainStat span:not(:first-child) {
   padding-left: 30px;
 }
 

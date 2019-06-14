@@ -115,10 +115,11 @@ export default class DomUI extends EventEmitter {
     }
 
     showStageTitle(text) {
+        const pane = this.createContainer();
         const title = document.createElement('h2');
         title.className = 'stageTitle';
         title.innerText = text;
-        // pane.appendChild(title);
+        pane.appendChild(title);
 
         const titleAnimation = title.animate([
             { transform: 'scale(0)', opacity: 0 }, 
@@ -132,6 +133,7 @@ export default class DomUI extends EventEmitter {
 
         setTimeout(() => {
             title.style.opacity = 0;
+            pane.parentNode.removeChild(pane);
         }, 3000);
     }
     
@@ -165,18 +167,19 @@ export default class DomUI extends EventEmitter {
         confirmModal.dom.style.top = '50%';
         confirmModal.dom.style.marginTop = 250 * -0.5 + 'px';
 
-        const options = new MakeDom('div', 'contents-option', null);
-        if(items.length > 1) {
+        const options = new MakeDom('div', 'contents-option');
+
+        if(items.length > 0) {
             items.forEach((item) => {
                 let option = new ItemImage(item.data.image.texture, item.data.image.x, item.data.image.y);
-                let count = new MakeDom('span', null, null);
+                let count = new MakeDom('span');
                 count.innerText = `x${item.owned}`;
                 options.appendChild(option.dom);
                 options.appendChild(count);
             });
         } else {
             let option = new ItemImage(items.data.image.texture, items.data.image.x, items.data.image.y);
-            let count = new MakeDom('span', null, null);
+            let count = new MakeDom('span');
             count.innerText = `x${items.owned}`;
             options.appendChild(option.dom);
             options.appendChild(count);
@@ -273,13 +276,13 @@ export default class DomUI extends EventEmitter {
 
     showInventory(inputs) {
         const pane = this.createContainer();
-        const inven = new Inventory(pane, inputs);
+        const inventory = new Inventory(pane, inputs);
 
-        inven.moveToRight(70);
-        inven.onTabSelected(inven.tabs[0].category);
+        inventory.moveToRight(70);
+        inventory.onTabSelected(inventory.tabs[0].category);
     }
 
-    showCharacterSelect(inputs, inven) {
+    showCharacterSelect(inputs, inventory) {
         const pane = this.createContainer();
         // 물약데이터
         const characterSelect = new CharacterSelect(pane, inputs, (info) => {
@@ -287,7 +290,7 @@ export default class DomUI extends EventEmitter {
         });
 
         // DOM이 있으면 날린다.
-        characterSelect.updateInvenItems(inven, (selected) => {
+        characterSelect.updateInvenItems(inventory, (selected) => {
             if (selected !== null) {
                 this.showSystemModal('포션을 사용하시겠습니까?', selected, (confirmed) => {
                     if (confirmed === "ok") {
@@ -295,7 +298,7 @@ export default class DomUI extends EventEmitter {
                         this.emit('useItem', selected.data.id, 1, characterSelect.selected);
                         characterSelect.updateStatus(characterSelect.selected);
                         
-                        this.emit('refresh', 'consumables');
+                        this.emit('playerInvenData', 'consumables');
                         console.log(this.playerInvenData);
                     } 
                 });
@@ -307,17 +310,24 @@ export default class DomUI extends EventEmitter {
         const pane = this.createContainer();
         const characterDetail = new CharacterDetail(pane, player, (result) => {
             if(result !== null){
-                
-                console.log(result);
-                
-                this.emit('refresh', result);
-                this.showSystemModal('장비교체 테스트', this.playerInvenData, (confirmed) => {
-                    if (confirmed === "ok") {
-                        return;
-                        this.emit('equipItem', category, itemid, player.id);
-                        console.log(this.playerInvenData);
-                    } 
-                });
+                //1. 가지고 있는 장비 데이터 로드 -> this.playerInvenData
+                this.emit('playerInvenData', result.category);
+                //2. 받아온 데이터로 장비교체 ui 적용
+                //3. 장비선택시 데이터 업데이트..player 데이터 갱신
+                //4. 장비교체 확인 -> 선택된 장비로 equip / 보관함에서 삭제 / 변경된 스탯 player 데이터에 저장해서 리로드..
+                console.log(this.playerInvenData);
+
+                if (this.playerInvenData.length !== 0) {
+                    this.showSystemModal('장비교체 테스트', this.playerInvenData, (confirmed) => {
+                        if (confirmed === "ok") {
+                            // this.emit('equipItem', category, itemid, player.id);
+                            this.emit('equipItem', result.category, 7, player.id);
+                            characterDetail.updateEquip();
+                        } 
+                    });
+                } else {
+                    this.showConfirmModal('장착가능한 장비가 없습니다.', ()=>{});
+                }
             }
         });
     }

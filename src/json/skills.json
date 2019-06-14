@@ -1,5 +1,6 @@
 {
     "crouch": {
+        "name": "웅크리기",
         "description": "웅크려 앉아 맞는다. 방어력이 30% 증가한다.",
         "skillExpressions": [
             [
@@ -10,6 +11,7 @@
     },
 
     "runaway": {
+        "name": "도주",
         "description": "전투에서 빠져나와 몸을 숨긴다.",
         "coolTime": 10,
         "maxCoolTime": 10,
@@ -17,6 +19,7 @@
     },
 
     "slash": {
+        "name": "베기",
         "description": "평범한 검격을 날린다.",
         "skillExpressions": [
             [
@@ -26,6 +29,7 @@
     },
 
     "shieldAttack": {
+        "name": "방패공격",
         "description": "방패로 공격한다.",
         "skillExpressions": [
             [
@@ -35,6 +39,7 @@
     },
 
     "doubleAttack": {
+        "name": "연속공격",
         "description": "방패와 검으로 연속 공격한다.",
         "coolTime": 8,
         "maxCoolTime": 8,
@@ -54,6 +59,7 @@
     },
 
     "wandAttack": {
+        "name": "마력공격",
         "description": "완드에 마력을 실어 가격한다.",
         "skillExpressions": [
             [
@@ -63,6 +69,7 @@
         ]
     },
     "antiPower": {
+        "name": "안티파워",
         "description": "적의 공격력을 20만큼 낮춘다.",
         "skillExpressions": [
             [
@@ -72,6 +79,7 @@
     },
     
     "heal": {
+        "name": "힐",
         "description": "아군의 체력을 30%만큼 회복한다.",
         "coolTime": 10,
         "maxCoolTime": 10,
@@ -83,6 +91,7 @@
     },
 
     "shotArrow": {
+        "name": "화살공격",
         "description": "화살을 쏴 후방의 적을 공격한다.",
         "skillExpressions": [
             [
@@ -92,6 +101,7 @@
     },
 
     "criticalAttack": {
+        "name": "단검공격",
         "description": "단검으로 치명적인 일격을 가한다.",
         "skillExpressions": [
             [
@@ -102,6 +112,7 @@
     },
 
     "arrowOfTracker": {
+        "name": "단검공격",
         "description": "활을 높게 쏘아올려 제일 체력이 약한적을 공격한다.",
         "coolTime": 6,
         "maxCoolTime": 6,
@@ -114,6 +125,7 @@
     },
 
     "fireBolt": {
+        "name": "단검공격",
         "description": "전방의 적에게 화염구체를 날려 공격한다.",
         "skillExpressions": [
             [
@@ -123,6 +135,7 @@
     },
 
     "fireCape": {
+        "name": "화염망토",
         "description": "화염망토를 둘러 방어력을 증가시킨다.",
         "skillExpressions": [
             [
@@ -133,6 +146,7 @@
     },
     
     "fireRain": {
+        "name": "화염의 비",
         "description": "모든 적에게 화염구체를 떨어뜨려 공격한다.",
         "coolTime": 14,
         "maxCoolTime": 14,
