@@ -292,7 +292,7 @@ export default class Stage extends PIXI.Container {
             });
             obj.on('move', () => {
                 const path = this.getRandomPath(obj);
-                this.moveObj(obj, path);
+                this.moveMonster(obj, path);
             });
         }
     }
@@ -334,7 +334,7 @@ export default class Stage extends PIXI.Container {
         return path.reverse();
     }
 
-    moveObj(obj, path) {
+    moveMonster(obj, path) {
         if (obj.isStop) {
             return;
         }
@@ -361,11 +361,11 @@ export default class Stage extends PIXI.Container {
         this.arrangeDepthsFromLocation(obj, path[0].x, path[0].y);
         path.splice(0, 1);
         // Monster Speed
-        const speed = 0.2;
+        const speed = 0.3;
 
         this.tweens.addTween(obj.position, speed, { x: to.x, y: to.y }, 0, "linear", true , () => {
             obj.tileTexture.isMoving = false;
-            this.moveObj(obj, path);
+            this.moveMonster(obj, path);
         });
 
         // 여기에서 플레이어 전투 판정.. => 플레이어를 바라보고, 전투를 시작한다.
@@ -378,6 +378,8 @@ export default class Stage extends PIXI.Container {
                 obj.changeVisualToDirection(obj.currentDirection);
                 this.stopObject(this.player);
                 this.onObjMoveStepEnd(this.player);
+                this.player.position.x = this.getTilePosXFor(this.player.gridX, this.player.gridY);
+                this.player.position.y = this.getTilePosYFor(this.player.gridX, this.player.gridY);
 
                 this.emit('battle', obj);
             }

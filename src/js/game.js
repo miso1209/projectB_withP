@@ -78,7 +78,7 @@ export default class Game extends EventEmitter {
         });
         this.ui.on('characterselect', ()=> {
             const inputs = [];
-            const consumableData = this.getInventoryDataByCategory('consumables');
+            const consumableData = this.getFiteredInventoryData('consumables');
             for (const cid in this.player.characters) {
                 inputs.push(this.player.characters[cid]);
             }
@@ -86,7 +86,7 @@ export default class Game extends EventEmitter {
         });
 
         this.ui.on('refresh', (category) => {
-            this.ui.playerInvenData = this.getInventoryDataByCategory(category);
+            this.ui.playerInvenData = this.getFiteredInventoryData(category);
         });
 
         this.ui.on('stageTitle', (text) => {
@@ -555,13 +555,40 @@ export default class Game extends EventEmitter {
         return result;
     }
 
-    getInventoryDataByCategory(category) {
-        let result = [];
+    /*
+    filterOption = {
+        category: string | null,
+        class: string | null
+    }
+
+    ex) getFilteredInventoryData({ class: 'warrior' })
+    */
+    getFiteredInventoryData(filterOption) {
+        const items = [];
         this.player.inventory.forEach((item) => {
-            if(item.category === category) {
-                result.push({ item: item.id, data: item.data, owned: item.count });
+            if (filterOption.category && item.category === filterOption.category) {
+                items.push(item);
             }
         });
+        
+        const result = [];
+        items.forEach((item) => {
+            if (filterOption.class && item.classes) {
+                let flag = false;
+                item.classes.forEach((c) => {
+                    if (filterOption.class === c) {
+                        flag = true;
+                    }
+                });
+
+                if (flag) {
+                    result.push({ item: item.id, data: item.data, owned: item.count });
+                }
+            } else if (!filterOption.class) {
+                    result.push({ item: item.id, data: item.data, owned: item.count });
+            }
+        });
+
         return result;
     }
     
@@ -671,7 +698,10 @@ export default class Game extends EventEmitter {
             } else if (options.type === "cutscene") {
                 this.onNotification = true;
                 this._playCutscene(options.script);
-            }
+            } 
+            // else if (options.type === 'items') {
+            //     this.ui.showSystemModal()
+            // }
         }
     }
 }

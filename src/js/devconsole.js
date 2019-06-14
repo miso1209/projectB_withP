@@ -28,6 +28,14 @@ export default class DevConsole {
         return true;
     }
 
+    addGameItem(id, count) {
+        this.game.addItem(id.toString(), count);
+        return true;
+    }
+    onNotify(...args) {
+        this.game.onNotify(...args);
+    }
+
     setScale(scale) {
         this.game.stage.zoomTo(scale,false);
     }
