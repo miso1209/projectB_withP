@@ -513,7 +513,62 @@ export default class Stage extends PIXI.Container {
                 // console.log(tile);
                 // console.log('---------------------------------------');
             }
+        } 
+        else if( tileData.type == "random_object" ) {
+            
+            tileData.randomImage = new Array(tileData.imgCount?tileData.imgCount:0); // 이미지 숫자로 랜덤이미지의 배열을 선언
+            for(var i=0; i < tileData.imgCount; i++){
+                tileData.randomImage[i] = eval('tileData.random_image'+i); // 카운트된 수의 랜덤 이미지 넘버를 각각의 배열에 넣는다.
+            }
+            
+            tileData.recipeImage = new Array(tileData.recipeCount?tileData.recipeCount:0); // 이미지 숫자로 랜덤이미지의 배열을 선언
+            for(var i=0; i < tileData.recipeCount; i++){
+                tileData.recipeImage[i] = eval('tileData.recipe_image'+i); // 카운트된 수의 랜덤 이미지 넘버를 각각의 배열에 넣는다.
+            }
+
+            let objectCount = Math.floor( Math.random() * (tileData.randomImage.length)); // 랜덤하게 이미지를 선택한다.
+            let recipeCount = Math.floor( Math.random() * (tileData.recipeImage.length));
+            
+            var randomProperties = {
+                id: objectCount,
+                imageArray: tileData.randomImage,
+                type: 'object'
+            }; // 랜덤수 초기화
+            if( tileData.freeFlip == true ){
+                var randomFlip = Math.floor( Math.random() * (2)); 
+
+                if( randomFlip < 1 ){
+                    tileData.flipX = true;
+                }
+            }
+
+            
+            if( tileData.recipeCount == 1 ) {
+                var randomRecipe = Math.floor( Math.random() * (2)); 
+
+                if( randomRecipe < 1 ){
+                    randomProperties.id = recipeCount;
+                    randomProperties.imageArray = tileData.recipeImage;
+                    randomProperties.type = 'recipe';
+
+                    if ( randomProperties.type === 'recipe'){
+                        this.doorTarget.push(tileData.name);
+                    }
+                }
+            }
+
+            
+
+            if(randomProperties.imageArray[randomProperties.id] === undefined ){ // 이미지가 1개이고 문이 선택되지 않았을때
+                tileData.texture = false; //이미지를 그리지 않는다.
+                tileData.movable = true;
+            } else {
+                tileData.texture = PIXI.Texture.fromFrame(randomProperties.imageArray[randomProperties.id]); // 선택된 이미지를 그린다.
+            }
+
+            tile = Prop.New(tileData.type, x, y, tileData);
         }
+        
         //END 호영 테스트
         else if (tileData.type !== "groundtile") {
             tile = Prop.New(tileData.type, x, y, tileData);

@@ -258,7 +258,7 @@
          "margin":0,
          "name":"object2x2",
          "spacing":0,
-         "tilecount":20,
+         "tilecount":19,
          "tileheight":384,
          "tileoffset":
             {
@@ -390,23 +390,6 @@
                  "image":"castle_torch_short_pillar.png",
                  "imageheight":224,
                  "imagewidth":64,
-                 "properties":[
-                        {
-                         "name":"xsize",
-                         "type":"int",
-                         "value":2
-                        }, 
-                        {
-                         "name":"ysize",
-                         "type":"int",
-                         "value":2
-                        }]
-                }, 
-                {
-                 "id":12,
-                 "image":"table_2.png",
-                 "imageheight":49,
-                 "imagewidth":65,
                  "properties":[
                         {
                          "name":"xsize",

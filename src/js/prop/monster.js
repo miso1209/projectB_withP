@@ -81,12 +81,29 @@ export default class Monster extends PropBase {
 
         if (!this.nametag) {
 
-            const style = new PIXI.TextStyle({fontSize: 1, fill : 0xffffff, align : 'center' });
+            const style = new PIXI.TextStyle({
+                fontSize: 12,
+                fill : 0xffffff,
+                dropShadow: true,
+                dropShadowAlpha: 0.6,
+                dropShadowAngle: 90,
+                dropShadowBlur: 5,
+                dropShadowDistance: 1,
+                align : 'center' });
             const name = new PIXI.Text(this.getName(), style);
             name.anchor.x = 0.5;
             name.anchor.y = 0.5;
 
-            const dpsStyle = new PIXI.TextStyle({fontSize: 1, fill : 0xffffff, align : 'center' });
+            const dpsStyle = new PIXI.TextStyle({
+                fontSize: 10,
+                fill : "#ffffff",
+                dropShadow: true,
+                dropShadowAlpha: 0.6,
+                dropShadowAngle: 90,
+                dropShadowBlur: 5,
+                dropShadowDistance: 1,
+                align : 'center'
+            });
             const dps = new PIXI.Text(this.getDPS(), dpsStyle);
             dps.anchor.x = 0.5;
             dps.anchor.y = 0.5;
@@ -114,11 +131,11 @@ export default class Monster extends PropBase {
 
     // 가장 강한 녀석의 이름을 가져온다
     getName() {
-        return "Monster";
+        return "해골병사";
     }
 
     // DPS는 파티의 DPS를 가져온다.
     getDPS() {
-        return "전투력 100";
+        return "DPS 1K";
     }
 }

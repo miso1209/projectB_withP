@@ -10,7 +10,8 @@ export default class App {
         this.game = null;
 
         this.pixi = new PIXI.Application(980, 500, { 
-            backgroundColor: 0x6BACDE,
+            // backgroundColor: 0x6BACDE,
+            backgroundColor: 0x000000,
             view: document.getElementById('canvas'),
         });
     }
