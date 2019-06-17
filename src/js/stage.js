@@ -389,7 +389,7 @@ export default class Stage extends PIXI.Container {
 
             // 범위안에 들어왔으니 전투씬 진입.
             if (dist <= 4 && !obj.isStop) {
-                obj.stop();
+                this.leave();
                 obj.changeVisualToDirection(obj.currentDirection);
                 this.stopObject(this.player);
                 this.interactTarget = null;

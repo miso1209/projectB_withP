@@ -232,7 +232,8 @@ export default class MapGenerator {
                     const stageName = path.basename(`assets/mapdata/${room}.json`, ".json");
                     const stage = new Stage(neighbor);
                     await stage.$load(stageName);
-                    stage.addMonster(null, 16, 65);
+                    stage.addMonster();
+                    stage.addMonster();
                     stage.addChest();
     
                     realMap[y][x] = stage;

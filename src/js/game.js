@@ -488,6 +488,7 @@ export default class Game extends EventEmitter {
             this.ui.showMenu();
             await this.$fadeIn(0.5);
             this.exploreMode.setInteractive(true);
+            this.stage.enter();
         }
     }
 
