@@ -86,25 +86,25 @@ export class BattleUI extends EventEmitter {
 export class BattleProgressBar extends PIXI.Container {
     constructor() {
         super();
-        this.buffIcon = new BuffIcon({x:4, y:19});
-        this.buffIcon.position.x = -15;
-        this.buffIcon.position.y = -8;
-        this.addChild(this.buffIcon);
+        // this.buffIcon = new BuffIcon({x:4, y:19});
+        // this.buffIcon.position.x = -15;
+        // this.buffIcon.position.y = -8;
+        // this.addChild(this.buffIcon);
 
-        this.buffIcon = new BuffIcon({x:5, y:19});
-        this.buffIcon.position.x = -5;
-        this.buffIcon.position.y = -8;
-        this.addChild(this.buffIcon);
+        // this.buffIcon = new BuffIcon({x:5, y:19});
+        // this.buffIcon.position.x = -5;
+        // this.buffIcon.position.y = -8;
+        // this.addChild(this.buffIcon);
 
-        this.buffIcon = new BuffIcon({x:3, y:19});
-        this.buffIcon.position.x = 5;
-        this.buffIcon.position.y = -8;
-        this.addChild(this.buffIcon);
+        // this.buffIcon = new BuffIcon({x:3, y:19});
+        // this.buffIcon.position.x = 5;
+        // this.buffIcon.position.y = -8;
+        // this.addChild(this.buffIcon);
 
-        this.buffIcon = new BuffIcon({x:2, y:19});
-        this.buffIcon.position.x = 15;
-        this.buffIcon.position.y = -8;
-        this.addChild(this.buffIcon);
+        // this.buffIcon = new BuffIcon({x:2, y:19});
+        // this.buffIcon.position.x = 15;
+        // this.buffIcon.position.y = -8;
+        // this.addChild(this.buffIcon);
         
         this.progressHolder = new PIXI.Sprite(PIXI.Texture.fromFrame("pbar.png"));
         this.progressBar = new PIXI.Sprite(PIXI.Texture.fromFrame("pbar_w.png"));

@@ -58,6 +58,10 @@ export default class DevConsole {
         this.game.addQuest(id);
     }
 
+    hello() {
+        return this.game.ui.minimap;
+    }
+
     // Test
     useItem(){
         for (const cid in this.game.player.characters) {

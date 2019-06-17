@@ -203,9 +203,6 @@ export default class Game extends EventEmitter {
             // 그냥 평범하게 집에 들어간다
             this.ui.showTheaterUI(0.5);
 
-            // 스테이지 타이틀 테스트
-            this.ui.showStageTitle('모험가의 집');
-
             this.$enterStage("assets/mapdata/open_road_3.json", "road3-to-road2").then(() => {
                 this.exploreMode.interactive = true;
                 this.stage.showPathHighlight = true;
@@ -315,7 +312,6 @@ export default class Game extends EventEmitter {
     async $nextFloor(from, dir) {
         // 5층씩 올라가도록 해본다.
         this.currentFloor++;
-        console.log(`현재층은 ${this.currentFloor}층 입니다.`);
         await this.$leaveStage(from);
 
         const mapGenerator = new MapGenerator();
@@ -336,6 +332,7 @@ export default class Game extends EventEmitter {
         }
 
         await this.$enterStageIns(hall, hallKey);
+        this.ui.showStageTitle(`- 어둠의 성탑 ${this.currentFloor}층 -`);
     }
 
     async $objBattle(obj) {

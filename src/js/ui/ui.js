@@ -39,6 +39,7 @@ export default class DomUI extends EventEmitter {
         // minimap.style.width = '118px';
         // minimap.style.height = '90px';
         gnb.appendChild(minimap);
+        this.minimap = minimap;
         
         const menuData = [
             {name:'캐릭터', event: "characterselect"},

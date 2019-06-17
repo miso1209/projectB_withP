@@ -100,14 +100,12 @@ export default class MapGenerator {
         }
 
         if (bossFloor) {
-            console.log('Boss Floor');
             // Stair Flow
             const bossRoomPos = this.getBossRoomPos(map, rooms);
             map[bossRoomPos.y - 1][bossRoomPos.x] = MAP_DATA.PASSAGE;
             map[bossRoomPos.y - 2][bossRoomPos.x] = MAP_DATA.BOSS;
             map[bossRoomPos.y - 3][bossRoomPos.x] = MAP_DATA.OUTPUT;
         } else {
-            console.log('Stair Floor');
             // Stair Flow
             const stairRoomPos = this.getStairRoomPos(map, rooms);
             map[stairRoomPos.y][stairRoomPos.x] = MAP_DATA.STAIR;
