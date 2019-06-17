@@ -84,7 +84,6 @@ export default class CharacterSelect extends Panel {
     this.invenItems = document.createElement('ul');
     this.invenItems.className = 'invenItems';
 
-
     // 자세히 보기 버튼 콜백
     const moreButton = new Button('자세히보기', 'submit');
     moreButton.moveToCenter(0);
@@ -102,7 +101,6 @@ export default class CharacterSelect extends Panel {
     characterDesc.appendChild(titleWrap);
     characterDesc.appendChild(infoWrap);
     characterDesc.appendChild(statWrap);
-
     characterDesc.appendChild(this.invenItems);
     characterDesc.appendChild(moreButton.dom);
     
@@ -177,11 +175,9 @@ export default class CharacterSelect extends Panel {
 
   updateHealth() {
     if (this.selected.health === 0) {
-      console.log('캐릭터 사망--부활물약?');
       this.recoveryBtn.dom.classList.remove('half');
       this.recoveryBtn.dom.classList.add('empty');
     } else if (this.selected.health < this.selected.maxHealth) {
-      console.log('체력포션 쓸래?');
       this.recoveryBtn.dom.classList.remove('empty');
       this.recoveryBtn.dom.classList.add('half');
     } else {
@@ -198,26 +194,21 @@ export default class CharacterSelect extends Panel {
   }
 
   updateInvenItems(inven, result) {
-    
-    this.callback = result;
-    
+    // 가지고 있는 포션
     inven.forEach(item => {
       if (item !== null) {
         let liWrap = new MakeDom('li');
-        this.invenItems.appendChild(liWrap);
-
         let itemIcon = new ItemImage(item.data.image.texture, item.data.image.x, item.data.image.y);
-        itemIcon.dom.style.display = 'inline-block';
-
         let itemCount = new MakeDom('span', 'itemCount', `x${item.owned}`);
         itemCount.style.color = '#ffd800';
 
         liWrap.appendChild(itemIcon.dom);
         liWrap.appendChild(itemCount);
         
-        if(this.callback) {
-          liWrap.addEventListener('click', this.callback.bind(this, item));
+        if(result) {
+          liWrap.addEventListener('click', result.bind(this, item));
         }
+        this.invenItems.appendChild(liWrap);
       } 
     });
     // } else {
@@ -225,20 +216,12 @@ export default class CharacterSelect extends Panel {
     //   while (i < 4) {
     //     ++i;
     //     let liWrap = new MakeDom('li', 'empty');
-    //     let itemIcon = new MakeDom('span', 'img');
+    //     let itemIcon = new MakeDom('div', 'img');
     //     liWrap.appendChild(itemIcon);
     //     this.invenItems.appendChild(liWrap);
     //   }
     // }
   }
-
-  // updataInven(){
-  //   this.invenItems.innerHTML = '';
-  //   this.callback = result;
-  //   this.updateInvenItems();
-
-  //   console.log(this.inven);
-  // }
 }
 
 

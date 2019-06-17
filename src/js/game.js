@@ -75,20 +75,25 @@ export default class Game extends EventEmitter {
         });
         this.ui.on('equipItem', (itemCategory, itemId, cid) => {
             this.player.characters[cid].equip(itemCategory, itemId);
-            // 장착한 아이템은 inventory에서 제거..를 여기서 해주는게 맞나?
-            // this.player.inventory.deleteItem(itemId, Number(1));
         });
+
+        this.ui.on('unequipItem', (itemCategory, cid) => {
+            console.log('unequipItem ' + itemCategory, cid);
+            this.player.characters[cid].unequip(itemCategory);
+        });
+
         this.ui.on('characterselect', ()=> {
             const inputs = [];
-            const consumableData = this.getFiteredInventoryData('consumables');
+            const consumableData = this.getFiteredInventoryData({category: 'consumables'});
             for (const cid in this.player.characters) {
                 inputs.push(this.player.characters[cid]);
             }
+
             this.ui.showCharacterSelect(inputs, consumableData);
         });
 
         this.ui.on('playerInvenData', (category) => {
-            this.ui.playerInvenData = this.getFiteredInventoryData(category);
+            this.ui.playerInvenData = this.getFiteredInventoryData({category: category});
         });
 
         this.ui.on('stageTitle', (text) => {
@@ -197,6 +202,7 @@ export default class Game extends EventEmitter {
         } else {
             // 그냥 평범하게 집에 들어간다
             this.ui.showTheaterUI(0.5);
+
             // 스테이지 타이틀 테스트
             this.ui.showStageTitle('모험가의 집');
 

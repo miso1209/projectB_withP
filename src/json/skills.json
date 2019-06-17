@@ -112,7 +112,7 @@
     },
 
     "arrowOfTracker": {
-        "name": "단검공격",
+        "name": "추적화살",
         "description": "활을 높게 쏘아올려 제일 체력이 약한적을 공격한다.",
         "coolTime": 6,
         "maxCoolTime": 6,
@@ -125,7 +125,7 @@
     },
 
     "fireBolt": {
-        "name": "단검공격",
+        "name": "파이어볼",
         "description": "전방의 적에게 화염구체를 날려 공격한다.",
         "skillExpressions": [
             [

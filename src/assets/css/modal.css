@@ -279,19 +279,19 @@
   border-radius: 8px;
 }
 
-.slot-list-box li:nth-child(6n) {
+.inventory .slot-list-box li:nth-child(6n) {
   margin: 0 0 10px 0;
 }
 
-.statUI {
+
+/* .statUI {
   position: relative;
 }
 
 .statUI .equipItems {
   position: absolute;
   bottom: 100px;
-}
-
+} */
 
 
 /* listbox */

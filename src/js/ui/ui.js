@@ -119,27 +119,28 @@ export default class DomUI extends EventEmitter {
         const title = document.createElement('h2');
         title.className = 'stageTitle';
         title.innerText = text;
+
         pane.appendChild(title);
+        pane.style.pointerEvents = 'none';
 
         const titleAnimation = title.animate([
             { transform: 'scale(0)', opacity: 0 }, 
-            { transform: 'scale(1)', opacity: 1 }
+            { transform: 'scale(1)', opacity: 1 },
+            { transform: 'scale(1)', opacity: 1 },
+            { transform: 'scale(0)', opacity: 0 }
+
         ], { 
-            duration: 1500,
-            easing: 'ease-in-out'
+            duration: 3000,
+            easing: 'ease-out'
         });
         
         titleAnimation.play();
 
         setTimeout(() => {
-            title.style.opacity = 0;
             pane.parentNode.removeChild(pane);
         }, 3000);
     }
     
-    hideStageTitle(){
-    }
-
     showDialog(script, callback) {
         const pane = this.createContainer();
         const dialog = new Dialog(pane, 700, 140, script);
@@ -289,8 +290,11 @@ export default class DomUI extends EventEmitter {
             this.showCharacterDatail(info);
         });
 
+        console.log(inventory);
+        
         // DOM이 있으면 날린다.
         characterSelect.updateInvenItems(inventory, (selected) => {
+
             if (selected !== null) {
                 this.showSystemModal('포션을 사용하시겠습니까?', selected, (confirmed) => {
                     if (confirmed === "ok") {
@@ -308,25 +312,35 @@ export default class DomUI extends EventEmitter {
 
     showCharacterDatail(player) {
         const pane = this.createContainer();
-        const characterDetail = new CharacterDetail(pane, player, (result) => {
+        const characterDetail = new CharacterDetail(pane, player, (result, option) => {
             if(result !== null){
-                //1. 가지고 있는 장비 데이터 로드 -> this.playerInvenData
                 this.emit('playerInvenData', result.category);
+                //1. 가지고 있는 장비 데이터 로드 -> this.playerInvenData
                 //2. 받아온 데이터로 장비교체 ui 적용
                 //3. 장비선택시 데이터 업데이트..player 데이터 갱신
                 //4. 장비교체 확인 -> 선택된 장비로 equip / 보관함에서 삭제 / 변경된 스탯 player 데이터에 저장해서 리로드..
-                console.log(this.playerInvenData);
+                console.log(result);
 
-                if (this.playerInvenData.length !== 0) {
-                    this.showSystemModal('장비교체 테스트', this.playerInvenData, (confirmed) => {
-                        if (confirmed === "ok") {
-                            // this.emit('equipItem', category, itemid, player.id);
-                            this.emit('equipItem', result.category, 7, player.id);
-                            characterDetail.updateEquip();
-                        } 
-                    });
+                if (option === 'equip') {
+                    // 장비장착/
+                    if (this.playerInvenData.length !== 0) {
+                        // characterDetail.invendata = this.playerInvenData;
+                        characterDetail.showInvenSlot(this.playerInvenData);
+                        // this.showSystemModal('장비교체 테스트', this.playerInvenData, (confirmed) => {
+                        //     if (confirmed === "ok") {
+                        //         // this.emit('equipItem', category, itemid, player.id);
+                        //         this.emit('equipItem', result.category, 7, player.id);
+                        //         characterDetail.updateEquip();
+                        //     } 
+                        // });
+                    } else {
+                        this.showConfirmModal('장착가능한 장비가 없습니다.', ()=>{});
+                    }
                 } else {
-                    this.showConfirmModal('장착가능한 장비가 없습니다.', ()=>{});
+                    // 장비해제
+                    console.log('장비가 해제되었습니다..');
+                    this.emit('unequipItem', result.category, player.id);
+
                 }
             }
         });
