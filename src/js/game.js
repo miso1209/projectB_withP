@@ -467,6 +467,7 @@ export default class Game extends EventEmitter {
             });
             
             await this.$fadeOut(0.5);
+            this.stage.leave();
             // 기존 스테이지를 보이지 않게 한다 (스테이지를 떠날 필요는없다)
             this.gamelayer.removeChild(this.stage);
             this.gamelayer.addChild(this.currentMode.stage);
