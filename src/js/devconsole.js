@@ -78,6 +78,14 @@ export default class DevConsole {
         return this.game.player.quests;
     }
 
+    equipItem(...args) {
+        this.game.equipItem(...args);
+    }
+
+    unequipItem(...args) {
+        this.game.unequipItem(...args);
+    }
+
     test1() {
         // 디버깅용
         console.log(this.game.player.characters[0].equip);

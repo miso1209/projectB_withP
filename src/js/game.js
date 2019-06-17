@@ -74,7 +74,10 @@ export default class Game extends EventEmitter {
             this.useItem(itemId, count, target);
         });
         this.ui.on('equipItem', (itemCategory, itemId, cid) => {
-            this.player.characters[cid].equip(itemCategory, itemId);
+            this.equipItem(itemCategory, itemId, cid);
+        });
+        this.ui.on('unequipItem', (itemCategory, cid) => {
+            this.unequipItem(itemCategory, cid);
         });
 
         this.ui.on('unequipItem', (itemCategory, cid) => {
@@ -626,6 +629,21 @@ export default class Game extends EventEmitter {
         this.player.addCharacter(id, character);
         this.storage.addCharacter(id, character);
         this.emit('addcharacter', id, character);
+    }
+
+    equipItem(itemCategory, itemId, cid) {
+        const unequipItem = this.player.characters[cid].equip(itemCategory, itemId);
+        this.player.inventory.deleteItem(itemId, 1);
+        if (unequipItem) {
+            this.player.inventory.addItem(unequipItem.id, 1);
+        }
+    }
+
+    unequipItem(itemCategory, cid) {
+        const unequipItem = this.player.characters[cid].unequip(itemCategory);
+        if (unequipItem) {
+            this.player.inventory.addItem(unequipItem.id, 1);
+        }
     }
 
     addItem(itemId, count) {

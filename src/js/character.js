@@ -190,8 +190,9 @@ export default class Character {
         }
 
         // 기존에 사용하고 있던 아이템이 있으면 제거한다
+        let unequipItem = null;
         if (this.equipments[slot]) {
-            this.unequip(slot);
+            unequipItem = this.unequip(slot);
         }
 
         this.equipments[slot] = item;
@@ -202,6 +203,7 @@ export default class Character {
         
         // 상태가 변했으므로 업데이트를 해야한다
         this.makeDirty();
+        return unequipItem;
     }
 
     canEquip(slot, item) {
@@ -222,6 +224,8 @@ export default class Character {
             // 상태가 변했으므로 업데이트를 해야한다
             this.makeDirty();
         }
+
+        return item;
     }
 
     applyOption(option) {
