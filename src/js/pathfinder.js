@@ -316,6 +316,14 @@ export default class PathFinder {
         this.dirtyNodes.push(node);
     }
 
+    getCell(x, y) {
+        if (this.grid[y] && this.grid[y][x]) {
+            return this.grid[y][x].weight === 1;
+        } else {
+            return false;
+        }
+    }
+
     setCell(x, y, movable) {
 	    this.grid[y][x].weight = movable ? 1 : 0;
     }

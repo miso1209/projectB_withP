@@ -187,6 +187,7 @@ export default class MapGenerator {
     async loadMap() {
         const middleBoss = 'castle_boss-middle';
         const stair = 'castle_room_stair';
+        const portal = 'castle_portal';
         const UDPassage = 'castle_path_nesw';
         const LRPassage = 'castle_path_nwse';
         let realMap = [];
@@ -215,7 +216,7 @@ export default class MapGenerator {
     
                     realMap[y][x] = stage;
                 } else  if (this.map[y][x] === MAP_DATA.PORTAL) {
-                    const stageName = path.basename(`assets/mapdata/${room}.json`, ".json");
+                    const stageName = path.basename(`assets/mapdata/${portal}.json`, ".json");
                     const stage = new Stage(neighbor);
                     await stage.$load(stageName);
     

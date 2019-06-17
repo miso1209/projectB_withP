@@ -181,7 +181,7 @@ export default class Stage extends PIXI.Container {
                         this.setBottomTile(x, y, tile);
                     } else if (group === "ground") {
                         this.setGroundTile(x, y, tile);
-                    } else if (group === "object") { 
+                    } else if (group === "object") {
                         this.setObjectTile(x, y, tile);
                     } else if (group === "event") {
                         if (tile.name === 'up' || tile.name === 'down' || tile.name === 'left' || tile.name === 'right') {
@@ -199,9 +199,9 @@ export default class Stage extends PIXI.Container {
                                 this.pathFinder.setCell(x, y, true);
                             }
                         } else if (tile.name === 'nextFloor') {
-                                this.eventMap[x + y * width] = new NextFloorPortal(x, y, tile);
-                                // 포탈이벤트를 기본적으로 패스에 포함시킬수 없다
-                                this.pathFinder.setCell(x, y, false);
+                            this.eventMap[x + y * width] = new NextFloorPortal(x, y, tile);
+                            // 포탈이벤트를 기본적으로 패스에 포함시킬수 없다
+                            this.pathFinder.setCell(x, y, false);
                         } else {
                             this.eventMap[x + y * width] = new Portal2(x, y, tile);
                             // 포탈이벤트를 기본적으로 패스에 포함시킬수 없다
@@ -297,21 +297,36 @@ export default class Stage extends PIXI.Container {
         }
     }
 
-    getRandomPositions() {
+    getRandomPositions(width, height) {
         const tileList = [];
 
         this.groundMap.forEach((tile) => {
-            if (tile && !this.getObjectAt(tile.gridX,tile.gridY)) {
+            let emptyFlag = true;
+
+            for (let y = 0; y < height; y++) {
+                for (let x = 0; x < width; x++) {
+                    if (this.getObjectAt(tile.gridX - x,tile.gridY - y) || !this.pathFinder.getCell(tile.gridX - x, tile.gridY - y)) {
+                        emptyFlag = false;
+                    }
+                }
+            }
+
+            // 해당 좌표에 오브젝트가 없고, 해당 좌표의 무버블이 1이여야함. => 움직일 수 있는 좌표를 찾아본다.
+            if (tile && emptyFlag) {
                 tileList.push(tile);
             }
         });
 
         const tile = tileList[Math.round(Math.random() * (tileList.length - 1))];
 
-        return {
-            x: tile.gridX,
-            y: tile.gridY
-        };
+        if (tile) {
+            return {
+                x: tile.gridX,
+                y: tile.gridY
+            };
+        } else {
+            return false;
+        }
     }
 
     getRandomPath(obj) {
@@ -377,6 +392,7 @@ export default class Stage extends PIXI.Container {
                 obj.stop();
                 obj.changeVisualToDirection(obj.currentDirection);
                 this.stopObject(this.player);
+                this.interactTarget = null;
                 this.onObjMoveStepEnd(this.player);
                 this.player.position.x = this.getTilePosXFor(this.player.gridX, this.player.gridY);
                 this.player.position.y = this.getTilePosYFor(this.player.gridX, this.player.gridY);
@@ -504,15 +520,6 @@ export default class Stage extends PIXI.Container {
                 tileData.movable = true;
             }
             tile = Prop.New(tileData.type, x, y, tileData);
-            if(tileData.target === 'castle_wall_door4') {
-                // console.log('down',tileData);
-                // console.log(tile);
-                // console.log('---------------------------------------');
-            } else if(tileData.target === 'castle_wall_door3') {
-                // console.log('left',tileData);
-                // console.log(tile);
-                // console.log('---------------------------------------');
-            }
         } 
         else if( tileData.type == "random_object" ) {
             
@@ -774,37 +781,50 @@ export default class Stage extends PIXI.Container {
     // 몬스터를 해당 좌표에 찍어낸다. 어디서 호출해야 하는가?
     // 최초 Map Generator에서 생성 시, 몬스터를 찍어내도록 하는것은 어떨까?..
     addMonster(monster, x, y) {
-        const spawnPos = this.getRandomPositions();
         // 임시 하드코딩. 다음엔 Generate 된 몬스터 파티를 받도록 하자.
         const monsters = Monster.GetByStage('house');
         for (const monster of monsters) {
-            const options = {  type: "monster", src: monster };
-
-            const prop = this.newTile(spawnPos.x, spawnPos.y, options);
-            this.pathFinder.setDynamicCell(prop.gridX, prop.gridY, false);
-
-            this.addObjRefToLocation(prop, spawnPos.x, spawnPos.y);
-            this.arrangeDepthsFromLocation(prop, spawnPos.x, spawnPos.y);
-            this.setObjectEmitter(prop);
-            
-            this.monsters.push(prop);
+            const spawnPos = this.getRandomPositions(1, 1);
+            if (spawnPos) {
+                const options = {  type: "monster", src: monster };
+    
+                const prop = this.newTile(spawnPos.x, spawnPos.y, options);
+                this.pathFinder.setDynamicCell(prop.gridX, prop.gridY, false);
+    
+                this.addObjRefToLocation(prop, spawnPos.x, spawnPos.y);
+                this.arrangeDepthsFromLocation(prop, spawnPos.x, spawnPos.y);
+                this.setObjectEmitter(prop);
+                
+                this.monsters.push(prop);
+            }
         }
     }
 
     addChest() {
-        const spawnPos = this.getRandomPositions();
         const options = {
             type: "chest",
-            texture: PIXI.Texture.fromFrame('castle_box.png'),
+            texture: PIXI.Texture.fromFrame('castle_treasurebox.png'),
             movable: false
         };
+        const size = {
+            width: 1,
+            height: 2
+        }
+        // if (Math.random() < 0.5) {
+        //     options.texture = PIXI.Texture.fromFrame('castle_treasurebox_flip.png');
+        //     size.width = 2;
+        //     size.height = 1;
+        // }
+        const spawnPos = this.getRandomPositions(size.width, size.height);
 
-        const prop = this.newTile(spawnPos.x, spawnPos.y, options);
-        this.pathFinder.setDynamicCell(prop.gridX, prop.gridY, false);
-
-        this.addObjRefToLocation(prop, spawnPos.x, spawnPos.y);
-        this.arrangeDepthsFromLocation(prop, spawnPos.x, spawnPos.y);
-        this.setObjectEmitter(prop);
+        if (spawnPos) {
+            const prop = this.newTile(spawnPos.x, spawnPos.y, options);
+            this.pathFinder.setDynamicCell(prop.gridX, prop.gridY, false);
+    
+            this.addObjRefToLocation(prop, spawnPos.x, spawnPos.y);
+            this.arrangeDepthsFromLocation(prop, spawnPos.x, spawnPos.y);
+            this.setObjectEmitter(prop);
+        }
     }
 
     addCharacter(character, x, y) {
