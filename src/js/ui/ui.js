@@ -58,6 +58,8 @@ export default class DomUI extends EventEmitter {
                 this.emit(menu.event);
             });
         });
+
+        this.player = null;
         this.playerInvenData = null;
     }
 
@@ -324,7 +326,6 @@ export default class DomUI extends EventEmitter {
                 });
             }
         });
-
         characterSelect.createConsumablesItem(useItem);
     }
 
@@ -332,34 +333,41 @@ export default class DomUI extends EventEmitter {
         const pane = this.createContainer();
         const characterDetail = new CharacterDetail(pane, player, (result, option) => {
 
-            if (result !== null) {
-                if (option === 'simulation') {
-                    console.log('시뮬레이션할 아이템 데이터..');
+            if (result.data !== null) {
+                // 장착된 아이템이 이미 있거나, 장착가능한 아이템으로 시뮬레이션 데이터 호출 / 취소 
+                if (option === 'simulationEquip') {
+                    console.log('아이템 고르기 - 시뮬레이션');
+                    this.emit('simulateEquip', result.data.category, result.item, player.id);
+                    
+                    characterDetail.selected = this.player;
+                    characterDetail.updateStat();
 
-                    if (this.playerInvenData.length !== 0) {
-        
-                        console.log(result);
-                        this.emit('playerInvenData', result.category);
-                        characterDetail.simulationData = this.playerInvenData;
-
-                        this.emit('simulateEquip', result.category, player.id);
-                        characterDetail.showEquipInven();
-                    } else {
-                        this.showConfirmModal('장착가능한 장비가 없습니다.', ()=>{});
-                    }
                 } else if (option === 'cancel') {
                     console.log('시뮬레이션 취소');
                     this.emit('cancelSimulate');
-
+                    characterDetail.statItem.data = null;
+                    
                 } else if (option === 'equip') {
                     console.log('장비 장착');
-                    this.emit('equipItem', result.category, result.item, player.id);
+                    this.emit('equipItem', result.data.category, result.item, player.id);
+                    this.emit('playerInvenData', result.data.category);
+                    characterDetail.updateEquip();
                 } else {
-                    // 장비해제
-                    console.log('장비가 해제되었습니다..');
-                    this.emit('unequipItem', result.category, player.id);
+                    console.log('장비 해제');
+                    this.emit('unequipItem', result.data.category, player.id);
+                    this.emit('playerInvenData', result.data.category);
+                    characterDetail.statItem.data = null;
+                    characterDetail.updateEquip();
+                }
+            } else {
+                if (this.playerInvenData.length !== 0) {
+                    console.log('장착 가능한 아이템 리스트 호출');
+
                     this.emit('playerInvenData', result.category);
-                    characterDetail.simulationData = this.playerInvenData;
+                    characterDetail.tempEquip = this.playerInvenData;
+                    characterDetail.showEquipInven();
+                } else {
+                    this.showConfirmModal('장착가능한 장비가 없습니다.', ()=>{});
                 }
             }
         });

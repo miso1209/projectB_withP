@@ -77,6 +77,7 @@ export default class Game extends EventEmitter {
         });
         this.ui.on('simulateEquip', (itemCategory, itemId, cid) => {
             this.player.characters[cid].equip(itemCategory, itemId);
+            this.ui.player = this.player.characters[cid];
         });
         this.ui.on('cancelSimulate', () => {
             for (const cid in this.player.characters) {
@@ -93,12 +94,11 @@ export default class Game extends EventEmitter {
 
         this.ui.on('characterselect', ()=> {
             const inputs = [];
-            const consumableData = this.getFiteredInventoryData({category: 'consumables'});
             for (const cid in this.player.characters) {
                 inputs.push(this.player.characters[cid]);
             }
 
-            this.ui.showCharacterSelect(inputs, consumableData);
+            this.ui.showCharacterSelect(inputs);
         });
 
         this.ui.on('playerInvenData', (category) => {

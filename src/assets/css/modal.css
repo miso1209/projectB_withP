@@ -278,8 +278,11 @@
   border: 2px solid #ffd800;
   border-radius: 8px;
 }
+.inventory .scrollbox {
+  padding: 0;
+}
 
-.inventory .slot-list-box li:nth-child(6n) {
+.inventory .slot-list-box li.slot:nth-child(6n) {
   margin: 0 0 10px 0;
 }
 
@@ -317,6 +320,7 @@
   right: 0;
   min-width: auto;
 }
+
 .scrollBlind {
   width: calc(100% - 10px);
   height: 320px;

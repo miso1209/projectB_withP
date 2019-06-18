@@ -17,7 +17,7 @@
         "category": "armor",
         "classes": ["warrior", "wizard", "healer", "archer"],
         "subcategory": "medium-armor",
-        "options": ["armor(5)"]
+        "options": ["armor(+5)", "stamina(5)"]
     },
     "3":{
         "id": 3,
@@ -27,7 +27,7 @@
         "category": "weapon",
         "classes": ["warrior"],
         "subcategory": "medium-armor",
-        "options": ["attack(11)"]
+        "options": ["attack(11)", "critical(2)"]
     },
     "4":{
         "id": 4,
@@ -37,7 +37,7 @@
         "category": "armor",
         "classes": ["warrior", "wizard", "healer", "archer"],
         "subcategory": "medium-armor",
-        "options": ["armor(6)"]
+        "options": ["armor(6)", "stamina(7)"]
     },
     "5":{
         "id": 5,
@@ -47,7 +47,7 @@
         "category": "accessory",
         "classes": ["warrior", "wizard", "healer", "archer"],
         "subcategory": "accessory-ring",
-        "options": ["armor(+5)"]
+        "options": ["armor(+5)", "agility(7)"]
     },
     "6":{
         "id": 6,
@@ -57,7 +57,7 @@
         "category": "accessory",
         "classes": ["warrior", "wizard", "healer", "archer"],
         "subcategory": "accessory-necklace",
-        "options": ["armor(+3)"]
+        "options": ["armor(3)", "agility(10)"]
     },
     "7":{
         "id": 7,
@@ -67,7 +67,7 @@
         "category": "weapon",
         "classes": ["warrior"],
         "subcategory": "medium-armor",
-        "options": ["attack(11)"]
+        "options": ["attack(11)", "strength(10)"]
     },
     "8":{
         "id": 8,
@@ -77,7 +77,7 @@
         "category": "armor",
         "classes": ["warrior", "wizard", "healer", "archer"],
         "subcategory": "medium-armor",
-        "options": ["armor(6)"]
+        "options": ["armor(6)", "stamina(10)"]
     },
     "9":{
         "id": 9,
@@ -87,7 +87,7 @@
         "category": "accessory",
         "classes": ["warrior", "wizard", "healer", "archer"],
         "subcategory": "accessory-ring",
-        "options": ["armor(+3)"]
+        "options": ["armor(3)", "strength(10)"]
     },
     "10":{
         "id": 10,
@@ -97,7 +97,7 @@
         "category": "accessory",
         "classes": ["warrior", "wizard", "healer", "archer"],
         "subcategory": "accessory-necklace",
-        "options": ["armor(+3)"]
+        "options": ["armor(3)"]
     },
 
     "1001": {

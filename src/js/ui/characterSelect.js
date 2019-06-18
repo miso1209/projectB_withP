@@ -215,28 +215,6 @@ export default class CharacterSelect extends Panel {
     });
   }
 
-  // updateConsumables(result) {
-
-  //   this.invenItems.innerHTML = '';
-    
-  //   this.consumablesData.forEach(item => {
-  //     if (item !== null) {
-  //       let liWrap = new MakeDom('li');
-  //       let itemIcon = new ItemImage(item.data.image.texture, item.data.image.x, item.data.image.y);
-  //       let itemCount = new MakeDom('span', 'itemCount', `x${item.owned}`);
-  //       itemCount.style.color = '#ffd800';
-
-  //       liWrap.appendChild(itemIcon.dom);
-  //       liWrap.appendChild(itemCount);
-        
-  //       if(result) {
-  //         liWrap.addEventListener('click', result.bind(this, item));
-  //       }
-  //       this.invenItems.appendChild(liWrap);
-  //     } 
-  //   });
-  // }
-
   hideModal(){
     this.pane.parentNode.removeChild(this.pane);
   }

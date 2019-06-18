@@ -11,10 +11,11 @@ export default class CharacterDetail extends Panel {
     pane.classList.add('screen');
 
     this.selected = input;
-    this.statItem = null;
-    this.isActive = null;
+    this.statItem = null; 
+    this.isActive = null; // 장비, 스킬 아이콘 같이 체크해야함.
+
     this.callback = result;
-    this.simulationData = null;
+    this.tempEquip = null;
 
     // 모달
     const modal = new Modal(pane, 800, 460);
@@ -97,8 +98,9 @@ export default class CharacterDetail extends Panel {
       });
     }
 
-    if (this.equipBtn.dom) {
+    if (this.cancelBtn.dom) {
       this.cancelBtn.dom.addEventListener('click', (e)=>{
+        this.cancelBtn.dom.setAttribute('value', 'cancel');
         this.equipCallback(e.target);
       });
     }
@@ -113,9 +115,9 @@ export default class CharacterDetail extends Panel {
     this.statWrap = new MakeDom('ul', 'statWrap');
     const mainStats = new MakeDom('div', 'mainStat');
 
-    this.statMagic = new MakeDom('span', 'stat', `마법 : ${this.selected.magic}`);
-    this.statAttack = new MakeDom('span', 'stat', `공격력 : ${this.selected.attack}`);
-    this.statArmor = new MakeDom('span', 'stat', `방어력 : ${this.selected.armor}`);
+    // this.statMagic = new MakeDom('span', 'stat', `마법 : ${this.selected.magic}`);
+    this.statDps = new MakeDom('span', 'stat', `공격력 : ${this.selected.strongFigure}`);
+    this.statArmor = new MakeDom('span', 'stat', `방어력 : ${this.selected.armorFigure}`);
 
     // 장착가능 아이템 슬롯 
     // 장착버튼 클릭 시 노출된다.
@@ -145,8 +147,8 @@ export default class CharacterDetail extends Panel {
 
     
     leftBox.appendChild(descBox);
-    mainStats.appendChild(this.statMagic);
-    mainStats.appendChild(this.statAttack);
+    // mainStats.appendChild(this.statMagic);
+    mainStats.appendChild(this.statDps);
     mainStats.appendChild(this.statArmor);
     rightBox.appendChild(mainStats);
 
@@ -162,12 +164,12 @@ export default class CharacterDetail extends Panel {
     contentsWrap.appendChild(this.equipInven);
 
     this.dom.appendChild(contentsWrap);
-    this.update();
+    this.init();
   }
 
 
 
-  update() {
+  init() {
     const path = '/src/assets/';
 
     this.class.innerText = this.selected.class;
@@ -183,9 +185,10 @@ export default class CharacterDetail extends Panel {
   }
 
   updateStat() {
-    this.statMagic.innerText = `마법 : ${this.selected.magic}`;
-    this.statAttack.innerText = `공격력 : ${this.selected.attack}`;
-    this.statArmor.innerText = `방어력 : ${this.selected.armor}`;
+    this.statWrap.innerHTML = '';
+
+    this.statDps.innerText = `공격력 : ${this.selected.strongFigure}`;
+    this.statArmor.innerText = `방어력 : ${this.selected.armorFigure}`;
 
     for (let base in this.selected.data.base) {
       if ( base !== 'regist') {
@@ -194,19 +197,19 @@ export default class CharacterDetail extends Panel {
 
         let text = base.charAt(0).toUpperCase() + base.slice(1);
         let baseStatText = 'base' + text;
-        let plusStatText = 'plus' + text; //simulated
+        let plusStatText = 'simulated' + text; //simulated
         
         if ( base === 'health') {
           baseStatText = 'baseMax' + text;
-          plusStatText = 'plusMax' + text;
+          plusStatText = 'simulatedMax' + text;
         }
-
         baseStat.innerText = `${base} : ${this.selected[baseStatText]}`;
-
         plusStat.innerText = `( + ${this.selected[plusStatText]} )`;
+        
+        // console.log(plusStatText + ' / ' + this.selected[plusStatText]);
+
         plusStat.style.paddingLeft = '10px';
         plusStat.style.color = '#ffd800';
-
         baseStat.appendChild(plusStat);
         this.statWrap.appendChild(baseStat);
       }
@@ -214,41 +217,33 @@ export default class CharacterDetail extends Panel {
   }
 
   updateEquip(){
-    // console.log('updateEquip---');
     this.equipItems.innerHTML = '';
-    
+    let index = -1;
     //장착하고 있는 아이템정보와 별개로, 장착가능한 장비정보를 인벤에서 로드해야하므로 카테고리인자값이 필요함. 
     let equipItemsData = [
-      {data: null, category: 'armor'},
-      {data: null, category: 'weapon'},
-      {data: null, category: 'accessory'}
+      {data: null, category: 'armor', displayName: '갑옷'},
+      {data: null, category: 'weapon', displayName: '무기'},
+      {data: null, category: 'accessory', displayName: '악세사리'}
     ];
-
     equipItemsData[0].data = this.selected.equipments.armor;
     equipItemsData[1].data = this.selected.equipments.weapon;
     equipItemsData[2].data = this.selected.equipments.accessory;
-
-    let index = -1;
-
+    
     equipItemsData.forEach(d => {
       ++index;
-
       let liWrap = new MakeDom('li');
       let descText = new MakeDom('span', 'descText', '');
-
       liWrap.appendChild(descText);
       liWrap.index = index;
-
       if (d.data !== null) {
         let item = d.data.data;
         let itemIcon = new ItemImage(item.image.texture, item.image.x, item.image.y);
-
         itemIcon.dom.style.display = 'inline-block';
-        descText.innerText = item.name;
+        descText.innerText = d.displayName;
         liWrap.appendChild(itemIcon.dom);
       } else {
         liWrap.classList.add('empty');
-        descText.innerText = '장비없음';
+        descText.innerText = d.displayName;
       }
 
       this.equipItems.appendChild(liWrap);
@@ -261,17 +256,14 @@ export default class CharacterDetail extends Panel {
         }
         liWrap.classList.add('active');
         this.isActive = liWrap;
-
         this.statItem = equipItemsData[liWrap.index];
       });
-
       // // #click event - data
-      liWrap.addEventListener('click', this.showDescription.bind(this, 'gear'));
+      liWrap.addEventListener('click', this.showEquipInfo.bind(this));
     });
   }
 
-
-  updateSkill(){
+  updateSkill() {
     this.skillItems.innerHTML = '';
     let skillItemsData = [];
     skillItemsData.push(this.selected.skillA);
@@ -286,8 +278,7 @@ export default class CharacterDetail extends Panel {
       liWrap.index = index;
 
       if (d !== null) {
-        console.log(skillItemsData[liWrap.index]);
-
+        // console.log(skillItemsData[liWrap.index]);
         let skillIcon = new ItemImage('items.png', 20, 1);
         skillIcon.dom.style.display = 'inline-block';
 
@@ -308,66 +299,67 @@ export default class CharacterDetail extends Panel {
         this.statItem = skillItemsData[liWrap.index];
       });
 
-      liWrap.addEventListener('click', this.showDescription.bind(this, 'skill'));
+      liWrap.addEventListener('click', this.showSkillInfo.bind(this));
     });
   }
 
-  showDescription(input) {
-    console.log('=== updateDesc');
-    // 초기화
+  showSkillInfo (){
+    this.descEquip.innerHTML = '';
+
+    this.equipBtn.dom.style.display = 'none';
+    this.cancelBtn.dom.style.display = 'none';
+
+    if (this.statItem) {
+      this.descEquip.innerText = this.statItem.data.name; 
+      const desctext = new MakeDom('p', 'desc-text');
+      this.descEquip.appendChild(desctext);
+      desctext.innerText = this.statItem.data.description; 
+    }
+  }
+
+  showEquipInfo() {
     this.descEquip.innerHTML = '';
     
+    this.equipBtn.dom.style.display = 'none';
+    this.cancelBtn.dom.style.display = 'none';
     const desctext = new MakeDom('p', 'desc-text');
-    let d = this.statItem;
 
-    if (input === 'gear') {
+    if (this.statItem.data !== null) {
+
+      console.log('=== a');
+      this.descEquip.innerText = this.statItem.data.name; 
+      desctext.innerText = this.statItem.data.description;
       this.equipBtn.dom.style.display = 'block';
-
-      if (d.data === null) {
-        desctext.innerText = '장착된 장비 정보가 없습니다.';
-        this.equipBtn.dom.innerText = '장비장착';
-        this.equipBtn.dom.setAttribute('value', 'simulation');
+      
+      if(this.equipBtn.dom.value === 'simulationEquip') {
+        this.cancelBtn.dom.style.display = 'block';
+        this.equipBtn.dom.innerText = '확인';
+        this.equipBtn.dom.setAttribute('value', 'equip');
+        this.equipCallback(null);
       } else {
-        this.descEquip.innerText = d.data.name; 
-        desctext.innerText = d.data.description;
         this.equipBtn.dom.innerText = '장비해제';
         this.equipBtn.dom.setAttribute('value', 'unEquip');
       }
+
     } else {
-      this.equipBtn.dom.style.display = 'none';
-      this.descEquip.innerText = d.data.name; 
-      desctext.innerText = d.data.description; 
+      console.log('=== b');
+      desctext.innerText = '장착된 장비 정보가 없습니다.';
+      this.equipBtn.dom.style.display = 'block';
+      this.equipBtn.dom.innerText = '장비장착';
+      this.equipBtn.dom.setAttribute('value', 'simulationEquip');
     }
-    
-    this.descEquip.appendChild(desctext);
-  }
 
-  updateDescItem() {
-    console.log(this.statItem);
-
-    // 초기화
-    this.descEquip.innerHTML = '';
-    const desctext = new MakeDom('p', 'desc-text');
-    desctext.innerText = this.statItem.data.description;
-    this.descEquip.innerText = this.statItem.data.name;
-
-    this.cancelBtn.dom.style.display = 'block';
-    this.equipBtn.dom.style.display = 'block';
-
-    this.cancelBtn.dom.setAttribute('value', 'cancel');
-    this.equipBtn.dom.innerText = '확인';
-    this.equipBtn.dom.setAttribute('value', 'equip');
     this.descEquip.appendChild(desctext);
   }
 
   showEquipInven() {
+    this.storageContent.innerHTML = '';
     this.equipInven.style.display = 'block';
     this.slotSize = 14;
 
-    console.log(this.simulationData);
-
     let isActive = null;
-    this.simulationData.forEach(item => {
+
+    this.tempEquip.forEach(item => {
       let liWrap = new MakeDom('li', 'slot');
       liWrap.style.width = '55px';
       liWrap.style.height = '55px';
@@ -386,27 +378,41 @@ export default class CharacterDetail extends Panel {
         this.statItem = item;
       });
 
-      liWrap.addEventListener('click', this.updateDescItem.bind(this));
-      liWrap.addEventListener('dblclick', this.callback.bind(this, item, 'equip'));
+      liWrap.addEventListener('click', this.showEquipInfo.bind(this));
+      liWrap.addEventListener('dblclick', this.equipCallback.bind(this, 'equip'));
       this.storageContent.appendChild(liWrap);
     });
   }
+
   hideEquipInven() {
-    this.equipInven.innerHTML = '';
     this.equipInven.style.display = 'none';
     this.cancelBtn.dom.style.display = 'none';
   }
 
-  equipCallback (attr) {
-    if (attr.value === 'equip') {
-      console.log('equipCallback');
-      
-    } else if (attr.value === 'cancel') {
-      this.hideEquipInven();
-    }
+  equipCallback(attr) {
 
-    this.callback(this.statItem, attr.value);
-    // this.updateEquip();
+    if(attr === null) {
+
+      console.log('simulationEquip');
+      this.callback(this.statItem, 'simulationEquip');
+      // 확인취소
+    } else {
+      let flag = attr.value;
+
+      console.log(flag);
+
+      if (flag === 'equip') {
+        this.hideEquipInven();
+        // 설명영역 업데이트
+      } else if (flag === 'cancel') {
+        this.hideEquipInven();
+        // 설명영역 업데이트
+      } else { 
+        flag = 'unEquip'
+      }
+
+      this.callback(this.statItem, flag);
+    }
   }
 }
 
