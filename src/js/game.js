@@ -338,14 +338,15 @@ export default class Game extends EventEmitter {
                 const map = maps[y][x];
                 
                 if (map instanceof Stage) {
+                    map.on('playcutscene', async (...args) => {
+                        this._playCutscene(...args);
+                    });
                     map.on('battle', async (...args) => { await this.$objBattle(...args); });
                 }
             }
         }
 
         await this.$enterStageIns(hall, hallKey);
-        this.ui.hideTheaterUI(0.5);
-        this.ui.showMenu();
         this.ui.showStageTitle(`- 어둠의 성탑 ${this.currentFloor}층 -`);
     }
 
@@ -410,11 +411,15 @@ export default class Game extends EventEmitter {
         await cutscene.$play();
         this.exploreMode.interactive = true;
         this.stage.showPathHighlight = true;
+        this.ui.hideTheaterUI(0.5);
+        this.ui.showMenu();
         stage.enter();
     }
 
     async $leaveStage(eventName) {
         if (!this.stage) { return; }
+        this.ui.showTheaterUI(0.5);
+        this.ui.hideMenu();
 
         this.stage.leave();
         // 이벤트를 찾는다
