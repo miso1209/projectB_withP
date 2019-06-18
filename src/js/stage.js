@@ -1010,7 +1010,7 @@ export default class Stage extends PIXI.Container {
 
         // 던전의 포털 밟았는가.
         const index = obj.gridX + obj.gridY * this.mapWidth;
-        if (this.eventMap[index] && obj.currentPath.length <= 2) {
+        if (this.eventMap[index] && obj.currentPath && obj.currentPath.length <= 2) {
             if (this.onEvent) {
                 this.onEvent(this.eventMap[index]);
             }
