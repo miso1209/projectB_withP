@@ -431,7 +431,7 @@ export default class Stage extends PIXI.Container {
     newTile(x, y, tileData) {
         let tile;
         //호영 테스트
-        if( tileData.type == "random_wall"){ // 랜덤 벽일때
+        if( tileData.type == "random_wall" ){ // 랜덤 벽일때
             
             tileData.randomImage = new Array(tileData.imgCount?tileData.imgCount:0); // 이미지 숫자로 랜덤이미지의 배열을 선언
             for(var i=0; i < tileData.imgCount; i++){
@@ -502,22 +502,12 @@ export default class Stage extends PIXI.Container {
             
             tile = Prop.New(tileData.type, x, y, tileData);
         
-        } else if( tileData.type == "door_portal"){
+        } else if( tileData.type == "door_object"){
             if ( this.doorTarget.indexOf(tileData.target) < 0 || tileData.name === this.neighbor.input ){
+                // tileData.texture = false;
+                // tileData.movable = true;
+            } else {
                 tileData.texture = false;
-                tileData.movable = true;
-            } else if (tileData.target === 'castle_wall_door1' && this.neighbor.input == 'up') {
-                tileData.texture = false;
-                tileData.movable = true;
-            } else if (tileData.target === 'castle_wall_door2' && this.neighbor.input == 'down') {
-                tileData.texture = false;
-                tileData.movable = true;
-            } else if (tileData.target === 'castle_wall_door3' && this.neighbor.input == 'left') {
-                tileData.texture = false;
-                tileData.movable = true;
-            } else if (tileData.target === 'castle_wall_door4' && this.neighbor.input == 'right') {
-                tileData.texture = false;
-                tileData.movable = true;
             }
             tile = Prop.New(tileData.type, x, y, tileData);
         } 

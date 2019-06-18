@@ -136,6 +136,6 @@ export default class Monster extends PropBase {
 
     // DPS는 파티의 DPS를 가져온다.
     getDPS() {
-        return "DPS 1K";
+        return "DPS 100";
     }
 }
