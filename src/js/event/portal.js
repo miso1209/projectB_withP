@@ -55,18 +55,8 @@ export class Portal3 {
     touch(game) {
         // 월드 진입컷신을 만들어서 넣어준다.
         const $t = async () => {
-            game.exploreMode.interactive = false;
-            game.stage.showPathHighlight = false;
-            game.ui.showTheaterUI(0.5);
-            game.ui.hideMenu();
-
             await game.$leaveStage(this.from)
             await game.$enterStageIns(this.targetStage, this.to);
-
-            game.exploreMode.interactive = true;
-            game.stage.showPathHighlight = true;
-            game.ui.hideTheaterUI(0.5);
-            game.ui.showMenu();
         };
 
         $t();

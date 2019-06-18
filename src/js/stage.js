@@ -770,6 +770,11 @@ export default class Stage extends PIXI.Container {
         this.monsters.forEach((monster) => {
             monster.move();
         });
+
+        // 중간보스룸 컷씬
+        if (this.name === 'castle_boss-middle') {
+            this.emit('playcutscene', 3);
+        }
     }
 
     leave() {
@@ -960,7 +965,7 @@ export default class Stage extends PIXI.Container {
     }
 
     onObjMoveStepEnd(obj) {
-        console.log(obj.gridX, obj.gridY);
+        // console.log(obj.gridX, obj.gridY);
         obj.currentPathStep--;
         obj.currentTarget = null;
         obj.currentTargetTile = null;

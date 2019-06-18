@@ -40,21 +40,18 @@ export default class Minimap extends PIXI.Application {
         this.mapTile = {};
         this.mapLength = map.length;
 
-        // console.log(map);
-
         for (let y = 0; y < map.length; y++) {
             for (let x = 0; x < map[y].length; x++) {
                 if (MAP_DATA[map[y][x]]) {
                     const mapTile = new MiniMapTile(MAP_DATA[map[y][x]]);
                     mapTile.position.x = (x * TILE_WIDTH/2) - (y * TILE_WIDTH / 2);
                     mapTile.position.y = (x * TILE_HEIGHT/2) + (y * TILE_HEIGHT / 2);
-                    this.mapTile[x + y * this.mapLength] = mapTile;
+                    this.mapTile[Math.round(x + y * this.mapLength)] = mapTile;
     
                     this.mapContainer.addChild(mapTile);
                 }
             }
         }
-        // console.log(this.mapContainer);
         this.stage.addChild(this.mapContainer);
         this.stage.addChild(this.minimapPortrait);
     }
@@ -69,7 +66,7 @@ export default class Minimap extends PIXI.Application {
                 if (this.realmap[y][x] === stage && this.mapContainer) {
                     this.mapContainer.position.x = (this.screenWidth / 2) - ((x * TILE_WIDTH / 2) - (y * TILE_WIDTH / 2) + TILE_WIDTH / 2);
                     this.mapContainer.position.y = (this.screenHeight / 2) - ((x * TILE_HEIGHT / 2) + (y * TILE_HEIGHT / 2) + TILE_HEIGHT / 2);
-                    this.mapTile[(x) + (y) * this.mapLength].show();
+                    this.mapTile[Math.round(x + y * this.mapLength)].show();
                     if (stage.neighbor.up) {
                         this.mapTile[(x) + (y-1) * this.mapLength].show();
                     }
