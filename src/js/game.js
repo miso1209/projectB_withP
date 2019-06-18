@@ -75,6 +75,14 @@ export default class Game extends EventEmitter {
         this.ui.on('equipItem', (itemCategory, itemId, cid) => {
             this.equipItem(itemCategory, itemId, cid);
         });
+        this.ui.on('simulateEquip', (itemCategory, itemId, cid) => {
+            this.player.characters[cid].equip(itemCategory, itemId);
+        });
+        this.ui.on('cancelSimulate', () => {
+            for (const cid in this.player.characters) {
+                this.player.characters[cid].refreshSimulationData();
+            }
+        });
         this.ui.on('unequipItem', (itemCategory, cid) => {
             this.unequipItem(itemCategory, cid);
         });

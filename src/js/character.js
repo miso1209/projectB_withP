@@ -15,9 +15,9 @@ export default class Character {
         this.data = data;
         
        
-        this.plusMaxHealth = 0;
         this.health = this.maxHealth;
 
+        this.plusMaxHealth = 0;
         this.plusStrength = 0;
         this.plusIntellect = 0;
         this.plusAgility = 0;
@@ -25,16 +25,27 @@ export default class Character {
         this.plusSpeed = 0;
         this.plusCritical = 0;
         this.plusRegist = 0;
+        this.plusAttack = 0;
+        this.plusMagic = 0;
+        this.plusArmor = 0;
+
+        this.simulatedMaxHealth = 0;
+        this.simulatedStrength = 0;
+        this.simulatedIntellect = 0;
+        this.simulatedAgility = 0;
+        this.simulatedStamina = 0;
+        this.simulatedSpeed = 0;
+        this.simulatedCritical = 0;
+        this.simulatedRegist = 0;
+        this.simulatedAttack = 0;
+        this.simulatedMagic = 0;
+        this.simulatedArmor = 0;
 
         this.equipments = {
             weapon: null,
             armor: null,
             accessory: null,
         };
-
-        this.plusAttack = 0;
-        this.plusMagic = 0;
-        this.plusArmor = 0;
 
         this.attackPotential = 0.5;
         this.magicPotential = 0.5;
@@ -131,7 +142,6 @@ export default class Character {
         return 1.2 + (this.agility / 100)
     }
 
-    // 스킬계수를 포함하지 않은 그저 강함의 수치를 DPS처럼 나타내고싶다.
     get strongFigure() {
         // 기본적인 기대 데미지
         const basicDmg = (this.attack>this.magic?this.attack:this.magic) * this.speed;
@@ -141,10 +151,14 @@ export default class Character {
         // 공격 기대 수치.
         const resultDmg = nonCriticalDmg + criticalDmg;
 
+        return Math.round(resultDmg);
+    }
+
+    get armorFigure() {
         // 방어 기대 수치
         const resultDefense = this.maxHealth + this.armor;
 
-        return Math.round(resultDmg + resultDefense);
+        return Math.round(resultDefense);
     }
 
     get attack() {
@@ -206,12 +220,6 @@ export default class Character {
         return unequipItem;
     }
 
-    canEquip(slot, item) {
-        // 아이템 카테고리가 일치하는지 보고, 서브 카테고리가 일치하는지도 살펴본다.
-        // TODO : 서브 카테고리는 나중에 처리
-        return item.category === slot;
-    }
-
     unequip(slot) {
         const item = this.equipments[slot];
         if (item) {
@@ -226,6 +234,12 @@ export default class Character {
         }
 
         return item;
+    }
+
+    canEquip(slot, item) {
+        // 아이템 카테고리가 일치하는지 보고, 서브 카테고리가 일치하는지도 살펴본다.
+        // TODO : 서브 카테고리는 나중에 처리
+        return item.category === slot;
     }
 
     applyOption(option) {
@@ -250,6 +264,8 @@ export default class Character {
                 this.health = Math.min(this.maxHealth, this.health);
                 break;
         }
+
+        this.refreshSimulationData();
     }
 
     clearOption(option) {
@@ -271,6 +287,8 @@ export default class Character {
                 this.health = Math.max(0, this.health);
                 break;
         }
+
+        this.refreshSimulationData();
     }
 
     // exp 를 추가한다
@@ -337,5 +355,86 @@ export default class Character {
 
     clearDirty() {
         return this.dirty = false;
+    }
+
+    simulationEquip(slot, itemId) {
+        this.refreshSimulationData();
+
+        const item = new Item(itemId);
+        if (!this.canEquip(slot, item)) {
+            throw Error("can not equip item :" + item.name + " at " +  slot);
+        }
+
+        if (this.equipments[slot]) {
+            this.simulationUnequip(slot);
+        }
+
+        for(const option of item.options) {
+            this.applySimulationOption(option);
+        }
+    }
+
+    simulationUnequip(slot) {
+        const item = this.equipments[slot];
+        if (item) {
+            for(const option of item.options) {
+                this.clearSimulationOption(option);
+            }
+        }
+    }
+
+    refreshSimulationData() {
+        this.simulatedMaxHealth = this.plusMaxHealth;
+        this.simulatedStrength = this.plusStrength;
+        this.simulatedIntellect = this.plusIntellect;
+        this.simulatedAgility = this.plusAgility;
+        this.simulatedStamina = this.plusStamina;
+        this.simulatedSpeed = this.plusSpeed;
+        this.simulatedCritical = this.plusCritical;
+        this.simulatedRegist = this.plusRegist;
+        this.simulatedAttack = this.plusAttack;
+        this.simulatedMagic = this.plusMagic;
+        this.simulatedArmor = this.plusArmor;
+    }
+
+    applySimulationOption(option) {
+        // TODO : 매번 옵션을 파싱하지 않고 미리 캐싱해놓을필요가 있다
+        option = new ScriptParser(option);
+        switch(option.name) {
+            case "attack":
+                this.simulatedAttack += Number(option.args[0]);
+                break;
+            case "matic":
+                this.simulatedMagic += Number(option.args[0]);
+                break;
+            case "armor":
+                this.simulatedArmor += Number(option.args[0]);
+                break;
+            case "health":
+                break;
+            case "maxHealth":
+                this.simulatedMaxHealth += Number(option.args[0]);
+                break;
+        }
+    }
+
+    clearSimulationOption(option) {
+        option =new ScriptParser(option);
+        switch(option.name) {
+            case "attack":
+                this.simulatedAttack -= Number(option.args[0]);
+                break;
+            case "matic":
+                this.simulatedMagic -= Number(option.args[0]);
+                break;
+            case "armor":
+                this.simulatedArmor -= Number(option.args[0]);
+                break;
+            case "health":
+                break;
+            case "maxHealth":
+                this.simulatedMaxHealth -= Number(option.args[0]);
+                break;
+        }
     }
 }
