@@ -263,6 +263,27 @@ export default class Character {
                 this.plusMaxHealth += Number(option.args[0]);
                 this.health = Math.min(this.maxHealth, this.health);
                 break;
+            case "strength":
+                this.plusStrength += Number(option.args[0]);
+                break;
+            case "intellect":
+                this.plusIntellect += Number(option.args[0]);
+                break;
+            case "agility":
+                this.plusAgility += Number(option.args[0]);
+                break;
+            case "stamina":
+                this.plusStamina += Number(option.args[0]);
+                break;
+            case "speed":
+                this.plusSpeed += Number(option.args[0]);
+                break;
+            case "critical":
+                this.plusCritical += Number(option.args[0]);
+                break;
+            case "regist":
+                this.plusRegist += Number(option.args[0]);
+                break;
         }
 
         this.refreshSimulationData();
@@ -285,6 +306,27 @@ export default class Character {
             case "maxHealth":
                 this.plusMaxHealth -= Number(option.args[0]);
                 this.health = Math.max(0, this.health);
+                break;
+            case "strength":
+                this.plusStrength -= Number(option.args[0]);
+                break;
+            case "intellect":
+                this.plusIntellect -= Number(option.args[0]);
+                break;
+            case "agility":
+                this.plusAgility -= Number(option.args[0]);
+                break;
+            case "stamina":
+                this.plusStamina -= Number(option.args[0]);
+                break;
+            case "speed":
+                this.plusSpeed -= Number(option.args[0]);
+                break;
+            case "critical":
+                this.plusCritical -= Number(option.args[0]);
+                break;
+            case "regist":
+                this.plusRegist -= Number(option.args[0]);
                 break;
         }
 
@@ -415,6 +457,27 @@ export default class Character {
             case "maxHealth":
                 this.simulatedMaxHealth += Number(option.args[0]);
                 break;
+            case "strength":
+                this.simulatedStrength += Number(option.args[0]);
+                break;
+            case "intellect":
+                this.simulatedIntellect += Number(option.args[0]);
+                break;
+            case "agility":
+                this.simulatedAgility += Number(option.args[0]);
+                break;
+            case "stamina":
+                this.simulatedStamina += Number(option.args[0]);
+                break;
+            case "speed":
+                this.simulatedSpeed += Number(option.args[0]);
+                break;
+            case "critical":
+                this.simulatedCritical += Number(option.args[0]);
+                break;
+            case "regist":
+                this.simulatedRegist += Number(option.args[0]);
+                break;
         }
     }
 
@@ -434,6 +497,27 @@ export default class Character {
                 break;
             case "maxHealth":
                 this.simulatedMaxHealth -= Number(option.args[0]);
+                break;
+            case "strength":
+                this.simulatedStrength -= Number(option.args[0]);
+                break;
+            case "intellect":
+                this.simulatedIntellect -= Number(option.args[0]);
+                break;
+            case "agility":
+                this.simulatedAgility -= Number(option.args[0]);
+                break;
+            case "stamina":
+                this.simulatedStamina -= Number(option.args[0]);
+                break;
+            case "speed":
+                this.simulatedSpeed -= Number(option.args[0]);
+                break;
+            case "critical":
+                this.simulatedCritical -= Number(option.args[0]);
+                break;
+            case "regist":
+                this.simulatedRegist -= Number(option.args[0]);
                 break;
         }
     }
