@@ -345,6 +345,7 @@ export default class DomUI extends EventEmitter {
                 } else if (option === 'cancel') {
                     console.log('시뮬레이션 취소');
                     this.emit('cancelSimulate');
+
                     characterDetail.statItem.data = null;
                     
                 } else if (option === 'equip') {
@@ -352,12 +353,15 @@ export default class DomUI extends EventEmitter {
                     this.emit('equipItem', result.data.category, result.item, player.id);
                     this.emit('playerInvenData', result.data.category);
                     characterDetail.updateEquip();
+                    characterDetail.showEquipInfo();
                 } else {
                     console.log('장비 해제');
                     this.emit('unequipItem', result.data.category, player.id);
                     this.emit('playerInvenData', result.data.category);
+                    
                     characterDetail.statItem.data = null;
                     characterDetail.updateEquip();
+                    characterDetail.updateStat();
                 }
             } else {
                 if (this.playerInvenData.length !== 0) {

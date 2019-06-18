@@ -76,20 +76,19 @@ export default class Game extends EventEmitter {
             this.equipItem(itemCategory, itemId, cid);
         });
         this.ui.on('simulateEquip', (itemCategory, itemId, cid) => {
-            this.player.characters[cid].equip(itemCategory, itemId);
+            this.player.characters[cid].simulationEquip(itemCategory, itemId);
             this.ui.player = this.player.characters[cid];
+            console.log(this.ui.player);
         });
         this.ui.on('cancelSimulate', () => {
             for (const cid in this.player.characters) {
                 this.player.characters[cid].refreshSimulationData();
             }
         });
-        this.ui.on('unequipItem', (itemCategory, cid) => {
-            this.unequipItem(itemCategory, cid);
-        });
 
         this.ui.on('unequipItem', (itemCategory, cid) => {
             this.player.characters[cid].unequip(itemCategory);
+            this.ui.player = this.player.characters[cid];
         });
 
         this.ui.on('characterselect', ()=> {
@@ -320,7 +319,9 @@ export default class Game extends EventEmitter {
 
     async $nextFloor(from, dir) {
         // 5층씩 올라가도록 해본다.
-        this.currentFloor+=5;
+        this.currentFloor++;
+        this.ui.showTheaterUI(0.5);
+        this.ui.hideMenu();
         await this.$leaveStage(from);
 
         const mapGenerator = new MapGenerator();
@@ -337,15 +338,14 @@ export default class Game extends EventEmitter {
                 const map = maps[y][x];
                 
                 if (map instanceof Stage) {
-                    map.on('playcutscene', async (...args) => {
-                        this._playCutscene(...args);
-                    });
                     map.on('battle', async (...args) => { await this.$objBattle(...args); });
                 }
             }
         }
 
         await this.$enterStageIns(hall, hallKey);
+        this.ui.hideTheaterUI(0.5);
+        this.ui.showMenu();
         this.ui.showStageTitle(`- 어둠의 성탑 ${this.currentFloor}층 -`);
     }
 
@@ -410,15 +410,12 @@ export default class Game extends EventEmitter {
         await cutscene.$play();
         this.exploreMode.interactive = true;
         this.stage.showPathHighlight = true;
-        this.ui.hideTheaterUI(0.5);
-        this.ui.showMenu();
         stage.enter();
     }
 
     async $leaveStage(eventName) {
         if (!this.stage) { return; }
-        this.ui.showTheaterUI(0.5);
-        this.ui.hideMenu();
+
         this.stage.leave();
         // 이벤트를 찾는다
         this.exploreMode.setInteractive(false);
@@ -695,6 +692,7 @@ export default class Game extends EventEmitter {
     addQuest(questId) {
 
         if (!this.storage.data.quests[questId]) {
+            console.log('addQuest');
             // 퀘스트를 가지고 있지 않다면 퀘스트를 추가한다
             // 가지고 있다면 추가하지 않는다.
             const quest = new Quest(questId);
@@ -707,6 +705,7 @@ export default class Game extends EventEmitter {
     }
 
     completeQuest(id) {
+        console.log('complete Quest');
         const quest = this.player.quests[id];
         if (quest && quest.isAllObjectivesCompleted()){
             // 이벤트 연결을 끊어놓는다

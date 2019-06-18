@@ -327,18 +327,20 @@ export default class CharacterDetail extends Panel {
     if (this.statItem.data !== null) {
 
       console.log('=== a');
+      
       this.descEquip.innerText = this.statItem.data.name; 
       desctext.innerText = this.statItem.data.description;
       this.equipBtn.dom.style.display = 'block';
       
-      if(this.equipBtn.dom.value === 'simulationEquip') {
+      // TODO : 장비 해제 / 장착은 따로 함수로 뺄 것.
+      if(true) {
         this.cancelBtn.dom.style.display = 'block';
         this.equipBtn.dom.innerText = '확인';
         this.equipBtn.dom.setAttribute('value', 'equip');
-        this.equipCallback(null);
+        // this.equipCallback(null);
       } else {
-        this.equipBtn.dom.innerText = '장비해제';
-        this.equipBtn.dom.setAttribute('value', 'unEquip');
+        // this.equipBtn.dom.innerText = '장비해제';
+        // this.equipBtn.dom.setAttribute('value', 'unEquip');
       }
 
     } else {
@@ -351,6 +353,7 @@ export default class CharacterDetail extends Panel {
 
     this.descEquip.appendChild(desctext);
   }
+
 
   showEquipInven() {
     this.storageContent.innerHTML = '';
@@ -376,10 +379,10 @@ export default class CharacterDetail extends Panel {
         liWrap.classList.add('active');
         
         this.statItem = item;
+        this.showEquipInfo();
       });
 
-      liWrap.addEventListener('click', this.showEquipInfo.bind(this));
-      liWrap.addEventListener('dblclick', this.equipCallback.bind(this, 'equip'));
+      liWrap.addEventListener('click', this.equipCallback.bind(this, null));
       this.storageContent.appendChild(liWrap);
     });
   }
@@ -390,27 +393,21 @@ export default class CharacterDetail extends Panel {
   }
 
   equipCallback(attr) {
+    console.log('equipCallback');
 
     if(attr === null) {
-
-      console.log('simulationEquip');
       this.callback(this.statItem, 'simulationEquip');
       // 확인취소
     } else {
       let flag = attr.value;
-
-      console.log(flag);
-
       if (flag === 'equip') {
         this.hideEquipInven();
-        // 설명영역 업데이트
       } else if (flag === 'cancel') {
         this.hideEquipInven();
-        // 설명영역 업데이트
       } else { 
         flag = 'unEquip'
       }
-
+      this.showEquipInfo();
       this.callback(this.statItem, flag);
     }
   }
