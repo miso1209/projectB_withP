@@ -29,6 +29,12 @@ export default class Character {
         this.plusMagic = 0;
         this.plusArmor = 0;
 
+        this.equipments = {
+            weapon: null,
+            armor: null,
+            accessory: null,
+        };
+
         this.simulatedMaxHealth = 0;
         this.simulatedStrength = 0;
         this.simulatedIntellect = 0;
@@ -41,7 +47,7 @@ export default class Character {
         this.simulatedMagic = 0;
         this.simulatedArmor = 0;
 
-        this.equipments = {
+        this.simulationEquipments = {
             weapon: null,
             armor: null,
             accessory: null,
@@ -407,22 +413,24 @@ export default class Character {
             throw Error("can not equip item :" + item.name + " at " +  slot);
         }
 
-        if (this.equipments[slot]) {
+        if (this.simulationEquipments[slot]) {
             this.simulationUnequip(slot);
         }
 
         for(const option of item.options) {
+            this.simulationEquipments[slot] = item;
             this.applySimulationOption(option);
         }
     }
 
     simulationUnequip(slot) {
-        const item = this.equipments[slot];
+        const item = this.simulationEquipments[slot];
         if (item) {
             for(const option of item.options) {
                 this.clearSimulationOption(option);
             }
         }
+        this.simulationEquipments[slot] = null;
     }
 
     refreshSimulationData() {
@@ -437,6 +445,9 @@ export default class Character {
         this.simulatedAttack = this.plusAttack;
         this.simulatedMagic = this.plusMagic;
         this.simulatedArmor = this.plusArmor;
+        this.simulationEquipments.weapon = this.equipments.weapon;
+        this.simulationEquipments.armor = this.equipments.armor;
+        this.simulationEquipments.accessory = this.equipments.accessory;
     }
 
     applySimulationOption(option) {
