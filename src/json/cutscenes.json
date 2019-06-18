@@ -59,6 +59,20 @@
                 {"text": "작업도구로 회복약을 만들어서 가져와보자 ", "speaker": 1}
             ]
         }
+    ],
+    "3": [
+        {
+            "command": "dialog",
+            "arguments": [ {"text":"이런, 보스방이잖아?", "speaker": 1}]
+        }, {
+            "command": "goto",
+            "arguments": [45, 71]
+        }, {
+            "command": "dialog",
+            "arguments": [
+                {"text": "한판뜨자고?", "speaker": 1}
+            ]
+        }
     ]
 }
 

@@ -808,7 +808,8 @@
                          "name":"ysize",
                          "type":"int",
                          "value":2
-                        }]
+                        }],
+                 "type":"home_portal"
                 }],
          "tilewidth":65
         }, 

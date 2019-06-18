@@ -10,6 +10,7 @@ import ItemImage from "./component/itemimage";
 import CharacterSelect from "./characterSelect";
 import CharacterDetail from "./characterDetail";
 import MakeDom from "./component/makedom";
+import Minimap from "./minimap";
 
 export default class DomUI extends EventEmitter {
     constructor() {
@@ -36,10 +37,10 @@ export default class DomUI extends EventEmitter {
 
         const minimap = document.createElement('canvas');
         minimap.classList.add('minimap');
-        // minimap.style.width = '118px';
-        // minimap.style.height = '90px';
+        minimap.style.width = '160px';
+        minimap.style.height = '100px';
         gnb.appendChild(minimap);
-        this.minimap = minimap;
+        this.minimap = new Minimap(160, 100, minimap);
         
         const menuData = [
             {name:'캐릭터', event: "characterselect"},

@@ -26,6 +26,8 @@
     ["shadow.png", "assets/shadow.png"],
     ["pbar.png", "assets/pbar.png"],
     ["pbar_w.png", "assets/pbar_w.png"],
+    ["event_02.png", "assets/mapdata/event_02.png"],
+    ["location_icon.png", "assets/location_icon.png"],
 
     ["assets/sprite/elid/elid_atk_nw.json"],
     ["assets/sprite/elid/elid_atk_sw.json"],

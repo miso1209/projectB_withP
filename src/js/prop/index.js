@@ -28,3 +28,4 @@ Prop.Register("worktable", (...args) => { return new WorkTable(...args); });
 Prop.Register("monster", (...args) => { return new Monster(...args); });
 Prop.Register("wizard", (...args) => { return new Wizard(...args); });
 Prop.Register("chest", (...args) => { return new Chest(...args); });
+Prop.Register("home_portal", (...args) => { return new Chest(...args); });

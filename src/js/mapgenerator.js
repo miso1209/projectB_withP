@@ -133,10 +133,6 @@ export default class MapGenerator {
         // 축소작업
         this.smallizeMap(map);
 
-        for (let y = 0; y < map.length; y++) {
-            console.log(map[y].toString().replace(/,/g,''));
-        }
-
         this.map = map;
         this.realMap = await this.loadMap();
         this.setPortal();

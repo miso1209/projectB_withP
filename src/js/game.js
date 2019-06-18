@@ -70,7 +70,6 @@ export default class Game extends EventEmitter {
             this.ui.showInventory(inputs);
         });
         this.ui.on('useItem', (itemId, count, target) => {
-            console.log(itemId, count, target);
             this.useItem(itemId, count, target);
         });
         this.ui.on('equipItem', (itemCategory, itemId, cid) => {
@@ -81,7 +80,6 @@ export default class Game extends EventEmitter {
         });
 
         this.ui.on('unequipItem', (itemCategory, cid) => {
-            console.log('unequipItem ' + itemCategory, cid);
             this.player.characters[cid].unequip(itemCategory);
         });
 
@@ -315,6 +313,8 @@ export default class Game extends EventEmitter {
     async $nextFloor(from, dir) {
         // 5층씩 올라가도록 해본다.
         this.currentFloor++;
+        this.ui.showTheaterUI(0.5);
+        this.ui.hideMenu();
         await this.$leaveStage(from);
 
         const mapGenerator = new MapGenerator();
@@ -322,6 +322,8 @@ export default class Game extends EventEmitter {
         const maps = await mapGenerator.createMap(dir);
         const hall = mapGenerator.getHall();
         let hallKey = (dir === 'left'? 'right':'down');
+        
+        this.ui.minimap.makeNewMap(mapGenerator.map, mapGenerator.realMap);
 
         // 맵에 리스너 달아서 배틀 받는다..
         for (let y=0; y<maps.length; y++) {
@@ -335,6 +337,8 @@ export default class Game extends EventEmitter {
         }
 
         await this.$enterStageIns(hall, hallKey);
+        this.ui.hideTheaterUI(0.5);
+        this.ui.showMenu();
         this.ui.showStageTitle(`- 어둠의 성탑 ${this.currentFloor}층 -`);
     }
 
@@ -391,6 +395,8 @@ export default class Game extends EventEmitter {
         // 임시 이동 코드...
         this.stage.addCharacter(this.currentMode.controller, cutscene.gridX, cutscene.gridY);
         this.stage.checkForFollowCharacter(this.currentMode.controller, true);
+        this.ui.minimap.moveTo(stage);
+
         // 스테이지 타이틀을 띄운다
         // 진입 컷신을 사용한다
         await this.$fadeIn(0.5);
@@ -679,6 +685,7 @@ export default class Game extends EventEmitter {
     addQuest(questId) {
 
         if (!this.storage.data.quests[questId]) {
+            console.log('addQuest');
             // 퀘스트를 가지고 있지 않다면 퀘스트를 추가한다
             // 가지고 있다면 추가하지 않는다.
             const quest = new Quest(questId);
@@ -691,6 +698,7 @@ export default class Game extends EventEmitter {
     }
 
     completeQuest(id) {
+        console.log('complete Quest');
         const quest = this.player.quests[id];
         if (quest && quest.isAllObjectivesCompleted()){
             // 이벤트 연결을 끊어놓는다
