@@ -305,13 +305,18 @@
   min-width: 320px;
   height: 260px;
   margin-top: 10px;
-  padding: 0;
+  padding: 0 10px;
 
   overflow-x: hidden;
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
 }
 
+.equipInven .scrollbox {
+  left: 0;
+  right: 0;
+  min-width: auto;
+}
 .scrollBlind {
   width: calc(100% - 10px);
   height: 320px;

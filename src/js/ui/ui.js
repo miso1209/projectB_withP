@@ -37,17 +37,24 @@ export default class DomUI extends EventEmitter {
 
         const minimap = document.createElement('canvas');
         minimap.classList.add('minimap');
+<<<<<<< HEAD
         minimap.style.width = '160px';
         minimap.style.height = '100px';
         gnb.appendChild(minimap);
         this.minimap = new Minimap(160, 100, minimap);
+=======
+        minimap.style.width = '118px';
+        minimap.style.height = '90px';
+        gnb.appendChild(minimap);
+>>>>>>> 캐릭터선택창-포션사용 데이터 업데이트 적용, 착용가능 장비 선택시 시뮬레이션 ui작업중
         
         const menuData = [
             {name:'캐릭터', event: "characterselect"},
             {name:'보관함', event: "inventory"},
-            {name:'파티', event: "party"},
-            {name:'퀘스트', event: "quest"},
-            {name:'설정', event: "options"}
+            {name:'파티', event: "party"}
+            // 아래 메뉴는 기획이 미정이어서 감춤
+            // {name:'퀘스트', event: "quest"},
+            // {name:'설정', event: "options"}
         ];
         
         menuData.forEach(menu => {
@@ -57,18 +64,6 @@ export default class DomUI extends EventEmitter {
                 this.emit(menu.event);
             });
         });
-        
-        // TODO : zoom button delete
-        // this.zoomBtn = document.createElement('button');
-        // this.zoomBtn.classList.add('buttonS');
-        // this.zoomBtn.classList.add('zoomBtn');
-        // this.zoomBtn.innerText = 'x2';
-        // this.gnbContainer.appendChild(this.zoomBtn);
-        // this.showZoomBtn();
-        // this.zoomBtn.addEventListener('click', () => {
-        //     this.emit('zoomInOut');
-        // });
-
         this.playerInvenData = null;
     }
 
@@ -83,7 +78,7 @@ export default class DomUI extends EventEmitter {
     
         return container;
     }
-
+    
     removeContainer(pane) {
         document.body.removeChild(pane);
     }
@@ -117,6 +112,7 @@ export default class DomUI extends EventEmitter {
     }
 
     showStageTitle(text) {
+        // TODO : safari에서 오류.. 애니메이션 수정할 것.
         const pane = this.createContainer();
         const title = document.createElement('h2');
         title.className = 'stageTitle';
@@ -169,10 +165,12 @@ export default class DomUI extends EventEmitter {
         const confirmModal = new SystemModal(pane, 300, 200, text, result);
         confirmModal.dom.style.top = '50%';
         confirmModal.dom.style.marginTop = 250 * -0.5 + 'px';
+        confirmModal.contents.style.margin = '10% auto';
+        confirmModal.contents.style.fontSize = '1.1rem';
 
         const options = new MakeDom('div', 'contents-option');
 
-        if(items.length > 0) {
+        if (items.length > 0) {
             items.forEach((item) => {
                 let option = new ItemImage(item.data.image.texture, item.data.image.x, item.data.image.y);
                 let count = new MakeDom('span');
@@ -182,15 +180,38 @@ export default class DomUI extends EventEmitter {
             });
         } else {
             let option = new ItemImage(items.data.image.texture, items.data.image.x, items.data.image.y);
-            let count = new MakeDom('span');
-            count.innerText = `x${items.owned}`;
+            // let count = new MakeDom('span');
+            // count.innerText = `x${items.owned}`;
             options.appendChild(option.dom);
-            options.appendChild(count);
+            // options.appendChild(count);
         }
-        
         confirmModal.contents.appendChild(options);
+    }
+
+    showUseItemModal(text, input, result) {
+        const pane = this.createContainer();
+        const confirmModal = new SystemModal(pane, 300, 200, text, result);
+        confirmModal.dom.style.top = '50%';
+        confirmModal.dom.style.marginTop = 250 * -0.5 + 'px';
         confirmModal.contents.style.margin = '10% auto';
         confirmModal.contents.style.fontSize = '1.1rem';
+
+        const options = new MakeDom('div', 'contents-option');
+
+        if (input.length > 0) {
+            input.forEach((item) => {
+                let option = new ItemImage(item.data.image.texture, item.data.image.x, item.data.image.y);
+                let count = new MakeDom('span');
+                count.innerText = `x${item.owned}`;
+                options.appendChild(option.dom);
+                options.appendChild(count);
+            });
+        } else {
+            let option = new ItemImage(items.data.image.texture, items.data.image.x, items.data.image.y);
+            options.appendChild(option.dom);
+        }
+
+        confirmModal.contents.appendChild(options);
     }
 
     showCombineItemList(inputs, callback) { // 제작하기 버튼 콜백
@@ -255,7 +276,10 @@ export default class DomUI extends EventEmitter {
         itemAcquire.addTitle('아이템 획득');
         itemAcquire.addCloseButton();
         itemAcquire.addConfirmButton('확인');
-    
+        itemAcquire.moveToCenter(0);
+        itemAcquire.dom.style.top = '50%';
+        itemAcquire.dom.style.marginTop = domHeight * -0.5 + 'px';
+
         const itemText = document.createElement('div');
         itemText.className = 'contents';
         itemText.style.top = 'auto';
@@ -268,11 +292,7 @@ export default class DomUI extends EventEmitter {
         itemSprite.style.left = '0';
         itemSprite.style.right = '0';
         itemSprite.style.margin = '90px auto 0';
-
-        itemAcquire.moveToCenter(0);
-        itemAcquire.dom.style.top = '50%';
-        itemAcquire.dom.style.marginTop = domHeight * -0.5 + 'px';
-
+        
         itemAcquire.dom.appendChild(itemText);
         itemAcquire.dom.appendChild(itemSprite);
     }
@@ -280,69 +300,72 @@ export default class DomUI extends EventEmitter {
     showInventory(inputs) {
         const pane = this.createContainer();
         const inventory = new Inventory(pane, inputs);
-
         inventory.moveToRight(70);
         inventory.onTabSelected(inventory.tabs[0].category);
     }
 
-    showCharacterSelect(inputs, inventory) {
+    showCharacterSelect(inputs) {
         const pane = this.createContainer();
-        // 물약데이터
+        
         const characterSelect = new CharacterSelect(pane, inputs, (info) => {
             this.showCharacterDatail(info);
         });
-
-        console.log(inventory);
         
-        // DOM이 있으면 날린다.
-        characterSelect.updateInvenItems(inventory, (selected) => {
+        // consumables
+        this.emit('playerInvenData', 'consumables');
+        characterSelect.consumablesData = this.playerInvenData;
 
+        const useItem = ((selected) => {
             if (selected !== null) {
                 this.showSystemModal('포션을 사용하시겠습니까?', selected, (confirmed) => {
                     if (confirmed === "ok") {
-                        // console.log('포션 쓰기' + player);
                         this.emit('useItem', selected.data.id, 1, characterSelect.selected);
                         characterSelect.updateStatus(characterSelect.selected);
                         
                         this.emit('playerInvenData', 'consumables');
-                        console.log(this.playerInvenData);
+                        characterSelect.consumablesData = this.playerInvenData;
+
+                        characterSelect.createConsumablesItem(useItem);
                     } 
                 });
             }
         });
+
+        characterSelect.createConsumablesItem(useItem);
     }
 
     showCharacterDatail(player) {
         const pane = this.createContainer();
         const characterDetail = new CharacterDetail(pane, player, (result, option) => {
-            if(result !== null){
-                this.emit('playerInvenData', result.category);
-                //1. 가지고 있는 장비 데이터 로드 -> this.playerInvenData
-                //2. 받아온 데이터로 장비교체 ui 적용
-                //3. 장비선택시 데이터 업데이트..player 데이터 갱신
-                //4. 장비교체 확인 -> 선택된 장비로 equip / 보관함에서 삭제 / 변경된 스탯 player 데이터에 저장해서 리로드..
-                console.log(result);
 
-                if (option === 'equip') {
-                    // 장비장착/
+            if (result !== null) {
+                if (option === 'simulation') {
+                    console.log('시뮬레이션할 아이템 데이터..');
+
                     if (this.playerInvenData.length !== 0) {
-                        // characterDetail.invendata = this.playerInvenData;
-                        characterDetail.showInvenSlot(this.playerInvenData);
-                        // this.showSystemModal('장비교체 테스트', this.playerInvenData, (confirmed) => {
-                        //     if (confirmed === "ok") {
-                        //         // this.emit('equipItem', category, itemid, player.id);
-                        //         this.emit('equipItem', result.category, 7, player.id);
-                        //         characterDetail.updateEquip();
-                        //     } 
-                        // });
+        
+                        console.log(result);
+                        this.emit('playerInvenData', result.category);
+                        characterDetail.simulationData = this.playerInvenData;
+
+                        this.emit('simulateEquip', result.category, player.id);
+                        characterDetail.showEquipInven();
                     } else {
                         this.showConfirmModal('장착가능한 장비가 없습니다.', ()=>{});
                     }
+                } else if (option === 'cancel') {
+                    console.log('시뮬레이션 취소');
+                    this.emit('cancelSimulate');
+
+                } else if (option === 'equip') {
+                    console.log('장비 장착');
+                    this.emit('equipItem', result.category, result.item, player.id);
                 } else {
                     // 장비해제
                     console.log('장비가 해제되었습니다..');
                     this.emit('unequipItem', result.category, player.id);
-
+                    this.emit('playerInvenData', result.category);
+                    characterDetail.simulationData = this.playerInvenData;
                 }
             }
         });

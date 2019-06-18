@@ -8,20 +8,25 @@ import Button from "./component/button";
 export default class CharacterSelect extends Panel {
   constructor(pane, inputs, result) {
     super();
+
+    this.pane = pane;
+    this.pane.classList.add('screen');
     
     // 캐릭터 전체
     this.inputs = inputs;
-    this.result = result;
+    this.callback = result;
+    
     // 선택한 캐릭터 정보
     this.selected = null;
+    this.consumablesData = null;
 
     // 모달
     const modal = new Modal(pane, 800, 460, null);
-    modal.dom.classList.add('characterSelect');
     modal.addTitle('캐릭터 선택창');
     modal.addCloseButton();
+    modal.dom.classList.add('characterSelect');
+
     this.dom = modal.dom;
-    pane.classList.add('screen');
 
     // 페이징버튼
     this.prevButton = new Button('', 'paging');
@@ -51,7 +56,6 @@ export default class CharacterSelect extends Panel {
     const infoWrap = new MakeDom('div', 'infoWrap', null);
 
     this.dpsStat = new MakeDom('p', 'info-dps', null);
-
     this.portrait = document.createElement('img');
     this.portrait.style.display = 'block';
     this.portrait.style.margin = '30px auto 10px';
@@ -61,10 +65,7 @@ export default class CharacterSelect extends Panel {
     this.recoveryBtn.dom.classList.add('ico-life');
     this.recoveryBtn.dom.style.top = '60px';
     this.recoveryBtn.moveToRight(40);
-    // this.recoveryBtn.dom.addEventListener('click', ()=> {
-    //   return this.result(this.selected.id);
-    // });
-
+  
     const titleWrap = new MakeDom('div', 'titleWrap', null);
     this.descClass = new MakeDom('span', 'stat_class', null);
     this.descName = new MakeDom('span', 'stat_name', null);
@@ -89,12 +90,12 @@ export default class CharacterSelect extends Panel {
     moreButton.moveToCenter(0);
     moreButton.moveToBottom(15);
     moreButton.dom.addEventListener('click', (ok)=> {
-      // pane.parentNode.removeChild(pane);
-      return this.result(this.selected);
+      return this.callback(this.selected);
     });
 
     titleWrap.appendChild(this.level);
     titleWrap.appendChild(this.descClass);
+    infoWrap.appendChild(this.dpsStat);
     infoWrap.appendChild(this.portrait);
     infoWrap.appendChild(this.recoveryBtn.dom);
 
@@ -136,7 +137,6 @@ export default class CharacterSelect extends Panel {
       ++n;
 
       doll.stage.style.backgroundPosition = `${posX}px 0`;
-
       doll.dom.addEventListener('click', function(){
         if(selectedDoll) {
           selectedDoll.classList.remove('active');
@@ -188,14 +188,16 @@ export default class CharacterSelect extends Panel {
   }
 
   updateStatus(current){
-    this.dpsStat.innerText = current.level;
+    this.dpsStat.innerText = current.strongFigure;
     this.hp.update(current.health, current.maxHealth);
     this.exp.update(current.exp, current.maxexp);
   }
 
-  updateInvenItems(inven, result) {
-    // 가지고 있는 포션
-    inven.forEach(item => {
+  createConsumablesItem(result) {
+
+    this.invenItems.innerHTML = '';
+
+    this.consumablesData.forEach(item => {
       if (item !== null) {
         let liWrap = new MakeDom('li');
         let itemIcon = new ItemImage(item.data.image.texture, item.data.image.x, item.data.image.y);
@@ -211,21 +213,34 @@ export default class CharacterSelect extends Panel {
         this.invenItems.appendChild(liWrap);
       } 
     });
-    // } else {
-    //   let i = 0;
-    //   while (i < 4) {
-    //     ++i;
-    //     let liWrap = new MakeDom('li', 'empty');
-    //     let itemIcon = new MakeDom('div', 'img');
-    //     liWrap.appendChild(itemIcon);
-    //     this.invenItems.appendChild(liWrap);
-    //   }
-    // }
+  }
+
+  // updateConsumables(result) {
+
+  //   this.invenItems.innerHTML = '';
+    
+  //   this.consumablesData.forEach(item => {
+  //     if (item !== null) {
+  //       let liWrap = new MakeDom('li');
+  //       let itemIcon = new ItemImage(item.data.image.texture, item.data.image.x, item.data.image.y);
+  //       let itemCount = new MakeDom('span', 'itemCount', `x${item.owned}`);
+  //       itemCount.style.color = '#ffd800';
+
+  //       liWrap.appendChild(itemIcon.dom);
+  //       liWrap.appendChild(itemCount);
+        
+  //       if(result) {
+  //         liWrap.addEventListener('click', result.bind(this, item));
+  //       }
+  //       this.invenItems.appendChild(liWrap);
+  //     } 
+  //   });
+  // }
+
+  hideModal(){
+    this.pane.parentNode.removeChild(this.pane);
   }
 }
-
-
-
 
 
 

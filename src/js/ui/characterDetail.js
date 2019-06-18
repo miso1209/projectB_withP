@@ -7,15 +7,17 @@ import Button from "./component/button";
 export default class CharacterDetail extends Panel {
   constructor(pane, input, result) {
     super();
+    
+    pane.classList.add('screen');
 
     this.selected = input;
     this.statItem = null;
     this.isActive = null;
-    this.result = result;
+    this.callback = result;
+    this.simulationData = null;
 
     // 모달
     const modal = new Modal(pane, 800, 460);
-    pane.classList.add('screen');
 
     modal.addTitle('캐릭터 정보');
     modal.addCloseButton();
@@ -23,8 +25,7 @@ export default class CharacterDetail extends Panel {
     this.dom = modal.dom;
 
     // 모달 내부 컨텐츠 영역
-    const contentsWrap = document.createElement('div');
-    contentsWrap.classList.add('contents');
+    const contentsWrap = new MakeDom('div', 'contents');
     contentsWrap.classList.add('flexWrap');
     contentsWrap.style.top = '80px';
 
@@ -79,11 +80,16 @@ export default class CharacterDetail extends Panel {
     const descBox = new MakeDom('div', 'descBox');
     this.descEquip = new MakeDom('p', 'description');
 
+    const buttonWrap = new MakeDom('div');
     this.equipBtn = new Button('장비장착', 'buttonS');
     this.equipBtn.dom.style.display = 'none';
     this.equipBtn.moveToRight(10);
     this.equipBtn.moveToBottom(10);
-    
+
+    this.cancelBtn = new Button('취소', 'buttonS');
+    this.cancelBtn.dom.style.display = 'none';
+    this.cancelBtn.moveToRight(110);
+    this.cancelBtn.moveToBottom(10);
 
     if (this.equipBtn.dom) {
       this.equipBtn.dom.addEventListener('click', (e)=>{
@@ -91,7 +97,16 @@ export default class CharacterDetail extends Panel {
       });
     }
 
-    descBox.appendChild(this.equipBtn.dom);
+    if (this.equipBtn.dom) {
+      this.cancelBtn.dom.addEventListener('click', (e)=>{
+        this.equipCallback(e.target);
+      });
+    }
+    
+    buttonWrap.appendChild(this.cancelBtn.dom);
+    buttonWrap.appendChild(this.equipBtn.dom);
+
+    descBox.appendChild(buttonWrap);
     descBox.appendChild(this.descEquip);
     //.left
 
@@ -102,12 +117,33 @@ export default class CharacterDetail extends Panel {
     this.statAttack = new MakeDom('span', 'stat', `공격력 : ${this.selected.attack}`);
     this.statArmor = new MakeDom('span', 'stat', `방어력 : ${this.selected.armor}`);
 
-    // 장착가능 아이템 슬롯
+    // 장착가능 아이템 슬롯 
+    // 장착버튼 클릭 시 노출된다.
     this.equipInven = new MakeDom('div', 'equipInven');
     this.equipInven.style.display = 'none';
+    
+    let scrollHeight = '200px';
+    let scrollWidth = '340px';
 
-    contentsWrap.appendChild(this.equipInven);
+    const scrollView = document.createElement('div');
+    scrollView.classList.add('scrollView');
+    scrollView.style.height = scrollHeight;
+    scrollView.style.width = scrollWidth;
 
+    const scrollBlind = document.createElement('div');
+    scrollBlind.className = 'scrollBlind';
+    scrollBlind.style.height = scrollHeight;
+
+    this.storageContent = document.createElement('ul');
+    this.storageContent.classList.add('slot-list-box');
+    this.storageContent.classList.add('scrollbox');
+    this.storageContent.style.height = scrollHeight;
+
+    scrollView.appendChild(scrollBlind);
+    scrollBlind.appendChild(this.storageContent);
+    this.equipInven.appendChild(scrollView);
+
+    
     leftBox.appendChild(descBox);
     mainStats.appendChild(this.statMagic);
     mainStats.appendChild(this.statAttack);
@@ -123,7 +159,8 @@ export default class CharacterDetail extends Panel {
 
     contentsWrap.appendChild(leftBox);
     contentsWrap.appendChild(rightBox);
-    
+    contentsWrap.appendChild(this.equipInven);
+
     this.dom.appendChild(contentsWrap);
     this.update();
   }
@@ -157,7 +194,7 @@ export default class CharacterDetail extends Panel {
 
         let text = base.charAt(0).toUpperCase() + base.slice(1);
         let baseStatText = 'base' + text;
-        let plusStatText = 'plus' + text;
+        let plusStatText = 'plus' + text; //simulated
         
         if ( base === 'health') {
           baseStatText = 'baseMax' + text;
@@ -229,7 +266,7 @@ export default class CharacterDetail extends Panel {
       });
 
       // // #click event - data
-      liWrap.addEventListener('click', this.updateDesc.bind(this, 'gear'));
+      liWrap.addEventListener('click', this.showDescription.bind(this, 'gear'));
     });
   }
 
@@ -271,11 +308,12 @@ export default class CharacterDetail extends Panel {
         this.statItem = skillItemsData[liWrap.index];
       });
 
-      liWrap.addEventListener('click', this.updateDesc.bind(this, 'skill'));
+      liWrap.addEventListener('click', this.showDescription.bind(this, 'skill'));
     });
   }
 
-  updateDesc(input) {
+  showDescription(input) {
+    console.log('=== updateDesc');
     // 초기화
     this.descEquip.innerHTML = '';
     
@@ -284,10 +322,11 @@ export default class CharacterDetail extends Panel {
 
     if (input === 'gear') {
       this.equipBtn.dom.style.display = 'block';
+
       if (d.data === null) {
         desctext.innerText = '장착된 장비 정보가 없습니다.';
         this.equipBtn.dom.innerText = '장비장착';
-        this.equipBtn.dom.setAttribute('value', 'equip');
+        this.equipBtn.dom.setAttribute('value', 'simulation');
       } else {
         this.descEquip.innerText = d.data.name; 
         desctext.innerText = d.data.description;
@@ -299,37 +338,36 @@ export default class CharacterDetail extends Panel {
       this.descEquip.innerText = d.data.name; 
       desctext.innerText = d.data.description; 
     }
-
+    
     this.descEquip.appendChild(desctext);
   }
 
-  showInvenSlot(inven) {
-    let scrollHeight = '200px';
-    let scrollWidth = '340px';
-    // IE 스크롤바 이슈 대응
-    const scrollView = document.createElement('div');
-    scrollView.classList.add('scrollView');
-    scrollView.style.height = scrollHeight;
-    scrollView.style.width = scrollWidth;
+  updateDescItem() {
+    console.log(this.statItem);
 
-    const scrollBlind = document.createElement('div');
-    scrollBlind.className = 'scrollBlind';
-    scrollBlind.style.height = scrollHeight;
+    // 초기화
+    this.descEquip.innerHTML = '';
+    const desctext = new MakeDom('p', 'desc-text');
+    desctext.innerText = this.statItem.data.description;
+    this.descEquip.innerText = this.statItem.data.name;
 
-    const storageContent = document.createElement('ul');
-    storageContent.classList.add('slot-list-box');
-    storageContent.classList.add('scrollbox');
-    storageContent.style.height = scrollHeight;
-    
+    this.cancelBtn.dom.style.display = 'block';
+    this.equipBtn.dom.style.display = 'block';
 
-    this.storageContent = storageContent;
+    this.cancelBtn.dom.setAttribute('value', 'cancel');
+    this.equipBtn.dom.innerText = '확인';
+    this.equipBtn.dom.setAttribute('value', 'equip');
+    this.descEquip.appendChild(desctext);
+  }
+
+  showEquipInven() {
+    this.equipInven.style.display = 'block';
     this.slotSize = 14;
 
-    console.log(inven);
+    console.log(this.simulationData);
 
     let isActive = null;
-
-    inven.forEach(item => {
+    this.simulationData.forEach(item => {
       let liWrap = new MakeDom('li', 'slot');
       liWrap.style.width = '55px';
       liWrap.style.height = '55px';
@@ -344,34 +382,31 @@ export default class CharacterDetail extends Panel {
         }
         isActive = liWrap;
         liWrap.classList.add('active');
+        
+        this.statItem = item;
       });
 
-      liWrap.addEventListener('dblclick', this.submitData.bind(this, item));
-      storageContent.appendChild(liWrap);
+      liWrap.addEventListener('click', this.updateDescItem.bind(this));
+      liWrap.addEventListener('dblclick', this.callback.bind(this, item, 'equip'));
+      this.storageContent.appendChild(liWrap);
     });
-
-    scrollView.appendChild(scrollBlind);
-    scrollBlind.appendChild(storageContent);
-    this.equipInven.appendChild(scrollView);
-
-    this.equipInven.style.display = 'block';
   }
-
-  submitData(item) {
-    // 현재 선택된 데이터로 장비 장착 
-    // 옵션 영역 제거.
+  hideEquipInven() {
     this.equipInven.innerHTML = '';
     this.equipInven.style.display = 'none';
-
-    this.result(item, 'equip');
+    this.cancelBtn.dom.style.display = 'none';
   }
 
-  equipCallback(flag) {
-    this.result(this.statItem, flag.value);
-    // if (flag.value === 'equip') {
-    //   this.showInvenSlot();
-    // } 
-    this.updateEquip();
+  equipCallback (attr) {
+    if (attr.value === 'equip') {
+      console.log('equipCallback');
+      
+    } else if (attr.value === 'cancel') {
+      this.hideEquipInven();
+    }
+
+    this.callback(this.statItem, attr.value);
+    // this.updateEquip();
   }
 }
 

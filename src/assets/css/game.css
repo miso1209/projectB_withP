@@ -1029,8 +1029,14 @@ button.disabled span {
 }
 
 /* 캐릭터 선택창 - dps */
-.characterDetail .info-dps{
-  color: red;
+.characterSelect .info-dps{
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 111;
+  margin: 0 auto;
+  top: 100px;
+  font-size: 20px;
 }
 
 .characterDetail .skillItems, 
