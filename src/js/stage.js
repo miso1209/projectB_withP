@@ -188,11 +188,11 @@ export default class Stage extends PIXI.Container {
                             if (this.neighbor.output === tile.name) {
                                 this.eventMap[x + y * width] = new NextFloorPortal(x, y, tile);
                                 // 포탈이벤트를 기본적으로 패스에 포함시킬수 없다
-                                this.pathFinder.setCell(x, y, false);
+                                this.pathFinder.setCell(x, y, true);
                             } else if (this.neighbor[tile.name]) {
                                 this.eventMap[x + y * width] = new Portal3(x, y, tile);
                                 // 포탈이벤트를 기본적으로 패스에 포함시킬수 없다
-                                this.pathFinder.setCell(x, y, false);
+                                this.pathFinder.setCell(x, y, true);
                             } else {
                                 // 작동하지 않는 단지 위치를 알려주는 포탈.
                                 this.eventMap[x + y * width] = new Portal4(x, y, tile);
@@ -201,7 +201,7 @@ export default class Stage extends PIXI.Container {
                         } else if (tile.name === 'nextFloor') {
                             this.eventMap[x + y * width] = new NextFloorPortal(x, y, tile);
                             // 포탈이벤트를 기본적으로 패스에 포함시킬수 없다
-                            this.pathFinder.setCell(x, y, false);
+                            this.pathFinder.setCell(x, y, true);
                         } else {
                             this.eventMap[x + y * width] = new Portal2(x, y, tile);
                             // 포탈이벤트를 기본적으로 패스에 포함시킬수 없다
@@ -757,6 +757,7 @@ export default class Stage extends PIXI.Container {
     }
 
     enter() {
+        console.log(this.neighbor);
         this.monsters.forEach((monster) => {
             monster.move();
         });
@@ -796,30 +797,30 @@ export default class Stage extends PIXI.Container {
     }
 
     addChest() {
-        const options = {
-            type: "chest",
-            texture: PIXI.Texture.fromFrame('castle_treasurebox.png'),
-            movable: false
-        };
-        const size = {
-            width: 1,
-            height: 2
-        }
+        // const options = {
+        //     type: "chest",
+        //     texture: PIXI.Texture.fromFrame('castle_treasurebox.png'),
+        //     movable: false
+        // };
+        // const size = {
+        //     width: 1,
+        //     height: 2
+        // }
         // if (Math.random() < 0.5) {
         //     options.texture = PIXI.Texture.fromFrame('castle_treasurebox_flip.png');
         //     size.width = 2;
         //     size.height = 1;
         // }
-        const spawnPos = this.getRandomPositions(size.width, size.height);
+        // const spawnPos = this.getRandomPositions(size.width, size.height);
 
-        if (spawnPos) {
-            const prop = this.newTile(spawnPos.x, spawnPos.y, options);
-            this.pathFinder.setDynamicCell(prop.gridX, prop.gridY, false);
+        // if (spawnPos) {
+        //     const prop = this.newTile(spawnPos.x, spawnPos.y, options);
+        //     this.pathFinder.setDynamicCell(prop.gridX, prop.gridY, false);
     
-            this.addObjRefToLocation(prop, spawnPos.x, spawnPos.y);
-            this.arrangeDepthsFromLocation(prop, spawnPos.x, spawnPos.y);
-            this.setObjectEmitter(prop);
-        }
+        //     this.addObjRefToLocation(prop, spawnPos.x, spawnPos.y);
+        //     this.arrangeDepthsFromLocation(prop, spawnPos.x, spawnPos.y);
+        //     this.setObjectEmitter(prop);
+        // }
     }
 
     addCharacter(character, x, y) {
@@ -1005,6 +1006,14 @@ export default class Stage extends PIXI.Container {
             // 마지막 타일의 선택을 지운다
             this.highlightPath(obj.currentPath, null);
             this.emit('moveend');
+        }
+
+        // 던전의 포털 밟았는가.
+        const index = obj.gridX + obj.gridY * this.mapWidth;
+        if (this.eventMap[index] && obj.currentPath.length <= 2) {
+            if (this.onEvent) {
+                this.onEvent(this.eventMap[index]);
+            }
         }
     }
 

@@ -15,6 +15,7 @@ export default class Explore {
        this.game.stage.checkForFollowCharacter(this.controller, true);
 
        this.game.stage.onTouchObject = this.onTouchObject.bind(this);
+       this.game.stage.onEvent = this.onEvent.bind(this);
        this.game.stage.onTileSelected = this.onTileSelected.bind(this);
     }
 
@@ -26,6 +27,12 @@ export default class Explore {
             if (this.game.stage) {
                 this.game.stage.checkForTileClick(event.data);
             }
+        }
+    }
+
+    onEvent(obj) {
+        if (obj && obj.onEvent) {
+            obj.onEvent(this.game);
         }
     }
 
