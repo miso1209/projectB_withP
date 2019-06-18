@@ -37,16 +37,10 @@ export default class DomUI extends EventEmitter {
 
         const minimap = document.createElement('canvas');
         minimap.classList.add('minimap');
-<<<<<<< HEAD
         minimap.style.width = '160px';
         minimap.style.height = '100px';
         gnb.appendChild(minimap);
         this.minimap = new Minimap(160, 100, minimap);
-=======
-        minimap.style.width = '118px';
-        minimap.style.height = '90px';
-        gnb.appendChild(minimap);
->>>>>>> 캐릭터선택창-포션사용 데이터 업데이트 적용, 착용가능 장비 선택시 시뮬레이션 ui작업중
         
         const menuData = [
             {name:'캐릭터', event: "characterselect"},
