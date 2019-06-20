@@ -463,9 +463,10 @@ export default class Stage extends PIXI.Container {
                     randomProperties.id = doorCount; // 문을 선택. 문은 항상 random_image0 값에 들어있다.
                     randomProperties.imageArray = tileData.doorImage;
                     randomProperties.type = 'door';
-                } else if (tileData.name === 'castle_wall_door2' && (this.neighbor.down || this.neighbor.input == 'down')) {
+                } else if (tileData.name === 'castle_wall_door2' && this.neighbor.down) {
                     // down
-                    randomProperties.id = doorCount; // 문을 선택. 문은 항상 random_image0 값에 들어있다.
+                    // randomProperties.id = doorCount;
+                    randomProperties.id = 0; // 문을 선택. 문은 항상 random_image0 값에 들어있다.
                     randomProperties.imageArray = tileData.doorImage;
                     randomProperties.type = 'door';
                 } else if (tileData.name === 'castle_wall_door3' && (this.neighbor.left || this.neighbor.input == 'left')) {
@@ -473,9 +474,18 @@ export default class Stage extends PIXI.Container {
                     randomProperties.id = doorCount; // 문을 선택. 문은 항상 random_image0 값에 들어있다.
                     randomProperties.imageArray = tileData.doorImage;
                     randomProperties.type = 'door';
-                } else if (tileData.name === 'castle_wall_door4' && (this.neighbor.right || this.neighbor.input == 'right')) {
+                } else if (tileData.name === 'castle_wall_door4' && this.neighbor.right) {
                     // right
-                    randomProperties.id = doorCount; // 문을 선택. 문은 항상 random_image0 값에 들어있다.
+                    // randomProperties.id = doorCount;
+                    randomProperties.id = 0; // 문을 선택. 문은 항상 random_image0 값에 들어있다.
+                    randomProperties.imageArray = tileData.doorImage;
+                    randomProperties.type = 'door';
+                } else if( tileData.name === 'castle_wall_door2' && this.neighbor.input == 'down' ){
+                    randomProperties.id = 1;
+                    randomProperties.imageArray = tileData.doorImage;
+                    randomProperties.type = 'door';
+                } else if( tileData.name === 'castle_wall_door4' && this.neighbor.input == 'right' ){
+                    randomProperties.id = 1;
                     randomProperties.imageArray = tileData.doorImage;
                     randomProperties.type = 'door';
                 } else if(tileData.name === 'castle_wall_door3' && this.neighbor.output == 'left') {
@@ -504,8 +514,11 @@ export default class Stage extends PIXI.Container {
         
         } else if( tileData.type == "door_object"){
             if ( this.doorTarget.indexOf(tileData.target) < 0 || tileData.name === this.neighbor.input ){
-                // tileData.texture = false;
-                // tileData.movable = true;
+                if( tileData.stair ){
+                    if( tileData.direction != this.neighbor.input ){
+                        tileData.texture = false;
+                    }
+                }
             } else {
                 tileData.texture = false;
             }
