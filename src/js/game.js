@@ -69,6 +69,22 @@ export default class Game extends EventEmitter {
             const inputs = this.getInvenotryData();
             this.ui.showInventory(inputs);
         });
+        this.ui.on('party', () => {
+            const inputs = [];
+            for (const cid in this.player.characters) {
+                inputs.push(this.player.characters[cid]);
+            }
+            this.ui.showParty(inputs);
+        });
+        this.ui.on('characterselect', ()=> {
+            const inputs = [];
+            for (const cid in this.player.characters) {
+                inputs.push(this.player.characters[cid]);
+            }
+
+            this.ui.showCharacterSelect(inputs);
+        });
+
         this.ui.on('useItem', (itemId, count, target) => {
             this.useItem(itemId, count, target);
         });
@@ -78,7 +94,6 @@ export default class Game extends EventEmitter {
         this.ui.on('simulateEquip', (itemCategory, itemId, cid) => {
             this.player.characters[cid].simulationEquip(itemCategory, itemId);
             this.ui.player = this.player.characters[cid];
-            console.log(this.ui.player);
         });
         this.ui.on('cancelSimulate', () => {
             for (const cid in this.player.characters) {
@@ -91,14 +106,7 @@ export default class Game extends EventEmitter {
             this.ui.player = this.player.characters[cid];
         });
 
-        this.ui.on('characterselect', ()=> {
-            const inputs = [];
-            for (const cid in this.player.characters) {
-                inputs.push(this.player.characters[cid]);
-            }
-
-            this.ui.showCharacterSelect(inputs);
-        });
+        
 
         this.ui.on('playerInvenData', (category) => {
             this.ui.playerInvenData = this.getFiteredInventoryData({category: category});

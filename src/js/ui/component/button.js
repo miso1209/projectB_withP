@@ -6,11 +6,8 @@ export default class Button extends Panel {
         super();
     
         const button = document.createElement('button');
-        const btnText = document.createElement('span');
-        btnText.innerText = value;
-        btnText.style.textShadow = '1px 2px 2px #444'
-    
-        button.appendChild(btnText);
+        button.innerText = value;
+        button.style.textShadow = '1px 2px 2px #444'
         button.style.position = 'absolute';
     
         if (type !== undefined) {
@@ -20,10 +17,9 @@ export default class Button extends Panel {
         }
     
         this.dom = button;
-
-        if(onclick !== null) {
-            this.dom.addEventListener('click', onclick);
-        }
+        // if(onclick !== null) {
+        //     this.dom.addEventListener('click', onclick);
+        // }
     }
 }
 

@@ -192,6 +192,12 @@ button, .button {
   color: #fff;
   background: url(~assets/ui/button_s1.png) no-repeat;
   transition: all 0.4s linear;
+
+  font-size: 14px;
+  text-align: center;
+  text-shadow: 2px 2px 1px #111; 
+  vertical-align: middle;
+  /* pointer-events: none; */
 }
 
 *.disabled {
@@ -199,13 +205,13 @@ button, .button {
   opacity: 0.7;
 }
 
-button span {
+/* button span {
   font-size: 14px;
   line-height: 44px;
   pointer-events: none;
   text-shadow: 2px 2px 1px #111; 
   vertical-align: middle;
-}
+} */
 
 .submit {
   background: url(~assets/ui/button_s2.png) no-repeat;

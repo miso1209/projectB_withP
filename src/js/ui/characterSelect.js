@@ -4,6 +4,7 @@ import MakeDom from "./component/makedom";
 import ItemImage from "./component/itemimage";
 import Button from "./component/button";
 // import { stringify } from "querystring";
+import Doll from "./component/doll";
 
 export default class CharacterSelect extends Panel {
   constructor(pane, inputs, result) {
@@ -119,7 +120,7 @@ export default class CharacterSelect extends Panel {
     // 캐릭터 데이터가 6개 넘어갈 때 - 처리는 페이징 해야하는데 그러려면. .
     inputs.forEach(input => {
       let doll = new Doll(input);
-      doll.dom.classList.add('doll');
+      // doll.dom.classList.add('doll');
 
       if (index === 0) {
         doll.dom.classList.add('active');
@@ -222,32 +223,32 @@ export default class CharacterSelect extends Panel {
 
 
 
-export class Doll {
-  constructor(item){ //캐릭터데이터-input
-    const doll = document.createElement('div');
-    doll.classList.add('doll');
+// export class Doll {
+//   constructor(item){ //캐릭터데이터-input
+//     const doll = document.createElement('div');
+//     doll.classList.add('doll');
 
-    this.path = '/src/assets/sprite/';
-    this.path = `${this.path}${item.data.name}/${item.data.name}_idle_sw.png`;
+//     this.path = '/src/assets/sprite/';
+//     this.path = `${this.path}${item.data.name}/${item.data.name}_idle_sw.png`;
 
-    const name = new MakeDom('p', 'name', item.data.displayname);
-    const imgWrap = new MakeDom('p', 'imgWrap', null);
-    const profile = new MakeDom('img', 'profileImg', null);
-    profile.src = this.path;
+//     const name = new MakeDom('p', 'name', item.data.displayname);
+//     const imgWrap = new MakeDom('p', 'imgWrap', null);
+//     const profile = new MakeDom('img', 'profileImg', null);
+//     profile.src = this.path;
 
-    imgWrap.style.width = '64px';
-    imgWrap.style.height = '96px';
+//     imgWrap.style.width = '64px';
+//     imgWrap.style.height = '96px';
 
-    this.stage = new MakeDom('p', 'tilebg', null);
-    imgWrap.appendChild(profile);
-    // equipments
-    doll.appendChild(this.stage);
-    doll.appendChild(name);
-    doll.appendChild(imgWrap);
+//     this.stage = new MakeDom('p', 'tilebg', null);
+//     imgWrap.appendChild(profile);
+//     // equipments
+//     doll.appendChild(this.stage);
+//     doll.appendChild(name);
+//     doll.appendChild(imgWrap);
 
-    this.dom = doll;
-  }
-}
+//     this.dom = doll;
+//   }
+// }
 
 class StatusBar {
   constructor(currentValue, maxValue) {
