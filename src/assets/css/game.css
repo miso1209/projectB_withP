@@ -88,18 +88,19 @@
   width: 980px;
   margin: 0 auto;
   transition: all 0.8s;
+  pointer-events: none;
 } 
 
 .minimap {
   position: absolute;
   top: 15px;
   right: 5px;
-  /* display: inline-block; */
   width: 160px;
   height: 100px;
   margin: 0 10px 10px 0;
   background: url(~assets/ui/minimap.png) no-repeat;
   background-size: contain;
+  opacity: 0.6;
 }
 
 /* 배틀모드 */
@@ -323,6 +324,8 @@ button, .button {
   flex-direction: column;
   overflow: hidden;
   text-align: right;
+
+  pointer-events: auto;
 }
 
 .gnb .tabBtn {
@@ -872,6 +875,10 @@ button.disabled span {
   border: 2px solid transparent;
   border-radius: 10px;
   transition: border 0.3s;
+}
+
+.party .doll {
+  border-color: rgba(255,255,255,.3);
 }
 
 .doll:hover, .doll.active {

@@ -41,11 +41,8 @@ class ListCell {
     }
 
     showCharacterCell(){
-        if (this.cellData.available === 1) {
-            this.cell.classList.remove('disabled');
-            this.cell.classList.add('isAvailable');
-        }
-        
+        this.cell.classList.remove('disabled');
+
         this.cellImg = document.createElement('img');
         this.cellImg.src = `/src/assets/${this.cellData.data.portrait}`;
         this.cellData1 = document.createElement('p');

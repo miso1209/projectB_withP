@@ -80,6 +80,16 @@ export default class Game extends EventEmitter {
             this.ui.showParty(inputs, party);
         });
 
+        this.ui.on('setParty', (result) => {
+            console.log(result);
+            
+            let index= -1;
+            for (const crew in result) {
+                ++index;
+                this.player.party.set(index, result[index].character);
+            }
+        });
+
         this.ui.on('characterselect', ()=> {
             const inputs = [];
             for (const cid in this.player.characters) {
