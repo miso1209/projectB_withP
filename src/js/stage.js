@@ -8,7 +8,7 @@ import TiledMap from "./tiledmap";
 import Tile from './tile';
 import Prop from './prop';
 
-import { Portal2, Portal3, NextFloorPortal, Portal4 } from './event/portal';
+import { Portal2, Portal3, NextFloorPortal, Portal4, Portal5 } from './event/portal';
 import Loader from './loader';
 import Monster from './monster';
 
@@ -203,9 +203,9 @@ export default class Stage extends PIXI.Container {
                             // 포탈이벤트를 기본적으로 패스에 포함시킬수 없다
                             this.pathFinder.setCell(x, y, true);
                         } else {
-                            this.eventMap[x + y * width] = new Portal2(x, y, tile);
+                            this.eventMap[x + y * width] = new Portal5(x, y, tile);
                             // 포탈이벤트를 기본적으로 패스에 포함시킬수 없다
-                            this.pathFinder.setCell(x, y, false);
+                            this.pathFinder.setCell(x, y, true);
                         }
                     } else {
                         throw Error("invalid group :" + group);
@@ -553,6 +553,11 @@ export default class Stage extends PIXI.Container {
             
             tile = Prop.New(tileData.type, x, y, tileData);
         
+        } else if( tileData.type == "door_portal"){
+            if ( this.doorTarget.indexOf(tileData.target) < 0 ){
+                tileData.texture = false;
+            }
+            tile = Prop.New(tileData.type, x, y, tileData);
         } else if( tileData.type == "door_object"){
             if ( this.doorTarget.indexOf(tileData.target) < 0 || tileData.name === this.neighbor.input ){
                 if( tileData.stair ){

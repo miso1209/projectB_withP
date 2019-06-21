@@ -989,7 +989,7 @@
          "margin":0,
          "name":"object1x1",
          "spacing":0,
-         "tilecount":21,
+         "tilecount":20,
          "tileheight":128,
          "tiles":[
                 {
@@ -1433,28 +1433,6 @@
                  "image":"castle_knight_back.png",
                  "imageheight":79,
                  "imagewidth":32
-                }, 
-                {
-                 "id":21,
-                 "image":"warp_tile.png",
-                 "imageheight":16,
-                 "imagewidth":32,
-                 "properties":[
-                        {
-                         "name":"movable",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"xsize",
-                         "type":"int",
-                         "value":1
-                        }, 
-                        {
-                         "name":"ysize",
-                         "type":"int",
-                         "value":1
-                        }]
                 }],
          "tilewidth":64
         }, 
