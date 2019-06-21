@@ -378,6 +378,8 @@ export default class Game extends EventEmitter {
     async $enterStage(stagePath, eventName) {
         const stageName = path.basename(stagePath, ".json");
         const stage = new Stage();
+        this.currentFloor = 0;
+        this.ui.hideMinimap();
         await stage.$load(stageName);
         for(const tag of this.player.tags) {
             stage.applyTag(tag);
@@ -497,7 +499,11 @@ export default class Game extends EventEmitter {
                     this.player.inventory.addItem(itemID, monster.rewards[itemID]);
                 }
             });
-            this.currentMode.on('lose', () => {});
+            this.currentMode.on('lose', async () => {
+                await this.$leaveBattle();
+                this.stage.leave();
+                this.playCutscene(4);
+            });
             this.currentMode.on('closeBattle', () => {
                 this.$leaveBattle();
             });

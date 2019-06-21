@@ -179,11 +179,10 @@ export class Battle extends EventEmitter {
             } else if (battleStatus === BATTLE_STATUS.LOSE) {
                 // 졌다
                 this.pause = true;
-                this.emit('lose');
 
                 // 패배 로고를 보이고, 배틀 떠난다.
                 this.ui.showBattleLogo('defeat_logo.png', false, () => {
-                    this.emit('closeBattle');
+                    this.emit('lose');
                 });
                 
                 return;

@@ -33,6 +33,8 @@
     ["recipeshelf_back_1x1_flip.png", "assets/mapdata/recipeshelf_back_1x1_flip.png"],
     ["recipeshelf_back_1x1.png", "assets/mapdata/recipeshelf_back_1x1.png"],
     ["recipeshelf_front_1x1.png", "assets/mapdata/recipeshelf_front_1x1.png"],
+    ["castle_treasurebox.png", "assets/mapdata/castle_treasurebox.png"],
+    ["castle_treasurebox_flip.png", "assets/mapdata/castle_treasurebox_flip.png"],
 
     ["assets/sprite/elid/elid_atk_nw.json"],
     ["assets/sprite/elid/elid_atk_sw.json"],
