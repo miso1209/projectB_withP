@@ -289,7 +289,6 @@ export default class CharacterDetail extends Panel {
         this.isActive = liWrap;
         this.statItem = skillItemsData[liWrap.index];
       });
-
       liWrap.addEventListener('click', this.showSkillInfo.bind(this));
     });
   }
@@ -321,17 +320,13 @@ export default class CharacterDetail extends Panel {
       } else { // 실제 장비를 장착하고 잇는 중. 
         status = 'unEquip';
       }
-
       this.description.innerText = this.statItem.data.name; 
       desctext.innerText = this.statItem.data.description;
-      this.updateInfo(status);
     } else {
-      console.log('=== no equip info');
-
       desctext.innerText = '장착된 장비 정보가 없습니다.';
       status = 'simulationEquip';
-      this.updateInfo(status);
     }
+    this.updateInfo(status);
     this.description.appendChild(desctext);
   }
 

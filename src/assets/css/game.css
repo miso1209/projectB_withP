@@ -88,17 +88,15 @@
   width: 980px;
   margin: 0 auto;
   transition: all 0.8s;
-}
+} 
 
 .minimap {
   display: inline-block;
-
-  width: 110px;
-  height: 90px;
-  margin-bottom: 20px;
-
-  background-color: rgba(255,255,255,0.4);
-  border: 1px solid #fff;
+  width: 160px;
+  height: 100px;
+  margin: 0 10px 10px 0;
+  background: url(~assets/ui/minimap.png) no-repeat;
+  background-size: contain;
 }
 
 /* 배틀모드 */
@@ -315,20 +313,19 @@ button, .button {
 
 .gnb {
   position: absolute;
-  right: 0;
+  left: 10px;
   top: 0;
-
   margin: 20px 10px 0;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-
   text-align: right;
 }
 
 .gnb .tabBtn {
   position: static !important;
-  text-align: center;
+  text-align: left;
+  padding-left: 15px;
 }
 
 .gnb .tabBtn:hover, 

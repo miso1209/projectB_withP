@@ -37,12 +37,15 @@ export default class DomUI extends EventEmitter {
         const gnb = new MakeDom('div', 'gnb');
         this.gnbContainer.appendChild(gnb);
 
-        const minimap = document.createElement('canvas');
-        minimap.classList.add('minimap');
-        minimap.style.width = '160px';
-        minimap.style.height = '100px';
-        gnb.appendChild(minimap);
-        this.minimap = new Minimap(160, 100, minimap);
+        this.minimap = document.createElement('canvas');
+        this.minimap.classList.add('minimap');
+        this.minimap.style.width = '160px';
+        this.minimap.style.height = '100px';
+        this.minimap.style.display = 'none';
+        
+        gnb.appendChild(this.minimap);
+
+        this.minimap = new Minimap(160, 100, this.minimap);
         
         const menuData = [
             {name:'캐릭터', event: "characterselect"},
@@ -107,6 +110,13 @@ export default class DomUI extends EventEmitter {
 
     hideZoomBtn(){
         this.zoomBtn.style.opacity = '0';
+    }
+
+    showMinimap() {
+        this.minimap.style.display = 'block';
+    }
+    hideMinimap() {
+        this.minimap.style.display = 'none';
     }
 
     showStageTitle(text) {

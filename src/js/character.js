@@ -228,6 +228,8 @@ export default class Character {
 
     unequip(slot) {
         const item = this.equipments[slot];
+        console.log(item);
+        
         if (item) {
             this.equipments[slot] = null;
             // 아이템 옵션을 적용한다

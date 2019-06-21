@@ -102,11 +102,10 @@ export default class Game extends EventEmitter {
         });
 
         this.ui.on('unequipItem', (itemCategory, cid) => {
-            this.player.characters[cid].unequip(itemCategory);
+            this.unequipItem(itemCategory, cid);
+            // this.player.characters[cid].unequip(itemCategory);
             this.ui.player = this.player.characters[cid];
         });
-
-        
 
         this.ui.on('playerInvenData', (category) => {
             this.ui.playerInvenData = this.getFiteredInventoryData({category: category});
@@ -667,6 +666,7 @@ export default class Game extends EventEmitter {
 
     unequipItem(itemCategory, cid) {
         const unequipItem = this.player.characters[cid].unequip(itemCategory);
+        console.log(unequipItem)
         if (unequipItem) {
             this.player.inventory.addItem(unequipItem.id, 1);
         }
