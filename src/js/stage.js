@@ -778,22 +778,36 @@ export default class Stage extends PIXI.Container {
     }
 
     chestRandomGenerate() {
-        this.addChest();
-        this.addChest();
-        this.addChest();
-        this.addChest();
-        this.addChest();
-        this.addChest();
-        this.addChest();
-        this.addChest();
-        this.addChest();
-        this.addChest();
-        this.addChest();
-        this.addChest();
-        this.addChest();
-        this.addChest();
-        this.addChest();
-        this.addChest();
+        let chest = {
+            type: "chest",
+            texture: PIXI.Texture.fromFrame('castle_treasurebox.png'),
+            movable: false,
+            xsize: 1,
+            ysize: 2
+        };
+        if (Math.random() <= 0.5) {
+            chest = {
+                type: "chest",
+                texture: PIXI.Texture.fromFrame('castle_treasurebox_flip.png'),
+                movable: false,
+                xsize: 2,
+                ysize: 1,
+                imageOffset: {
+                    x:-16,
+                    y:0
+                }
+            };
+        }
+        this.addProp(chest);
+
+        let recipe = {
+            type: "recipe",
+            texture: PIXI.Texture.fromFrame('recipeshelf_front_1x1_flip.png'),
+            movable: false,
+            xsize: 1,
+            ysize: 1
+        };
+        this.addProp(recipe, { ne:true });
     }
 
     enter() {
@@ -835,36 +849,21 @@ export default class Stage extends PIXI.Container {
         }
     }
 
-    addChest(radius) {
-        let options = {
-            type: "chest",
-            texture: PIXI.Texture.fromFrame('castle_treasurebox.png'),
-            movable: false,
-            xsize: 1,
-            ysize: 2
-        };
-        if (Math.random() <= 0.5) {
-            options = {
-                type: "chest",
-                texture: PIXI.Texture.fromFrame('castle_treasurebox_flip.png'),
-                movable: false,
-                xsize: 2,
-                ysize: 1,
-                imageOffset: {
-                    x:-16,
-                    y:0
-                }
-
-            };
-        }
-
-        const tiles = this.getChestPositions({
+    addProp(options, directions) {
+        const tiles = this.getPropPositions({
             xMin: 2,
             yMin: 2
         },{
             xSize: options.xsize,
-            ySize: options.ysize
+            ySize: options.ysize,
+            directions: directions?directions:{
+                ne: true,
+                nw: true,
+                se: true,
+                sw: true,
+            }
         });
+        console.log(directions);
         let spawnPos = this.getRandomPositions(options.xsize, options.ysize, tiles);
 
         if (spawnPos) {
@@ -881,7 +880,7 @@ export default class Stage extends PIXI.Container {
         }
     }
 
-    getChestPositions(offset, options) {
+    getPropPositions(offset, options) {
         const mapData = {
             xMin: null,
             yMin: null,
@@ -923,13 +922,13 @@ export default class Stage extends PIXI.Container {
         // 모서리는 각 xMin, xMax, yMin, yMax의 타일이다.
         this.groundMap.forEach((tile) => {
             // 모서리 타일 추가.
-            if (tile && tile.gridX <= mapData.xMax && tile.gridX >= mapData.xMin && tile.gridY === mapData.yMin && options && options.xSize >= options.ySize) {
+            if (tile && tile.gridX <= mapData.xMax && tile.gridX >= mapData.xMin && tile.gridY === mapData.yMin && options && options.xSize >= options.ySize && options.directions.ne) {
                 resultTiles.push(tile);
-            } else if (tile && tile.gridX <= mapData.xMax && tile.gridX >= mapData.xMin && tile.gridY === mapData.yMax && options.xSize >= options.ySize) {
+            } else if (tile && tile.gridX <= mapData.xMax && tile.gridX >= mapData.xMin && tile.gridY === mapData.yMax && options.xSize >= options.ySize && options.directions.sw) {
                 resultTiles.push(tile);
-            } else if (tile && tile.gridY <= mapData.yMax && tile.gridY >= mapData.yMin && tile.gridX === mapData.xMin && options.xSize <= options.ySize) {
+            } else if (tile && tile.gridY <= mapData.yMax && tile.gridY >= mapData.yMin && tile.gridX === mapData.xMin && options.xSize <= options.ySize && options.directions.nw) {
                 resultTiles.push(tile);
-            } else if (tile && tile.gridY <= mapData.yMax && tile.gridY >= mapData.yMin && tile.gridX === mapData.xMax && options.xSize <= options.ySize) {
+            } else if (tile && tile.gridY <= mapData.yMax && tile.gridY >= mapData.yMin && tile.gridX === mapData.xMax && options.xSize <= options.ySize && options.directions.se) {
                 resultTiles.push(tile);
             }
         });
