@@ -2,14 +2,14 @@
     "house": [{
         "name" : "",
         "field": {
-            "character": 1,
+            "character": 2,
             "direction": "se",
             "x": 2,
             "y": 4
         },
         "battle": {
             "characters": [
-                { "id":1, "level":1 }
+                { "id":2, "level":1 }
             ]
         },
         "gold": 50,

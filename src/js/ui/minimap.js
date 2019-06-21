@@ -38,7 +38,7 @@ export default class Minimap extends PIXI.Application {
 
         this.realmap = realmap;
         this.mapTile = {};
-        this.mapLength = map.length;
+        this.mapLength = map[0].length;
 
         for (let y = 0; y < map.length; y++) {
             for (let x = 0; x < map[y].length; x++) {

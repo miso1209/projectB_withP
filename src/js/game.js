@@ -329,7 +329,7 @@ export default class Game extends EventEmitter {
 
     async $nextFloor(from, dir) {
         // 5층씩 올라가도록 해본다.
-        this.currentFloor++;
+        this.currentFloor += 5;
         this.ui.showTheaterUI(0.5);
         this.ui.hideMenu();
         await this.$leaveStage(from);

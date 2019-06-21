@@ -64,8 +64,6 @@ export class Portal3 {
     touch(game) {
         // 월드 진입컷신을 만들어서 넣어준다.
         const $t = async () => {
-            await game.$leaveStage(this.from)
-            await game.$enterStageIns(this.targetStage, this.to);
         };
 
         $t();
@@ -133,15 +131,7 @@ export class NextFloorPortal {
 
 
     touch(game) {
-        let direciton = '';
-        if (this.direction === DIRECTIONS.NW) {
-            direciton = 'left';
-        } else if(this.direction === DIRECTIONS.NE) {
-            direciton = 'up';
-        }
-        // 월드 진입컷신을 만들어서 넣어준다.
         const $t = async () => {
-            await game.$nextFloor(this.from, direciton);
         };
 
         $t();
