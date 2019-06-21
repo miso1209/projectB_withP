@@ -69,19 +69,22 @@ export default class Game extends EventEmitter {
             const inputs = this.getInvenotryData();
             this.ui.showInventory(inputs);
         });
+        
         this.ui.on('party', () => {
-            const inputs = [];
+            const inputs = []; // 가지고 있는 캐릭터 데이터
             for (const cid in this.player.characters) {
                 inputs.push(this.player.characters[cid]);
             }
-            this.ui.showParty(inputs);
+            // 현재 파티 구성 데이터
+            const party = this.player.party.getBattleAllies();
+            this.ui.showParty(inputs, party);
         });
+
         this.ui.on('characterselect', ()=> {
             const inputs = [];
             for (const cid in this.player.characters) {
                 inputs.push(this.player.characters[cid]);
             }
-
             this.ui.showCharacterSelect(inputs);
         });
 

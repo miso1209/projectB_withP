@@ -7,7 +7,6 @@ export default class Doll {
 
     this.path = '/src/assets/sprite/';
     this.path = `${this.path}${item.data.name}/${item.data.name}_idle_sw.png`;
-
     const name = new MakeDom('p', 'name', item.data.displayname);
     const imgWrap = new MakeDom('p', 'imgWrap', null);
     const profile = new MakeDom('img', 'profileImg', null);

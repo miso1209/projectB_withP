@@ -240,7 +240,7 @@ export default class CharacterDetail extends Panel {
       }
 
       this.equipItems.appendChild(liWrap);
-      // #click event - style
+
       liWrap.addEventListener('click', (e) => {
         if (this.isActive) {
           this.isActive.classList.remove('active');
@@ -250,7 +250,7 @@ export default class CharacterDetail extends Panel {
         this.isActive = liWrap;
         this.statItem = equipItemsData[liWrap.index];
       });
-      // #click event - data
+      
       liWrap.addEventListener('click', this.showEquipInfo.bind(this));
     });
   }

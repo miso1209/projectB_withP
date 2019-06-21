@@ -229,17 +229,13 @@
   width: 67%;
 }
 
-.flexWrap .flex-right .slot-list-box {
-  position: static;
-}
-
 .scrollView {
   position: absolute;
   top: 0px;
   left: 20px;
 
   /* 코드에서 수정함. */
-  width: 320px; 
+  width: 100%; 
   min-height: 260px;
 
   padding: 0;
@@ -286,6 +282,10 @@
   margin: 0 0 10px 0;
 }
 
+.flexWrap .flex-right .slot-list-box, 
+.flexWrap .flex-right .scrollView {
+  position: static;
+}
 
 /* .statUI {
   position: relative;
@@ -330,7 +330,7 @@
 
 .slot-list-box, .list-box {
   width: calc(100% + 10px);
-  min-width: 330px;
+  /* min-width: 330px; */
   height: 100%;
 }
 

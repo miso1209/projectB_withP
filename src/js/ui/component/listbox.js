@@ -13,6 +13,8 @@ class ListCell {
         // 타입별로 리스트의 셀 스타일을 교체함.
         if ( cellType === 'recipe') {
             this.showRecipeCell();
+        } else {
+            this.showCharacterCell();
         }
     }
   
@@ -37,9 +39,30 @@ class ListCell {
         this.cell.appendChild(this.cellData2);
         this.cell.appendChild(this.cellData3);
     }
+
+    showCharacterCell(){
+        if (this.cellData.available === 1) {
+            this.cell.classList.remove('disabled');
+            this.cell.classList.add('isAvailable');
+        }
+        
+        this.cellImg = document.createElement('img');
+        this.cellImg.src = `/src/assets/${this.cellData.data.portrait}`;
+        this.cellData1 = document.createElement('p');
+        this.cellData2 = document.createElement('p');
+        this.cellData3 = document.createElement('p');
+    
+        this.cellData1.innerText = this.cellData.data.displayname;
+        this.cellData2.innerText = this.cellData.data.class;
+        this.cellData3.innerText = `DPS : ${this.cellData.strongFigure}`;
+    
+        this.cell.appendChild(this.cellImg);
+        this.cell.appendChild(this.cellData1);
+        this.cell.appendChild(this.cellData2);
+        this.cell.appendChild(this.cellData3);
+    }
 }
   
-// 현재는 리스트형태 / 갤러리도 추가할 것.
 export default class ListBox extends Panel {
     constructor(_viewWidth, _viewHeight, callback) {
       super();
@@ -60,6 +83,7 @@ export default class ListBox extends Panel {
   
       this.list = document.createElement('ul');
       this.list.classList.add('list-box');
+      this.list.style.margin = '10px 0';
       this.list.style.height = viewHeight;
       this.list.style.width = viewWidth;
   
@@ -70,9 +94,10 @@ export default class ListBox extends Panel {
       this.callback = callback;
     }
   
-    update (listData) {
+    update (listData, celltype) {
         if (listData.length < 1) {
-            this.list.innerHTML = '해당 카테고리 레시피가 없습니다.';
+            // this.list.innerHTML = '해당 카테고리 레시피가 없습니다.';
+            this.list.innerHTML = '데이터가 없습니다.';
             return;
         } else {
             this.list.innerHTML = '';
@@ -83,7 +108,7 @@ export default class ListBox extends Panel {
             for (const data of listData) {
                 ++index;
         
-                let listCell = new ListCell(data, 'recipe');
+                let listCell = new ListCell(data, celltype);
                 listCell.available = data.available;
                 listCell.index = index;
         

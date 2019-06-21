@@ -28,4 +28,10 @@
         { "item":2001, "count": 10 },
         { "item":2002, "count": 4 }
     ]
+}, "1004": {
+    "item": 1004,
+    "materials": [
+        { "item":2001, "count": 100 },
+        { "item":2002, "count": 50 }
+    ]
 }}

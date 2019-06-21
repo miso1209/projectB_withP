@@ -11,7 +11,7 @@ import CharacterSelect from "./characterSelect";
 import CharacterDetail from "./characterDetail";
 import MakeDom from "./component/makedom";
 import Minimap from "./minimap";
-import Party from "./party";
+import PartyUI from "./partyui";
 
 
 export default class DomUI extends EventEmitter {
@@ -312,12 +312,15 @@ export default class DomUI extends EventEmitter {
         inventory.onTabSelected(inventory.tabs[0].category);
     }
 
-    showParty(inputs){
+    showParty(inputs, members){
         const pane = this.createContainer();
-        const party = new Party(pane, inputs, (result) => {
+        const party = new PartyUI(pane, inputs, members, (result) => {
             console.log(result);
         });
+        
+        console.log(members);
     }
+
     showCharacterSelect(inputs) {
         const pane = this.createContainer();
         
@@ -355,13 +358,13 @@ export default class DomUI extends EventEmitter {
 
             if (result.data !== null) {
                 if (option === 'simulationEquip') {
-                    console.log('아이템 고르기 - 시뮬레이션');
+                    // console.log('아이템 고르기 - 시뮬레이션');
                     this.emit('simulateEquip', result.data.category, result.item, player.id);
                     
                     characterDetail.selected = this.player;
                     characterDetail.updateStat();
                 } else if (option === 'cancel') {
-                    console.log('시뮬레이션 취소');
+                    // console.log('시뮬레이션 취소');
                     this.emit('cancelSimulate');
                     
                     characterDetail.selected = this.player;
@@ -369,16 +372,15 @@ export default class DomUI extends EventEmitter {
                     characterDetail.updateStat();
 
                 } else if (option === 'equip') {
-                    console.log('장비 장착');
+                    // console.log('장비 장착');
                     this.emit('equipItem', result.data.category, result.item, player.id);
                     
                     characterDetail.statItem.data = null;
                     characterDetail.updateEquip();
                     characterDetail.showEquipInfo();
                 } else {
-                    console.log('장비 해제');
+                    // console.log('장비 해제');
                     this.emit('unequipItem', result.data.category, player.id);
-                    // TODO : 해제하고 나서 인벤토리에 들어가는지 체크 필요함.
                     characterDetail.statItem.data = null;
                     characterDetail.updateEquip();
                     characterDetail.updateStat();
@@ -389,7 +391,9 @@ export default class DomUI extends EventEmitter {
                     characterDetail.tempEquip = this.playerInvenData;
                     characterDetail.showEquipInven();
                 } else {
-                    this.showConfirmModal('장착가능한 장비가 없습니다.', ()=>{});
+                    this.showConfirmModal('장착가능한 장비가 없습니다.', ()=>{
+                        // TODO: 나중엔 상점으로 연결하면 되려나.
+                    });
                 }
             }
         });

@@ -153,7 +153,7 @@ export default class RecipeUI extends Panel {
   
     update(){
         this.recipeModal.setSubTitle(this.category);
-        this.list.update(this.recipes);
+        this.list.update(this.recipes, 'recipe');
         this.recipeModal.addTab(this.tabs, this.category, this.select.bind(this));
     
         if(this.recipes.length > 0) {
