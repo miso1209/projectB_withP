@@ -324,6 +324,14 @@ export default class PathFinder {
         }
     }
 
+    isMovable(x, y) {
+        if (this.grid[y] && this.grid[y][x]) {
+            return (this.grid[y][x].weight === 1 && this.grid[y][x].dynamicWeight !== 0);
+        } else {
+            return false;
+        }
+    }
+
     setCell(x, y, movable) {
 	    this.grid[y][x].weight = movable ? 1 : 0;
     }

@@ -297,15 +297,23 @@ export default class Stage extends PIXI.Container {
         }
     }
 
-    getRandomPositions(width, height) {
+    getRandomPositions(xsize, ysize, tileSet) {
         const tileList = [];
 
-        this.groundMap.forEach((tile) => {
+        tileSet.forEach((tile) => {
             let emptyFlag = true;
 
-            for (let y = 0; y < height; y++) {
-                for (let x = 0; x < width; x++) {
-                    if (this.getObjectAt(tile.gridX - x,tile.gridY - y) || !this.pathFinder.getCell(tile.gridX - x, tile.gridY - y)) {
+            for (let y = 0; y < ysize; y++) {
+                for (let x = 0; x < xsize; x++) {
+                    if (!this.pathFinder.isMovable(tile.gridX - x, tile.gridY - y)) {
+                        emptyFlag = false;
+                    }
+                }
+            }
+
+            for (let y = -1; y < ysize+1; y++) {
+                for (let x = -1; x < xsize+1; x++) {
+                    if (this.eventMap[(tile.gridX - x) + (tile.gridY - y) * this.mapWidth] && !(this.eventMap[(tile.gridX - x) + (tile.gridY - y) * this.mapWidth] instanceof Portal4)) {
                         emptyFlag = false;
                     }
                 }
@@ -769,8 +777,46 @@ export default class Stage extends PIXI.Container {
         return null;
     }
 
+    chestRandomGenerate() {
+        this.addChest(4);
+        this.addChest(4);
+        this.addChest(4);
+        this.addChest(4);
+        this.addChest(4);
+        this.addChest(4);
+        this.addChest(4);
+        this.addChest(4);
+        this.addChest(4);
+        this.addChest(4);
+        this.addChest(4);
+        this.addChest(4);
+        this.addChest(4);
+        this.addChest(4);
+        this.addChest(4);
+        this.addChest(4);
+        this.addChest(4);
+    }
+
+    chestRandomGenerate_2() {
+        this.addChest();
+        this.addChest();
+        this.addChest();
+        this.addChest();
+        this.addChest();
+        this.addChest();
+        this.addChest();
+        this.addChest();
+        this.addChest();
+        this.addChest();
+        this.addChest();
+        this.addChest();
+        this.addChest();
+        this.addChest();
+        this.addChest();
+        this.addChest();
+    }
+
     enter() {
-        console.log(this.neighbor);
         this.monsters.forEach((monster) => {
             monster.move();
         });
@@ -793,7 +839,7 @@ export default class Stage extends PIXI.Container {
         // 임시 하드코딩. 다음엔 Generate 된 몬스터 파티를 받도록 하자.
         const monsters = Monster.GetByStage('house');
         for (const monster of monsters) {
-            const spawnPos = this.getRandomPositions(1, 1);
+            const spawnPos = this.getRandomPositions(1, 1, this.groundMap);
             if (spawnPos) {
                 const options = {  type: "monster", src: monster };
     
@@ -809,31 +855,122 @@ export default class Stage extends PIXI.Container {
         }
     }
 
-    addChest() {
-        // const options = {
-        //     type: "chest",
-        //     texture: PIXI.Texture.fromFrame('castle_treasurebox.png'),
-        //     movable: false
-        // };
-        // const size = {
-        //     width: 1,
-        //     height: 2
-        // }
-        // if (Math.random() < 0.5) {
-        //     options.texture = PIXI.Texture.fromFrame('castle_treasurebox_flip.png');
-        //     size.width = 2;
-        //     size.height = 1;
-        // }
-        // const spawnPos = this.getRandomPositions(size.width, size.height);
+    addChest(radius) {
+        let options = {
+            type: "chest",
+            texture: PIXI.Texture.fromFrame('castle_treasurebox.png'),
+            movable: false,
+            xsize: 1,
+            ysize: 2
+        };
+        if (Math.random() <= 0.5) {
+            options = {
+                type: "chest",
+                texture: PIXI.Texture.fromFrame('castle_treasurebox_flip.png'),
+                movable: false,
+                xsize: 2,
+                ysize: 1,
+                imageOffset: {
+                    x:-16,
+                    y:0
+                }
 
-        // if (spawnPos) {
-        //     const prop = this.newTile(spawnPos.x, spawnPos.y, options);
-        //     this.pathFinder.setDynamicCell(prop.gridX, prop.gridY, false);
+            };
+        }
+
+        const tiles = this.getChestPositions({
+            xMin: 2,
+            yMin: 2
+        },{
+            xSize: options.xsize,
+            ySize: options.ysize,
+            radius: radius?radius:null
+        });
+        let spawnPos = null;
+        if (radius) {
+            spawnPos = this.getRandomPositions(options.xsize, options.ysize, (Math.random()<0.5)?tiles.diagonal:tiles.center);
+        } else {
+            spawnPos = this.getRandomPositions(options.xsize, options.ysize, tiles.diagonal);
+        }
+
+        if (spawnPos) {
+            const prop = this.newTile(spawnPos.x, spawnPos.y, options);
+            for (let y=0;y<options.ysize;y++) {
+                for (let x=0;x<options.xsize;x++) {
+                    this.pathFinder.setDynamicCell(prop.gridX - x, prop.gridY - y, false);
+                }
+            }
     
-        //     this.addObjRefToLocation(prop, spawnPos.x, spawnPos.y);
-        //     this.arrangeDepthsFromLocation(prop, spawnPos.x, spawnPos.y);
-        //     this.setObjectEmitter(prop);
-        // }
+            this.addObjRefToLocation(prop, spawnPos.x, spawnPos.y);
+            this.arrangeDepthsFromLocation(prop, spawnPos.x, spawnPos.y);
+            this.setObjectEmitter(prop);
+        }
+    }
+
+    getChestPositions(offset, options) {
+        const mapData = {
+            xMin: null,
+            yMin: null,
+            xMax: null,
+            yMax: null,
+            centerX: null,
+            centerY: null
+        };
+
+        this.groundMap.forEach((tile) => {
+            if (tile && (mapData.xMin > tile.gridX || mapData.xMin === null)) {
+                mapData.xMin = tile.gridX;
+            }
+            if (tile && (mapData.xMax < tile.gridX || mapData.xMax === null)) {
+                mapData.xMax = tile.gridX;
+            }
+            if (tile && (mapData.yMin > tile.gridY || mapData.yMin === null)) {
+                mapData.yMin = tile.gridY;
+            }
+            if (tile && (mapData.yMax < tile.gridY || mapData.yMax === null)) {
+                mapData.yMax = tile.gridY;
+            }
+        });
+        let mapOffset = Object.assign({
+            xMin: 0,
+            xMax: 0,
+            yMin: 0,
+            yMax: 0
+        }, offset);
+
+        for (let key in mapOffset) {
+            mapData[key] += mapOffset[key];
+        }
+
+        mapData.centerX = Math.floor((mapData.xMin + mapData.xMax) / 2);
+        mapData.centerY = Math.floor((mapData.yMin + mapData.yMax) / 2);
+        
+        const resultTiles = {
+            diagonal: [],
+            center: []
+        };
+        // 모서리는 각 xMin, xMax, yMin, yMax의 타일이다.
+        this.groundMap.forEach((tile) => {
+            // 모서리 타일 추가.
+            if (tile && tile.gridX <= mapData.xMax && tile.gridX >= mapData.xMin && tile.gridY === mapData.yMin && options && options.xSize >= options.ySize) {
+                resultTiles.diagonal.push(tile);
+            } else if (tile && tile.gridX <= mapData.xMax && tile.gridX >= mapData.xMin && tile.gridY === mapData.yMax && options.xSize >= options.ySize) {
+                resultTiles.diagonal.push(tile);
+            } else if (tile && tile.gridY <= mapData.yMax && tile.gridY >= mapData.yMin && tile.gridX === mapData.xMin && options.xSize <= options.ySize) {
+                resultTiles.diagonal.push(tile);
+            } else if (tile && tile.gridY <= mapData.yMax && tile.gridY >= mapData.yMin && tile.gridX === mapData.xMax && options.xSize <= options.ySize) {
+                resultTiles.diagonal.push(tile);
+            }
+
+            // 중앙 타일 추가.
+            if (tile && options && options.radius && tile.gridX <= mapData.centerX + options.radius && tile.gridX >= mapData.centerX - options.radius) {
+                if (tile.gridY <= mapData.centerY + options.radius && tile.gridY >= mapData.centerY - options.radius) {
+                    resultTiles.center.push(tile);
+                }
+            }
+        });
+
+        return resultTiles;
     }
 
     addCharacter(character, x, y) {

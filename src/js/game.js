@@ -354,6 +354,7 @@ export default class Game extends EventEmitter {
         }
 
         await this.$enterStageIns(hall, hallKey);
+        this.ui.showMinimap();
         this.ui.showStageTitle(`- 어둠의 성탑 ${this.currentFloor}층 -`);
     }
 

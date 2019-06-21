@@ -202,24 +202,28 @@ export default class MapGenerator {
                     const stageName = path.basename(`assets/mapdata/${middleBoss}.json`, ".json");
                     const stage = new Stage(neighbor);
                     await stage.$load(stageName);
+                    stage.chestRandomGenerate();
     
                     realMap[y][x] = stage;
                 } else  if (this.map[y][x] === MAP_DATA.STAIR) {
                     const stageName = path.basename(`assets/mapdata/${stair}.json`, ".json");
                     const stage = new Stage(neighbor);
                     await stage.$load(stageName);
+                    stage.chestRandomGenerate();
     
                     realMap[y][x] = stage;
                 } else  if (this.map[y][x] === MAP_DATA.PORTAL) {
                     const stageName = path.basename(`assets/mapdata/${portal}.json`, ".json");
                     const stage = new Stage(neighbor);
                     await stage.$load(stageName);
+                    stage.chestRandomGenerate();
     
                     realMap[y][x] = stage;
                 } else if (this.map[y][x] === MAP_DATA.HALL) {
                     const stageName = path.basename(`assets/mapdata/${hall}.json`, ".json");
                     const stage = new Stage(neighbor);
                     await stage.$load(stageName);
+                    stage.chestRandomGenerate();
     
                     realMap[y][x] = stage;
                     this.hall = stage;
@@ -227,9 +231,9 @@ export default class MapGenerator {
                     const stageName = path.basename(`assets/mapdata/${room}.json`, ".json");
                     const stage = new Stage(neighbor);
                     await stage.$load(stageName);
-                    stage.addMonster();
-                    stage.addMonster();
-                    stage.addChest();
+                    stage.chestRandomGenerate();
+                    // stage.addMonster();
+                    // stage.addMonster();
     
                     realMap[y][x] = stage;
                 } else if (this.map[y][x] === MAP_DATA.PASSAGE && ((this.map[y-1] && this.map[y-1][x] !== MAP_DATA.EMPTY && this.map[y-1][x] !== MAP_DATA.PASSAGE) || (this.map[y+1] && this.map[y+1][x] !== MAP_DATA.EMPTY && this.map[y+1][x] !== MAP_DATA.PASSAGE))) {
@@ -237,6 +241,7 @@ export default class MapGenerator {
                     const stageName = path.basename(`assets/mapdata/${UDPassage}.json`, ".json");
                     const stage = new Stage(neighbor);
                     await stage.$load(stageName);
+                    stage.chestRandomGenerate_2();
     
                     realMap[y][x] = stage;
                 } else if (this.map[y][x] === MAP_DATA.PASSAGE) {
@@ -244,6 +249,7 @@ export default class MapGenerator {
                     const stageName = path.basename(`assets/mapdata/${LRPassage}.json`, ".json");
                     const stage = new Stage(neighbor);
                     await stage.$load(stageName);
+                    stage.chestRandomGenerate_2();
     
                     realMap[y][x] = stage;
                 } else if (this.map[y][x] === MAP_DATA.INPUT || this.map[y][x] === MAP_DATA.OUTPUT) {
