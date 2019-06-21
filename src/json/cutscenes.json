@@ -106,6 +106,29 @@
             "command": "delay",
             "arguments": [0.5]
         }
+    ],
+    "6": [{
+            "command": "goto",
+            "arguments": [45, 72]
+        }, {
+            "command": "dialog",
+            "arguments": [
+                {"text": "밀루다?", "speaker": 2}
+            ]
+        }, {
+            "command": "delay",
+            "arguments": [0.3]
+        }, {
+            "command": "dialog",
+            "arguments": [
+                {"text": "밀루다!! 이게 무슨일이야!", "speaker": 2},
+                {"text": "으.. 으으.. 싸운다....", "speaker": 4},
+                {"text": "아무래도 정신을 차리게 해줘야겠어!.", "speaker": 2}
+            ]
+        }, {
+            "command": "battle",
+            "arguments": []
+        }
     ]
 }
 

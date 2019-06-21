@@ -848,13 +848,18 @@ export default class Stage extends PIXI.Container {
     }
 
     enter() {
-        this.monsters.forEach((monster) => {
-            monster.move();
-        });
 
         // 중간보스룸 컷씬
         if (this.name === 'castle_boss-middle') {
-            this.emit('playcutscene', 3);
+            this.monsters.forEach((monster) => {
+                monster.currentDirection = getDirection(monster.gridX, monster.gridY, monster.gridX, monster.gridY + 1);
+                monster.changeVisualToDirection(monster.currentDirection);
+            });
+            this.emit('playcutscene', 6);
+        } else {
+            this.monsters.forEach((monster) => {
+                monster.move();
+            });
         }
     }
 
@@ -866,11 +871,11 @@ export default class Stage extends PIXI.Container {
 
     // 몬스터를 해당 좌표에 찍어낸다. 어디서 호출해야 하는가?
     // 최초 Map Generator에서 생성 시, 몬스터를 찍어내도록 하는것은 어떨까?..
-    addMonster(monster, x, y) {
+    addMonster(pos) {
         // 임시 하드코딩. 다음엔 Generate 된 몬스터 파티를 받도록 하자.
         const monsters = Monster.GetByStage('house');
         for (const monster of monsters) {
-            const spawnPos = this.getRandomPositions(1, 1, this.groundMap);
+            const spawnPos = pos?pos:this.getRandomPositions(1, 1, this.groundMap);
             if (spawnPos) {
                 const options = {  type: "monster", src: monster };
     
@@ -1102,6 +1107,12 @@ export default class Stage extends PIXI.Container {
         this.moveEngine.addMovable(obj); 
         return true;
       
+    }
+
+    storyBattle() {
+        this.monsters.forEach((monster) => {
+            monster.move();
+        });
     }
 
     onObjMoveStepEnd(obj) {

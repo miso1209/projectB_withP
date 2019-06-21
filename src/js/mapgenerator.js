@@ -206,7 +206,7 @@ export default class MapGenerator {
                     const stageName = path.basename(`assets/mapdata/${middleBoss}.json`, ".json");
                     const stage = new Stage(neighbor);
                     await stage.$load(stageName);
-                    stage.randomPropGenerate();
+                    stage.addMonster({x:45, y:70});
     
                     realMap[y][x] = stage;
                 } else  if (this.map[y][x] === MAP_DATA.STAIR) {

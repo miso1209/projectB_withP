@@ -238,6 +238,10 @@ export default class Game extends EventEmitter {
         this.onNotify({ type:"cutscene", script: script });
     }
 
+    allRecoveryParty() {
+        console.log('player 모두 회복.');
+    }
+
     _playCutscene(script) {
         if (Number(script)) {
             script = Cutscene.fromData(Number(script));
@@ -280,6 +284,9 @@ export default class Game extends EventEmitter {
                     next();
                 } else if (func.command === "addquest") {
                     this.addQuest(...func.arguments);
+                    next();
+                } else if (func.command === "battle") {
+                    this.stage.storyBattle();
                     next();
                 }
             } else {
@@ -500,9 +507,11 @@ export default class Game extends EventEmitter {
                 }
             });
             this.currentMode.on('lose', async () => {
+                this.stage.pathFinder.setDynamicCell(this.stage.player.gridX, this.stage.player.gridY, false);
                 await this.$leaveBattle();
                 this.stage.leave();
-                this.playCutscene(4);
+                this.allRecoveryParty();
+                this._playCutscene(4);
             });
             this.currentMode.on('closeBattle', () => {
                 this.$leaveBattle();

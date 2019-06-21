@@ -27,8 +27,10 @@ export default class PortalStone extends PropBase {
                 effect.position.x += 18;
                 effect.position.y += 25;
                 effect.blendMode = PIXI.BLEND_MODES.ADD;
-                this.addChild(effect)
+                this.addChild(effect);
+                game.stage.player.colorBlink(0x0000A0, 1);
                 
+                game.allRecoveryParty();
                 game._playCutscene(5);
             }
         });
