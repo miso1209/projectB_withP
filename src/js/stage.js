@@ -778,26 +778,6 @@ export default class Stage extends PIXI.Container {
     }
 
     chestRandomGenerate() {
-        this.addChest(4);
-        this.addChest(4);
-        this.addChest(4);
-        this.addChest(4);
-        this.addChest(4);
-        this.addChest(4);
-        this.addChest(4);
-        this.addChest(4);
-        this.addChest(4);
-        this.addChest(4);
-        this.addChest(4);
-        this.addChest(4);
-        this.addChest(4);
-        this.addChest(4);
-        this.addChest(4);
-        this.addChest(4);
-        this.addChest(4);
-    }
-
-    chestRandomGenerate_2() {
         this.addChest();
         this.addChest();
         this.addChest();
@@ -883,15 +863,9 @@ export default class Stage extends PIXI.Container {
             yMin: 2
         },{
             xSize: options.xsize,
-            ySize: options.ysize,
-            radius: radius?radius:null
+            ySize: options.ysize
         });
-        let spawnPos = null;
-        if (radius) {
-            spawnPos = this.getRandomPositions(options.xsize, options.ysize, (Math.random()<0.5)?tiles.diagonal:tiles.center);
-        } else {
-            spawnPos = this.getRandomPositions(options.xsize, options.ysize, tiles.diagonal);
-        }
+        let spawnPos = this.getRandomPositions(options.xsize, options.ysize, tiles);
 
         if (spawnPos) {
             const prop = this.newTile(spawnPos.x, spawnPos.y, options);
@@ -945,28 +919,18 @@ export default class Stage extends PIXI.Container {
         mapData.centerX = Math.floor((mapData.xMin + mapData.xMax) / 2);
         mapData.centerY = Math.floor((mapData.yMin + mapData.yMax) / 2);
         
-        const resultTiles = {
-            diagonal: [],
-            center: []
-        };
+        const resultTiles = [];
         // 모서리는 각 xMin, xMax, yMin, yMax의 타일이다.
         this.groundMap.forEach((tile) => {
             // 모서리 타일 추가.
             if (tile && tile.gridX <= mapData.xMax && tile.gridX >= mapData.xMin && tile.gridY === mapData.yMin && options && options.xSize >= options.ySize) {
-                resultTiles.diagonal.push(tile);
+                resultTiles.push(tile);
             } else if (tile && tile.gridX <= mapData.xMax && tile.gridX >= mapData.xMin && tile.gridY === mapData.yMax && options.xSize >= options.ySize) {
-                resultTiles.diagonal.push(tile);
+                resultTiles.push(tile);
             } else if (tile && tile.gridY <= mapData.yMax && tile.gridY >= mapData.yMin && tile.gridX === mapData.xMin && options.xSize <= options.ySize) {
-                resultTiles.diagonal.push(tile);
+                resultTiles.push(tile);
             } else if (tile && tile.gridY <= mapData.yMax && tile.gridY >= mapData.yMin && tile.gridX === mapData.xMax && options.xSize <= options.ySize) {
-                resultTiles.diagonal.push(tile);
-            }
-
-            // 중앙 타일 추가.
-            if (tile && options && options.radius && tile.gridX <= mapData.centerX + options.radius && tile.gridX >= mapData.centerX - options.radius) {
-                if (tile.gridY <= mapData.centerY + options.radius && tile.gridY >= mapData.centerY - options.radius) {
-                    resultTiles.center.push(tile);
-                }
+                resultTiles.push(tile);
             }
         });
 

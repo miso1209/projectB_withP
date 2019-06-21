@@ -241,7 +241,7 @@ export default class MapGenerator {
                     const stageName = path.basename(`assets/mapdata/${UDPassage}.json`, ".json");
                     const stage = new Stage(neighbor);
                     await stage.$load(stageName);
-                    stage.chestRandomGenerate_2();
+                    stage.chestRandomGenerate();
     
                     realMap[y][x] = stage;
                 } else if (this.map[y][x] === MAP_DATA.PASSAGE) {
@@ -249,7 +249,7 @@ export default class MapGenerator {
                     const stageName = path.basename(`assets/mapdata/${LRPassage}.json`, ".json");
                     const stage = new Stage(neighbor);
                     await stage.$load(stageName);
-                    stage.chestRandomGenerate_2();
+                    stage.chestRandomGenerate();
     
                     realMap[y][x] = stage;
                 } else if (this.map[y][x] === MAP_DATA.INPUT || this.map[y][x] === MAP_DATA.OUTPUT) {
