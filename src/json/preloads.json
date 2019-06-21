@@ -22,12 +22,17 @@
     ["victory_logo.png", "assets/victory_logo.png"],
     ["defeat_logo.png", "assets/defeat_logo.png"],
     ["bufficons.png", "assets/bufficons.png"],
+    ["battleIcon_32.png", "assets/battleIcon_32.png"],
 
     ["shadow.png", "assets/shadow.png"],
     ["pbar.png", "assets/pbar.png"],
     ["pbar_w.png", "assets/pbar_w.png"],
     ["event_02.png", "assets/mapdata/event_02.png"],
     ["location_icon.png", "assets/location_icon.png"],
+    ["recipeshelf_front_1x1_flip.png", "assets/mapdata/recipeshelf_front_1x1_flip.png"],
+    ["recipeshelf_back_1x1_flip.png", "assets/mapdata/recipeshelf_back_1x1_flip.png"],
+    ["recipeshelf_back_1x1.png", "assets/mapdata/recipeshelf_back_1x1.png"],
+    ["recipeshelf_front_1x1.png", "assets/mapdata/recipeshelf_front_1x1.png"],
 
     ["assets/sprite/elid/elid_atk_nw.json"],
     ["assets/sprite/elid/elid_atk_sw.json"],

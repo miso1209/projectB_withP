@@ -351,6 +351,7 @@ export default class Game extends EventEmitter {
                     map.on('playcutscene', async (...args) => {
                         this._playCutscene(...args);
                     });
+                    map.on('seePlayer', async (...args) => { await this.$battleCutscene(...args); });
                     map.on('battle', async (...args) => { await this.$objBattle(...args); });
                 }
             }
@@ -361,16 +362,16 @@ export default class Game extends EventEmitter {
         this.ui.showStageTitle(`- 어둠의 성탑 ${this.currentFloor}층 -`);
     }
 
-    async $objBattle(obj) {
+    async $battleCutscene() {
         // Theater깔고 인풋 막는다.
         this.stage.interactTarget = null;
         this.ui.showTheaterUI(0.5);
         this.ui.hideMenu();
         this.exploreMode.setInteractive(false);
+    }
 
-        // await이 걸린 무엇인가의 컷씬처리같은게 일어나야할듯.
-        // 
-
+    async $objBattle(obj) {
+        await this.$fadeIn(0.5);
         await this.$enterBattle(obj);
     }
     

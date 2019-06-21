@@ -357,12 +357,31 @@ export default class Stage extends PIXI.Container {
         return path.reverse();
     }
 
-    moveMonster(obj, path) {
+    getPlayerPath(obj) {
+        let path = [].concat(this.pathFinder.solve(obj.gridX, obj.gridY, this.player.gridX, this.player.gridY, false));
+
+        if (path && path[0] === null) {
+            path = [];
+        } else {
+            path.splice(0, 1);
+        }
+        path.push({x:obj.gridX, y:obj.gridY});
+        path.push({x:obj.gridX, y:obj.gridY});
+        path.push({x:obj.gridX, y:obj.gridY});
+
+        return path.reverse();
+    }
+
+    moveMonster(obj, path, callback) {
         if (obj.isStop) {
             return;
         }
         if (path.length === 0) {
-            obj.move();
+            if (callback) {
+                callback();
+            } else {
+                obj.move();
+            }
             return;
         }
         
@@ -388,7 +407,7 @@ export default class Stage extends PIXI.Container {
 
         this.tweens.addTween(obj.position, speed, { x: to.x, y: to.y }, 0, "linear", true , () => {
             obj.tileTexture.isMoving = false;
-            this.moveMonster(obj, path);
+            this.moveMonster(obj, path, callback);
         });
 
         // 여기에서 플레이어 전투 판정.. => 플레이어를 바라보고, 전투를 시작한다.
@@ -396,16 +415,30 @@ export default class Stage extends PIXI.Container {
             const dist = Math.sqrt((this.player.gridX - obj.gridX)**2 + (this.player.gridY - obj.gridY)**2);
 
             // 범위안에 들어왔으니 전투씬 진입.
-            if (dist <= 4 && !obj.isStop) {
+            if (dist <= 5 && !obj.battle) {
                 this.leave();
                 obj.changeVisualToDirection(obj.currentDirection);
+                obj.tileTexture.isMoving = true;
+                obj.isStop = false;
+                obj.battle = true;
+                obj.showBattleIcon();
                 this.stopObject(this.player);
                 this.interactTarget = null;
                 this.onObjMoveStepEnd(this.player);
                 this.player.position.x = this.getTilePosXFor(this.player.gridX, this.player.gridY);
                 this.player.position.y = this.getTilePosYFor(this.player.gridX, this.player.gridY);
 
-                this.emit('battle', obj);
+                this.emit('seePlayer');
+                path = this.getPlayerPath(obj);
+                callback =  () => {
+                    obj.currentDirection = getDirection(obj.gridX, obj.gridY, this.player.gridX, this.player.gridY);
+                    obj.tileTexture.isMoving = false;
+                    obj.tileTexture.changeVisualToDirection(obj.currentDirection);
+
+                    this.player.changeVisualToDirection(getDirection(this.player.gridX, this.player.gridY, obj.gridX, obj.gridY));
+                    this.leave();
+                    this.emit('battle', obj);
+                };
             }
         }
     }

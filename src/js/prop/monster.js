@@ -22,6 +22,7 @@ export default class Monster extends PropBase {
 
         this.emitter = new EventEmitter();
         this.hasEmitter = true;
+        this.battle = false;
 
         // TODO : 출력위치는 조정해야한다.
         this.src = monster;
@@ -41,6 +42,15 @@ export default class Monster extends PropBase {
 
     delete() {
         this.emit('delete');
+    }
+
+    showBattleIcon() {
+        const sprite = new PIXI.Sprite(PIXI.Texture.fromFrame('battleIcon_32.png'));
+        sprite.position.x += 20;
+        sprite.position.y = -this.height + 10;
+        sprite.scale.x = 1 / 1.5;
+        sprite.scale.y = 1 / 1.5;
+        this.addChild(sprite);
     }
 
     move() {
