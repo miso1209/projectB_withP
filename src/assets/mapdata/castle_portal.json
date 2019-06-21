@@ -723,7 +723,8 @@
                          "name":"ysize",
                          "type":"int",
                          "value":2
-                        }]
+                        }],
+                 "type":"portal_stone"
                 }, 
                 {
                  "id":19,

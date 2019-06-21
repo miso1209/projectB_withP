@@ -10,12 +10,7 @@ export default class Recipe extends PropBase {
 
     touch(game) {
         if (!this.isOpened) {
-            game.addItems([
-                {
-                    id: 1001,
-                    owned: 1
-                }
-            ]);
+            game.addItem(1001, 1);
 
             this.isOpened = true;
         } else {

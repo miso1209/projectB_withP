@@ -777,7 +777,7 @@ export default class Stage extends PIXI.Container {
         return null;
     }
 
-    chestRandomGenerate() {
+    randomPropGenerate() {
         let chest = {
             type: "chest",
             texture: PIXI.Texture.fromFrame('castle_treasurebox.png'),
@@ -795,6 +795,10 @@ export default class Stage extends PIXI.Container {
                 imageOffset: {
                     x:-16,
                     y:0
+                },
+                nameTagOffset: {
+                    x: -16,
+                    y: -8
                 }
             };
         }
@@ -863,7 +867,6 @@ export default class Stage extends PIXI.Container {
                 sw: true,
             }
         });
-        console.log(directions);
         let spawnPos = this.getRandomPositions(options.xsize, options.ysize, tiles);
 
         if (spawnPos) {
@@ -1069,7 +1072,6 @@ export default class Stage extends PIXI.Container {
     }
 
     onObjMoveStepEnd(obj) {
-        // console.log(obj.gridX, obj.gridY);
         obj.currentPathStep--;
         obj.currentTarget = null;
         obj.currentTargetTile = null;

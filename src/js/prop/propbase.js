@@ -27,6 +27,7 @@ export default class PropBase extends PIXI.Container {
             }
         }
 
+        this.nameTagOffset = options.nameTagOffset;
         this.movable = options.movable || false;
         this.transperancy = options.transperancy;
         this.flipX = this.flipX;
