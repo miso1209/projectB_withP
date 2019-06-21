@@ -91,6 +91,21 @@
             "command": "dialog",
             "arguments": [ {"text":"집에 돌아오니 한결 살것같아", "speaker": 1}]
         }
+    ],
+    "5": [
+        {
+            "command": "delay",
+            "arguments": [1.5]
+        }, { 
+            "command": "leavestage",
+            "arguments": [] 
+        }, {
+            "command": "enterstage",
+            "arguments": ["house", "house-gate"]
+        }, {
+            "command": "delay",
+            "arguments": [0.5]
+        }
     ]
 }
 

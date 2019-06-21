@@ -132,6 +132,10 @@ export default class MapGenerator {
 
         // 축소작업
         this.smallizeMap(map);
+        
+        for(let y=0;y<map.length;y++) {
+            console.log(map[y].toString().replace(/,/g,''));
+        }
 
         this.map = map;
         this.realMap = await this.loadMap();
@@ -232,8 +236,8 @@ export default class MapGenerator {
                     const stage = new Stage(neighbor);
                     await stage.$load(stageName);
                     stage.randomPropGenerate();
-                    stage.addMonster();
-                    stage.addMonster();
+                    // stage.addMonster();
+                    // stage.addMonster();
     
                     realMap[y][x] = stage;
                 } else if (this.map[y][x] === MAP_DATA.PASSAGE && ((this.map[y-1] && this.map[y-1][x] !== MAP_DATA.EMPTY && this.map[y-1][x] !== MAP_DATA.PASSAGE) || (this.map[y+1] && this.map[y+1][x] !== MAP_DATA.EMPTY && this.map[y+1][x] !== MAP_DATA.PASSAGE))) {
