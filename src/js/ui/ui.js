@@ -43,7 +43,7 @@ export default class DomUI extends EventEmitter {
         this.minimapDOM.style.height = '100px';
         this.minimapDOM.style.display = 'none';
         
-        gnb.appendChild(this.minimapDOM);
+        this.gnbContainer.appendChild(this.minimapDOM);
 
         this.minimap = new Minimap(160, 100, this.minimapDOM);
         

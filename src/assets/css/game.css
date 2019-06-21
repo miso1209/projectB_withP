@@ -91,7 +91,10 @@
 } 
 
 .minimap {
-  display: inline-block;
+  position: absolute;
+  top: 15px;
+  right: 5px;
+  /* display: inline-block; */
   width: 160px;
   height: 100px;
   margin: 0 10px 10px 0;
