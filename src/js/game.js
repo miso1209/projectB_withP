@@ -128,18 +128,6 @@ export default class Game extends EventEmitter {
             this.ui.showStageTitle(text);
         });
 
-        this.ui.on('zoomInOut', ()=>{
-            if (this.stage.currentScale === 2) {
-                this.stage.zoomTo(1.5, true);
-            } else if (this.stage.currentScale === 1.5) {
-                this.stage.zoomTo(1, true);
-            } else {
-                this.stage.zoomTo(2, true);
-            }
-
-            this.ui.zoomBtn.innerText = `x${this.stage.currentScale}`;
-        });
-
         // 게임 알림을 알려주는 notificatin 큐를 만든다
         this.notification = new Notification();
     }
@@ -406,7 +394,13 @@ export default class Game extends EventEmitter {
         for(const tag of this.player.tags) {
             stage.applyTag(tag);
         }
-        stage.zoomTo(2, true);
+
+        // 집일경우 2배줌
+        if (stageName === 'house') {
+            stage.zoomTo(2, true);
+        } else {
+            stage.zoomTo(1.5, true);
+        }
 
         this.stage = stage;
         this.gamelayer.addChild(stage);
