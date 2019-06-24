@@ -183,29 +183,7 @@ export default class Stage extends PIXI.Container {
                     } else if (group === "object") {
                         this.setObjectTile(x, y, tile);
                     } else if (group === "event") {
-                        if (tile.name === 'up' || tile.name === 'down' || tile.name === 'left' || tile.name === 'right') {
-                            if (this.neighbor.output === tile.name) {
-                                this.eventMap[x + y * width] = new NextFloorPortal(x, y, tile);
-                                // 포탈이벤트를 기본적으로 패스에 포함시킬수 없다
-                                this.pathFinder.setCell(x, y, true);
-                            } else if (this.neighbor[tile.name]) {
-                                this.eventMap[x + y * width] = new Portal3(x, y, tile);
-                                // 포탈이벤트를 기본적으로 패스에 포함시킬수 없다
-                                this.pathFinder.setCell(x, y, true);
-                            } else {
-                                // 작동하지 않는 단지 위치를 알려주는 포탈.
-                                this.eventMap[x + y * width] = new Portal4(x, y, tile);
-                                this.pathFinder.setCell(x, y, true);
-                            }
-                        } else if (tile.name === 'nextFloor') {
-                            this.eventMap[x + y * width] = new NextFloorPortal(x, y, tile);
-                            // 포탈이벤트를 기본적으로 패스에 포함시킬수 없다
-                            this.pathFinder.setCell(x, y, true);
-                        } else {
-                            this.eventMap[x + y * width] = new Portal5(x, y, tile);
-                            // 포탈이벤트를 기본적으로 패스에 포함시킬수 없다
-                            this.pathFinder.setCell(x, y, true);
-                        }
+                        this.setEventTile(x, y, tile);
                     } else {
                         throw Error("invalid group :" + group);
                     }
@@ -262,6 +240,22 @@ export default class Stage extends PIXI.Container {
         }
     }
 
+    setEventTile(x, y, tile) {
+        if (tile.name === 'up' || tile.name === 'down' || tile.name === 'left' || tile.name === 'right') {
+            if (this.neighbor.output === tile.name) {
+                this.eventMap[x + y * this.mapWidth] = new NextFloorPortal(x, y, tile);
+            } else if (this.neighbor[tile.name]) {
+                this.eventMap[x + y * this.mapWidth] = new Portal3(x, y, tile);
+            } else {
+                this.eventMap[x + y * this.mapWidth] = new Portal4(x, y, tile);
+            }
+        } else if (tile.name === 'nextFloor') {
+            this.eventMap[x + y * this.mapWidth] = new NextFloorPortal(x, y, tile);
+        } else {
+            this.eventMap[x + y * this.mapWidth] = new Portal5(x, y, tile);
+        }
+        this.pathFinder.setCell(x, y, true);
+    }
     setObjectTile(x, y, src) {
         const tile = this.newTile(x, y, src);
         for(let j = 0; j < src.xsize; ++j ) {
@@ -1149,7 +1143,7 @@ export default class Stage extends PIXI.Container {
         }
         this.nameTiles = [];
         // 주변에 프랍들을 검색해서 이름표를 띄운다
-        const distance = 2;
+        const distance = 4;
         for (let j = Math.max(0, obj.gridY - distance); j <= Math.min(this.mapHeight-1, obj.gridY+distance); j++) {
             for (let i = Math.max(0, obj.gridX - distance); i <= Math.min(this.mapWidth-1, obj.gridX+distance); i++) {
                 const obj = this.getObjectAt(i, j);

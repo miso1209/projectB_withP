@@ -247,7 +247,7 @@ export default class Game extends EventEmitter {
         console.log('player 모두 회복.');
     }
 
-    _playCutscene(script) {
+    _playCutscene(script, callback) {
         if (Number(script)) {
             script = Cutscene.fromData(Number(script));
         } else {
@@ -319,6 +319,10 @@ export default class Game extends EventEmitter {
 
                     this.storage.data.cutscene = null;
                     this.storage.save();
+
+                    if (callback) {
+                        callback();
+                    }
                 }
 
                 t();

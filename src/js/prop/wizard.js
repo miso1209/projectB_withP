@@ -40,9 +40,11 @@ export default class Wizard extends PropBase {
                         game.addCharacter(5, { level: 1, exp: 0, equips: {}});
                         game.addTag("haswizard");
                         game.exploreMode.interactive = false;
+                        game.ui.hideMenu();
                         await game.$fadeOut(1);
                         this.delete();
                         await game.$fadeIn(1);
+                        game.ui.showMenu();
                         game.exploreMode.interactive = true;
                     };
 
