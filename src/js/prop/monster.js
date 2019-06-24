@@ -146,6 +146,6 @@ export default class Monster extends PropBase {
 
     // DPS는 파티의 DPS를 가져온다.
     getDPS() {
-        return "DPS 100";
+        return `전투력 ${this.src.totalPowerFigure}`;
     }
 }

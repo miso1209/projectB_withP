@@ -1,4 +1,5 @@
 import monsters from "./monsters";
+import Character from "./character";
 
 export default class Monster {
     static GetByStage(stageName) {
@@ -17,6 +18,19 @@ export default class Monster {
 
     get fieldCharacter() {
         return this.origin.field;
+    }
+
+    get totalPowerFigure() {
+        let result = 0;
+
+        this.battleCharacters.forEach((c) => {
+            const character = new Character(c.id);
+            character.level = c.level;
+
+            result += character.totalPowerFigure;
+        });
+
+        return result;
     }
 
     get battleCharacters() {
