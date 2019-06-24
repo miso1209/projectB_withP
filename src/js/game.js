@@ -81,19 +81,14 @@ export default class Game extends EventEmitter {
             this.ui.showParty(inputs, party);
         });
 
-        this.ui.on('setParty', (parties) => {
-            parties.forEach((partyData, index) => {
-                this.setParty(index, partyData.character);
-            });
+        this.ui.on('setParty', (index, character) => {
+            this.setParty(index, character);
             
             const party = [];
-            this.player.party.members.forEach((character) => {
-                if(character) {
-                    party.push(Number(character.id));
-                } else {
-                    party.push(0);
-                }
-            });
+            for (let key in this.player.party.members) {
+                const member = this.player.party.members[key];
+                party[key] = (member && member.id)?member.id:0;
+            }
 
             this.storage.saveParty(party);
         });
@@ -243,7 +238,6 @@ export default class Game extends EventEmitter {
     }
 
     allRecoveryParty() {
-        console.log(this.player);
         for (let key in this.player.characters) {
             this.player.characters[key].applyOption('recovery()');
         }

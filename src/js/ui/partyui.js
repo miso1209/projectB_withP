@@ -48,10 +48,10 @@ export default class PartyUI extends Panel {
     submitButton.moveToCenter(15);
     submitButton.moveToBottom(15);
 
-    submitButton.dom.addEventListener('click', (ok)=> {
-      pane.parentNode.removeChild(pane);
-      return this.result(this.members);
-    });
+    // submitButton.dom.addEventListener('click', (ok)=> {
+    //   pane.parentNode.removeChild(pane);
+    //   return this.result(this.members);
+    // });
 
     this.ownedCharacters.appendChild(submitButton.dom);
     this.ownedCharacters.appendChild(this.totaldps);
@@ -87,47 +87,29 @@ export default class PartyUI extends Panel {
   }
 
   initMembers(){
-    let index = -1;
-    // 좌표만 가지고 있는 비교용 데이터 배열...이 필요..
-    for (let i = 0; i < PARTY_SIZE; i++) {
-      this.members[i] = {
-          character: null,
-          x: i % 3,
-          y: Math.floor(i / 3)
-      };
-    }
-
-    let partymebers = this.party.getBattleAllies();
-
-    partymebers.forEach(member => {
-      ++index;
-      // if (this.partymember[index].x === member.x && this.partymember[index].y === member.y) {
-      //   this.members[index] = member;
-      // }
-      this.members[index] = member;
-    });
     this.updateMembers();
   } 
   
   updateMembers(){
     let selectedDoll = null;
-    
-    console.log(this.party.totalPowerFigure);
 
     this.totaldps.innerText = `${this.party.totalPowerFigure}`;
     this.characterList.innerHTML = '';
-    
+
+    for (let i = 0; i < PARTY_SIZE; i++) {
+      this.members[i] = {
+          character: this.party.members[i]?this.party.members[i]:null,
+          x: i % 3,
+          y: Math.floor(i / 3)
+      };
+    }
+
     this.members.forEach(member => {
       let doll = new Doll(member.character);
 
       if(doll.dom.hasChildNodes('img')) {
         doll.dom.classList.remove('empty');
       }
-      // if (index === 0) {
-      //   doll.dom.classList.add('active');
-      //   selectedDoll = doll.dom;
-      // }
-      // ++index;
 
       this.characterList.appendChild(doll.dom);
 
@@ -161,7 +143,8 @@ export default class PartyUI extends Panel {
         }
       });
 
-      this.result(this.members);
+      const index = this.selected.y * 3 + this.selected.x;
+      this.result(index, this.selected.character);
       this.updateMembers();
     }
   }
@@ -169,10 +152,10 @@ export default class PartyUI extends Panel {
   compose(member) {
     // 현재 선택된 멤버의 좌표를 저장-
     if(member.character === null) {
-      this.result(this.members);
+      const index = member.y * 3 + member.x;
+      this.result(index, member.character);
       this.totaldps.innerText = `${this.party.totalPowerFigure}`;
     }
-    // console.log('x: ' + member.x + ' / ' + 'y: ' + member.y);
     this.selected = member;
   }
 }

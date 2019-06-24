@@ -8,8 +8,14 @@ export default class Party {
     }
 
     set(index, character) {
-        this.members[index] = character;
-        console.log(this);
+        const characterIndex = this.members.indexOf(character);
+        if (characterIndex>=0) {
+            this.members[characterIndex] = null;
+            this.members[index] = character;
+        } else {
+            this.members[index] = character;
+        }
+        console.log('im party', index, character);
     }
 
     getBattleAllies() {
