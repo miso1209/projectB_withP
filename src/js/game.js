@@ -245,7 +245,9 @@ export default class Game extends EventEmitter {
 
     allRecoveryParty() {
         console.log(this.player);
-        console.log('player 모두 회복.');
+        for (let key in this.player.characters) {
+            this.player.characters[key].applyOption('recovery()');
+        }
     }
 
     _playCutscene(script, callback) {
