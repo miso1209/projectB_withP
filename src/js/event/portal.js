@@ -56,6 +56,7 @@ export class Portal5 {
     onEvent(game) {
         // 월드 진입컷신을 만들어서 넣어준다.
         const $t = async () => {
+            game.stage.stopObject(game.stage.player);
             game.exploreMode.interactive = false;
             game.stage.showPathHighlight = false;
             game.ui.showTheaterUI(0.5);

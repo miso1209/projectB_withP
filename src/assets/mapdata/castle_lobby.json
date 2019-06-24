@@ -41,7 +41,7 @@
          "name":"ground",
          "opacity":1,
          "type":"group",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -109,7 +109,7 @@
          "name":"event",
          "opacity":1,
          "type":"group",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }],
@@ -1362,7 +1362,7 @@
          "name":"object1x2",
          "spacing":0,
          "tilecount":1,
-         "tileheight":52,
+         "tileheight":67,
          "tileoffset":
             {
              "x":-16,
@@ -1372,7 +1372,7 @@
                 {
                  "id":0,
                  "image":"castle_treasurebox_flip.png",
-                 "imageheight":52,
+                 "imageheight":67,
                  "imagewidth":48,
                  "properties":[
                         {
@@ -1414,6 +1414,11 @@
                  "imageheight":76,
                  "imagewidth":112,
                  "properties":[
+                        {
+                         "name":"movable",
+                         "type":"bool",
+                         "value":true
+                        }, 
                         {
                          "name":"xsize",
                          "type":"int",

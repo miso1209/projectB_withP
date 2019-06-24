@@ -8,6 +8,7 @@ export default class Party {
     }
 
     set(index, character) {
+        console.log('setParty');
         this.members[index] = character;
     }
 

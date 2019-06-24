@@ -236,7 +236,7 @@ export default class MapGenerator {
                     const stage = new Stage(neighbor);
                     await stage.$load(stageName);
                     stage.randomPropGenerate();
-                    // stage.addMonster();
+                    stage.addMonster();
                     // stage.addMonster();
     
                     realMap[y][x] = stage;

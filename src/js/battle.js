@@ -41,7 +41,7 @@ export class Battle extends EventEmitter {
         this.enemies = [];
 
         for (const c of options.allies) {
-            if (c.character.health > 0) {
+            if (c.character && c.character.health > 0) {
                 const battleChar = new BattleCharacter(c.character);
                 battleChar.setGridPosition(c.x, c.y);
                 battleChar.setCamp(CHARACTER_CAMP.ALLY);
@@ -58,7 +58,7 @@ export class Battle extends EventEmitter {
         }
         
         for(const c of options.enemies) {
-            if (c.character.health > 0) {
+            if (c.character && c.character.health > 0) {
                 const battleChar = new BattleCharacter(c.character);
                 battleChar.setGridPosition(c.x, c.y);
                 battleChar.setCamp(CHARACTER_CAMP.ENEMY);

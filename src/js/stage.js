@@ -385,30 +385,6 @@ export default class Stage extends PIXI.Container {
             return;
         }
         
-        obj.currentDirection = getDirection(obj.gridX, obj.gridY, path[0].x, path[0].y);
-        obj.tileTexture.isMoving = true;
-        obj.tileTexture.changeVisualToDirection(obj.currentDirection);
-
-        // 해당자리 Movable변경,
-        const groundTile = this.getGroundTileAt(obj.gridX, obj.gridY);
-        this.pathFinder.setDynamicCell(obj.gridX, obj.gridY, groundTile?groundTile.movable:false);
-        this.pathFinder.setDynamicCell(path[0].x, path[0].y, false);
-
-        const to = {
-            x: this.getTilePosXFor(path[0].x, path[0].y) - this.TILE_HALF_W,
-            y: this.getTilePosYFor(path[0].x, path[0].y) + this.TILE_HALF_H
-        };
-
-        this.arrangeObjLocation(obj, path[0].x, path[0].y);
-        this.arrangeDepthsFromLocation(obj, path[0].x, path[0].y);
-        path.splice(0, 1);
-        // Monster Speed
-        const speed = 0.3;
-
-        this.tweens.addTween(obj.position, speed, { x: to.x, y: to.y }, 0, "linear", true , () => {
-            obj.tileTexture.isMoving = false;
-            this.moveMonster(obj, path, callback);
-        });
 
         // 여기에서 플레이어 전투 판정.. => 플레이어를 바라보고, 전투를 시작한다.
         if (this.player) {
@@ -441,6 +417,31 @@ export default class Stage extends PIXI.Container {
                 };
             }
         }
+        
+        obj.currentDirection = getDirection(obj.gridX, obj.gridY, path[0].x, path[0].y);
+        obj.tileTexture.isMoving = true;
+        obj.tileTexture.changeVisualToDirection(obj.currentDirection);
+
+        // 해당자리 Movable변경,
+        const groundTile = this.getGroundTileAt(obj.gridX, obj.gridY);
+        this.pathFinder.setDynamicCell(obj.gridX, obj.gridY, groundTile?groundTile.movable:false);
+        this.pathFinder.setDynamicCell(path[0].x, path[0].y, false);
+
+        const to = {
+            x: this.getTilePosXFor(path[0].x, path[0].y) - this.TILE_HALF_W,
+            y: this.getTilePosYFor(path[0].x, path[0].y) + this.TILE_HALF_H
+        };
+
+        this.arrangeObjLocation(obj, path[0].x, path[0].y);
+        this.arrangeDepthsFromLocation(obj, path[0].x, path[0].y);
+        path.splice(0, 1);
+        // Monster Speed
+        const speed = 0.3;
+
+        this.tweens.addTween(obj.position, speed, { x: to.x, y: to.y }, 0, "linear", true , () => {
+            obj.tileTexture.isMoving = false;
+            this.moveMonster(obj, path, callback);
+        });
     }
 
     deleteObj(obj) {
@@ -853,14 +854,17 @@ export default class Stage extends PIXI.Container {
     }
 
     enter() {
-
         // 중간보스룸 컷씬
         if (this.name === 'castle_boss-middle') {
             this.monsters.forEach((monster) => {
                 monster.currentDirection = getDirection(monster.gridX, monster.gridY, monster.gridX, monster.gridY + 1);
                 monster.changeVisualToDirection(monster.currentDirection);
             });
-            this.emit('playcutscene', 6);
+            if (this.monsters.length > 0) {
+                this.emit('playcutscene', 6);
+            } else {
+                // this.emit('playcutscene', 7);
+            }
         } else {
             this.monsters.forEach((monster) => {
                 monster.move();

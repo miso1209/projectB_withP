@@ -3,7 +3,7 @@ import AnimatedCharacter from '../animatedcharacter';
 import { getDirectionFromName } from '../utils';
 import { EventEmitter } from 'events';
 
-export default class Monster extends PropBase {
+export default class MiddleBoss extends PropBase {
     constructor(x, y, options) {
         super(x,y, options);
 
@@ -41,7 +41,8 @@ export default class Monster extends PropBase {
     }
 
     die(game) {
-        this.emit('delete');
+
+        // this.emit('delete');
     }
 
     showBattleIcon() {

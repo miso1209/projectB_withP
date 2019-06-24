@@ -296,8 +296,13 @@ export default class Game extends EventEmitter {
                     this.addQuest(...func.arguments);
                     next();
                 } else if (func.command === "battle") {
+                    this.ui.hideTheaterUI();
+                    this.ui.showMenu();
+                    this.exploreMode.interactive = true;
+                    if (this.stage) { this.stage.showPathHighlight = true; }
+                    this.onNotification = false;
+
                     this.stage.storyBattle();
-                    next();
                 }
             } else {
                 const t = async() => {
@@ -505,10 +510,12 @@ export default class Game extends EventEmitter {
 
             // 보상을 여기서 추가해야 할 것 같다 battle에서 주는것은 아닐 것 같다.
             this.currentMode.on('win', () => {
-                monsterObj.delete();
+                monsterObj.die(this);
                 // 경험치 추가.
                 allies.forEach((ally) => {
-                    ally.character.increaseExp(monster.exp);
+                    if (ally.character) {
+                        ally.character.increaseExp(monster.exp);
+                    }
                 });
 
                 // 아이템 추가
@@ -696,7 +703,6 @@ export default class Game extends EventEmitter {
 
     unequipItem(itemCategory, cid) {
         const unequipItem = this.player.characters[cid].unequip(itemCategory);
-        console.log(unequipItem)
         if (unequipItem) {
             this.player.inventory.addItem(unequipItem.id, 1);
         }

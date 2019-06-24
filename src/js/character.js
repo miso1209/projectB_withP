@@ -13,9 +13,6 @@ export default class Character {
         this.exp = 0;
         const data = characters[id];
         this.data = data;
-        
-       
-        this.health = this.maxHealth;
 
         this.plusMaxHealth = 0;
         this.plusStrength = 0;
@@ -58,6 +55,8 @@ export default class Character {
         this.armorPotential = 0.5;
 
         this.skills = data.skills;
+        
+        this.health = this.maxHealth;
 
         this.dirty = false;
     }
