@@ -5,6 +5,15 @@ const PARTY_SIZE = 6;
 export default class Party {
     constructor() {
         this.members = new Array(PARTY_SIZE);
+        this.rollbackMembers = new Array(PARTY_SIZE);
+    }
+
+    cancel() {
+        this.members = this.rollbackMembers;
+    }
+
+    confirm() {
+        this.rollbackMembers = this.members;
     }
 
     set(index, character) {
@@ -15,7 +24,6 @@ export default class Party {
         } else {
             this.members[index] = character;
         }
-        console.log('im party', index, character);
     }
 
     getBattleAllies() {

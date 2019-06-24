@@ -83,15 +83,19 @@ export default class Game extends EventEmitter {
 
         this.ui.on('setParty', (index, character) => {
             this.setParty(index, character);
-            
+        });
+        this.ui.on('partyCancel', () => {
+            this.player.party.cancel();
+        });
+        this.ui.on('partyConfirm', () => {
             const party = [];
             for (let key in this.player.party.members) {
                 const member = this.player.party.members[key];
                 party[key] = (member && member.id)?member.id:0;
             }
-
+            this.player.party.confirm();
             this.storage.saveParty(party);
-        });
+        })
         this.ui.on('characterselect', ()=> {
             const inputs = [];
             for (const cid in this.player.characters) {
@@ -194,6 +198,7 @@ export default class Game extends EventEmitter {
                 this.player.party.set(i, this.player.characters[memberID]);
             }
         }
+        this.player.party.confirm();
         
         // 플레이어의 인벤토리에 복사한다
         this.player.inventory.load(this.storage.data.inventory);
