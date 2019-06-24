@@ -1,5 +1,6 @@
 import Stage  from "./stage";
 import path from 'path';
+import Monster from './monster';
 
 const MAP_DATA = {
     EMPTY: '   ',
@@ -18,15 +19,27 @@ export default class MapGenerator {
     constructor() {
     }
 
+    setTags(tags) {
+        this.tags = tags;
+    }
+    
+    hasTag(tag) {
+        return this.tags.indexOf(tag)>=0;
+    }
+
     // Input 방향을 입력받는다.
     async createMap(input) {
-        // 한 층의 룸의 갯수는 기본적으로 6개이고 5개 층마다 1개씩 늘어난다.
-        // 6 + Math.floor(this.currentFloor / 5)
-        const roomCount = 3;
-        const bossFloor = (this.currentFloor % 5 === 0)?true : false;
+        // 한 층의 룸의 갯수는 기본적으로 6개이고 5개 층마다 1개씩 늘어난다. ==> 100층은 26개 + a의 룸. (boss룸은 추가로 붙는다.)
+        const roomCount = 6 + Math.floor(this.currentFloor / 5);
+        let bossFloor = (this.currentFloor % 10 === 0)?true : false;
         let width = 500;
         let height = 500;
         const map = [];
+
+        // 밀루다 층 하드코딩.
+        if (!this.hasTag('hasarcher')) {
+            bossFloor = true;
+        }
 
         for (let y = 0; y < height; y++) {
             map.push([]);
@@ -207,13 +220,28 @@ export default class MapGenerator {
                     const stageName = path.basename(`assets/mapdata/${middleBoss}.json`, ".json");
                     const stage = new Stage(neighbor);
                     await stage.$load(stageName);
-                    stage.addMonster({x:45, y:70});
+                    stage.setTags(this.tags);
+
+                    if (!this.hasTag('hasarcher')) {
+                        const monster = Monster.GetByStage('house')[0];
+                        stage.addMonster(monster, {
+                            type: "archer",
+                            pos: {x:45, y:70}
+                        });
+                    } else { 
+                        const monster = Monster.GetByStage('house')[0];
+                        stage.addMonster(monster, {
+                            type: "monster",
+                            pos: {x:45, y:70}
+                        });
+                    }
     
                     realMap[y][x] = stage;
                 } else  if (this.map[y][x] === MAP_DATA.STAIR) {
                     const stageName = path.basename(`assets/mapdata/${stair}.json`, ".json");
                     const stage = new Stage(neighbor);
                     await stage.$load(stageName);
+                    stage.setTags(this.tags);
                     stage.randomPropGenerate();
     
                     realMap[y][x] = stage;
@@ -221,6 +249,7 @@ export default class MapGenerator {
                     const stageName = path.basename(`assets/mapdata/${portal}.json`, ".json");
                     const stage = new Stage(neighbor);
                     await stage.$load(stageName);
+                    stage.setTags(this.tags);
                     stage.randomPropGenerate();
     
                     realMap[y][x] = stage;
@@ -228,6 +257,7 @@ export default class MapGenerator {
                     const stageName = path.basename(`assets/mapdata/${hall}.json`, ".json");
                     const stage = new Stage(neighbor);
                     await stage.$load(stageName);
+                    stage.setTags(this.tags);
                     stage.randomPropGenerate();
     
                     realMap[y][x] = stage;
@@ -236,8 +266,13 @@ export default class MapGenerator {
                     const stageName = path.basename(`assets/mapdata/${room}.json`, ".json");
                     const stage = new Stage(neighbor);
                     await stage.$load(stageName);
+                    stage.setTags(this.tags);
                     stage.randomPropGenerate();
-                    stage.addMonster();
+
+                    const monster = Monster.GetByStage('house')[0];
+                    stage.addMonster(monster, {
+                        type: "monster"
+                    });
                     // stage.addMonster();
     
                     realMap[y][x] = stage;
@@ -245,6 +280,7 @@ export default class MapGenerator {
                     // 위아래 통로.
                     const stageName = path.basename(`assets/mapdata/${UDPassage}.json`, ".json");
                     const stage = new Stage(neighbor);
+                    stage.setTags(this.tags);
                     await stage.$load(stageName);
                     stage.randomPropGenerate();
     
@@ -253,6 +289,7 @@ export default class MapGenerator {
                     // 좌우 통로
                     const stageName = path.basename(`assets/mapdata/${LRPassage}.json`, ".json");
                     const stage = new Stage(neighbor);
+                    stage.setTags(this.tags);
                     await stage.$load(stageName);
                     stage.randomPropGenerate();
     

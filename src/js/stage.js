@@ -8,9 +8,8 @@ import TiledMap from "./tiledmap";
 import Tile from './tile';
 import Prop from './prop';
 
-import { Portal2, Portal3, NextFloorPortal, Portal4, Portal5 } from './event/portal';
+import { Portal3, NextFloorPortal, Portal4, Portal5 } from './event/portal';
 import Loader from './loader';
-import Monster from './monster';
 
 function hitTestRectangle(rect1, rect2) {
     return  (rect1.x < rect2.x + rect2.width &&
@@ -230,6 +229,10 @@ export default class Stage extends PIXI.Container {
         });
     }
 
+    setTags(tags) {
+        this.tags = tags;
+    }
+
     setBottomTile(x, y, src) {
         const tile = this.newTile(x, y, src);
         this.bottomContainer.addChild(tile);
@@ -289,6 +292,12 @@ export default class Stage extends PIXI.Container {
             obj.on('delete', () => {
                 // 같은 그룹 ID 모두 제거하며, 해당 좌표의 그라운드가 있는지 판별하여 movable 넣어준다. => 어떤 때 문제가 발생할 수 있을까..?
                 this.deleteObj(obj);
+            });
+            obj.on('deleteList', () => {
+                const isMonsterIndex = this.monsters.indexOf(obj);
+                if (isMonsterIndex >= 0) {
+                    this.monsters.splice(isMonsterIndex, 1);
+                }
             });
             obj.on('move', () => {
                 const path = this.getRandomPath(obj);
@@ -860,10 +869,18 @@ export default class Stage extends PIXI.Container {
                 monster.currentDirection = getDirection(monster.gridX, monster.gridY, monster.gridX, monster.gridY + 1);
                 monster.changeVisualToDirection(monster.currentDirection);
             });
-            if (this.monsters.length > 0) {
-                this.emit('playcutscene', 6);
+
+            // 밀루다층 하드코딩.
+            if (this.tags.indexOf('hasarcher') >= 0) {
+                if (this.monsters.length > 0) {
+                    this.emit('playcutscene', 8);
+                }
             } else {
-                this.emit('playcutscene', 7);
+                if (this.monsters.length > 0) {
+                    this.emit('playcutscene', 6);
+                } else {
+                    this.emit('playcutscene', 7);
+                }
             }
         } else {
             this.monsters.forEach((monster) => {
@@ -880,24 +897,19 @@ export default class Stage extends PIXI.Container {
 
     // 몬스터를 해당 좌표에 찍어낸다. 어디서 호출해야 하는가?
     // 최초 Map Generator에서 생성 시, 몬스터를 찍어내도록 하는것은 어떨까?..
-    addMonster(pos) {
+    addMonster(monster, monsterOptions) {
         // 임시 하드코딩. 다음엔 Generate 된 몬스터 파티를 받도록 하자.
-        const monsters = Monster.GetByStage('house');
-        for (const monster of monsters) {
-            const spawnPos = pos?pos:this.getRandomPositions(1, 1, this.groundMap);
-            if (spawnPos) {
-                const options = {  type: "monster", src: monster };
-    
-                const prop = this.newTile(spawnPos.x, spawnPos.y, options);
-                this.pathFinder.setDynamicCell(prop.gridX, prop.gridY, false);
-    
-                this.addObjRefToLocation(prop, spawnPos.x, spawnPos.y);
-                this.arrangeDepthsFromLocation(prop, spawnPos.x, spawnPos.y);
-                this.setObjectEmitter(prop);
-                
-                this.monsters.push(prop);
-            }
-        }
+        const spawnPos = monsterOptions.pos?monsterOptions.pos:this.getRandomPositions(1, 1, this.groundMap);
+        const options = {  type: monsterOptions.type, src: monster };
+
+        const prop = this.newTile(spawnPos.x, spawnPos.y, options);
+        this.pathFinder.setDynamicCell(prop.gridX, prop.gridY, false);
+
+        this.addObjRefToLocation(prop, spawnPos.x, spawnPos.y);
+        this.arrangeDepthsFromLocation(prop, spawnPos.x, spawnPos.y);
+        this.setObjectEmitter(prop);
+        
+        this.monsters.push(prop);
     }
 
     addProp(options, directions) {

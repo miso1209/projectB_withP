@@ -145,11 +145,27 @@
                 {"text": "정신지배를 당한 것 같아! 지금이라도 정신차려 다행이야.", "speaker": 2}
             ]
         }, {
+            "command": "addtag",
+            "arguments": [
+                "hasarcher"
+            ]
+        }, {
             "command": "addcharacter",
             "arguments": [
                 4,
                 { "level": 1, "exp": 0, "equips": {}}
             ]
+        }
+    ],
+    "8": [{
+            "command": "goto",
+            "arguments": [45, 72]
+        },{
+            "command": "delay",
+            "arguments": [0.5]
+        },{
+            "command": "battle",
+            "arguments": []
         }
     ]
 }

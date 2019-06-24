@@ -3,7 +3,7 @@ import AnimatedCharacter from '../animatedcharacter';
 import { getDirectionFromName } from '../utils';
 import { EventEmitter } from 'events';
 
-export default class MiddleBoss extends PropBase {
+export default class Archer extends PropBase {
     constructor(x, y, options) {
         super(x,y, options);
 
@@ -41,8 +41,8 @@ export default class MiddleBoss extends PropBase {
     }
 
     die(game) {
-
-        // this.emit('delete');
+        this.hideBattleIcon();
+        this.emit('deleteList');
     }
 
     showBattleIcon() {
@@ -51,7 +51,15 @@ export default class MiddleBoss extends PropBase {
         sprite.position.y = -this.height + 10;
         sprite.scale.x = 1 / 1.5;
         sprite.scale.y = 1 / 1.5;
+        this.battleIcon = sprite;
         this.addChild(sprite);
+    }
+
+    hideBattleIcon() {
+        if (this.battleIcon) {
+            this.removeChild(this.battleIcon);
+            this.battleIcon = null;
+        }
     }
 
     move() {

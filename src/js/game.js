@@ -350,12 +350,13 @@ export default class Game extends EventEmitter {
 
     async $nextFloor(from, dir) {
         // 5층씩 올라가도록 해본다.
-        this.currentFloor += 5;
+        this.currentFloor ++;
         this.ui.showTheaterUI(0.5);
         this.ui.hideMenu();
         await this.$leaveStage(from);
 
         const mapGenerator = new MapGenerator();
+        mapGenerator.setTags(this.player.tags);
         mapGenerator.setFloor(this.currentFloor);
         const maps = await mapGenerator.createMap(dir);
         const hall = mapGenerator.getHall();
@@ -530,13 +531,14 @@ export default class Game extends EventEmitter {
             });
             this.currentMode.on('lose', async () => {
                 this.stage.pathFinder.setDynamicCell(this.stage.player.gridX, this.stage.player.gridY, false);
-                await this.$leaveBattle();
                 this.stage.leave();
+                await this.$leaveBattle();
                 this.allRecoveryParty();
                 this._playCutscene(4);
             });
-            this.currentMode.on('closeBattle', () => {
-                this.$leaveBattle();
+            this.currentMode.on('closeBattle', async () => {
+                await this.$leaveBattle();
+                this.stage.enter();
             });
             
             await this.$fadeOut(0.5);
@@ -562,7 +564,6 @@ export default class Game extends EventEmitter {
             this.ui.showMenu();
             await this.$fadeIn(0.5);
             this.exploreMode.setInteractive(true);
-            this.stage.enter();
         }
     }
 
