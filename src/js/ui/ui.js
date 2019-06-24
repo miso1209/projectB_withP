@@ -290,7 +290,7 @@ export default class DomUI extends EventEmitter {
     showItemAcquire(item, result) {
         const pane = this.createContainer();
         const domHeight = 300;
-        const itemAcquire = new Acquireui(pane, inputs, 360, domHeight, () => {
+        const itemAcquire = new Modal(pane, 360, domHeight, () => {
             this.removeContainer(pane);
             if (result) {
                 result();

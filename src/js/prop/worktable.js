@@ -30,7 +30,7 @@ export default class WorkTable extends PropBase {
                     game.combine(item.item);
                     // 아이템 획득 UI 를 표시한다
                     const inst = game.player.inventory.getItem(item.item);
-                    game.ui.showItemAquire(inst);
+                    game.ui.showItemAcquire(inst);
                 })
             });
         } else {
