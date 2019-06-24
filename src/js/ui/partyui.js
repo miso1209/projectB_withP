@@ -42,16 +42,18 @@ export default class PartyUI extends Panel {
     this.ownedCharacters.style.position = 'relative';
 
     this.totaldps = new MakeDom('p', 'totaldps');
-
+    
     // 확인 버튼 콜백
     const submitButton = new Button('파티구성', 'submit');
     submitButton.moveToCenter(15);
     submitButton.moveToBottom(15);
 
-    // submitButton.dom.addEventListener('click', (ok)=> {
-    //   pane.parentNode.removeChild(pane);
-    //   return this.result(this.members);
-    // });
+    submitButton.dom.addEventListener('click', (ok)=> {
+      pane.parentNode.removeChild(pane);
+      return this.result('buttoncallback', 'partyConfirm');
+    });
+
+    modal.closeBtn.addEventListener('click', this.closeModal.bind(this, 'partyCancel'));
 
     this.ownedCharacters.appendChild(submitButton.dom);
     this.ownedCharacters.appendChild(this.totaldps);
@@ -73,11 +75,16 @@ export default class PartyUI extends Panel {
 
     pane.appendChild(this.dom);
 
-    this.initMembers();
+    this.updateMembers();
     this.initList();
   }
-  
-  
+
+  closeModal(callback) {
+    if(this.result) {
+      this.result('buttoncallback', callback)
+    }
+  }
+
   initList(){
     // 캐릭터 리스트 
     this.list = new ListBox(280, 260, this.select.bind(this));
@@ -85,11 +92,8 @@ export default class PartyUI extends Panel {
     this.ownedCharacters.appendChild(this.list.dom);
     this.list.update(this.inputs, 'character');
   }
-
-  initMembers(){
-    this.updateMembers();
-  } 
   
+
   updateMembers(){
     let selectedDoll = null;
 
@@ -159,5 +163,3 @@ export default class PartyUI extends Panel {
     this.selected = member;
   }
 }
-
-

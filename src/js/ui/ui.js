@@ -333,7 +333,12 @@ export default class DomUI extends EventEmitter {
         const pane = this.createContainer();
         
         const party = new PartyUI(pane, inputs, partyinputs, (id, character) => {
-            this.emit('setParty', id, character);
+            if(id === 'buttoncallback') {
+                console.log('buttoncallback' , character);
+                this.emit(character);
+            } else {
+                this.emit('setParty', id, character);
+            }
         });
     }
 

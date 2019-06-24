@@ -806,7 +806,7 @@ export default class Game extends EventEmitter {
         } else {
             if (options.type === "item") {
                 this.onNotification = true;
-                this.ui.showItemAquire(new Item(options.item, options.count), () => {
+                this.ui.showItemAcquire(new Item(options.item, options.count), () => {
                     this.onNotification = false;
                     const next = this.notification.pop();
                     if (next) {
