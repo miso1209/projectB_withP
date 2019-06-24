@@ -201,7 +201,10 @@ export default class Game extends EventEmitter {
         this.player.party.confirm();
         
         // 플레이어의 인벤토리에 복사한다
-        this.player.inventory.load(this.storage.data.inventory);
+        this.player.inventory.load({
+            inventory: this.storage.data.inventory,
+            gold: this.storage.data.gold
+        });
 
         // 퀘스트 정보를 등록한다
         for (const questId in this.storage.data.quests) {
@@ -532,6 +535,7 @@ export default class Game extends EventEmitter {
                 // 아이템 추가
                 for (let itemID in monster.rewards) {
                     this.player.inventory.addItem(itemID, monster.rewards[itemID]);
+                    this.player.inventory.gold += monster.gold;
                 }
             });
             this.currentMode.on('lose', async () => {

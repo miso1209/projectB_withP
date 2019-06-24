@@ -3,7 +3,17 @@ import Item from "./item";
 export default class Inventory {
     constructor() {
         this.items = {};
+        this._gold = 0;
         this.dirty = false;
+    }
+
+    get gold() {
+        return this._gold;
+    }
+
+    set gold(value) {
+        this._gold = value;
+        this.makeDirty();
     }
 
     addItem(itemId, count) {
@@ -55,9 +65,10 @@ export default class Inventory {
     }
     
     load(data) {
-        for (const itemId in data) {
+        for (const itemId in data.inventory) {
             this.addItem(itemId, data[itemId]);
         }
+        this.gold = data.gold;
         this.clearDirty();
     }
 
@@ -66,7 +77,10 @@ export default class Inventory {
         for (const itemId in this.items) {
             result[itemId] = this.items[itemId].count;
         }
-        return result;
+        return {
+            inventory: result,
+            gold: this.gold
+        };
     }
 
     makeDirty() {

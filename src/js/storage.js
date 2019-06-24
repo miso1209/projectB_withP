@@ -20,6 +20,7 @@ export default class Storage {
         this.data.characters = {};
         this.data.party = [0, 0, 0, 0, 0, 0]; // 파티최대 숫자를 어딘가에?
         this.data.inventory = {};
+        this.data.gold = 0;
         this.data.tags = [];
         this.data.quests = {};
     }
@@ -68,7 +69,8 @@ export default class Storage {
     }
 
     updateInventory(data) {
-        this.data.inventory = data;
+        this.data.inventory = data.inventory;
+        this.data.gold = data.gold;
         this.save();
     }
 
