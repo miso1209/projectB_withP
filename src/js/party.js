@@ -8,8 +8,8 @@ export default class Party {
     }
 
     set(index, character) {
-        console.log('setParty');
         this.members[index] = character;
+        console.log(this);
     }
 
     getBattleAllies() {
@@ -25,5 +25,17 @@ export default class Party {
         });
 
         return allies;
+    }
+
+    get totalPowerFigure() {
+        let result = 0;
+
+        this.members.forEach((character) => {
+            if (character) {
+                result += character.totalPowerFigure;
+            }
+        });
+
+        return result;
     }
 }

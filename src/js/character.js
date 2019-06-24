@@ -147,6 +147,11 @@ export default class Character {
         return 1.2 + (this.agility / 100)
     }
 
+    // 총체적 공격력을 구해보자.. 공식에 신빙성이 있어야 하는데.. 체력과 공격력에 비례한 어떠한 수치 이지만, 완벽한 강함의 척도는 아니다.
+    get totalPowerFigure() {
+        return Math.round(Math.sqrt(this.strongFigure * this.armorFigure));
+    }
+
     get strongFigure() {
         // 기본적인 기대 데미지
         const basicDmg = (this.attack>this.magic?this.attack:this.magic) * this.speed;
