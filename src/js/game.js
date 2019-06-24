@@ -77,6 +77,7 @@ export default class Game extends EventEmitter {
             }
             // 현재 파티 구성 데이터
             const party = this.player.party.getBattleAllies();
+            console.log(party);
             this.ui.showParty(inputs, party);
         });
 

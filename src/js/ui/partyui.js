@@ -111,27 +111,28 @@ export default class PartyUI extends Panel {
     
     this.members.forEach(member => {
       let doll = new Doll(member.character);
-      doll.dom.classList.add('empty');
-
       if(doll.dom.hasChildNodes('img')) {
         doll.dom.classList.remove('empty');
-        doll.dom.classList.add('isCrew');
+        // doll.dom.classList.add('isCrew');
       }
       // if (index === 0) {
       //   doll.dom.classList.add('active');
       //   selectedDoll = doll.dom;
       // }
       // ++index;
+
       this.characterList.appendChild(doll.dom);
 
       doll.dom.addEventListener('click', function(){
         if(selectedDoll) {
           selectedDoll.classList.remove('active');
-        }
 
-        // 파티원 제거하기 -- TODO : 이때도 setparty 호출해야할까..
-        if (doll.dom.classList.contains('isCrew')) {
-          doll.dom.parentNode.removeChild(doll.dom);
+          if (selectedDoll.classList.contains('isCrew')) {
+            doll.dom.innerHTML = '';
+            doll.dom.classList.remove('isCrew');
+            doll.dom.classList.add('empty');
+            member.character = null;
+          }
         }
 
         doll.dom.classList.add('active');
@@ -159,10 +160,10 @@ export default class PartyUI extends Panel {
     }
   }
 
-  remove
 
   compose(member) {
     // 현재 선택된 멤버의 좌표를 저장-
+    console.log(member);
     console.log('x: ' + member.x + ' / ' + 'y: ' + member.y);
     this.selected = member;
   }
