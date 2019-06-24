@@ -9,7 +9,7 @@
         },
         "battle": {
             "characters": [
-                { "id":4, "level":1 }
+                { "id":4, "level":1 },{ "id":4, "level":1 },{ "id":4, "level":1 }
             ]
         },
         "gold": 50,

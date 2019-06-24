@@ -251,6 +251,7 @@ export default class Character {
 
     applyOption(option) {
         // TODO : 매번 옵션을 파싱하지 않고 미리 캐싱해놓을필요가 있다
+        let result = true;
         option = new ScriptParser(option);
         switch(option.name) {
             case "attack":
@@ -263,8 +264,23 @@ export default class Character {
                 this.plusArmor += Number(option.args[0]);
                 break;
             case "health":
-                this.health += Number(option.args[0]);
-                this.health = Math.min(this.maxHealth, this.health);
+                if (this.health > 0) {
+                    this.health += Number(option.args[0]);
+                    this.health = Math.min(this.maxHealth, this.health);
+                } else {
+                    result = false;
+                }
+                break;
+            case "healthRecovery":
+                if (this.health > 0) {
+                    this.health += this.maxHealth * Number(option.args[0]);
+                    this.health = Math.min(this.maxHealth, this.health);
+                } else {
+                    result = false;
+                }
+                break;
+            case "recovery":
+                this.health = this.maxHealth;
                 break;
             case "maxHealth":
                 this.plusMaxHealth += Number(option.args[0]);
@@ -292,6 +308,8 @@ export default class Character {
                 this.plusRegist += Number(option.args[0]);
                 break;
         }
+
+        return result;
 
         this.refreshSimulationData();
     }

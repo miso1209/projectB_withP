@@ -244,6 +244,7 @@ export default class Game extends EventEmitter {
     }
 
     allRecoveryParty() {
+        console.log(this.player);
         console.log('player 모두 회복.');
     }
 
@@ -741,14 +742,18 @@ export default class Game extends EventEmitter {
     }
 
     useItem(itemId, count, target) {
-        this.player.inventory.deleteItem(itemId, Number(count));
-
         // 여기서 옵션 처리해 주는게 맞는가?
         const item = new Item(itemId, count);
+        let result = true;
+        
         if (item.category === 'consumables') {
-            target.applyOption(item.options);
+            result = target.applyOption(item.options);
         }
         
+        if(result) {
+            this.player.inventory.deleteItem(itemId, Number(count));
+        }
+
         this.emit('useitem', itemId, count);
     }
 
