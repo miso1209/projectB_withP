@@ -46,6 +46,11 @@ export default class Storage {
         }
     }
 
+    saveParty(party) {
+        this.data.party = party;
+        this.save();
+    }
+
     addCharacter(id, character) {
         if (!this.data.characters[id]) {
             this.data.characters[id] = character;

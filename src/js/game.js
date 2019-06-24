@@ -80,16 +80,22 @@ export default class Game extends EventEmitter {
             this.ui.showParty(inputs, party);
         });
 
-        this.ui.on('setParty', (result) => {
-            console.log(result);
+        this.ui.on('setParty', (parties) => {
+            parties.forEach((partyData, index) => {
+                this.setParty(index, partyData.character);
+            });
             
-            let index= -1;
-            for (const crew in result) {
-                ++index;
-                this.player.party.set(index, result[index].character);
-            }
-        });
+            const party = [];
+            this.player.party.members.forEach((character) => {
+                if(character) {
+                    party.push(Number(character.id));
+                } else {
+                    party.push(0);
+                }
+            });
 
+            this.storage.saveParty(party);
+        });
         this.ui.on('characterselect', ()=> {
             const inputs = [];
             for (const cid in this.player.characters) {
@@ -282,6 +288,10 @@ export default class Game extends EventEmitter {
                     next();
                 } else if (func.command === "addquest") {
                     this.addQuest(...func.arguments);
+                    next();
+                } else if (func.command === "addcharacter") {
+                    console.log(...func.arguments);
+                    this.addCharacter(...func.arguments);
                     next();
                 } else if (func.command === "battle") {
                     this.ui.hideTheaterUI();
@@ -685,6 +695,10 @@ export default class Game extends EventEmitter {
         this.player.addCharacter(id, character);
         this.storage.addCharacter(id, character);
         this.emit('addcharacter', id, character);
+    }
+
+    setParty(id, character) {
+        this.player.party.set(id, character);
     }
 
     equipItem(itemCategory, itemId, cid) {

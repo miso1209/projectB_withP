@@ -863,7 +863,7 @@ export default class Stage extends PIXI.Container {
             if (this.monsters.length > 0) {
                 this.emit('playcutscene', 6);
             } else {
-                // this.emit('playcutscene', 7);
+                this.emit('playcutscene', 7);
             }
         } else {
             this.monsters.forEach((monster) => {

@@ -117,17 +117,39 @@
             ]
         }, {
             "command": "delay",
-            "arguments": [0.3]
+            "arguments": [0.5]
         }, {
             "command": "dialog",
             "arguments": [
                 {"text": "밀루다!! 이게 무슨일이야!", "speaker": 2},
-                {"text": "으.. 으으.. 싸운다....", "speaker": 4},
+                {"text": "으.. 으으.. 싸운다....", "speaker": 2},
                 {"text": "아무래도 정신을 차리게 해줘야겠어!.", "speaker": 2}
             ]
         }, {
             "command": "battle",
             "arguments": []
+        }
+    ],
+    "7": [{
+            "command": "dialog",
+            "arguments": [
+                {"text": "밀루다! 이제 정신이 좀 들어?", "speaker": 2}
+            ]
+        }, {
+            "command": "delay",
+            "arguments": [0.5]
+        }, {
+            "command": "dialog",
+            "arguments": [
+                {"text": "으.. 어지러워 대체 무슨일이 있었던거지?", "speaker": 2},
+                {"text": "정신지배를 당한 것 같아! 지금이라도 정신차려 다행이야.", "speaker": 2}
+            ]
+        }, {
+            "command": "addcharacter",
+            "arguments": [
+                4,
+                { "level": 1, "exp": 0, "equips": {}}
+            ]
         }
     ]
 }
