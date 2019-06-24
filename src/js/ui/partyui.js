@@ -106,7 +106,6 @@ export default class PartyUI extends Panel {
       // }
       this.members[index] = member;
     });
-
     this.updateMembers();
   } 
   
@@ -120,6 +119,7 @@ export default class PartyUI extends Panel {
     
     this.members.forEach(member => {
       let doll = new Doll(member.character);
+
       if(doll.dom.hasChildNodes('img')) {
         doll.dom.classList.remove('empty');
       }
@@ -140,7 +140,6 @@ export default class PartyUI extends Panel {
             doll.dom.classList.remove('isCrew');
             doll.dom.classList.add('empty');
             member.character = null;
-            // this.result.bind(this, this.members);
           }
         }
 
@@ -161,12 +160,12 @@ export default class PartyUI extends Panel {
           member = this.selected;
         }
       });
+
       this.result(this.members);
       this.updateMembers();
     }
   }
-
-
+  
   compose(member) {
     // 현재 선택된 멤버의 좌표를 저장-
     if(member.character === null) {
