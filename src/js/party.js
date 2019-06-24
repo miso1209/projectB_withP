@@ -9,11 +9,15 @@ export default class Party {
     }
 
     cancel() {
-        this.members = this.rollbackMembers;
+        for (let i=0; i<PARTY_SIZE;i++) {
+            this.members[i] = this.rollbackMembers[i];
+        }
     }
 
     confirm() {
-        this.rollbackMembers = this.members;
+        for (let i=0; i<PARTY_SIZE;i++) {
+            this.rollbackMembers[i] = this.members[i];
+        }
     }
 
     set(index, character) {
