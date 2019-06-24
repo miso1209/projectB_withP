@@ -14,7 +14,7 @@ export default class PartyUI extends Panel {
     pane.classList.add('screen');
 
     this.inputs = inputs; // input 캐릭터 데이터
-    this.input_members = inputmembers; // input 파티 데이터
+    this.partymember = inputmembers; // input 파티 데이터
     this.result = result; // 콜백
     this.selected = null; // 리스트에서 선택된 캐릭터
 
@@ -36,10 +36,10 @@ export default class PartyUI extends Panel {
     
     // todo 변수명을 바꿔야할듯.
     // 캐릭터 리스트 wrap
-    this.ownedMembers = new MakeDom('div', 'members', null);
-    this.ownedMembers.classList.add('flex-right');
-    this.ownedMembers.style.height = '340px';
-    this.ownedMembers.style.position = 'relative';
+    this.ownedCharacters = new MakeDom('div', 'members', null);
+    this.ownedCharacters.classList.add('flex-right');
+    this.ownedCharacters.style.height = '340px';
+    this.ownedCharacters.style.position = 'relative';
 
     // 확인 버튼 콜백
     const submitButton = new Button('파티구성', 'submit');
@@ -51,7 +51,7 @@ export default class PartyUI extends Panel {
       return this.result(this.members);
     });
 
-    this.ownedMembers.appendChild(submitButton.dom);
+    this.ownedCharacters.appendChild(submitButton.dom);
 
     // 파티 리스트
     // characterList
@@ -65,7 +65,7 @@ export default class PartyUI extends Panel {
     characterListWrap.appendChild(this.characterList);
     
     wrapper.appendChild(characterListWrap);
-    wrapper.appendChild(this.ownedMembers);
+    wrapper.appendChild(this.ownedCharacters);
     this.dom.appendChild(wrapper);
 
     pane.appendChild(this.dom);
@@ -79,12 +79,12 @@ export default class PartyUI extends Panel {
     // 캐릭터 리스트 
     this.list = new ListBox(280, 260, this.select.bind(this));
     this.list.dom.style.top = '100px';
-    this.ownedMembers.appendChild(this.list.dom);
+    this.ownedCharacters.appendChild(this.list.dom);
     this.list.update(this.inputs, 'character');
   }
 
   initMembers(){
-    let index = 0;
+    let index = -1;
     // 좌표만 가지고 있는 비교용 데이터 배열...이 필요..
     for (let i = 0; i < PARTY_SIZE; i++) {
       this.members[i] = {
@@ -94,13 +94,14 @@ export default class PartyUI extends Panel {
       };
     }
 
-    this.input_members.forEach(member => {
-      if (this.members[index].x === member.x && this.members[index].y === member.y) {
+    this.partymember.forEach(member => {
+      ++index;
+
+      if (this.partymember[index].x === member.x && this.partymember[index].y === member.y) {
         this.members[index] = member;
       }
-      ++index;
     });
-
+    
     this.updateMembers();
   } 
   
@@ -113,7 +114,6 @@ export default class PartyUI extends Panel {
       let doll = new Doll(member.character);
       if(doll.dom.hasChildNodes('img')) {
         doll.dom.classList.remove('empty');
-        // doll.dom.classList.add('isCrew');
       }
       // if (index === 0) {
       //   doll.dom.classList.add('active');
