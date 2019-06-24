@@ -315,8 +315,9 @@ export default class DomUI extends EventEmitter {
     showParty(inputs, members){
         const pane = this.createContainer();
         const party = new PartyUI(pane, inputs, members, (result) => {
-            console.log(result);
             this.emit('setParty', result);
+            // let newParty = this.emit('setParty', result);
+            // party.members = newParty;
         });
     }
 

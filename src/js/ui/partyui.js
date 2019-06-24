@@ -59,6 +59,7 @@ export default class PartyUI extends Panel {
     characterListWrap.classList.add('flex-left');
 
     this.characterList = new MakeDom('div', 'characterList', null);
+    this.characterList.classList.add('party');
     this.characterList.style.width = '410px';
 
     characterListWrap.appendChild(this.characterList);
@@ -94,7 +95,7 @@ export default class PartyUI extends Panel {
     }
 
     this.input_members.forEach(member => {
-      if(this.members[index].x === member.x && this.members[index].y === member.y) {
+      if (this.members[index].x === member.x && this.members[index].y === member.y) {
         this.members[index] = member;
       }
       ++index;
@@ -110,6 +111,12 @@ export default class PartyUI extends Panel {
     
     this.members.forEach(member => {
       let doll = new Doll(member.character);
+      doll.dom.classList.add('empty');
+
+      if(doll.dom.hasChildNodes('img')) {
+        doll.dom.classList.remove('empty');
+        doll.dom.classList.add('isCrew');
+      }
       // if (index === 0) {
       //   doll.dom.classList.add('active');
       //   selectedDoll = doll.dom;
@@ -121,6 +128,12 @@ export default class PartyUI extends Panel {
         if(selectedDoll) {
           selectedDoll.classList.remove('active');
         }
+
+        // 파티원 제거하기 -- TODO : 이때도 setparty 호출해야할까..
+        if (doll.dom.classList.contains('isCrew')) {
+          doll.dom.parentNode.removeChild(doll.dom);
+        }
+
         doll.dom.classList.add('active');
         selectedDoll = doll.dom;
       });
@@ -141,10 +154,12 @@ export default class PartyUI extends Panel {
           }
         }
       });
-
+      this.result(this.members);
       this.updateMembers();
     }
   }
+
+  remove
 
   compose(member) {
     // 현재 선택된 멤버의 좌표를 저장-
