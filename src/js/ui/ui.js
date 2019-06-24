@@ -12,6 +12,8 @@ import CharacterDetail from "./characterDetail";
 import MakeDom from "./component/makedom";
 import Minimap from "./minimap";
 import PartyUI from "./partyui";
+import AcquireModal from "./itemacquireui";
+
 
 
 export default class DomUI extends EventEmitter {
@@ -153,6 +155,7 @@ export default class DomUI extends EventEmitter {
     
         dialog.setText(script[0].text);
         if (script[0].speaker) {
+            dialog.speaker = this.player.characters[script[0].speaker];
             dialog.showSpeaker(script[0].speaker);
         }
         dialog.onComplete = callback;
@@ -271,10 +274,23 @@ export default class DomUI extends EventEmitter {
         modal.dom.appendChild(loading.dom);
     }
 
-    showItemAquire(item, result) {
+    // 아이템 획득
+    showAcquireModal(item, inputs, result) {
         const pane = this.createContainer();
         const domHeight = 300;
-        const itemAcquire = new Modal(pane, 360, domHeight, () => {
+        
+        const itemAcquire = new AcquireModal(pane, inputs, 360, domHeight, () => {
+            this.removeContainer(pane);
+            if (result) {
+                result();
+            }
+        });
+    }
+
+    showItemAcquire(item, result) {
+        const pane = this.createContainer();
+        const domHeight = 300;
+        const itemAcquire = new Acquireui(pane, inputs, 360, domHeight, () => {
             this.removeContainer(pane);
             if (result) {
                 result();
@@ -305,6 +321,7 @@ export default class DomUI extends EventEmitter {
         itemAcquire.dom.appendChild(itemSprite);
     }
 
+
     showInventory(inputs) {
         const pane = this.createContainer();
         const inventory = new Inventory(pane, inputs);
@@ -312,12 +329,13 @@ export default class DomUI extends EventEmitter {
         inventory.onTabSelected(inventory.tabs[0].category);
     }
 
-    showParty(inputs, members){
+    showParty(inputs, partyinputs){
         const pane = this.createContainer();
-        const party = new PartyUI(pane, inputs, members, (result) => {
+        
+        const party = new PartyUI(pane, inputs, partyinputs, (result) => {
             this.emit('setParty', result);
-            party.partymember = members;
-            party.initMembers();
+            console.log(partyinputs.totalPowerFigure);
+            party.updateMembers();
         });
     }
 

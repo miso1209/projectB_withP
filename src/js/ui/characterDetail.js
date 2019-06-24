@@ -53,7 +53,7 @@ export default class CharacterDetail extends Panel {
     this.class = new MakeDom('p', 'stat_class');
     this.dps = new MakeDom('p', 'stat_dps');
     this.dps.style.paddingTop = '10px';
-
+    this.dps.style.fontSize = '18px';
     // 캐릭터 정보
     this.portrait = new MakeDom('img', 'profile');
     this.portrait.style.display = 'block';
@@ -169,7 +169,7 @@ export default class CharacterDetail extends Panel {
     this.descName.innerText = this.selected.displayName;
     this.portrait.src = path + this.selected.data.portrait;
     this.level.innerText = 'Lv.' + this.selected.level;
-    this.dps.innerText = `전투력 : ${this.selected.strongFigure}`;
+    this.dps.innerText = `총 전투력 : ${this.selected.totalPowerFigure}`;
 
     // 캐릭터 정보 업데이트
     this.updateEquip();

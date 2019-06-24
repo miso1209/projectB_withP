@@ -869,7 +869,6 @@ button.disabled span {
   position: relative;
   min-width: 25%;
   height: 140px;
-  /* padding: 5px; */
   margin: 10px 5px;
   border: 2px solid transparent;
   border-radius: 10px;
@@ -903,14 +902,13 @@ button.disabled span {
   position: absolute;
   left: 0;
   right: 0;
-  top: 15px;
+  top: 0;
   z-index: 11;
   width: 32px;
   height: 48px;
   margin: 0 auto;
   overflow: hidden;
 }
-
 
 .doll .profileImg {
   width: auto;
@@ -919,13 +917,18 @@ button.disabled span {
   margin: 0 auto;
 }
 
-.doll .name {
+.doll .infoWrap {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 10px 0;
+  padding: 0;
+  z-index: 111;
+}
+
+.doll .infoWrap * {
   font-size: 15px;
+  padding-bottom: 3px;
   text-shadow: 1px 1px 1px rgba(0,0,0,0.7);
 }
 
@@ -951,7 +954,7 @@ button.disabled span {
   transition: all 0.5s linear;
 } 
 
-.party .doll::after {
+.party .doll.isCrew::after {
   content: '-';
   display: block;
   position: absolute;
@@ -974,6 +977,18 @@ button.disabled span {
   line-height: 130px;
   color: rgba(255,214,6,.5)
 }
+
+/* 파티 캐릭터 리스트 */
+.party .ownedCharacters {
+  padding: 20px 0 0;
+}
+.party .ownedCharacters .totaldps {
+  font-size: 20px;
+  margin: 0 10px;
+  background-color: #000;
+  border-radius: 5px;
+}
+
 
 /* 캐릭터 상세창 */
 .characterSelect .invenItems {

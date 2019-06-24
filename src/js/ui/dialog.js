@@ -11,7 +11,8 @@ export default class Dialog extends Panel {
         dialog.dom.className = 'dialog';
         dialog.moveToBottom(20);
         this.dom = dialog.dom;
-    
+        this.speaker = null;
+
         // dialogText
         const dialogText = document.createElement('p');
         this.dialogText = dialogText;
@@ -19,17 +20,15 @@ export default class Dialog extends Panel {
         this.dom.appendChild(this.dialogText);
     
         // 캐릭터
-        const speaker = document.createElement('img');
-        speaker.className = 'dialog-speaker';
-        dialog.dom.appendChild(speaker);
-        this.speaker = speaker;
-    
+        this.speakerImg = document.createElement('img');
+        this.speakerImg.className = 'dialog-speaker';
+        dialog.dom.appendChild(this.speakerImg);
+        
         // 캐릭터이름
-        const speakerName = document.createElement('span');
-        speakerName.className = 'name';
-        dialog.dom.appendChild(speakerName);
-        this.speakerName = speakerName;
-    
+        this.speakerName = document.createElement('span');
+        this.speakerName.className = 'name';
+        dialog.dom.appendChild(this.speakerName);
+        
         // 프람프트 
         const prompt = document.createElement('div');
         prompt.className = 'dialog-prompt';
@@ -89,8 +88,8 @@ export default class Dialog extends Panel {
         }
         
         this.dom.classList.add('portrait');
-        this.speaker.src = `/src/assets/player${id}.png`;
-        this.speakerName.innerText = '헥터'; // todo - player name
+        this.speakerImg.src = `/src/assets/${this.speaker.data.portrait}`;
+        this.speakerName.innerText = `${this.speaker.displayName}`;
     }
     
     setText(text) {

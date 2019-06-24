@@ -8,13 +8,13 @@ import ListBox from "./component/listbox";
 const PARTY_SIZE = 6;
 
 export default class PartyUI extends Panel {
-  constructor(pane, inputs, inputmembers, result) {
+  constructor(pane, inputs, partyinputs, result) {
     super();
     
     pane.classList.add('screen');
 
     this.inputs = inputs; // input 캐릭터 데이터
-    this.partymember = inputmembers; // input 파티 데이터
+    this.party = partyinputs; // input 파티 데이터
     this.result = result; // 콜백
     this.selected = null; // 리스트에서 선택된 캐릭터
 
@@ -36,10 +36,12 @@ export default class PartyUI extends Panel {
     
     // todo 변수명을 바꿔야할듯.
     // 캐릭터 리스트 wrap
-    this.ownedCharacters = new MakeDom('div', 'members', null);
+    this.ownedCharacters = new MakeDom('div', 'ownedCharacters');
     this.ownedCharacters.classList.add('flex-right');
     this.ownedCharacters.style.height = '340px';
     this.ownedCharacters.style.position = 'relative';
+
+    this.totaldps = new MakeDom('p', 'totaldps');
 
     // 확인 버튼 콜백
     const submitButton = new Button('파티구성', 'submit');
@@ -52,13 +54,14 @@ export default class PartyUI extends Panel {
     });
 
     this.ownedCharacters.appendChild(submitButton.dom);
+    this.ownedCharacters.appendChild(this.totaldps);
 
     // 파티 리스트
     // characterList
-    const characterListWrap = new MakeDom('div', 'characterListWrap', null);
+    const characterListWrap = new MakeDom('div', 'characterListWrap');
     characterListWrap.classList.add('flex-left');
 
-    this.characterList = new MakeDom('div', 'characterList', null);
+    this.characterList = new MakeDom('div', 'characterList');
     this.characterList.classList.add('party');
     this.characterList.style.width = '410px';
 
@@ -94,20 +97,25 @@ export default class PartyUI extends Panel {
       };
     }
 
-    this.partymember.forEach(member => {
-      ++index;
+    let partymebers = this.party.getBattleAllies();
 
-      if (this.partymember[index].x === member.x && this.partymember[index].y === member.y) {
-        this.members[index] = member;
-      }
+    partymebers.forEach(member => {
+      ++index;
+      // if (this.partymember[index].x === member.x && this.partymember[index].y === member.y) {
+      //   this.members[index] = member;
+      // }
+      this.members[index] = member;
     });
-    
+
     this.updateMembers();
   } 
   
   updateMembers(){
     let selectedDoll = null;
+    
+    console.log(this.party.totalPowerFigure);
 
+    this.totaldps.innerText = `${this.party.totalPowerFigure}`;
     this.characterList.innerHTML = '';
     
     this.members.forEach(member => {
@@ -132,6 +140,7 @@ export default class PartyUI extends Panel {
             doll.dom.classList.remove('isCrew');
             doll.dom.classList.add('empty');
             member.character = null;
+            // this.result.bind(this, this.members);
           }
         }
 
@@ -149,10 +158,7 @@ export default class PartyUI extends Panel {
 
       this.members.forEach(member => {
         if (member.x === this.selected.x && member.y === this.selected.y) {
-          if(this.selected.character.id !== member.character.id) {
-            // TODO: 같은 캐릭터 중복배치 수정
-            member = this.selected;
-          }
+          member = this.selected;
         }
       });
       this.result(this.members);
@@ -163,8 +169,11 @@ export default class PartyUI extends Panel {
 
   compose(member) {
     // 현재 선택된 멤버의 좌표를 저장-
-    console.log(member);
-    console.log('x: ' + member.x + ' / ' + 'y: ' + member.y);
+    if(member.character === null) {
+      this.result(this.members);
+      this.totaldps.innerText = `${this.party.totalPowerFigure}`;
+    }
+    // console.log('x: ' + member.x + ' / ' + 'y: ' + member.y);
     this.selected = member;
   }
 }

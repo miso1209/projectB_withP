@@ -56,7 +56,7 @@ export default class CharacterSelect extends Panel {
 
     const infoWrap = new MakeDom('div', 'infoWrap', null);
 
-    this.dpsStat = new MakeDom('p', 'info-dps', null);
+    // this.dpsStat = new MakeDom('p', 'info-dps', null);
     this.portrait = document.createElement('img');
     this.portrait.style.display = 'block';
     this.portrait.style.margin = '30px auto 10px';
@@ -96,7 +96,7 @@ export default class CharacterSelect extends Panel {
 
     titleWrap.appendChild(this.level);
     titleWrap.appendChild(this.descClass);
-    infoWrap.appendChild(this.dpsStat);
+    // infoWrap.appendChild(this.dpsStat);
     infoWrap.appendChild(this.portrait);
     infoWrap.appendChild(this.recoveryBtn.dom);
 
@@ -189,7 +189,7 @@ export default class CharacterSelect extends Panel {
   }
 
   updateStatus(current){
-    this.dpsStat.innerText = current.strongFigure;
+    // this.dpsStat.innerText = current.totalPowerFigure;
     this.hp.update(current.health, current.maxHealth);
     this.exp.update(current.exp, current.maxexp);
   }
@@ -220,35 +220,6 @@ export default class CharacterSelect extends Panel {
     this.pane.parentNode.removeChild(this.pane);
   }
 }
-
-
-
-// export class Doll {
-//   constructor(item){ //캐릭터데이터-input
-//     const doll = document.createElement('div');
-//     doll.classList.add('doll');
-
-//     this.path = '/src/assets/sprite/';
-//     this.path = `${this.path}${item.data.name}/${item.data.name}_idle_sw.png`;
-
-//     const name = new MakeDom('p', 'name', item.data.displayname);
-//     const imgWrap = new MakeDom('p', 'imgWrap', null);
-//     const profile = new MakeDom('img', 'profileImg', null);
-//     profile.src = this.path;
-
-//     imgWrap.style.width = '64px';
-//     imgWrap.style.height = '96px';
-
-//     this.stage = new MakeDom('p', 'tilebg', null);
-//     imgWrap.appendChild(profile);
-//     // equipments
-//     doll.appendChild(this.stage);
-//     doll.appendChild(name);
-//     doll.appendChild(imgWrap);
-
-//     this.dom = doll;
-//   }
-// }
 
 class StatusBar {
   constructor(currentValue, maxValue) {

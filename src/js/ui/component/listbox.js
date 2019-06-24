@@ -51,7 +51,7 @@ class ListCell {
     
         this.cellData1.innerText = this.cellData.data.displayname;
         this.cellData2.innerText = this.cellData.data.class;
-        this.cellData3.innerText = `DPS : ${this.cellData.strongFigure}`;
+        this.cellData3.innerText = `DPS : ${this.cellData.totalPowerFigure}`;
     
         this.cell.appendChild(this.cellImg);
         this.cell.appendChild(this.cellData1);

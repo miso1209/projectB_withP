@@ -1,10 +1,10 @@
 import MakeDom from "./makedom";
 
 export default class Doll {
-  constructor(item){ //캐릭터데이터-input
-
+  constructor(item){ 
     const doll = document.createElement('div');
     doll.classList.add('doll');
+    
     this.profile = null;
 
     if (item === null) {
@@ -14,8 +14,11 @@ export default class Doll {
 
       this.path = '/src/assets/sprite/';
       this.path = `${this.path}${item.data.name}/${item.data.name}_idle_sw.png`;
-
+      
+      const infoWrap = new MakeDom('div', 'infoWrap');
       const name = new MakeDom('p', 'name', item.data.displayname);
+      const stat = new MakeDom('p', 'stat', item.totalPowerFigure);
+
       const imgWrap = new MakeDom('p', 'imgWrap', null);
       const profileimg = new MakeDom('img', 'profileImg', null);
 
@@ -30,8 +33,10 @@ export default class Doll {
 
       // equipments
       doll.appendChild(this.stage);
-      doll.appendChild(name);
+      infoWrap.appendChild(name);
+      infoWrap.appendChild(stat);
       doll.appendChild(imgWrap);
+      doll.appendChild(infoWrap);
     }
     this.dom = doll;
   }

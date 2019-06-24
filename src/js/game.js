@@ -76,8 +76,8 @@ export default class Game extends EventEmitter {
                 inputs.push(this.player.characters[cid]);
             }
             // 현재 파티 구성 데이터
-            const party = this.player.party.getBattleAllies();
-            console.log(party);
+            // const party = this.player.party.getBattleAllies();
+            const party = this.player.party;
             this.ui.showParty(inputs, party);
         });
 
@@ -123,7 +123,6 @@ export default class Game extends EventEmitter {
 
         this.ui.on('unequipItem', (itemCategory, cid) => {
             this.unequipItem(itemCategory, cid);
-            // this.player.characters[cid].unequip(itemCategory);
             this.ui.player = this.player.characters[cid];
         });
 
@@ -266,8 +265,8 @@ export default class Game extends EventEmitter {
             const func = script.next();
             if (func) {
                 if (func.command === "dialog") {
+                    this.ui.player = this.player;
                     this.ui.showDialog(func.arguments, next);
-
                 } else if (func.command === "delay") {
                     const delay = func.arguments[0] * 1000;
                     setTimeout(next, delay);
