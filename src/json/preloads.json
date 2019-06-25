@@ -79,6 +79,13 @@
     ["assets/sprite/soldier/soldier_idle_nw.json"],
     ["assets/sprite/soldier/soldier_walk_sw.json"],
     ["assets/sprite/soldier/soldier_walk_nw.json"],
+
+    ["assets/sprite/skeleton/skeleton_atk_sw.json"],
+    ["assets/sprite/skeleton/skeleton_atk_nw.json"],
+    ["assets/sprite/skeleton/skeleton_idle_sw.json"],
+    ["assets/sprite/skeleton/skeleton_idle_nw.json"],
+    ["assets/sprite/skeleton/skeleton_walk_sw.json"],
+    ["assets/sprite/skeleton/skeleton_walk_nw.json"],
     
     ["assets/effects/portaleffect.json"],
     ["assets/effects/stun.json"],

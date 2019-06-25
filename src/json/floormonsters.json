@@ -12,6 +12,19 @@
             "end": 10
         },
         "rewards": [
+            {
+                "item": "1001",
+                "probability": 0.2
+            }, {
+                "item": "1002",
+                "probability": 0.1
+            }, {
+                "item": "1003",
+                "probability": 0.05
+            }, {
+                "item": "2001",
+                "probability": 0.5
+            }
         ],
         "gold": 1,
         "exp": 1,
@@ -20,94 +33,39 @@
         "fieldSpeed": 0.3
     },
     "2": {
-        "description": "성에 넘쳐나는 도굴꾼이다.",
+        "description": "드물게 보이는 스켈레톤이다.",
         "character": {
-            "id": 10001,
-            "baseLevel": 1,
-            "levelUpPerFloor": 0.4
-        },
-        "rank": "B",
-        "generateFloor": {
-            "begin": 1,
-            "end": 10
-        },
-        "rewards": [
-        ],
-        "gold": 1,
-        "exp": 1,
-        "goldPerLevel": 0.3,
-        "expPerLevel": 0.3,
-        "fieldSpeed": 0.3
-    },
-    "3": {
-        "description": "성에 넘쳐나는 도굴꾼이다.",
-        "character": {
-            "id": 10001,
-            "baseLevel": 1,
+            "id": 10002,
+            "baseLevel": 2,
             "levelUpPerFloor": 0.4
         },
         "rank": "A",
         "generateFloor": {
             "begin": 1,
-            "end": 10
-        },
-        "rewards": [
-        ],
-        "gold": 1,
-        "exp": 1,
-        "goldPerLevel": 0.3,
-        "expPerLevel": 0.3,
-        "fieldSpeed": 0.3
-    },
-    "4": {
-        "description": "성에 넘쳐나는 도굴꾼이다.",
-        "character": {
-            "id": 10001,
-            "baseLevel": 1,
-            "levelUpPerFloor": 0.4
-        },
-        "rank": "S",
-        "generateFloor": {
-            "begin": 1,
-            "end": 10
+            "end": 20
         },
         "rewards": [
             {
-                "item": "1001",
+                "item": "1",
                 "probability": 0.1
             }, {
-                "item": "2001",
-                "probability": 0.2
-            }
-        ],
-        "gold": 1,
-        "exp": 1,
-        "goldPerLevel": 0.3,
-        "expPerLevel": 0.3,
-        "fieldSpeed": 0.3
-    },
-    "5": {
-        "description": "성에 넘쳐나는 도굴꾼이다.",
-        "character": {
-            "id": 10001,
-            "baseLevel": 1,
-            "levelUpPerFloor": 0.4
-        },
-        "rank": "U",
-        "generateFloor": {
-            "begin": 1,
-            "end": 10
-        },
-        "rewards": [
-            {
                 "item": "1001",
+                "probability": 0.3
+            }, {
+                "item": "1002",
                 "probability": 0.1
             }, {
+                "item": "1003",
+                "probability": 0.1
+            }, {
+                "item": "1004",
+                "probability": 0.05
+            }, {
                 "item": "2001",
-                "probability": 0.2
+                "probability": 0.7
             }
         ],
-        "gold": 1,
+        "gold": 2,
         "exp": 1,
         "goldPerLevel": 0.3,
         "expPerLevel": 0.3,

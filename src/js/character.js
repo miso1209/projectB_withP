@@ -6,11 +6,14 @@ import Skill from "./skill";
 // 이 클래스에서는 캐릭터의 보여지는 부분은 표현하지 않는다
 // 위치나 현재 애니메이션 상태등도 처리하지 않는다
 // 캐릭터의 스탯과 장비에 대한 부분만 처리한다 
+
 export default class Character {
-    constructor(id) {
+    constructor(id, rank) {
         this.id = id;
         this.level = 1;
         this.exp = 0;
+        this.rank = rank?rank:1;
+        
         const data = characters[id];
         this.data = data;
 
@@ -80,40 +83,40 @@ export default class Character {
     }
 
     get baseMaxHealth() {
-        return this.getParam('health', this.level);
+        return this.getParam('health', this.level) * this.rank;
     }
     
     get baseStrength() {
-        return this.getParam('strength', this.level);
+        return this.getParam('strength', this.level) * this.rank;
     }
     
     get baseIntellect() {
-        return this.getParam('intellect', this.level);
+        return this.getParam('intellect', this.level) * this.rank;
     }
     
     get baseAgility() {
-        return this.getParam('agility', this.level);
+        return this.getParam('agility', this.level) * this.rank;
     }
 
     get baseStamina() {
-        return this.getParam('stamina', this.level);
+        return this.getParam('stamina', this.level) * this.rank;
     }
 
     get baseSpeed() {
-        return this.getParam('speed', this.level);
+        return this.getParam('speed', this.level) * this.rank;
     }
     
     get baseCritical() {
-        return this.getParam('critical', this.level);
+        return this.getParam('critical', this.level) * this.rank;
     }
 
     get baseRegist() {
-        return this.getParam('regist', this.level);
+        return this.getParam('regist', this.level) * this.rank;
     }
 
     get maxHealth() {
         // 소숫점의 체력은 버린다.
-        return Math.floor(this.baseMaxHealth + this.plusMaxHealth);
+        return Math.floor(this.baseMaxHealth + this.plusMaxHealth) * this.rank;
     }
 
     get strength() {
