@@ -86,6 +86,13 @@
     ["assets/sprite/skeleton/skeleton_idle_nw.json"],
     ["assets/sprite/skeleton/skeleton_walk_sw.json"],
     ["assets/sprite/skeleton/skeleton_walk_nw.json"],
+
+    ["assets/sprite/ghost/ghost_atk_sw.json"],
+    ["assets/sprite/ghost/ghost_atk_nw.json"],
+    ["assets/sprite/ghost/ghost_idle_sw.json"],
+    ["assets/sprite/ghost/ghost_idle_nw.json"],
+    ["assets/sprite/ghost/ghost_walk_sw.json"],
+    ["assets/sprite/ghost/ghost_walk_nw.json"],
     
     ["assets/effects/portaleffect.json"],
     ["assets/effects/stun.json"],

@@ -70,5 +70,38 @@
         "goldPerLevel": 0.3,
         "expPerLevel": 0.3,
         "fieldSpeed": 0.3
+    },
+    "3": {
+        "description": "드물게 보이는 네크로멘서이다.",
+        "character": {
+            "id": 10003,
+            "baseLevel": 2,
+            "levelUpPerFloor": 0.4
+        },
+        "rank": "B",
+        "generateFloor": {
+            "begin": 1,
+            "end": 20
+        },
+        "rewards": [
+            {
+                "item": "1001",
+                "probability": 0.2
+            }, {
+                "item": "1002",
+                "probability": 0.1
+            }, {
+                "item": "1003",
+                "probability": 0.05
+            }, {
+                "item": "2001",
+                "probability": 0.5
+            }
+        ],
+        "gold": 2,
+        "exp": 1,
+        "goldPerLevel": 0.3,
+        "expPerLevel": 0.3,
+        "fieldSpeed": 0.3
     }
 }

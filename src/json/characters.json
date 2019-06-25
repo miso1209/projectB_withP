@@ -315,5 +315,50 @@
             "x": 0,
             "y": -48
         }
+    },
+    "10003" : {
+        "name": "ghost",
+        "displayname": "네크로멘서",
+        "class": "wizzard",
+        "portrait": "",
+        "base": {
+            "health": 100,
+            "strength": 7,
+            "intellect": 4,
+            "agility": 4,
+            "stamina": 4,
+            "speed": 1,
+            "critical": 0.08,
+            "regist": 0
+        },
+        "levelup": {
+            "health": 15,
+            "strength": 1,
+            "intellect": 1,
+            "agility": 1,
+            "stamina": 1,
+            "speed": 0,
+            "critical": 0.01,
+            "regist": 0.3
+        },
+
+        "skills": {
+            "a": "slash",
+            "b": "slash",
+            "extra": "slash"
+        },
+        "skillactiveprobability": 0,
+        "animations": {
+            "ghost_idle_nw": { "length": 1 },
+            "ghost_idle_sw": { "length": 1 },
+            "ghost_atk_nw": { "length": 10 },
+            "ghost_atk_sw": { "length": 10 },
+            "ghost_walk_nw": { "length": 8 },
+            "ghost_walk_sw": { "length": 8 }
+        },
+        "offset": {
+            "x": 0,
+            "y": -48
+        }
     }
 }
