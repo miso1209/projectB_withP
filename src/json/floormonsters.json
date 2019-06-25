@@ -1,96 +1,75 @@
 {
     "1": {
-        "description": "성에 넘쳐나는 늑대이다.",
+        "description": "성에 넘쳐나는 도굴꾼이다.",
         "character": {
             "id": 10001,
             "baseLevel": 1,
-            "levelUpPerFloor": 0.5
+            "levelUpPerFloor": 0.4
         },
         "rank": "C",
         "generateFloor": {
             "begin": 1,
-            "end": 100
+            "end": 10
         },
         "rewards": [
-            {
-                "item": "1001",
-                "probability": 0.1
-            }, {
-                "item": "2001",
-                "probability": 0.2
-            }
         ],
         "gold": 1,
         "exp": 1,
-        "goldPerLevel": 1,
-        "expPerLevel": 1,
+        "goldPerLevel": 0.3,
+        "expPerLevel": 0.3,
         "fieldSpeed": 0.3
     },
     "2": {
-        "description": "성에 넘쳐나는 늑대이다.",
+        "description": "성에 넘쳐나는 도굴꾼이다.",
         "character": {
             "id": 10001,
             "baseLevel": 1,
-            "levelUpPerFloor": 0.5
+            "levelUpPerFloor": 0.4
         },
         "rank": "B",
         "generateFloor": {
             "begin": 1,
-            "end": 100
+            "end": 10
         },
         "rewards": [
-            {
-                "item": "1001",
-                "probability": 0.1
-            }, {
-                "item": "2001",
-                "probability": 0.2
-            }
         ],
         "gold": 1,
         "exp": 1,
-        "goldPerLevel": 1,
-        "expPerLevel": 1,
+        "goldPerLevel": 0.3,
+        "expPerLevel": 0.3,
         "fieldSpeed": 0.3
     },
     "3": {
-        "description": "성에 넘쳐나는 늑대이다.",
+        "description": "성에 넘쳐나는 도굴꾼이다.",
         "character": {
             "id": 10001,
             "baseLevel": 1,
-            "levelUpPerFloor": 0.5
+            "levelUpPerFloor": 0.4
         },
         "rank": "A",
         "generateFloor": {
             "begin": 1,
-            "end": 100
+            "end": 10
         },
         "rewards": [
-            {
-                "item": "1001",
-                "probability": 0.1
-            }, {
-                "item": "2001",
-                "probability": 0.2
-            }
         ],
         "gold": 1,
         "exp": 1,
-        "goldPerLevel": 1,
-        "expPerLevel": 1,
+        "goldPerLevel": 0.3,
+        "expPerLevel": 0.3,
         "fieldSpeed": 0.3
     },
     "4": {
-        "description": "성에 넘쳐나는 늑대이다.",
+        "description": "성에 넘쳐나는 도굴꾼이다.",
         "character": {
             "id": 10001,
             "baseLevel": 1,
-            "levelUpPerFloor": 0.5
+            "levelUpPerFloor": 0.4
         },
         "rank": "S",
         "generateFloor": {
             "begin": 1,
-            "end": 100
+            "end": 10
         },
         "rewards": [
             {
@@ -103,21 +82,21 @@
         ],
         "gold": 1,
         "exp": 1,
-        "goldPerLevel": 1,
-        "expPerLevel": 1,
+        "goldPerLevel": 0.3,
+        "expPerLevel": 0.3,
         "fieldSpeed": 0.3
     },
     "5": {
-        "description": "성에 넘쳐나는 늑대이다.",
+        "description": "성에 넘쳐나는 도굴꾼이다.",
         "character": {
             "id": 10001,
             "baseLevel": 1,
-            "levelUpPerFloor": 0.5
+            "levelUpPerFloor": 0.4
         },
         "rank": "U",
         "generateFloor": {
             "begin": 1,
-            "end": 100
+            "end": 10
         },
         "rewards": [
             {
@@ -130,8 +109,8 @@
         ],
         "gold": 1,
         "exp": 1,
-        "goldPerLevel": 1,
-        "expPerLevel": 1,
+        "goldPerLevel": 0.3,
+        "expPerLevel": 0.3,
         "fieldSpeed": 0.3
     }
 }

@@ -227,26 +227,26 @@
         }
     },
     "10001" : {
-        "name": "hector",
-        "displayname": "늑대",
+        "name": "soldier",
+        "displayname": "도굴꾼",
         "class": "warrior",
-        "portrait": "player1_active.png",
+        "portrait": "",
         "base": {
             "health": 50,
-            "strength": 5,
-            "intellect": 5,
-            "agility": 5,
-            "stamina": 5,
+            "strength": 4,
+            "intellect": 4,
+            "agility": 4,
+            "stamina": 4,
             "speed": 1,
-            "critical": 0.1,
+            "critical": 0.05,
             "regist": 0
         },
         "levelup": {
-            "health": 5,
-            "strength": 0.5,
-            "intellect": 0.5,
-            "agility": 0.5,
-            "stamina": 0.5,
+            "health": 15,
+            "strength": 1,
+            "intellect": 1,
+            "agility": 1,
+            "stamina": 1,
             "speed": 0,
             "critical": 0.01,
             "regist": 0.3
@@ -257,16 +257,14 @@
             "b": "slash",
             "extra": "slash"
         },
-        "skillactiveprobability": 0.1,
+        "skillactiveprobability": 0,
         "animations": {
-            "hector_idle_nw": { "length": 2 },
-            "hector_idle_sw": { "length": 2 },
-            "hector_atk_nw": { "length": 10 },
-            "hector_atk_sw": { "length": 10 },
-            "hector_walk_nw": { "length": 8 },
-            "hector_walk_sw": { "length": 8 },
-            "hector_crouch_nw": { "length": 1 },
-            "hector_crouch_sw": { "length": 1 }
+            "soldier_idle_nw": { "length": 1 },
+            "soldier_idle_sw": { "length": 1 },
+            "soldier_atk_nw": { "length": 10 },
+            "soldier_atk_sw": { "length": 10 },
+            "soldier_walk_nw": { "length": 8 },
+            "soldier_walk_sw": { "length": 8 }
         },
         "offset": {
             "x": 0,

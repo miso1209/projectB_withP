@@ -72,6 +72,13 @@
     ["assets/sprite/healer/healer_idle_nw.json"],
     ["assets/sprite/healer/healer_walk_sw.json"],
     ["assets/sprite/healer/healer_walk_nw.json"],
+
+    ["assets/sprite/soldier/soldier_atk_sw.json"],
+    ["assets/sprite/soldier/soldier_atk_nw.json"],
+    ["assets/sprite/soldier/soldier_idle_sw.json"],
+    ["assets/sprite/soldier/soldier_idle_nw.json"],
+    ["assets/sprite/soldier/soldier_walk_sw.json"],
+    ["assets/sprite/soldier/soldier_walk_nw.json"],
     
     ["assets/effects/portaleffect.json"],
     ["assets/effects/stun.json"],
