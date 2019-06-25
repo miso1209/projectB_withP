@@ -86,7 +86,7 @@ export default class PropGenerator {
 
             monster.rewards.forEach((reward) => {
                 if (Math.random() <= reward.probability) {
-                    if (resultMonsterParty.rewards[reward.item]) {
+                    if (!resultMonsterParty.rewards[reward.item]) {
                         resultMonsterParty.rewards[reward.item] = 1;
                     } else {
                         resultMonsterParty.rewards[reward.item]++;
@@ -94,7 +94,6 @@ export default class PropGenerator {
                 }
             });
         });
-
         return resultMonsterParty;
     }
 
@@ -119,7 +118,6 @@ export default class PropGenerator {
             const monsterRank = monsterParty.ranks[this.getRank()];
             monsters.push(this.getMonster(currentFloor, monsterRank));
         }
-        
         return new Monster(this.makeMonsterParty(monsters, currentFloor));
     }
 

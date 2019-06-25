@@ -360,5 +360,185 @@
             "x": 0,
             "y": -48
         }
+    },
+    "10004" : {
+        "name": "frogknight",
+        "displayname": "개굴전사",
+        "class": "warrior",
+        "portrait": "",
+        "base": {
+            "health": 100,
+            "strength": 7,
+            "intellect": 4,
+            "agility": 4,
+            "stamina": 4,
+            "speed": 1,
+            "critical": 0.08,
+            "regist": 0
+        },
+        "levelup": {
+            "health": 15,
+            "strength": 1,
+            "intellect": 1,
+            "agility": 1,
+            "stamina": 1,
+            "speed": 0,
+            "critical": 0.01,
+            "regist": 0.3
+        },
+
+        "skills": {
+            "a": "slash",
+            "b": "slash",
+            "extra": "slash"
+        },
+        "skillactiveprobability": 0,
+        "animations": {
+            "frogknight_idle_nw": { "length": 1 },
+            "frogknight_idle_sw": { "length": 1 },
+            "frogknight_atk_nw": { "length": 10 },
+            "frogknight_atk_sw": { "length": 10 },
+            "frogknight_walk_nw": { "length": 8 },
+            "frogknight_walk_sw": { "length": 8 }
+        },
+        "offset": {
+            "x": 0,
+            "y": -48
+        }
+    },
+    "10005" : {
+        "name": "dknight",
+        "displayname": "암흑기사",
+        "class": "warrior",
+        "portrait": "",
+        "base": {
+            "health": 100,
+            "strength": 7,
+            "intellect": 4,
+            "agility": 4,
+            "stamina": 4,
+            "speed": 1,
+            "critical": 0.08,
+            "regist": 0
+        },
+        "levelup": {
+            "health": 15,
+            "strength": 1,
+            "intellect": 1,
+            "agility": 1,
+            "stamina": 1,
+            "speed": 0,
+            "critical": 0.01,
+            "regist": 0.3
+        },
+
+        "skills": {
+            "a": "slash",
+            "b": "slash",
+            "extra": "slash"
+        },
+        "skillactiveprobability": 0,
+        "animations": {
+            "dknight_idle_nw": { "length": 1 },
+            "dknight_idle_sw": { "length": 1 },
+            "dknight_atk_nw": { "length": 10 },
+            "dknight_atk_sw": { "length": 10 },
+            "dknight_walk_nw": { "length": 8 },
+            "dknight_walk_sw": { "length": 8 }
+        },
+        "offset": {
+            "x": 0,
+            "y": -48
+        }
+    },
+    "10006" : {
+        "name": "doga",
+        "displayname": "수도사",
+        "class": "warrior",
+        "portrait": "",
+        "base": {
+            "health": 100,
+            "strength": 7,
+            "intellect": 4,
+            "agility": 4,
+            "stamina": 4,
+            "speed": 1,
+            "critical": 0.08,
+            "regist": 0
+        },
+        "levelup": {
+            "health": 15,
+            "strength": 1,
+            "intellect": 1,
+            "agility": 1,
+            "stamina": 1,
+            "speed": 0,
+            "critical": 0.01,
+            "regist": 0.3
+        },
+
+        "skills": {
+            "a": "slash",
+            "b": "slash",
+            "extra": "slash"
+        },
+        "skillactiveprobability": 0,
+        "animations": {
+            "doga_idle_nw": { "length": 1 },
+            "doga_idle_sw": { "length": 1 },
+            "doga_atk_nw": { "length": 10 },
+            "doga_atk_sw": { "length": 10 },
+            "doga_walk_nw": { "length": 8 },
+            "doga_walk_sw": { "length": 8 }
+        },
+        "offset": {
+            "x": 0,
+            "y": -48
+        }
+    },
+    "10007" : {
+        "name": "lucavi",
+        "displayname": "스켈레톤",
+        "class": "wizzard",
+        "portrait": "",
+        "base": {
+            "health": 100,
+            "strength": 7,
+            "intellect": 4,
+            "agility": 4,
+            "stamina": 4,
+            "speed": 1,
+            "critical": 0.08,
+            "regist": 0
+        },
+        "levelup": {
+            "health": 15,
+            "strength": 1,
+            "intellect": 1,
+            "agility": 1,
+            "stamina": 1,
+            "speed": 0,
+            "critical": 0.01,
+            "regist": 0.3
+        },
+
+        "skills": {
+            "a": "slash",
+            "b": "slash",
+            "extra": "slash"
+        },
+        "skillactiveprobability": 0,
+        "animations": {
+            "lucavi_idle_nw": { "length": 1 },
+            "lucavi_idle_sw": { "length": 1 },
+            "lucavi_atk_nw": { "length": 10 },
+            "lucavi_atk_sw": { "length": 10 },
+            "lucavi_walk_nw": { "length": 8 },
+            "lucavi_walk_sw": { "length": 8 }
+        },
+        "offset": {
+            "x": 0,
+            "y": -48
+        }
     }
 }
