@@ -35,7 +35,7 @@ export default class WorkTable extends PropBase {
             });
         } else {
             // 업그레이드 하시겠습니까 모달.을 띄운다
-            game.ui.showConfirmModal("업그레이드 하시겠습니까?", (confirmed) => {
+            game.ui.showConfirmModal("업그레이드 하시겠습니까?", true, (confirmed) => {
                 if (confirmed === "ok") {
                     const t = async () => {
                         game.addTag("worktable");

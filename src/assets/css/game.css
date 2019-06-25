@@ -542,18 +542,63 @@ button, .button {
   top: 0;
   padding: 0 0;
   background-color: transparent;
-} 
+}
 
-.contents-option {
-  margin: 20px auto 10px;
+#SYSTEM .contents-option {
+  margin: 12% auto;
 }
 
 .contents-option div:not(:first-child) {
   margin-left: 15px;
 }
+
 .contents-option div + span {
-  font-size: 14px;
+  font-size: 15px;
   color: #ffd800;
+}
+
+.contents-option p {
+  font-size: 13px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;	
+}
+
+/* 아이템 획득창 */
+.acquireModal .contents {
+  left: 0;
+  right: 0;
+  top: 40px;
+}
+
+.acquireModal .contents .desc {
+  margin:15px 0;
+  max-height:35px;
+  
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.acquireModal .contents-option {
+  width: 100%;
+  margin: 20px auto 10px;
+}
+
+.acquireModal .contents-option.items {
+  /* 아이템이 여러개인 경우 */
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  width: 100%;
+}
+.acquireModal .contents-option.items section {
+  width: 30%;
+  margin-bottom: 10px;
+}
+
+.contents-option section:not(:first-child){
+  margin-left: 10px;
 }
 
 /* 아이템 조합창 */
@@ -849,7 +894,7 @@ button.disabled span {
 .characterList {
   min-height: 320px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 10px 15px;
   z-index: 2;
   display: flex;
   flex-wrap: wrap;

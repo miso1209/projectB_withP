@@ -809,7 +809,8 @@ export default class Game extends EventEmitter {
         } else {
             if (options.type === "item") {
                 this.onNotification = true;
-                this.ui.showItemAcquire(new Item(options.item, options.count), () => {
+                // text 가 있는 경우에 취소버튼 노출, 그 외는 확인버튼만..
+                this.ui.showItemAcquire(null, new Item(options.item, options.count), () => {
                     this.onNotification = false;
                     const next = this.notification.pop();
                     if (next) {
@@ -825,7 +826,7 @@ export default class Game extends EventEmitter {
                 options.items.forEach((item) => {
                     items.push(new Item(item.id, item.owned));
                 });
-                this.ui.showSystemModal('TEST TEXT', items, () => {});
+                this.ui.showItemAcquire('TEST TEXT', items, () => {});
             }
         }
     }

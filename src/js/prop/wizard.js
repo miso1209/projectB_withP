@@ -34,7 +34,7 @@ export default class Wizard extends PropBase {
 
     touch(game) {
         if (!this.alreadyParty) {
-            game.ui.showConfirmModal("Lv.1 Elid를 파티로 영입 하시겠습니까?", (confirmed) => {
+            game.ui.showConfirmModal("Lv.1 Elid를 파티로 영입 하시겠습니까?", true, (confirmed) => {
                 if (confirmed === "ok") {
                     const t = async () => {
                         game.addCharacter(5, { level: 1, exp: 0, equips: {}});

@@ -12,7 +12,7 @@ import CharacterDetail from "./characterDetail";
 import MakeDom from "./component/makedom";
 import Minimap from "./minimap";
 import PartyUI from "./partyui";
-import AcquireModal from "./itemacquireui";
+import ItemAcquire from "./itemAcquire";
 
 
 
@@ -161,66 +161,29 @@ export default class DomUI extends EventEmitter {
         dialog.onComplete = callback;
     }
 
-    showConfirmModal(text, result) {
+    // 기본 노티모달 : 텍스트 + 확인/취소 버튼 cancelable === true -> 취소버튼 
+    showConfirmModal(text, cancelable, result) {
         const pane = this.createContainer();
-        const confirmModal = new SystemModal(pane, 300, 200, text, result);
+        const confirmModal = new SystemModal(pane, 300, 200, text, cancelable, result);
         confirmModal.dom.style.top = '50%';
         confirmModal.dom.style.marginTop = 200 * -0.5 + 'px';
         confirmModal.contents.style.margin = '10% auto';
         confirmModal.contents.style.fontSize = '1.1rem';
     }
 
-    // 임시
-    showSystemModal(text, items, result) {
+    showUseItemModal(text, items, result) {
         const pane = this.createContainer();
-        const confirmModal = new SystemModal(pane, 300, 200, text, result);
+        const confirmModal = new SystemModal(pane, 300, 240, text, true, result);
+
         confirmModal.dom.style.top = '50%';
-        confirmModal.dom.style.marginTop = 250 * -0.5 + 'px';
+        confirmModal.dom.style.marginTop = 240 * -0.5 + 'px';
         confirmModal.contents.style.margin = '10% auto';
         confirmModal.contents.style.fontSize = '1.1rem';
 
         const options = new MakeDom('div', 'contents-option');
-
-        if (items.length > 0) {
-            items.forEach((item) => {
-                let option = new ItemImage(item.data.image.texture, item.data.image.x, item.data.image.y);
-                let count = new MakeDom('span');
-                count.innerText = `x${item.owned}`;
-                options.appendChild(option.dom);
-                options.appendChild(count);
-            });
-        } else {
-            let option = new ItemImage(items.data.image.texture, items.data.image.x, items.data.image.y);
-            // let count = new MakeDom('span');
-            // count.innerText = `x${items.owned}`;
-            options.appendChild(option.dom);
-            // options.appendChild(count);
-        }
-        confirmModal.contents.appendChild(options);
-    }
-
-    showUseItemModal(text, input, result) {
-        const pane = this.createContainer();
-        const confirmModal = new SystemModal(pane, 300, 200, text, result);
-        confirmModal.dom.style.top = '50%';
-        confirmModal.dom.style.marginTop = 250 * -0.5 + 'px';
-        confirmModal.contents.style.margin = '10% auto';
-        confirmModal.contents.style.fontSize = '1.1rem';
-
-        const options = new MakeDom('div', 'contents-option');
-
-        if (input.length > 0) {
-            input.forEach((item) => {
-                let option = new ItemImage(item.data.image.texture, item.data.image.x, item.data.image.y);
-                let count = new MakeDom('span');
-                count.innerText = `x${item.owned}`;
-                options.appendChild(option.dom);
-                options.appendChild(count);
-            });
-        } else {
-            let option = new ItemImage(items.data.image.texture, items.data.image.x, items.data.image.y);
-            options.appendChild(option.dom);
-        }
+       
+        let option = new ItemImage(items.data.image.texture, items.data.image.x, items.data.image.y);
+        options.appendChild(option.dom);
 
         confirmModal.contents.appendChild(options);
     }
@@ -275,52 +238,17 @@ export default class DomUI extends EventEmitter {
     }
 
     // 아이템 획득
-    showAcquireModal(item, inputs, result) {
+    showItemAcquire(text, inputs, result) {
         const pane = this.createContainer();
-        const domHeight = 300;
-        
-        const itemAcquire = new AcquireModal(pane, inputs, 360, domHeight, () => {
+        const acquire = new ItemAcquire(pane, text, inputs, (response) => {
             this.removeContainer(pane);
-            if (result) {
+
+            if (response) {
+                console.log(response);
                 result();
             }
         });
     }
-
-    showItemAcquire(item, result) {
-        const pane = this.createContainer();
-        const domHeight = 300;
-        const itemAcquire = new Modal(pane, 360, domHeight, () => {
-            this.removeContainer(pane);
-            if (result) {
-                result();
-            }
-        });
-        
-        itemAcquire.addTitle('아이템 획득');
-        itemAcquire.addCloseButton();
-        itemAcquire.addConfirmButton('확인');
-        itemAcquire.moveToCenter(0);
-        itemAcquire.dom.style.top = '50%';
-        itemAcquire.dom.style.marginTop = domHeight * -0.5 + 'px';
-
-        const itemText = document.createElement('div');
-        itemText.className = 'contents';
-        itemText.style.top = 'auto';
-        itemText.style.bottom = '70px';
-        itemText.innerText = item.name;
-        
-        const image = new ItemImage('items@2.png', item.data.image.x, item.data.image.y);
-        const itemSprite = image.dom;
-        itemSprite.style.position = 'absolute';
-        itemSprite.style.left = '0';
-        itemSprite.style.right = '0';
-        itemSprite.style.margin = '90px auto 0';
-        
-        itemAcquire.dom.appendChild(itemText);
-        itemAcquire.dom.appendChild(itemSprite);
-    }
-
 
     showInventory(inputs) {
         const pane = this.createContainer();
@@ -344,7 +272,6 @@ export default class DomUI extends EventEmitter {
 
     showCharacterSelect(inputs) {
         const pane = this.createContainer();
-        
         const characterSelect = new CharacterSelect(pane, inputs, (info) => {
             this.showCharacterDatail(info);
         });
@@ -355,7 +282,7 @@ export default class DomUI extends EventEmitter {
 
         const useItem = ((selected) => {
             if (selected !== null) {
-                this.showSystemModal('포션을 사용하시겠습니까?', selected, (confirmed) => {
+                this.showUseItemModal('포션을 사용하시겠습니까?', selected, (confirmed) => {
                     if (confirmed === "ok") {
                         this.emit('useItem', selected.data.id, 1, characterSelect.selected);
                         characterSelect.updateStatus(characterSelect.selected);
@@ -412,7 +339,7 @@ export default class DomUI extends EventEmitter {
                     characterDetail.tempEquip = this.playerInvenData;
                     characterDetail.showEquipInven();
                 } else {
-                    this.showConfirmModal('장착가능한 장비가 없습니다.', ()=>{
+                    this.showConfirmModal('장착가능한 장비가 없습니다.', false, ()=>{
                         // TODO: 나중엔 상점으로 연결하면 되려나.
                     });
                 }

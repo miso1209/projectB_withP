@@ -3,7 +3,7 @@ import Modal from "./component/modal";
 import Button from "./component/button";
 
 export default class SystemModal extends Panel {
-    constructor(pane, width, height, text, callback) {
+    constructor(pane, width, height, text, cancelable, callback) {
       super();
         this.pane = pane;
         this.pane.classList.add('screen');
@@ -18,22 +18,27 @@ export default class SystemModal extends Panel {
     
         this.contents = descText;
         this.callback = callback;
-    
+        this.cancelable = cancelable;
+
         const okButton = new Button('확인', 'submit');
         const cancelButton = new Button('취소');
     
         confirmModal.dom.appendChild(okButton.dom);
-        confirmModal.dom.appendChild(cancelButton.dom);
-    
-        okButton.moveToLeft(20);
-        cancelButton.moveToRight(20);
-        okButton.moveToBottom(20);
-        cancelButton.moveToBottom(20);
+
+        if(this.cancelable) {
+            okButton.moveToLeft(20);
+            cancelButton.moveToRight(20);
+            okButton.moveToBottom(20);
+            cancelButton.moveToBottom(20);
+
+            confirmModal.dom.appendChild(cancelButton.dom);
+            cancelButton.dom.addEventListener('click', this.onCancel.bind(this));
+        } else {
+            okButton.moveToCenter(0);
+            okButton.moveToBottom(20);
+        }
     
         okButton.dom.addEventListener('click', this.onSubmit.bind(this));
-        cancelButton.dom.addEventListener('click', this.onCancel.bind(this));
-    
-        this.response = null;
         this.dom = confirmModal.dom;
     }
   

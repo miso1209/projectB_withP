@@ -23,7 +23,6 @@ export default class Modal extends Panel {
     
     addCloseButton() {
         this.closeBtn.style.display = 'block';
-        
     }
     
     addConfirmButton(text) {
