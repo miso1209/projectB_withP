@@ -80,7 +80,7 @@ export default class ItemAcquire extends Panel {
         this.options.appendChild(wrap);
       });
     } else {
-      let option = new ItemImage(this.items.data.texture, this.items.data.image.x, this.items.data.image.y);
+      let option = new ItemImage(this.items.data.image.texture, this.items.data.image.x, this.items.data.image.y);
       let count = new MakeDom('span', '', `x${this.items.owned}`);
       this.options.appendChild(option.dom);
       this.options.appendChild(count);

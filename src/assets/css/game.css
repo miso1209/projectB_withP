@@ -130,7 +130,6 @@ body.battle .gnbContainer.battleMode {
   
   /* 클릭이벤트 막기. */
   /* pointer-events: none; */
-  
   background:none;
   /* transition: all 0.3s; */
 }
@@ -140,7 +139,7 @@ body.battle .gnbContainer.battleMode {
 }
 
 .uiContainer.screen {
-  background: rgba(1,1,1,.8);
+  background: rgba(1,1,1,.7);
   z-index: 1111;
   position: fixed;
   pointer-events: none;
