@@ -141,7 +141,7 @@ export default class Monster extends PropBase {
 
     // 가장 강한 녀석의 이름을 가져온다
     getName() {
-        return "해골병사";
+        return this.src.name;
     }
 
     // DPS는 파티의 DPS를 가져온다.

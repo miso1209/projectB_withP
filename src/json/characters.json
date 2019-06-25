@@ -225,5 +225,52 @@
             "x": 0,
             "y": -48
         }
+    },
+    "10001" : {
+        "name": "hector",
+        "displayname": "늑대",
+        "class": "warrior",
+        "portrait": "player1_active.png",
+        "base": {
+            "health": 50,
+            "strength": 5,
+            "intellect": 5,
+            "agility": 5,
+            "stamina": 5,
+            "speed": 1,
+            "critical": 0.1,
+            "regist": 0
+        },
+        "levelup": {
+            "health": 5,
+            "strength": 0.5,
+            "intellect": 0.5,
+            "agility": 0.5,
+            "stamina": 0.5,
+            "speed": 0,
+            "critical": 0.01,
+            "regist": 0.3
+        },
+
+        "skills": {
+            "a": "slash",
+            "b": "slash",
+            "extra": "slash"
+        },
+        "skillactiveprobability": 0.1,
+        "animations": {
+            "hector_idle_nw": { "length": 2 },
+            "hector_idle_sw": { "length": 2 },
+            "hector_atk_nw": { "length": 10 },
+            "hector_atk_sw": { "length": 10 },
+            "hector_walk_nw": { "length": 8 },
+            "hector_walk_sw": { "length": 8 },
+            "hector_crouch_nw": { "length": 1 },
+            "hector_crouch_sw": { "length": 1 }
+        },
+        "offset": {
+            "x": 0,
+            "y": -48
+        }
     }
 }

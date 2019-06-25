@@ -49,6 +49,10 @@ export default class Monster {
         return this.origin.rewards;
     }
 
+    get name() {
+        return this.origin.name;
+    }
+
     columnOf(i) {
         return i % 3;
     }

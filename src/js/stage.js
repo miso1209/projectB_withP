@@ -1143,7 +1143,7 @@ export default class Stage extends PIXI.Container {
         }
         this.nameTiles = [];
         // 주변에 프랍들을 검색해서 이름표를 띄운다
-        const distance = 4;
+        const distance = 5;
         for (let j = Math.max(0, obj.gridY - distance); j <= Math.min(this.mapHeight-1, obj.gridY+distance); j++) {
             for (let i = Math.max(0, obj.gridX - distance); i <= Math.min(this.mapWidth-1, obj.gridX+distance); i++) {
                 const obj = this.getObjectAt(i, j);

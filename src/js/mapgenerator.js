@@ -1,6 +1,7 @@
 import Stage  from "./stage";
 import path from 'path';
 import Monster from './monster';
+import PropGenerator from "./propgenerator";
 
 const MAP_DATA = {
     EMPTY: '   ',
@@ -17,6 +18,7 @@ const MAP_DATA = {
 // Seed값을 가지고 랜덤생성 하던가, 데이터를 가지고 있어야 할 것 같다. 인스턴스로 다 들고있으니 너무 무식하고, 메모리 낭비가 심할 것.
 export default class MapGenerator {
     constructor() {
+        this.propGenerator = new PropGenerator();
     }
 
     setTags(tags) {
@@ -229,7 +231,7 @@ export default class MapGenerator {
                             pos: {x:45, y:70}
                         });
                     } else { 
-                        const monster = Monster.GetByStage('house')[0];
+                        const monster = this.propGenerator.createMonster(this.currentFloor);
                         stage.addMonster(monster, {
                             type: "monster",
                             pos: {x:45, y:70}
@@ -269,11 +271,16 @@ export default class MapGenerator {
                     stage.setTags(this.tags);
                     stage.randomPropGenerate();
 
-                    const monster = Monster.GetByStage('house')[0];
+                    const monster = this.propGenerator.createMonster(this.currentFloor);
                     stage.addMonster(monster, {
                         type: "monster"
                     });
-                    // stage.addMonster();
+                    if (Math.random() < 0.5) {
+                        const monster = this.propGenerator.createMonster(this.currentFloor);
+                        stage.addMonster(monster, {
+                            type: "monster"
+                        });
+                    }
     
                     realMap[y][x] = stage;
                 } else if (this.map[y][x] === MAP_DATA.PASSAGE && ((this.map[y-1] && this.map[y-1][x] !== MAP_DATA.EMPTY && this.map[y-1][x] !== MAP_DATA.PASSAGE) || (this.map[y+1] && this.map[y+1][x] !== MAP_DATA.EMPTY && this.map[y+1][x] !== MAP_DATA.PASSAGE))) {
