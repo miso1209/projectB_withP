@@ -3,138 +3,661 @@
         "id": 1,
         "name": "기본검",
         "rank": "C",
-        "image": { "texture": "items.png", "x": 0, "y": 9 },
+        "image": {
+            "texture": "items.png",
+            "x": 0,
+            "y": 9
+        },
         "description": "흔히 볼 수 있는 평범한 무기",
         "category": "weapon",
         "classes": ["warrior"],
         "subcategory": "sword",
-        "options": ["strength(+3)"]
+        "options": ["strength(+3)"],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
     },
-    
-    "401":{
+    "2": {
+        "id": 2,
+        "name": "견습자의 검",
+        "rank": "C",
+        "image": {
+            "texture": "items.png",
+            "x": 1,
+            "y": 9
+        },
+        "description": "견습자용 검",
+        "category": "weapon",
+        "classes": ["warrior"],
+        "subcategory": "shortsword",
+        "options": [],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
+    },
+    "3": {
+        "id": 3,
+        "name": "사냥꾼의 단검",
+        "rank": "C",
+        "image": {
+            "texture": "items.png",
+            "x": 3,
+            "y": 9
+        },
+        "description": "샤냥꾼이 쓰는 단검",
+        "category": "weapon",
+        "classes": ["warrior"],
+        "subcategory": "sword",
+        "options": [],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
+    },
+    "4": {
+        "id": 4,
+        "name": "여행자의 단검",
+        "rank": "C",
+        "image": {
+            "texture": "items.png",
+            "x": 4,
+            "y": 9
+        },
+        "description": "여행자의 갑옷과 세트",
+        "category": "weapon",
+        "classes": ["warrior"],
+        "subcategory": "sword",
+        "options": [],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
+    },
+    "5": {
+        "id": 5,
+        "name": "여행자의 검",
+        "rank": "C",
+        "image": {
+            "texture": "items.png",
+            "x": 5,
+            "y": 9
+        },
+        "description": "여행자의 갑옷과 세트",
+        "category": "weapon",
+        "classes": ["warrior"],
+        "subcategory": "sword",
+        "options": [],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
+    },
+    "10": {
+        "id": 10,
+        "name": "경기병의 대검",
+        "rank": "C",
+        "image": {
+            "texture": "items.png",
+            "x": 10,
+            "y": 9
+        },
+        "description": "",
+        "category": "weapon",
+        "classes": ["warrior"],
+        "subcategory": "broadsword",
+        "options": [],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
+    },
+    "11": {
+        "id": 11,
+        "name": "경기병의 대검2",
+        "rank": "C",
+        "image": {
+            "texture": "items.png",
+            "x": 11,
+            "y": 9
+        },
+        "description": "",
+        "category": "weapon",
+        "classes": ["warrior"],
+        "subcategory": "broadsword",
+        "options": [],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
+    },
+    "201": {
+        "id": 201,
+        "name": "나무꾼의 활",
+        "rank": "C",
+        "image": {
+            "texture": "items.png",
+            "x": 14,
+            "y": 8
+        },
+        "description": "나무로 만든 활",
+        "category": "weapon",
+        "classes": ["archer"],
+        "subcategory": "bow",
+        "options": [],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
+    },
+    "202": {
+        "id": 202,
+        "name": "견습자의 활",
+        "rank": "C",
+        "image": {
+            "texture": "items.png",
+            "x": 15,
+            "y": 8
+        },
+        "description": "나무로 만든 활22",
+        "category": "weapon",
+        "classes": ["archer"],
+        "subcategory": "bow",
+        "options": [],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
+    },
+    "301": {
+        "id": 301,
+        "name": "나무지팡이",
+        "rank": "C",
+        "image": {
+            "texture": "items.png",
+            "x": 0,
+            "y": 8
+        },
+        "description": "나무로 만든 지팡이",
+        "category": "weapon",
+        "classes": ["wizard", "healer"],
+        "subcategory": "wond",
+        "options": ["intellect(+1)"]
+    },
+    "302": {
+        "id": 302,
+        "name": "떡갈나무 지팡이",
+        "rank": "C",
+        "image": {
+            "texture": "items.png",
+            "x": 2,
+            "y": 8
+        },
+        "description": "떡갈나무로 만든 지팡이",
+        "category": "weapon",
+        "classes": ["wizard", "healer"],
+        "subcategory": "wond",
+        "options": [],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
+    },
+    "303": {
+        "id": 303,
+        "name": "수행자의 원드",
+        "rank": "C",
+        "image": {
+            "texture": "items.png",
+            "x": 3,
+            "y": 8
+        },
+        "description": "수행자의 원드",
+        "category": "weapon",
+        "classes": ["wizard", "healer"],
+        "subcategory": "wond",
+        "options": [],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
+    },
+    "304": {
+        "id": 304,
+        "name": "수행자의 원드",
+        "rank": "C",
+        "image": {
+            "texture": "items.png",
+            "x": 4,
+            "y": 8
+        },
+        "description": "수행자의 원드",
+        "category": "weapon",
+        "classes": ["wizard", "healer"],
+        "subcategory": "",
+        "options": [],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
+    },
+    "305": {
+        "id": 305,
+        "name": "수행자의 원드",
+        "rank": "C",
+        "image": {
+            "texture": "items.png",
+            "x": 5,
+            "y": 8
+        },
+        "description": "수행자의 원드",
+        "category": "weapon",
+        "classes": ["wizard", "healer"],
+        "subcategory": "",
+        "options": [],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
+    },
+    "401": {
         "id": 401,
         "name": "기본갑옷",
         "rank": "C",
-        "image": { "texture": "items.png", "x": 0, "y": 12 },
+        "image": {
+            "texture": "items.png",
+            "x": 0,
+            "y": 12
+        },
         "description": "흔히 볼 수 있는 평범한 갑옷",
         "category": "armor",
         "classes": ["warrior"],
         "subcategory": "medium-armor",
-        "options": ["stamina(+3)"]
+        "options": ["stamina(+3)"],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
+    },
+    "402": {
+        "id": 402,
+        "name": "견습자의 갑옷",
+        "rank": "C",
+        "image": {
+            "texture": "items.png",
+            "x": 1,
+            "y": 12
+        },
+        "description": "견습자용 갑옷",
+        "category": "armor",
+        "classes": ["warrior", "wizard", "healer", "archer"],
+        "subcategory": "medium-armor",
+        "options": ["stamina(+3)"],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
+    },
+    "403": {
+        "id": 403,
+        "name": "여행자의 갑옷",
+        "rank": "C",
+        "image": {
+            "texture": "items.png",
+            "x": 6,
+            "y": 12
+        },
+        "description": "여행자의 검과 세트",
+        "category": "armor",
+        "classes": ["warrior", "wizard", "healer", "archer"],
+        "subcategory": "medium-armor",
+        "options": ["stamina(+5)"],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
     },
 
-    "701":{
+    "501": {
+        "id": 501,
+        "name": "기본 로브",
+        "rank": "C",
+        "image": {
+            "texture": "items.png",
+            "x": 7,
+            "y": 11
+        },
+        "description": "면으로 만들어진 실용적인 로브",
+        "category": "armor",
+        "classes": ["wizard", "healer"],
+        "subcategory": "light-armor",
+        "options": ["stamina(+1)"],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
+    },
+    "601": {
+        "id": 601,
+        "name": "견습자의 반지",
+        "rank": "C",
+        "image": {
+            "texture": "items.png",
+            "x": 9,
+            "y": 3
+        },
+        "description": "견습자의 목걸이와 세트",
+        "category": "accessory",
+        "classes": ["warrior", "wizard", "healer", "archer"],
+        "subcategory": "accessory-ring",
+        "options": ["agility(+5)"],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
+    },
+    "602": {
+        "id": 602,
+        "name": "여행자의 반지",
+        "rank": "C",
+        "image": {
+            "texture": "items.png",
+            "x": 15,
+            "y": 3
+        },
+        "description": "여행자의 목걸이와 세트",
+        "category": "accessory",
+        "classes": ["warrior", "wizard", "healer", "archer"],
+        "subcategory": "accessory-ring",
+        "options": ["strength(+5)"],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
+    },
+    "603": {
+        "id": 603,
+        "name": "견습자의 목걸이",
+        "rank": "C",
+        "image": {
+            "texture": "items.png",
+            "x": 1,
+            "y": 1
+        },
+        "description": "견습자의 반지와 세트",
+        "category": "accessory",
+        "classes": ["warrior", "wizard", "healer", "archer"],
+        "subcategory": "accessory-necklace",
+        "options": ["agility(+10)"],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
+    },
+
+    "604": {
+        "id": 604,
+        "name": "여행자의 목걸이",
+        "rank": "C",
+        "image": {
+            "texture": "items.png",
+            "x": 2,
+            "y": 1
+        },
+        "description": "여행자의 반지와 세트",
+        "category": "accessory",
+        "classes": ["warrior", "wizard", "healer", "archer"],
+        "subcategory": "accessory-necklace",
+        "options": ["agility(+7)"],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
+    },
+
+    "701": {
         "id": 701,
         "name": "기본장갑",
         "rank": "C",
-        "image": { "texture": "items.png", "x": 15, "y": 11 },
+        "image": {
+            "texture": "items.png",
+            "x": 15,
+            "y": 11
+        },
         "description": "흔히 볼 수 있는 평범한 장갑",
         "category": "accessory",
         "classes": ["warrior", "wizard", "healer", "archer"],
         "subcategory": "gloves",
-        "options": ["agility(+3)"]
+        "options": [],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
     },
 
+    "801": {
+        "id": 801,
+        "name": "기본 모자",
+        "rank": "C",
+        "image": {
+            "texture": "items.png",
+            "x": 0,
+            "y": 13
+        },
+        "description": "가벼운 모자",
+        "category": "accessory",
+        "classes": ["warrior", "wizard", "healer", "archer"],
+        "subcategory": "",
+        "options": ["speed(+1)"],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
+    },
+
+    "901": {
+        "id": 901,
+        "name": "기본 신발",
+        "rank": "C",
+        "image": {
+            "texture": "items.png",
+            "x": 0,
+            "y": 13
+        },
+        "description": "면으로 만들어진 실용적인 부츠",
+        "category": "accessory",
+        "classes": ["warrior", "wizard", "healer", "archer"],
+        "subcategory": "",
+        "options": ["speed(+1)"],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
+    },
 
     "1001": {
         "id": 1001,
         "name": "소형 회복약",
         "rank": "C",
-        "image": { "texture": "items.png", "x": 2, "y": 0 },
+        "image": {
+            "texture": "items.png",
+            "x": 2,
+            "y": 0
+        },
         "description": "체력을 소량 회복한다",
         "category": "consumables",
-        "options": ["healthRecovery(0.3)"]
+        "options": ["healthRecovery(0.3)"],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
     },
     "1002": {
         "id": 1002,
         "name": "중형 회복약",
         "rank": "C",
-        "image": { "texture": "items.png", "x": 8, "y": 0 },
+        "image": {
+            "texture": "items.png",
+            "x": 8,
+            "y": 0
+        },
         "description": "체력을 회복한다",
         "category": "consumables",
-        "options": ["healthRecovery(0.6)"]
+        "options": ["healthRecovery(0.6)"],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
     },
     "1003": {
         "id": 1003,
         "name": "대형 회복약",
         "rank": "B",
-        "image": { "texture": "items.png", "x": 14, "y": 0 },
+        "image": {
+            "texture": "items.png",
+            "x": 14,
+            "y": 0
+        },
         "description": "체력을 대량 회복한다",
         "category": "consumables",
-        "options": ["healthRecovery(1)"]
+        "options": ["healthRecovery(1)"],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
     },
     "1004": {
         "id": 1004,
         "name": "부활 물약",
         "rank": "B",
-        "image": { "texture": "items.png", "x": 21, "y": 0 },
+        "image": {
+            "texture": "items.png",
+            "x": 21,
+            "y": 0
+        },
         "description": "사망한 캐릭터를 부활시킨다",
         "category": "consumables",
-        "options": ["recovery()"]
+        "options": ["recovery()"],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
     },
-    
-    
+
+
     "2001": {
         "id": 2001,
         "name": "약초",
         "rank": "C",
-        "image": { "texture": "items.png", "x": 8, "y": 4 },
+        "image": {
+            "texture": "items.png",
+            "x": 8,
+            "y": 4
+        },
         "description": "흔히 볼수 있는 식물",
         "category": "material",
-        "options": []
+        "options": [],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
     },
     "2002": {
         "id": 2002,
         "name": "희귀 약초",
         "rank": "C",
-        "image": { "texture": "items.png", "x": 7, "y": 4 },
+        "image": {
+            "texture": "items.png",
+            "x": 7,
+            "y": 4
+        },
         "description": "흔히 볼수 없는 식물",
         "category": "material",
-        "options": []
+        "options": [],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
     },
-
 
     "3001": {
         "id": 3001,
         "name": "소형 회복약 제작서",
         "rank": "C",
-        "image": { "texture": "item.png", "x": 0, "y": 3 },
+        "image": {
+            "texture": "item.png",
+            "x": 0,
+            "y": 3
+        },
         "description": "소지 시 소형 회복약을 제작할 수 있는 제작서 이다.",
         "category": "valuables",
-        "options": []
+        "options": [],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
     },
     "3002": {
         "id": 3002,
         "name": "중형 회복약  제작서",
         "rank": "C",
-        "image": { "texture": "item.png", "x": 0, "y": 3 },
+        "image": {
+            "texture": "item.png",
+            "x": 0,
+            "y": 3
+        },
         "description": "소지 시 중형 회복약을 제작할 수 있는 제작서 이다.",
         "category": "valuables",
-        "options": []
+        "options": [],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
     },
     "3003": {
         "id": 3003,
         "name": "대형 회복약 제작서",
         "rank": "C",
-        "image": { "texture": "item.png", "x": 0, "y": 3 },
+        "image": {
+            "texture": "item.png",
+            "x": 0,
+            "y": 3
+        },
         "description": "소지 시 대형 회복약을 제작할 수 있는 제작서 이다.",
         "category": "valuables",
-        "options": []
+        "options": [],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
     },
     "3004": {
         "id": 3004,
         "name": "부활 물약 제작서",
         "rank": "C",
-        "image": { "texture": "item.png", "x": 0, "y": 3 },
+        "image": {
+            "texture": "item.png",
+            "x": 0,
+            "y": 3
+        },
         "description": "소지 시 부활 물약을 제작할 수 있는 제작서 이다.",
         "category": "valuables",
-        "options": []
+        "options": [],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
     },
     "3005": {
         "id": 3005,
         "name": "기본검 제작서",
         "rank": "C",
-        "image": { "texture": "item.png", "x": 0, "y": 3 },
+        "image": {
+            "texture": "item.png",
+            "x": 0,
+            "y": 3
+        },
         "description": "소지 시 기본검을 제작할 수 있는 제작서 이다.",
         "category": "valuables",
         "options": []
