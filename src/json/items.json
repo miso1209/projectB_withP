@@ -6,23 +6,25 @@
         "image": { "texture": "items.png", "x": 0, "y": 9 },
         "description": "흔히 볼 수 있는 평범한 무기",
         "category": "weapon",
-        "classes": ["warrior", "wizard", "healer", "archer"],
+        "classes": ["warrior"],
         "subcategory": "sword",
         "options": ["strength(+3)"]
     },
-    "2":{
-        "id": 2,
+    
+    "401":{
+        "id": 401,
         "name": "기본갑옷",
         "rank": "C",
         "image": { "texture": "items.png", "x": 0, "y": 12 },
         "description": "흔히 볼 수 있는 평범한 갑옷",
         "category": "armor",
-        "classes": ["warrior", "wizard", "healer", "archer"],
+        "classes": ["warrior"],
         "subcategory": "medium-armor",
         "options": ["stamina(+3)"]
     },
-    "3":{
-        "id": 3,
+
+    "701":{
+        "id": 701,
         "name": "기본장갑",
         "rank": "C",
         "image": { "texture": "items.png", "x": 15, "y": 11 },
@@ -32,6 +34,7 @@
         "subcategory": "gloves",
         "options": ["agility(+3)"]
     },
+
 
     "1001": {
         "id": 1001,
@@ -70,6 +73,7 @@
         "options": ["recovery()"]
     },
     
+    
     "2001": {
         "id": 2001,
         "name": "약초",
@@ -86,6 +90,53 @@
         "image": { "texture": "items.png", "x": 7, "y": 4 },
         "description": "흔히 볼수 없는 식물",
         "category": "material",
+        "options": []
+    },
+
+
+    "3001": {
+        "id": 3001,
+        "name": "소형 회복약 제작서 - 1",
+        "rank": "C",
+        "image": { "texture": "item.png", "x": 0, "y": 3 },
+        "description": "소지 시 소형 회복약을 제작할 수 있는 제작서 이다.",
+        "category": "valuables",
+        "options": []
+    },
+    "3002": {
+        "id": 3002,
+        "name": "중형 회복약  제작서 - 1",
+        "rank": "C",
+        "image": { "texture": "item.png", "x": 0, "y": 3 },
+        "description": "소지 시 중형 회복약을 제작할 수 있는 제작서 이다.",
+        "category": "valuables",
+        "options": []
+    },
+    "3003": {
+        "id": 3003,
+        "name": "대형 회복약 제작서 - 1",
+        "rank": "C",
+        "image": { "texture": "item.png", "x": 0, "y": 3 },
+        "description": "소지 시 대형 회복약을 제작할 수 있는 제작서 이다.",
+        "category": "valuables",
+        "options": []
+    },
+    "3004": {
+        "id": 3004,
+        "name": "부활 물약 제작서 - 1",
+        "rank": "C",
+        "image": { "texture": "item.png", "x": 0, "y": 3 },
+        "description": "소지 시 부활 물약을 제작할 수 있는 제작서 이다.",
+        "category": "valuables",
+        "options": []
+    },
+    "3005": {
+        "id": 3005,
+        "name": "기본검 제작서 - 1",
+        "rank": "C",
+        "image": { "texture": "item.png", "x": 0, "y": 3 },
+        "description": "소지 시 기본검을 제작할 수 있는 제작서 이다.",
+        "category": "valuables",
         "options": []
     }
 }
