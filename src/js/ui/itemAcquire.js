@@ -68,9 +68,7 @@ export default class ItemAcquire extends Panel {
 
   update() {
     if (this.items.length > 0) {
-
       this.options.classList.add('items');
-      
       this.items.forEach((item) => {
         let wrap = new MakeDom('section', 'option');
         let option = new ItemImage(item.data.image.texture, item.data.image.x, item.data.image.y);
@@ -89,12 +87,16 @@ export default class ItemAcquire extends Panel {
 
   onSubmit() {
     this.onclose();
-    this.callback('ok');
+    if(this.callback) {
+      this.callback('ok');
+    }
   }
 
   onCancel() {
       this.onclose();
-      this.callback('cancel');
+      if(this.callback) {
+        this.callback('cancel');
+      }
   }
 
   onclose() {

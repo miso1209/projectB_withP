@@ -250,7 +250,7 @@ export default class DomUI extends EventEmitter {
         const acquire = new ItemAcquire(pane, text, inputs, (response) => {
             this.removeContainer(pane);
 
-            if (response) {
+            if (result) {
                 console.log(response);
                 result();
             }
