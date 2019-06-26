@@ -14,22 +14,39 @@ export default class Combiner {
     constructor() {
     }
 
-    getRecipes(category, inventory) {
+    getRecipes(inventory) {
         const result = [];
-        // 해당 타입의 레시피를 반환한다
-        // 인벤토리를 참고해서 활성하 비활성화를 표기한다
-        filter(category, (recipe) => {
-            recipe.owned = inventory.getCount(recipe.item);
-            recipe.data = items[recipe.item];
-            recipe.available = true;
-            for(const mat of recipe.materials) {
-                mat.owned = inventory.getCount(mat.item);
-                mat.data = items[mat.item];
+        const playerRecipes = {};
+        inventory.forEach((item) => {
+            if (item.category === 'valuables') {
+                const itemId = recipes[item.id].item;
+                const recipeItem = items[itemId];
 
-                recipe.available &= (mat.count <= mat.owned);
+                if (!playerRecipes[recipeItem.category]) {
+                    playerRecipes[recipeItem.category] = [];
+                }
+                playerRecipes[recipeItem.category].push(recipes[item.id]);
             }
-            result.push(recipe);
         });
+
+        for (let key in playerRecipes) {
+            playerRecipes[key].forEach((recipe) => {
+                recipe.owned = inventory.getCount(recipe.item);
+                recipe.data = items[recipe.item];
+                recipe.available = true;
+                for(const mat of recipe.materials) {
+                    mat.owned = inventory.getCount(mat.item);
+                    mat.data = items[mat.item];
+    
+                    recipe.available &= (mat.count <= mat.owned);
+                }
+            });
+            result.push({
+                category: key,
+                recipes: playerRecipes[key]
+            });
+        }
+
         return result;
     }
 
@@ -37,7 +54,6 @@ export default class Combiner {
         // 해당 아이템을 조합한다
         // 레시피를 보고 인벤토리에서 아이템을 제거한다
         // 모든 아이템 제거가 끝나면 새로운 아이템을 추가한다
-
 
         const recipe = recipes[id];
         if (!recipe) {

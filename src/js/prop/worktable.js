@@ -22,12 +22,11 @@ export default class WorkTable extends PropBase {
 
     touch(game) {
         if (this.upgraded) {
-            const recipes = game.getRecipes('consumables');
-            const data = [{category: 'consumables', recipes: recipes}];
-            game.ui.showCombineItemList(data, (item) => {
+            const recipes = game.getRecipes();
+            game.ui.showCombineItemList(recipes, (item) => {
                 // TODO : 나중에 아이템 이름과 아이콘을 표시할수 있도록 하자
                 game.ui.showCraftUI(null, () => {
-                    game.combine(item.item);
+                    game.combine(item.id);
                     // 아이템 획득 UI 를 표시한다
                     const inst = game.player.inventory.getItem(item.item);
                     game.ui.showItemAcquire(null, inst);

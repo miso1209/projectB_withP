@@ -1,25 +1,30 @@
 {
     "3001": {
+        "id": 3001,
         "item": 1001,
         "materials": [
             { "item":2001, "count": 1 }
         ]
     },"3002": {
+        "id": 3002,
         "item": 1002,
         "materials": [
             { "item":2001, "count": 1 }
         ]
     }, "3003": {
+        "id": 3003,
         "item": 1003,
         "materials": [
             { "item":2001, "count": 1 }
         ]
     }, "3004": {
+        "id": 3004,
         "item": 1004,
         "materials": [
             { "item":2001, "count": 1 }
         ]
     }, "3005": {
+        "id": 3005,
         "item": 1,
         "materials": [
             { "item":2001, "count": 1 }

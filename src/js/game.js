@@ -230,7 +230,7 @@ export default class Game extends EventEmitter {
             // 그냥 평범하게 집에 들어간다
             this.ui.showTheaterUI(0.5);
 
-            this.$enterStage("assets/mapdata/open_road_3.json", "road3-to-road2").then(() => {
+            this.$enterStage("assets/mapdata/house.json", "house-gate").then(() => {
                 this.exploreMode.interactive = true;
                 this.stage.showPathHighlight = true;
                 this.ui.hideTheaterUI(0.5);
@@ -624,8 +624,9 @@ export default class Game extends EventEmitter {
         return true;
     }
 
-    getRecipes(category) {
-        const recipes = this.combiner.getRecipes(category, this.player.inventory);
+    // 인벤토리에 있는 레시피들을 가져와야할듯하다.
+    getRecipes() {
+        const recipes = this.combiner.getRecipes(this.player.inventory);
         return recipes;
     }
 
