@@ -2,107 +2,41 @@
     "1": {
         "id": 1,
         "name": "기본검",
+        "rank": "C",
         "image": { "texture": "items.png", "x": 0, "y": 9 },
         "description": "흔히 볼 수 있는 평범한 무기",
         "category": "weapon",
-        "classes": ["warrior"],
+        "classes": ["warrior", "wizard", "healer", "archer"],
         "subcategory": "sword",
-        "options": ["attack(+10)", "critical(+1)"]
+        "options": ["strength(+3)"]
     },
     "2":{
         "id": 2,
         "name": "기본갑옷",
+        "rank": "C",
         "image": { "texture": "items.png", "x": 0, "y": 12 },
         "description": "흔히 볼 수 있는 평범한 갑옷",
         "category": "armor",
         "classes": ["warrior", "wizard", "healer", "archer"],
         "subcategory": "medium-armor",
-        "options": ["armor(+5)", "stamina(+1)", "speed(+1)"]
+        "options": ["stamina(+3)"]
     },
     "3":{
         "id": 3,
-        "name": "견습자의 검",
-        "image": { "texture": "items.png", "x": 1, "y": 9 },
-        "description": "견습자용 검",
-        "category": "weapon",
-        "classes": ["warrior"],
-        "subcategory": "medium-armor",
-        "options": ["attack(+11)", "critical(+2)"]
-    },
-    "4":{
-        "id": 4,
-        "name": "견습자의 갑옷",
-        "image": { "texture": "items.png", "x": 1, "y": 12 },
-        "description": "견습자용 갑옷",
-        "category": "armor",
-        "classes": ["warrior", "wizard", "healer", "archer"],
-        "subcategory": "medium-armor",
-        "options": ["armor(+6)", "stamina(+3)"]
-    },
-    "5":{
-        "id": 5,
-        "name": "견습자의 반지",
-        "image": { "texture": "items.png", "x": 9, "y": 3 },
-        "description": "견습자의 목걸이와 세트",
+        "name": "기본장갑",
+        "rank": "C",
+        "image": { "texture": "items.png", "x": 15, "y": 11 },
+        "description": "흔히 볼 수 있는 평범한 장갑",
         "category": "accessory",
         "classes": ["warrior", "wizard", "healer", "archer"],
-        "subcategory": "accessory-ring",
-        "options": ["armor(+5)", "agility(+5)"]
-    },
-    "6":{
-        "id": 6,
-        "name": "견습자의 목걸이",
-        "image": { "texture": "items.png", "x": 1, "y": 1 },
-        "description": "견습자의 반지와 세트",
-        "category": "accessory",
-        "classes": ["warrior", "wizard", "healer", "archer"],
-        "subcategory": "accessory-necklace",
-        "options": ["armor(+3)", "agility(+10)"]
-    },
-    "7":{
-        "id": 7,
-        "name": "여행자의 검",
-        "image": { "texture": "items.png", "x": 5, "y": 9 },
-        "description": "여행자의 갑옷과 세트",
-        "category": "weapon",
-        "classes": ["warrior"],
-        "subcategory": "medium-armor",
-        "options": ["attack(+11)", "strength(+3)", "critical(+3)"]
-    },
-    "8":{
-        "id": 8,
-        "name": "여행자의 갑옷",
-        "image": { "texture": "items.png", "x": 6, "y": 12 },
-        "description": "여행자의 검과 세트",
-        "category": "armor",
-        "classes": ["warrior", "wizard", "healer", "archer"],
-        "subcategory": "medium-armor",
-        "options": ["armor(+6)", "stamina(+5)"]
-    },
-    "9":{
-        "id": 9,
-        "name": "여행자의 반지",
-        "image": { "texture": "items.png", "x": 15, "y": 3 },
-        "description": "여행자의 목걸이와 세트",
-        "category": "accessory",
-        "classes": ["warrior", "wizard", "healer", "archer"],
-        "subcategory": "accessory-ring",
-        "options": ["armor(+3)", "strength(+5)"]
-    },
-    "10":{
-        "id": 10,
-        "name": "여행자의 목걸이",
-        "image": { "texture": "items.png", "x": 2, "y": 1 },
-        "description": "여행자의 반지와 세트",
-        "category": "accessory",
-        "classes": ["warrior", "wizard", "healer", "archer"],
-        "subcategory": "accessory-necklace",
-        "options": ["armor(+3)", "agility(+7)"]
+        "subcategory": "gloves",
+        "options": ["agility(+3)"]
     },
 
     "1001": {
         "id": 1001,
         "name": "소형 회복약",
+        "rank": "C",
         "image": { "texture": "items.png", "x": 2, "y": 0 },
         "description": "체력을 소량 회복한다",
         "category": "consumables",
@@ -111,6 +45,7 @@
     "1002": {
         "id": 1002,
         "name": "중형 회복약",
+        "rank": "C",
         "image": { "texture": "items.png", "x": 8, "y": 0 },
         "description": "체력을 회복한다",
         "category": "consumables",
@@ -119,6 +54,7 @@
     "1003": {
         "id": 1003,
         "name": "대형 회복약",
+        "rank": "B",
         "image": { "texture": "items.png", "x": 14, "y": 0 },
         "description": "체력을 대량 회복한다",
         "category": "consumables",
@@ -127,6 +63,7 @@
     "1004": {
         "id": 1004,
         "name": "부활 물약",
+        "rank": "B",
         "image": { "texture": "items.png", "x": 21, "y": 0 },
         "description": "사망한 캐릭터를 부활시킨다",
         "category": "consumables",
@@ -136,6 +73,7 @@
     "2001": {
         "id": 2001,
         "name": "약초",
+        "rank": "C",
         "image": { "texture": "items.png", "x": 8, "y": 4 },
         "description": "흔히 볼수 있는 식물",
         "category": "material",
@@ -144,6 +82,7 @@
     "2002": {
         "id": 2002,
         "name": "희귀 약초",
+        "rank": "C",
         "image": { "texture": "items.png", "x": 7, "y": 4 },
         "description": "흔히 볼수 없는 식물",
         "category": "material",

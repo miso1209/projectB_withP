@@ -116,33 +116,40 @@ export default class Character {
 
     get maxHealth() {
         // 소숫점의 체력은 버린다.
-        return Math.floor(this.baseMaxHealth + this.plusMaxHealth) * this.rank.strong;
+        const maxHealth = this.simulatedMaxHealth?this.simulatedMaxHealth:this.plusMaxHealth;
+        return Math.floor(this.baseMaxHealth + maxHealth) * this.rank.strong;
     }
 
     get strength() {
-        return this.baseStrength + this.plusStrength;
+        const strength = this.simulatedStrength?this.simulatedStrength:this.plusStrength;
+        return this.baseStrength + strength;
     }
 
     // 민첩은 크리티컬 데미지에 사용한다. 100 Agility에 100% 추가데미지.
     get agility() {
-        return this.baseAgility + this.plusAgility;
+        const agility = this.simulatedAgility?this.simulatedAgility:this.plusAgility;
+        return this.baseAgility + agility;
     }
 
     // REG 저항력을 어디에 사용해야 할까.. 꼭 있어야 할까?
     get regist() {
-        return this.baseRegist + this.plusRegist;
+        const regist = this.simulatedRegist?this.simulatedRegist:this.plusRegist;
+        return this.baseRegist + regist;
     }
 
     get intellect() {
-        return this.baseIntellect + this.plusIntellect;
+        const intellect = this.simulatedIntellect?this.simulatedIntellect:this.plusIntellect;
+        return this.baseIntellect + intellect;
     }
 
     get stamina() {
-        return this.baseStamina + this.plusStamina;
+        const stamina = this.simulatedStamina?this.simulatedStamina:this.plusStamina;
+        return this.baseStamina + stamina;
     }
 
     get critical() {
-        return (this.baseCritical + this.plusCritical)>=1?1:(this.baseCritical + this.plusCritical);
+        const critical = this.simulatedCritical?this.simulatedCritical:this.plusCritical;
+        return (this.baseCritical + critical)>=1?1:(this.baseCritical + critical);
     }
 
     // 기본적인 크리티컬 데미지는 1.2배로 한다.
@@ -175,19 +182,23 @@ export default class Character {
     }
 
     get attack() {
-        return Math.floor(this.strength * this.attackPotential * 10) + this.plusAttack;
+        const attack = this.simulatedAttack?this.simulatedAttack:this.plusAttack;
+        return Math.floor(this.strength * this.attackPotential * 10) + (attack);
     }
 
     get magic() {
-        return Math.floor(this.intellect * this.magicPotential * 10) + this.plusMagic;
+        const magic = this.simulatedMagic?this.simulatedMagic:this.plusMagic;
+        return Math.floor(this.intellect * this.magicPotential * 10) + (magic);
     }
 
     get armor() {
-        return Math.floor(this.stamina * this.armorPotential) + this.plusArmor;
+        const armor = this.simulatedArmor?this.simulatedArmor:this.plusArmor;
+        return Math.floor(this.stamina * this.armorPotential) + (armor);
     }
 
     get speed() {
-        return this.baseSpeed + this.plusSpeed;
+        const speed = this.simulatedSpeed?this.simulatedSpeed:this.plusSpeed;
+        return this.baseSpeed + speed;
     }
 
     get class() {
