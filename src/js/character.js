@@ -12,7 +12,7 @@ export default class Character {
         this.id = id;
         this.level = 1;
         this.exp = 0;
-        this.rank = rank?rank:1;
+        this.rank = rank?rank:{ strong: 1, display: 'C' };
         
         const data = characters[id];
         this.data = data;
@@ -83,40 +83,40 @@ export default class Character {
     }
 
     get baseMaxHealth() {
-        return this.getParam('health', this.level) * this.rank;
+        return this.getParam('health', this.level) * this.rank.strong;
     }
     
     get baseStrength() {
-        return this.getParam('strength', this.level) * this.rank;
+        return this.getParam('strength', this.level) * this.rank.strong;
     }
     
     get baseIntellect() {
-        return this.getParam('intellect', this.level) * this.rank;
+        return this.getParam('intellect', this.level) * this.rank.strong;
     }
     
     get baseAgility() {
-        return this.getParam('agility', this.level) * this.rank;
+        return this.getParam('agility', this.level) * this.rank.strong;
     }
 
     get baseStamina() {
-        return this.getParam('stamina', this.level) * this.rank;
+        return this.getParam('stamina', this.level) * this.rank.strong;
     }
 
     get baseSpeed() {
-        return this.getParam('speed', this.level) * this.rank;
+        return this.getParam('speed', this.level) * this.rank.strong;
     }
     
     get baseCritical() {
-        return this.getParam('critical', this.level) * this.rank;
+        return this.getParam('critical', this.level) * this.rank.strong;
     }
 
     get baseRegist() {
-        return this.getParam('regist', this.level) * this.rank;
+        return this.getParam('regist', this.level) * this.rank.strong;
     }
 
     get maxHealth() {
         // 소숫점의 체력은 버린다.
-        return Math.floor(this.baseMaxHealth + this.plusMaxHealth) * this.rank;
+        return Math.floor(this.baseMaxHealth + this.plusMaxHealth) * this.rank.strong;
     }
 
     get strength() {
@@ -235,8 +235,6 @@ export default class Character {
 
     unequip(slot) {
         const item = this.equipments[slot];
-        console.log(item);
-        
         if (item) {
             this.equipments[slot] = null;
             // 아이템 옵션을 적용한다
@@ -281,7 +279,7 @@ export default class Character {
                 break;
             case "healthRecovery":
                 if (this.health > 0) {
-                    this.health += this.maxHealth * Number(option.args[0]);
+                    this.health += Math.round(this.maxHealth * Number(option.args[0]));
                     this.health = Math.min(this.maxHealth, this.health);
                 } else {
                     result = false;
@@ -317,9 +315,8 @@ export default class Character {
                 break;
         }
 
-        return result;
-
         this.refreshSimulationData();
+        return result;
     }
 
     clearOption(option) {
