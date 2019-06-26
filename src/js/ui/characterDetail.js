@@ -169,7 +169,6 @@ export default class CharacterDetail extends Panel {
     this.descName.innerText = this.selected.displayName;
     this.portrait.src = path + this.selected.data.portrait;
     this.level.innerText = 'Lv.' + this.selected.level;
-    this.dps.innerText = `총 전투력 : ${this.selected.totalPowerFigure}`;
 
     // 캐릭터 정보 업데이트
     this.updateEquip();
@@ -178,8 +177,10 @@ export default class CharacterDetail extends Panel {
   }
 
   updateStat() {
-    this.statWrap.innerHTML = '';
+    console.log('=== updateStat');
 
+    this.statWrap.innerHTML = '';
+    this.dps.innerText = `총 전투력 : ${this.selected.totalPowerFigure}`;
     this.statDps.innerText = `공격력 : ${this.selected.strongFigure}`;
     this.statArmor.innerText = `방어력 : ${this.selected.armorFigure}`;
 

@@ -131,7 +131,6 @@ body.battle .gnbContainer.battleMode {
   /* 클릭이벤트 막기. */
   /* pointer-events: none; */
   background:none;
-  /* transition: all 0.3s; */
 }
 
 .uiContainer * {
@@ -143,6 +142,8 @@ body.battle .gnbContainer.battleMode {
   z-index: 1111;
   position: fixed;
   pointer-events: none;
+
+  transition: all 0.3s;
 }
 
 #theater {

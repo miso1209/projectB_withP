@@ -53,7 +53,6 @@ export default class DomUI extends EventEmitter {
             {name:'캐릭터', event: "characterselect"},
             {name:'보관함', event: "inventory"},
             {name:'파티', event: "party"}
-            // 아래 메뉴는 기획이 미정이어서 감춤
             // {name:'퀘스트', event: "quest"},
             // {name:'설정', event: "options"}
         ];
@@ -121,6 +120,23 @@ export default class DomUI extends EventEmitter {
         this.minimapDOM.style.display = 'none';
     }
 
+    hideAllModal(){
+        console.log('hideAllModal');
+
+        const currentUI = document.querySelector('.uiContainer');
+        if (currentUI) {
+            currentUI.style.opacity = 0;
+        }
+    }
+
+    removeAllModal() {
+        console.log('remove');
+        const currentUI = document.querySelector('.uiContainer');
+        if (currentUI) {
+            currentUI.parentNode.removeChild(currentUI);
+        }
+    }
+    
     showStageTitle(text) {
         // TODO : safari에서 오류.. 애니메이션 수정할 것.
         const pane = this.createContainer();
@@ -287,7 +303,7 @@ export default class DomUI extends EventEmitter {
                         this.emit('useItem', selected.data.id, 1, characterSelect.selected);
                         characterSelect.updateStatus(characterSelect.selected);
                         
-                        this.emit('playerInvenData', 'consumables');
+                        this.emit('playerInvenData', {category:'consumables'});
                         characterSelect.consumablesData = this.playerInvenData;
 
                         characterSelect.createConsumablesItem(useItem);
@@ -301,28 +317,20 @@ export default class DomUI extends EventEmitter {
     showCharacterDatail(player) {
         const pane = this.createContainer();
         const characterDetail = new CharacterDetail(pane, player, (result, option) => {
-        
-            this.emit('playerInvenData', result.category);
+            
+            this.emit('playerInvenData', {category:result.category, class: player.data.class} );
 
             if (result.data !== null) {
                 if (option === 'simulationEquip') {
                     // console.log('아이템 고르기 - 시뮬레이션');
                     this.emit('simulateEquip', result.data.category, result.item, player.id);
-                    
-                    characterDetail.selected = this.player;
-                    characterDetail.updateStat();
                 } else if (option === 'cancel') {
                     // console.log('시뮬레이션 취소');
                     this.emit('cancelSimulate');
-                    
-                    characterDetail.selected = this.player;
                     characterDetail.statItem.data = null;
-                    characterDetail.updateStat();
-
                 } else if (option === 'equip') {
                     // console.log('장비 장착');
                     this.emit('equipItem', result.data.category, result.item, player.id);
-                    
                     characterDetail.statItem.data = null;
                     characterDetail.updateEquip();
                     characterDetail.showEquipInfo();
@@ -331,11 +339,13 @@ export default class DomUI extends EventEmitter {
                     this.emit('unequipItem', result.data.category, player.id);
                     characterDetail.statItem.data = null;
                     characterDetail.updateEquip();
-                    characterDetail.updateStat();
                 }
+
+                characterDetail.selected = this.player;
+                characterDetail.updateStat();
+
             } else {
                 if (this.playerInvenData.length !== 0) {
-                    this.emit('playerInvenData', result.category);
                     characterDetail.tempEquip = this.playerInvenData;
                     characterDetail.showEquipInven();
                 } else {

@@ -109,6 +109,7 @@ export default class Game extends EventEmitter {
         });
         this.ui.on('equipItem', (itemCategory, itemId, cid) => {
             this.equipItem(itemCategory, itemId, cid);
+            this.ui.player = this.player.characters[cid];
         });
         this.ui.on('simulateEquip', (itemCategory, itemId, cid) => {
             this.player.characters[cid].simulationEquip(itemCategory, itemId);
@@ -125,8 +126,9 @@ export default class Game extends EventEmitter {
             this.ui.player = this.player.characters[cid];
         });
 
-        this.ui.on('playerInvenData', (category) => {
-            this.ui.playerInvenData = this.getFiteredInventoryData({category: category});
+        // this.ui.on('playerInvenData', (category) => {
+        this.ui.on('playerInvenData', (option) => {
+            this.ui.playerInvenData = this.getFiteredInventoryData({category: option.category, class: option.class});
         });
 
         this.ui.on('stageTitle', (text) => {
@@ -396,6 +398,8 @@ export default class Game extends EventEmitter {
         this.stage.interactTarget = null;
         this.ui.showTheaterUI(0.5);
         this.ui.hideMenu();
+        this.ui.hideAllModal();
+        
         this.exploreMode.setInteractive(false);
     }
 
@@ -570,6 +574,8 @@ export default class Game extends EventEmitter {
             // 배틀을 사용한다
             this.currentMode = this.exploreMode;
             this.ui.showMenu();
+            this.ui.removeAllModal();
+
             await this.$fadeIn(0.5);
             this.exploreMode.setInteractive(true);
         }

@@ -56,7 +56,6 @@ export default class CharacterSelect extends Panel {
 
     const infoWrap = new MakeDom('div', 'infoWrap', null);
 
-    // this.dpsStat = new MakeDom('p', 'info-dps', null);
     this.portrait = document.createElement('img');
     this.portrait.style.display = 'block';
     this.portrait.style.margin = '30px auto 10px';
@@ -96,7 +95,6 @@ export default class CharacterSelect extends Panel {
 
     titleWrap.appendChild(this.level);
     titleWrap.appendChild(this.descClass);
-    // infoWrap.appendChild(this.dpsStat);
     infoWrap.appendChild(this.portrait);
     infoWrap.appendChild(this.recoveryBtn.dom);
 
@@ -189,7 +187,6 @@ export default class CharacterSelect extends Panel {
   }
 
   updateStatus(current){
-    // this.dpsStat.innerText = current.totalPowerFigure;
     this.hp.update(current.health, current.maxHealth);
     this.exp.update(current.exp, current.maxexp);
   }
