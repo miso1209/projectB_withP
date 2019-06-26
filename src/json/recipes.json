@@ -29,5 +29,17 @@
         "materials": [
             { "item":2001, "count": 1 }
         ]
+    }, "3006": {
+        "id": 3006,
+        "item": 401,
+        "materials": [
+            { "item":2001, "count": 1 }
+        ]
+    }, "3007": {
+        "id": 3007,
+        "item": 701,
+        "materials": [
+            { "item":2001, "count": 1 }
+        ]
     }
 }

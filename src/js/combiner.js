@@ -15,6 +15,14 @@ export default class Combiner {
     }
 
     getRecipes(inventory) {
+        const sorting = {
+            weapon: 1,
+            armor: 2,
+            accessory: 3,
+            material: 4,
+            consumables: 5,
+            valuables: 6
+        };
         const result = [];
         const playerRecipes = {};
         inventory.forEach((item) => {
@@ -46,6 +54,13 @@ export default class Combiner {
                 recipes: playerRecipes[key]
             });
         }
+
+        result.sort((a,b) => {
+            if (sorting[a.category] < sorting[b.category]) {
+                return -1;
+            }
+            return 1;
+        });
 
         return result;
     }

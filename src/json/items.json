@@ -138,5 +138,23 @@
         "description": "소지 시 기본검을 제작할 수 있는 제작서 이다.",
         "category": "valuables",
         "options": []
+    },
+    "3006": {
+        "id": 3006,
+        "name": "기본갑옷 제작서",
+        "rank": "C",
+        "image": { "texture": "item.png", "x": 0, "y": 3 },
+        "description": "소지 시 기본갑옷을 제작할 수 있는 제작서 이다.",
+        "category": "valuables",
+        "options": []
+    },
+    "3007": {
+        "id": 3007,
+        "name": "기본장갑 제작서",
+        "rank": "C",
+        "image": { "texture": "item.png", "x": 0, "y": 3 },
+        "description": "소지 시 기본장갑을 제작할 수 있는 제작서 이다.",
+        "category": "valuables",
+        "options": []
     }
 }
