@@ -183,7 +183,11 @@
         "category": "weapon",
         "classes": ["wizard", "healer"],
         "subcategory": "wond",
-        "options": ["intellect(+1)"]
+        "options": ["intellect(+1)"],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
     },
     "302": {
         "id": 302,
@@ -660,7 +664,11 @@
         },
         "description": "소지 시 기본검을 제작할 수 있는 제작서 이다.",
         "category": "valuables",
-        "options": []
+        "options": [],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
     },
     "3006": {
         "id": 3006,
@@ -669,7 +677,11 @@
         "image": { "texture": "item.png", "x": 0, "y": 3 },
         "description": "소지 시 기본갑옷을 제작할 수 있는 제작서 이다.",
         "category": "valuables",
-        "options": []
+        "options": [],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
     },
     "3007": {
         "id": 3007,
@@ -678,6 +690,10 @@
         "image": { "texture": "item.png", "x": 0, "y": 3 },
         "description": "소지 시 기본장갑을 제작할 수 있는 제작서 이다.",
         "category": "valuables",
-        "options": []
+        "options": [],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
     }
 }

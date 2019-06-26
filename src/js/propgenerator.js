@@ -2,12 +2,15 @@ import FloorMonsters from "./floormonsters";
 import StoryMonsters from "./storymonsters";
 import Character from "./character";
 import Monster from "./monster";
+import Items from "./items";
+
 const RANK = {
     C: 'C',
     B: 'B',
     A: 'A',
     S: 'S',
-    U: 'U'
+    U: 'U',
+    UNKNOWN: 'UNKNOWN'
 };
 
 export default class PropGenerator {
@@ -42,7 +45,43 @@ export default class PropGenerator {
         return chest;
     }
 
-    createRecipe(currentFloor, isBoss) {
+    createRecipe(floor, isBoss) {
+        let success = false;
+        const recipes = [];
+        let rank = this.getOneOfAllRank().display;
+        console.log("rank",rank);
+
+        while (!success) {
+            const filteredRecipes = [];
+            for (let key in Items) {
+                const item = Items[key];
+                if (item.rank === rank && item.category === "valuables") {
+                    filteredRecipes.push(item);
+                }
+            }
+    
+            filteredRecipes.forEach((item) => {
+                if (item.generateFloor.begin <= floor && item.generateFloor.end >= floor) {
+                    recipes.push(item);
+                }
+            });
+
+            if (recipes.length === 0) {
+                rank = this.getUnderRank(rank);
+                if (rank === RANK.UNKNOWN) {
+                    rank = RANK.C;
+                    console.log('no rank, no floor', floor, rank);
+                    floor--;
+                }
+                success = false;
+            } else {
+                success = true;
+            }
+        }
+
+        const recipe = recipes[Math.round(Math.random() * (recipes.length - 1))];
+        console.log(recipe)
+
         // 여기에 리워드 박아서 주면 되겠다.
         return {
             tileData: {
@@ -103,7 +142,7 @@ export default class PropGenerator {
         return new Monster(StoryMonsters[type]);
     }
 
-    getMonsterRank() {
+    getOneOfAllRank() {
         /*
             몬스터의 Rank도 있지만,
             생성되는 몬스터의 질(급) 또한 랜덤으로 정해준다.
@@ -168,7 +207,7 @@ export default class PropGenerator {
             break;
 
             case RANK.C:
-                console.log('rank error');
+                resultRank = RANK.UNKNOWN;
             break;
         }
 
@@ -211,6 +250,11 @@ export default class PropGenerator {
 
             if (resultMonsters.length === 0) {
                 rank = this.getUnderRank(rank);
+                if (rank === RANK.UNKNOWN) {
+                    rank = RANK.C;
+                    console.log('no rank, no floor', floor, rank);
+                    floor--;
+                }
                 success = false;
             } else {
                 success = true;
@@ -244,7 +288,7 @@ export default class PropGenerator {
 
         monsters.forEach((monster) => {
             // 몬스터의 Rank는 C - U까지 랜덤하게 생성하고, 100% - 150%의 강함을 가지자.
-            const monsterRank = isBoss?{strong: 1.3, display:'U'}:this.getMonsterRank();
+            const monsterRank = isBoss?{strong: 1.3, display:'U'}:this.getOneOfAllRank();
             const character = new Character(monster.character.id, monsterRank);
             character.level = monster.character.baseLevel + Math.floor(monster.character.levelUpPerFloor * floor);
             character.level += Math.round(Math.random() * 1.8);

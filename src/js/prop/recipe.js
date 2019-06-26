@@ -7,6 +7,7 @@ export default class Recipe extends PropBase {
         this.isInteractive = true;
         this.isOpened = false;
         this.recipe = tileData.recipe;
+        console.log(this.recipe);
     }
 
     touch(game) {

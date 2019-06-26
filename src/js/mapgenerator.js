@@ -246,9 +246,11 @@ export default class MapGenerator {
                     await stage.$load(stageName);
                     stage.setTags(this.tags);
 
-                    let recipe = this.propGenerator.createRecipe(this.currentFloor);
+                    if (Math.random() <= 0.15) {
+                        let recipe = this.propGenerator.createRecipe(this.currentFloor);
+                        stage.addProp(recipe.tileData, recipe.directions);
+                    }
                     let chest = this.propGenerator.createChest(this.currentFloor);
-                    stage.addProp(recipe.tileData, recipe.directions);
                     stage.addProp(chest);
     
                     realMap[y][x] = stage;
@@ -258,9 +260,11 @@ export default class MapGenerator {
                     await stage.$load(stageName);
                     stage.setTags(this.tags);
 
-                    let recipe = this.propGenerator.createRecipe(this.currentFloor);
+                    if (Math.random() <= 0.15) {
+                        let recipe = this.propGenerator.createRecipe(this.currentFloor);
+                        stage.addProp(recipe.tileData, recipe.directions);
+                    }
                     let chest = this.propGenerator.createChest(this.currentFloor);
-                    stage.addProp(recipe.tileData, recipe.directions);
                     stage.addProp(chest);
     
                     realMap[y][x] = stage;
@@ -270,9 +274,11 @@ export default class MapGenerator {
                     await stage.$load(stageName);
                     stage.setTags(this.tags);
 
-                    let recipe = this.propGenerator.createRecipe(this.currentFloor);
+                    if (Math.random() <= 0.15) {
+                        let recipe = this.propGenerator.createRecipe(this.currentFloor);
+                        stage.addProp(recipe.tileData, recipe.directions);
+                    }
                     let chest = this.propGenerator.createChest(this.currentFloor);
-                    stage.addProp(recipe.tileData, recipe.directions);
                     stage.addProp(chest);
     
                     realMap[y][x] = stage;
@@ -283,9 +289,11 @@ export default class MapGenerator {
                     await stage.$load(stageName);
                     stage.setTags(this.tags);
 
-                    let recipe = this.propGenerator.createRecipe(this.currentFloor);
+                    if (Math.random() <= 0.15) {
+                        let recipe = this.propGenerator.createRecipe(this.currentFloor);
+                        stage.addProp(recipe.tileData, recipe.directions);
+                    }
                     let chest = this.propGenerator.createChest(this.currentFloor);
-                    stage.addProp(recipe.tileData, recipe.directions);
                     stage.addProp(chest);
 
                     const monster = this.propGenerator.createMonster(this.currentFloor);
@@ -301,9 +309,11 @@ export default class MapGenerator {
                     await stage.$load(stageName);
                     stage.setTags(this.tags);
 
-                    let recipe = this.propGenerator.createRecipe(this.currentFloor);
+                    if (Math.random() <= 0.15) {
+                        let recipe = this.propGenerator.createRecipe(this.currentFloor);
+                        stage.addProp(recipe.tileData, recipe.directions);
+                    }
                     let chest = this.propGenerator.createChest(this.currentFloor);
-                    stage.addProp(recipe.tileData, recipe.directions);
                     stage.addProp(chest);
     
                     realMap[y][x] = stage;
@@ -314,9 +324,11 @@ export default class MapGenerator {
                     await stage.$load(stageName);
                     stage.setTags(this.tags);
 
-                    let recipe = this.propGenerator.createRecipe(this.currentFloor);
+                    if (Math.random() <= 0.15) {
+                        let recipe = this.propGenerator.createRecipe(this.currentFloor);
+                        stage.addProp(recipe.tileData, recipe.directions);
+                    }
                     let chest = this.propGenerator.createChest(this.currentFloor);
-                    stage.addProp(recipe.tileData, recipe.directions);
                     stage.addProp(chest);
     
                     realMap[y][x] = stage;
