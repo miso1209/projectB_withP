@@ -284,7 +284,7 @@ export default class DomUI extends EventEmitter {
         });
         
         // consumables
-        this.emit('playerInvenData', 'consumables');
+        this.emit('playerInvenData', {category: 'consumables'});
         characterSelect.consumablesData = this.playerInvenData;
 
         const useItem = ((selected) => {
@@ -309,7 +309,17 @@ export default class DomUI extends EventEmitter {
         const pane = this.createContainer();
         const characterDetail = new CharacterDetail(pane, player, (result, option) => {
             
-            this.emit('playerInvenData', {category:result.category, class: player.data.class} );
+            if (option === 'close') {
+                this.emit('cancelSimulate');
+                this.emit('characterselect');
+                return;
+            } else {
+                this.emit('playerInvenData', {category:result.category, class: player.data.class} );
+            }
+            
+            if (characterDetail.pauseData !== null) {
+                this.emit('playerInvenData', {category:characterDetail.pauseData, class: player.data.class} );
+            }
 
             if (result.data !== null) {
                 if (option === 'simulationEquip') {
@@ -325,11 +335,13 @@ export default class DomUI extends EventEmitter {
                     characterDetail.statItem.data = null;
                     characterDetail.updateEquip();
                     characterDetail.showEquipInfo();
+                    characterDetail.pauseData = null;
                 } else {
                     // console.log('장비 해제');
                     this.emit('unequipItem', result.data.category, player.id);
                     characterDetail.statItem.data = null;
                     characterDetail.updateEquip();
+                    characterDetail.pauseData = null;
                 }
 
                 characterDetail.selected = this.player;
@@ -337,7 +349,7 @@ export default class DomUI extends EventEmitter {
 
             } else {
                 if (this.playerInvenData.length !== 0) {
-                    characterDetail.tempEquip = this.playerInvenData;
+                    characterDetail.tempEquipData = this.playerInvenData;
                     characterDetail.showEquipInven();
                 } else {
                     this.showConfirmModal('장착가능한 장비가 없습니다.', false, ()=>{

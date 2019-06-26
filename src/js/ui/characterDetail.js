@@ -13,15 +13,16 @@ export default class CharacterDetail extends Panel {
     this.selected = input;
     this.statItem = null; 
     this.isActive = null; // 장비, 스킬 아이콘 같이 체크해야함.
+    this.pauseData = null; // 캔슬할때 임시로 데이터 담아두기
     this.callback = result;
-    this.tempEquip = null;
-
+    this.tempEquipData = null;
+    
     // 모달
     const modal = new Modal(pane, 800, 460);
-
+    modal.dom.classList.add('characterDetail');
     modal.addTitle('캐릭터 정보');
     modal.addCloseButton();
-    modal.dom.classList.add('characterDetail');
+    modal.closeBtn.addEventListener('click', this.closeModal.bind(this, 'close'));
     this.dom = modal.dom;
 
     // 모달 내부 컨텐츠 영역
@@ -54,6 +55,7 @@ export default class CharacterDetail extends Panel {
     this.dps = new MakeDom('p', 'stat_dps');
     this.dps.style.paddingTop = '10px';
     this.dps.style.fontSize = '18px';
+    
     // 캐릭터 정보
     this.portrait = new MakeDom('img', 'profile');
     this.portrait.style.display = 'block';
@@ -177,8 +179,6 @@ export default class CharacterDetail extends Panel {
   }
 
   updateStat() {
-    console.log('=== updateStat');
-
     this.statWrap.innerHTML = '';
     this.dps.innerText = `총 전투력 : ${this.selected.totalPowerFigure}`;
     this.statDps.innerText = `공격력 : ${this.selected.strongFigure}`;
@@ -210,7 +210,6 @@ export default class CharacterDetail extends Panel {
   updateEquip(){
     this.equipItems.innerHTML = '';
     let index = -1;
-    //장착하고 있는 아이템정보와 별개로, 장착가능한 장비정보를 인벤에서 로드해야하므로 카테고리인자값이 필요함. 
     let equipItemsData = [
       {data: null, category: 'armor', displayName: '갑옷'},
       {data: null, category: 'weapon', displayName: '무기'},
@@ -221,9 +220,7 @@ export default class CharacterDetail extends Panel {
     equipItemsData[2].data = this.selected.equipments.accessory;
     
     equipItemsData.forEach(d => {
-
       ++index;
-
       let liWrap = new MakeDom('li');
       let descText = new MakeDom('span', 'descText', '');
       liWrap.appendChild(descText);
@@ -316,7 +313,7 @@ export default class CharacterDetail extends Panel {
     let status = null;
 
     if (this.statItem.data !== null) {
-      if(this.tempEquip !== null) { // 시뮬레이션 데이터
+      if(this.tempEquipData !== null) { // 시뮬레이션 데이터
         status = 'tempEquip';
       } else { // 실제 장비를 장착하고 잇는 중. 
         status = 'unEquip';
@@ -335,7 +332,7 @@ export default class CharacterDetail extends Panel {
     this.equipBtn.dom.style.display = 'none';
     this.cancelBtn.dom.style.display = 'none';
 
-    if( _status === 'simulationEquip') {
+    if( _status === 'simulationEquip' ||  _status === 'cancel' ) {
       this.equipBtn.dom.style.display = 'block';
       this.cancelBtn.dom.style.display = 'none';
       this.equipBtn.dom.innerText = '장비장착';
@@ -352,7 +349,7 @@ export default class CharacterDetail extends Panel {
       this.equipBtn.dom.innerText = '확인';
       this.equipBtn.dom.setAttribute('value', 'equip');
       this.cancelBtn.dom.setAttribute('value', 'cancel');
-    }
+    } 
   }
 
   showEquipInven() {
@@ -363,7 +360,7 @@ export default class CharacterDetail extends Panel {
     let isActive = null;
     let index = -1;
 
-    this.tempEquip.forEach(item => {
+    this.tempEquipData.forEach(item => {
       ++index;
 
       let liWrap = new MakeDom('li', 'slot');
@@ -373,12 +370,6 @@ export default class CharacterDetail extends Panel {
       let itemIcon = new ItemImage(item.data.image.texture, item.data.image.x, item.data.image.y);
       itemIcon.dom.style.display = 'inline-block';
       liWrap.appendChild(itemIcon.dom);
-
-      // if(index === 0) {
-      //   isActive = liWrap;
-      //   liWrap.classList.add('active');
-      // }
-
       liWrap.addEventListener('click', ()=>{
         if(isActive) {
           isActive.classList.remove('active');
@@ -402,25 +393,29 @@ export default class CharacterDetail extends Panel {
   equipCallback(attr) {
     let flag = null;
 
-    if(attr === null) {
+    if (attr === null) {
       flag = 'simulationEquip';
     } else {
       flag = attr.value;
+      
       if (flag === 'equip') {
         this.hideEquipInven();
-        this.tempEquip = null;
+        this.tempEquipData = null;
       } else if (flag === 'cancel') {
+        this.pauseData = this.statItem.data.category;
+        this.tempEquipData = null;
         this.hideEquipInven();
-        this.tempEquip = null;
       } else if (flag === 'unEquip'){ 
         flag = 'unEquip';
       } 
-      console.log(flag);
     }
-
     this.updateInfo(flag);
     this.callback(this.statItem, flag);
     this.showEquipInfo();
+  }
+
+  closeModal(){
+    this.callback(this.statItem, 'close');
   }
 }
 

@@ -90,6 +90,7 @@ export default class CharacterSelect extends Panel {
     moreButton.moveToCenter(0);
     moreButton.moveToBottom(15);
     moreButton.dom.addEventListener('click', (ok)=> {
+      this.hideModal();
       return this.callback(this.selected);
     });
 
