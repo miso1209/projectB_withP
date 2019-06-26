@@ -1,2 +1,2 @@
-const monsters = require("json/floormonsters.json");
-export default monsters;
+const FloorMonsters = require("json/floormonsters.json");
+export default FloorMonsters;

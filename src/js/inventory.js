@@ -66,7 +66,7 @@ export default class Inventory {
     
     load(data) {
         for (const itemId in data.inventory) {
-            this.addItem(itemId, data[itemId]);
+            this.addItem(itemId, data.inventory[itemId]);
         }
         this.gold = data.gold;
         this.clearDirty();

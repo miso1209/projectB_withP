@@ -1,4 +1,5 @@
-import monsters from "./floormonsters";
+import FloorMonsters from "./floormonsters";
+import StoryMonsters from "./storymonsters";
 import Character from "./character";
 import Monster from "./monster";
 const RANK = {
@@ -11,6 +12,52 @@ const RANK = {
 
 export default class PropGenerator {
     constructor() {
+    }
+    createChest(currentFloor, isBoss) {
+        let chest = {
+            type: "chest",
+            texture: PIXI.Texture.fromFrame('castle_treasurebox.png'),
+            movable: false,
+            xsize: 1,
+            ysize: 2
+        };
+        if (Math.random() <= 0.5) {
+            chest = {
+                type: "chest",
+                texture: PIXI.Texture.fromFrame('castle_treasurebox_flip.png'),
+                movable: false,
+                xsize: 2,
+                ysize: 1,
+                imageOffset: {
+                    x:-16,
+                    y:0
+                },
+                nameTagOffset: {
+                    x: -16,
+                    y: -8
+                }
+            };
+        }
+
+        return chest;
+    }
+
+    createRecipe(currentFloor, isBoss) {
+        // 여기에 리워드 박아서 주면 되겠다.
+        return {
+            tileData: {
+                type: "recipe",
+                texture: PIXI.Texture.fromFrame('recipeshelf_front_1x1_flip.png'),
+                movable: false,
+                xsize: 1,
+                ysize: 1,
+                rank: 'C',
+                recipe: 3001
+            },
+            directions: {
+                ne: true
+            }
+        }
     }
 
     createMonster(currentFloor, isBoss) {
@@ -50,6 +97,10 @@ export default class PropGenerator {
             monsters.push(this.getMonster(currentFloor, monsterRank));
         }
         return new Monster(this.makeMonsterParty(monsters, currentFloor, isBoss));
+    }
+
+    createStoryMonster(type) {
+        return new Monster(StoryMonsters[type]);
     }
 
     getMonsterRank() {
@@ -145,8 +196,8 @@ export default class PropGenerator {
 
         while (!success) {
             const filteredMonsters = [];
-            for (let key in monsters) {
-                const monster = monsters[key];
+            for (let key in FloorMonsters) {
+                const monster = FloorMonsters[key];
                 if (monster.rank === rank) {
                     filteredMonsters.push(monster);
                 }

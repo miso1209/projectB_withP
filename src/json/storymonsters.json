@@ -1,5 +1,5 @@
 {
-    "house": [{
+    "archer": {
         "name" : "Lv 1 밀루다[B]",
         "field": {
             "character": 2,
@@ -17,6 +17,6 @@
         "rewards": {
             "1": 1
         },
-        "description": "테스트용 몬스터 세트"
-    }]
+        "description": "밀루다 획득 스토리 몬스터."
+    }
 }

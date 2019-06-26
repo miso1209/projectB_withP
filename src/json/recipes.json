@@ -1,10 +1,16 @@
 {
     "3001": {
+        "description": "소형 회복약 레시피",
         "id": 3001,
         "item": 1001,
         "materials": [
             { "item":2001, "count": 1 }
-        ]
+        ],
+        "rank": "C",
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
     },"3002": {
         "id": 3002,
         "item": 1002,

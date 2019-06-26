@@ -853,7 +853,7 @@ export default class Stage extends PIXI.Container {
             xsize: 1,
             ysize: 1
         };
-        this.addProp(recipe, { ne:true });
+        this.addProp(recipe);
     }
 
     enter() {

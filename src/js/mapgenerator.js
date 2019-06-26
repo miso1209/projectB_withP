@@ -218,6 +218,7 @@ export default class MapGenerator {
                 const roomNumber = Math.round(Math.random() * roomLength);
                 const room = 'castle_room' + roomNumber;
                 const neighbor = this.getNeighbor(x,y);
+                
                 if (this.map[y][x] === MAP_DATA.BOSS) {
                     const stageName = path.basename(`assets/mapdata/${middleBoss}.json`, ".json");
                     const stage = new Stage(neighbor);
@@ -225,7 +226,7 @@ export default class MapGenerator {
                     stage.setTags(this.tags);
 
                     if (!this.hasTag('hasarcher')) {
-                        const monster = Monster.GetByStage('house')[0];
+                        const monster = this.propGenerator.createStoryMonster('archer');
                         stage.addMonster(monster, {
                             type: "archer",
                             pos: {x:45, y:70}
@@ -244,7 +245,11 @@ export default class MapGenerator {
                     const stage = new Stage(neighbor);
                     await stage.$load(stageName);
                     stage.setTags(this.tags);
-                    stage.randomPropGenerate();
+
+                    let recipe = this.propGenerator.createRecipe(this.currentFloor);
+                    let chest = this.propGenerator.createChest(this.currentFloor);
+                    stage.addProp(recipe.tileData, recipe.directions);
+                    stage.addProp(chest);
     
                     realMap[y][x] = stage;
                 } else  if (this.map[y][x] === MAP_DATA.PORTAL) {
@@ -252,7 +257,11 @@ export default class MapGenerator {
                     const stage = new Stage(neighbor);
                     await stage.$load(stageName);
                     stage.setTags(this.tags);
-                    stage.randomPropGenerate();
+
+                    let recipe = this.propGenerator.createRecipe(this.currentFloor);
+                    let chest = this.propGenerator.createChest(this.currentFloor);
+                    stage.addProp(recipe.tileData, recipe.directions);
+                    stage.addProp(chest);
     
                     realMap[y][x] = stage;
                 } else if (this.map[y][x] === MAP_DATA.HALL) {
@@ -260,7 +269,11 @@ export default class MapGenerator {
                     const stage = new Stage(neighbor);
                     await stage.$load(stageName);
                     stage.setTags(this.tags);
-                    stage.randomPropGenerate();
+
+                    let recipe = this.propGenerator.createRecipe(this.currentFloor);
+                    let chest = this.propGenerator.createChest(this.currentFloor);
+                    stage.addProp(recipe.tileData, recipe.directions);
+                    stage.addProp(chest);
     
                     realMap[y][x] = stage;
                     this.hall = stage;
@@ -269,7 +282,11 @@ export default class MapGenerator {
                     const stage = new Stage(neighbor);
                     await stage.$load(stageName);
                     stage.setTags(this.tags);
-                    stage.randomPropGenerate();
+
+                    let recipe = this.propGenerator.createRecipe(this.currentFloor);
+                    let chest = this.propGenerator.createChest(this.currentFloor);
+                    stage.addProp(recipe.tileData, recipe.directions);
+                    stage.addProp(chest);
 
                     const monster = this.propGenerator.createMonster(this.currentFloor);
                     stage.addMonster(monster, {
@@ -281,18 +298,26 @@ export default class MapGenerator {
                     // 위아래 통로.
                     const stageName = path.basename(`assets/mapdata/${UDPassage}.json`, ".json");
                     const stage = new Stage(neighbor);
-                    stage.setTags(this.tags);
                     await stage.$load(stageName);
-                    stage.randomPropGenerate();
+                    stage.setTags(this.tags);
+
+                    let recipe = this.propGenerator.createRecipe(this.currentFloor);
+                    let chest = this.propGenerator.createChest(this.currentFloor);
+                    stage.addProp(recipe.tileData, recipe.directions);
+                    stage.addProp(chest);
     
                     realMap[y][x] = stage;
                 } else if (this.map[y][x] === MAP_DATA.PASSAGE) {
                     // 좌우 통로
                     const stageName = path.basename(`assets/mapdata/${LRPassage}.json`, ".json");
                     const stage = new Stage(neighbor);
-                    stage.setTags(this.tags);
                     await stage.$load(stageName);
-                    stage.randomPropGenerate();
+                    stage.setTags(this.tags);
+
+                    let recipe = this.propGenerator.createRecipe(this.currentFloor);
+                    let chest = this.propGenerator.createChest(this.currentFloor);
+                    stage.addProp(recipe.tileData, recipe.directions);
+                    stage.addProp(chest);
     
                     realMap[y][x] = stage;
                 } else if (this.map[y][x] === MAP_DATA.INPUT || this.map[y][x] === MAP_DATA.OUTPUT) {

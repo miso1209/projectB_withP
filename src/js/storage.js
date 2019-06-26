@@ -19,7 +19,7 @@ export default class Storage {
         this.data.version = this.VERSION;
         this.data.characters = {};
         this.data.party = [0, 0, 0, 0, 0, 0]; // 파티최대 숫자를 어딘가에?
-        this.data.inventory = { 3001: 1, 3004: 1 };
+        this.data.inventory = {};
         this.data.gold = 0;
         this.data.tags = [];
         this.data.quests = {};

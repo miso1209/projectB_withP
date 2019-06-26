@@ -23,6 +23,13 @@ export default class Combiner {
             consumables: 5,
             valuables: 6
         };
+        const rankSorting = {
+            U: 1,
+            S: 2,
+            A: 3,
+            B: 4,
+            C: 5
+        };
         const result = [];
         const playerRecipes = {};
         inventory.forEach((item) => {
@@ -49,6 +56,21 @@ export default class Combiner {
                     recipe.available &= (mat.count <= mat.owned);
                 }
             });
+            
+            playerRecipes[key].sort((a,b) => {
+                if (a.data.id > b.data.id) {
+                    return -1;
+                }
+                return 1;
+            });
+
+            playerRecipes[key].sort((a,b) => {
+                if (rankSorting[a.data.rank] < rankSorting[b.data.rank]) {
+                    return -1;
+                }
+                return 1;
+            });
+
             result.push({
                 category: key,
                 recipes: playerRecipes[key]
