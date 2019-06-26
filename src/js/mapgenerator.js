@@ -231,7 +231,7 @@ export default class MapGenerator {
                             pos: {x:45, y:70}
                         });
                     } else { 
-                        const monster = this.propGenerator.createMonster(this.currentFloor);
+                        const monster = this.propGenerator.createMonster(this.currentFloor, true);
                         stage.addMonster(monster, {
                             type: "monster",
                             pos: {x:45, y:70}
@@ -275,12 +275,6 @@ export default class MapGenerator {
                     stage.addMonster(monster, {
                         type: "monster"
                     });
-                    if (Math.random() < 0.5) {
-                        const monster = this.propGenerator.createMonster(this.currentFloor);
-                        stage.addMonster(monster, {
-                            type: "monster"
-                        });
-                    }
     
                     realMap[y][x] = stage;
                 } else if (this.map[y][x] === MAP_DATA.PASSAGE && ((this.map[y-1] && this.map[y-1][x] !== MAP_DATA.EMPTY && this.map[y-1][x] !== MAP_DATA.PASSAGE) || (this.map[y+1] && this.map[y+1][x] !== MAP_DATA.EMPTY && this.map[y+1][x] !== MAP_DATA.PASSAGE))) {

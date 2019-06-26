@@ -61,19 +61,20 @@ export default class DouobleAttack extends SkillBase {
                 }));
                 this.addFontEffect({target: this.owner, outputText: `Armor ▲`, fontSize: 7});
 
-                this.target.addBuff("doubleAttackStun", 5, new BlinkEffectBuff({
-                    abilityOptions: [],
-                    statusOptions: ['stun(10)'],
-                    isAnimation: true,
-                    sprite: 'stun',
-                    animationLength: 109,
-                    loop: true,
-                    speed: 0.5,
-                    offset: {
-                        x: this.target.animation.width / 2,
-                        y: -this.target.animation.height + 10
-                    }
-                }));
+                // 스턴 버그있어서 우선 수정한다.
+                // this.target.addBuff("doubleAttackStun", 5, new BlinkEffectBuff({
+                //     abilityOptions: [],
+                //     statusOptions: ['stun(10)'],
+                //     isAnimation: true,
+                //     sprite: 'stun',
+                //     animationLength: 109,
+                //     loop: true,
+                //     speed: 0.5,
+                //     offset: {
+                //         x: this.target.animation.width / 2,
+                //         y: -this.target.animation.height + 10
+                //     }
+                // }));
 
                 this.addEffect(this.target, { name: 'slash', animation: true, animationLength: 8, removeFrame: 60, speed: 0.5 });
                 let damage = this.calcSkillExpressions(this.owner, this.skillExpressions[1]);

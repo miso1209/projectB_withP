@@ -35,11 +35,13 @@ export default class Party {
 
         // 임시로 좌표 임의설정.
         this.members.forEach((member, i) => {
-            allies.push({
-                character: member,
-                x: i % 3,
-                y: Math.floor(i / 3)
-            });
+            if(member && member.health > 0) {
+                allies.push({
+                    character: member,
+                    x: i % 3,
+                    y: Math.floor(i / 3)
+                });
+            }
         });
 
         return allies;

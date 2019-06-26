@@ -13,20 +13,35 @@ export default class PropGenerator {
     constructor() {
     }
 
-    createMonster(currentFloor) {
+    createMonster(currentFloor, isBoss) {
+        // 원래 필드에 C - U 까지 전부 나왔지만, 미들보스에서만 S - U등급의 몬스터가 나오는 것으로 변경.
         const monstersByRanked = [
             {
                 monsters: [1,2,3],
                 ranks: [RANK.C, RANK.B, RANK.A]
             }, {
                 monsters: [2,3,4],
-                ranks: [RANK.C, RANK.A, RANK.S]
+                ranks: [RANK.C, RANK.B, RANK.A]
+                // ranks: [RANK.C, RANK.A, RANK.S]
             }, {
                 monsters: [3,4,5],
-                ranks: [RANK.B, RANK.A, RANK.U]
+                ranks: [RANK.C, RANK.B, RANK.A]
+                // ranks: [RANK.B, RANK.A, RANK.U]
+            }, {
+                monsters: [4,5,6],
+                ranks: [RANK.C, RANK.B, RANK.U]
+            }, {
+                monsters: [4,5,6],
+                ranks: [RANK.B, RANK.A, RANK.S]
             }
         ];
-        const monsterParty = monstersByRanked[this.getRank()];
+
+        let monsterParty = null;
+        if (isBoss) {
+            monsterParty = monstersByRanked[3 + Math.round(Math.random())];
+        } else {
+            monsterParty = monstersByRanked[this.getRank()];
+        }
         monsterParty.monsters = monsterParty.monsters[Math.round(Math.random() * (monsterParty.monsters.length - 1))];
 
         const monsters = [];
@@ -34,7 +49,7 @@ export default class PropGenerator {
             const monsterRank = monsterParty.ranks[this.getRank()];
             monsters.push(this.getMonster(currentFloor, monsterRank));
         }
-        return new Monster(this.makeMonsterParty(monsters, currentFloor));
+        return new Monster(this.makeMonsterParty(monsters, currentFloor, isBoss));
     }
 
     getMonsterRank() {
@@ -44,10 +59,12 @@ export default class PropGenerator {
             C - U등급을 부여받으며, 각 올스텟 계수는 다음과 같다.
 
             C: 100%   (40%)
-            B: 110%   (33%)
-            A: 125%   (20%)
-            S: 145%   ( 5%)
-            U: 170%   ( 2%)
+            B: 105%   (34%)
+            A: 112%   (20%)
+            S: 123%   ( 5%)
+            U: 135%   ( 1%)
+
+            => 편차가 너무 크고, 필드 몬스터가 보스보다 강해질 우려가 있기 때문에 편차를 줄여본다.
         */
         const rand = Math.random();
 
@@ -56,24 +73,24 @@ export default class PropGenerator {
                 strong: 1,
                 display: 'C'
             }
-        } else if(rand <= 0.73) {
+        } else if(rand <= 0.74) {
             return {
-                strong: 1.10,
+                strong: 1.05,
                 display: 'B'
             }
-        } else if(rand <= 0.93) {
+        } else if(rand <= 0.94) {
             return {
-                strong: 1.25,
+                strong: 1.12,
                 display: 'A'
             }
-        } else if(rand <= 0.98) {
+        } else if(rand <= 0.99) {
             return {
-                strong: 1.45,
+                strong: 1.23,
                 display: 'S'
             }
         } else {
             return {
-                strong: 1.70,
+                strong: 1.35,
                 display: 'U'
             }
         }
@@ -154,7 +171,7 @@ export default class PropGenerator {
         return selectedMonster;
     }
 
-    makeMonsterParty(monsters, floor) {
+    makeMonsterParty(monsters, floor, isBoss) {
         const resultMonsterParty = {
             name: '',
             field: {
@@ -176,7 +193,7 @@ export default class PropGenerator {
 
         monsters.forEach((monster) => {
             // 몬스터의 Rank는 C - U까지 랜덤하게 생성하고, 100% - 150%의 강함을 가지자.
-            const monsterRank = this.getMonsterRank();
+            const monsterRank = isBoss?{strong: 1.3, display:'U'}:this.getMonsterRank();
             const character = new Character(monster.character.id, monsterRank);
             character.level = monster.character.baseLevel + Math.floor(monster.character.levelUpPerFloor * floor);
             character.level += Math.round(Math.random() * 1.8);
@@ -184,7 +201,7 @@ export default class PropGenerator {
 
             if (!resultMonsterParty.field.character || dps < character.totalPowerFigure) {
                 dps = character.totalPowerFigure;
-                resultMonsterParty.name = `Lv.${character.level} ${character.displayName}[${monsterRank.display}]`
+                resultMonsterParty.name = `Lv.${character.level} ${character.displayName}[${monster.rank}]`
                 resultMonsterParty.field.character = monster.character.id;
             }
 
@@ -195,8 +212,8 @@ export default class PropGenerator {
             });
 
             // rewards 추가. gold exp, rewards
-            resultMonsterParty.gold += monster.gold + Math.round(monster.goldPerLevel * character.level * character.rank.strong);
-            resultMonsterParty.exp += monster.exp + Math.round(monster.expPerLevel * character.level * character.rank.strong);
+            resultMonsterParty.gold += monster.gold + monster.goldPerLevel * character.level * character.rank.strong;
+            resultMonsterParty.exp += monster.exp + monster.expPerLevel * character.level * character.rank.strong;
 
             monster.rewards.forEach((reward) => {
                 if (Math.random() <= reward.probability) {
@@ -208,6 +225,14 @@ export default class PropGenerator {
                 }
             });
         });
+
+        resultMonsterParty.exp = Math.round(resultMonsterParty.exp);
+        resultMonsterParty.gold = Math.round(resultMonsterParty.gold);
+
+        if (resultMonsterParty.exp <= 0) {
+            resultMonsterParty.exp = 1;
+        }
+        
         return resultMonsterParty;
     }
 }
