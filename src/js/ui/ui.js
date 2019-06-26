@@ -119,22 +119,13 @@ export default class DomUI extends EventEmitter {
     hideMinimap() {
         this.minimapDOM.style.display = 'none';
     }
-
-    hideAllModal(){
-        console.log('hideAllModal');
-
+    
+    hasModal() {
         const currentUI = document.querySelector('.uiContainer');
         if (currentUI) {
-            currentUI.style.opacity = 0;
+            return true;
         }
-    }
-
-    removeAllModal() {
-        console.log('remove');
-        const currentUI = document.querySelector('.uiContainer');
-        if (currentUI) {
-            currentUI.parentNode.removeChild(currentUI);
-        }
+        return false;
     }
     
     showStageTitle(text) {

@@ -398,7 +398,6 @@ export default class Game extends EventEmitter {
         this.stage.interactTarget = null;
         this.ui.showTheaterUI(0.5);
         this.ui.hideMenu();
-        this.ui.hideAllModal();
         
         this.exploreMode.setInteractive(false);
     }
@@ -574,7 +573,6 @@ export default class Game extends EventEmitter {
             // 배틀을 사용한다
             this.currentMode = this.exploreMode;
             this.ui.showMenu();
-            this.ui.removeAllModal();
 
             await this.$fadeIn(0.5);
             this.exploreMode.setInteractive(true);
@@ -587,13 +585,20 @@ export default class Game extends EventEmitter {
         }
     }
 
+    isGamePuase() {
+        // 현재까지는 PAUSE가 UI 나왔을 때 밖에 없다.
+        return this.ui.hasModal();
+    }
+
     update() {
-        this.tweens.update();
-        if (this.stage) {
-            this.stage.update();
-        }
-        if (this.currentMode) {
-            this.currentMode.update();
+        if (!this.isGamePuase()) {
+            this.tweens.update();
+            if (this.stage) {
+                this.stage.update();
+            }
+            if (this.currentMode) {
+                this.currentMode.update();
+            }
         }
 
         // 캐릭터 데이터를 저장해야 하는지 확인
