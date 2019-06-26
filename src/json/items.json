@@ -590,9 +590,9 @@
         "name": "소형 회복약 제작서",
         "rank": "C",
         "image": {
-            "texture": "item.png",
-            "x": 0,
-            "y": 3
+            "texture": "items.png",
+            "x": 3,
+            "y": 6
         },
         "description": "소지 시 소형 회복약을 제작할 수 있는 제작서 이다.",
         "category": "valuables",
@@ -607,9 +607,9 @@
         "name": "중형 회복약  제작서",
         "rank": "C",
         "image": {
-            "texture": "item.png",
-            "x": 0,
-            "y": 3
+            "texture": "items.png",
+            "x": 3,
+            "y": 6
         },
         "description": "소지 시 중형 회복약을 제작할 수 있는 제작서 이다.",
         "category": "valuables",
@@ -624,9 +624,9 @@
         "name": "대형 회복약 제작서",
         "rank": "C",
         "image": {
-            "texture": "item.png",
-            "x": 0,
-            "y": 3
+            "texture": "items.png",
+            "x": 3,
+            "y": 6
         },
         "description": "소지 시 대형 회복약을 제작할 수 있는 제작서 이다.",
         "category": "valuables",
@@ -641,9 +641,9 @@
         "name": "부활 물약 제작서",
         "rank": "C",
         "image": {
-            "texture": "item.png",
-            "x": 0,
-            "y": 3
+            "texture": "items.png",
+            "x": 3,
+            "y": 6
         },
         "description": "소지 시 부활 물약을 제작할 수 있는 제작서 이다.",
         "category": "valuables",
@@ -658,9 +658,9 @@
         "name": "기본검 제작서",
         "rank": "C",
         "image": {
-            "texture": "item.png",
-            "x": 0,
-            "y": 3
+            "texture": "items.png",
+            "x": 3,
+            "y": 6
         },
         "description": "소지 시 기본검을 제작할 수 있는 제작서 이다.",
         "category": "valuables",
@@ -674,7 +674,7 @@
         "id": 3006,
         "name": "기본갑옷 제작서",
         "rank": "C",
-        "image": { "texture": "item.png", "x": 0, "y": 3 },
+        "image": { "texture": "items.png", "x": 3, "y": 6 },
         "description": "소지 시 기본갑옷을 제작할 수 있는 제작서 이다.",
         "category": "valuables",
         "options": [],
@@ -687,7 +687,7 @@
         "id": 3007,
         "name": "기본장갑 제작서",
         "rank": "C",
-        "image": { "texture": "item.png", "x": 0, "y": 3 },
+        "image": { "texture": "items.png", "x": 3, "y": 6 },
         "description": "소지 시 기본장갑을 제작할 수 있는 제작서 이다.",
         "category": "valuables",
         "options": [],

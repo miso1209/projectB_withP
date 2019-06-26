@@ -172,6 +172,8 @@ export default class Game extends EventEmitter {
             // 현지 진행해야하는 컷신 아이디를 적는다
             this.storage.data.cutscene = 1;
 
+            this.storage.data.inventory = { 3001: 1, 3004: 1 };
+
             // 필드에 보이는 캐릭터
             this.storage.data.controlCharacter = 1;
 
@@ -359,7 +361,7 @@ export default class Game extends EventEmitter {
     }
 
     async $nextFloor(from, dir) {
-        this.currentFloor +=10;
+        this.currentFloor ++;
         this.ui.showTheaterUI(0.5);
         this.ui.hideMenu();
         await this.$leaveStage(from);
@@ -822,6 +824,7 @@ export default class Game extends EventEmitter {
             if (options.type === "item") {
                 this.onNotification = true;
                 // text 가 있는 경우에 취소버튼 노출, 그 외는 확인버튼만..
+                // Recipe 모달 사용중.
                 this.ui.showItemAcquire(null, new Item(options.item, options.count), () => {
                     this.onNotification = false;
                     const next = this.notification.pop();
@@ -834,11 +837,12 @@ export default class Game extends EventEmitter {
                 this._playCutscene(options.script);
             } 
             else if (options.type === 'items') {
+                // Chest가 해당 모달 사용중.
                 const items = [];
                 options.items.forEach((item) => {
                     items.push(new Item(item.id, item.owned));
                 });
-                this.ui.showItemAcquire('TEST TEXT', items, () => {});
+                this.ui.showItemAcquire(null, items, () => {});
             }
         }
     }
