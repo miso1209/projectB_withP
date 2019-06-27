@@ -653,14 +653,14 @@
 
     "701": {
         "id": 701,
-        "name": "기본장갑",
+        "name": "건틀릿",
         "rank": "C",
         "image": {
             "texture": "items.png",
             "x": 15,
             "y": 11
         },
-        "description": "흔히 볼 수 있는 평범한 장갑",
+        "description": "흔히 볼 수 있는 평범한 건틀릿",
         "category": "accessory",
         "classes": ["warrior", "wizard", "healer", "archer"],
         "subcategory": "gloves",
@@ -673,17 +673,37 @@
 
     "801": {
         "id": 801,
-        "name": "기본 모자",
+        "name": "기본 투구",
+        "rank": "C",
+        "image": {
+            "texture": "items.png",
+            "x": 10,
+            "y": 12
+        },
+        "description": "흔히 구할 수 있는 투구",
+        "category": "accessory",
+        "classes": ["warrior", "wizard", "healer", "archer"],
+        "subcategory": "helmet",
+        "options": ["speed(+1)"],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
+    },
+
+    "851": {
+        "id": 851,
+        "name": "기본 방패",
         "rank": "C",
         "image": {
             "texture": "items.png",
             "x": 0,
-            "y": 13
+            "y": 10
         },
-        "description": "가벼운 모자",
+        "description": "흔히 구할 수 있는 방패",
         "category": "accessory",
-        "classes": ["warrior", "wizard", "healer", "archer"],
-        "subcategory": "",
+        "classes": ["warrior"],
+        "subcategory": "shield",
         "options": ["speed(+1)"],
         "generateFloor": {
             "begin": 1,

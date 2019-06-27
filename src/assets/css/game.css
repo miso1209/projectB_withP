@@ -787,13 +787,21 @@ button.disabled span {
   margin: 15px auto 0;
 }
 
-.inventory-detail .icon{
-  display: none;
+.inventory-detail .rankBg {
   position: absolute;
-
-  top: -60px;
-  left: -35px;
+  top: -35px;
+  left: 95px;
+  background: url(~assets/ui/flag.png) no-repeat;
+  width: 65px;
+  height: 75px;
   background-size: cover;
+}
+
+.inventory-detail .rankBg .icon {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: 15px auto 0;
 }
 
 .inventory-detail .itemName {

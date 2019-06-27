@@ -1,6 +1,7 @@
 import Panel from "./component/panel";
 import Modal from "./component/modal";
 import ItemImage from "./component/itemimage";
+import MakeDom from "./component/makedom";
 
 export default class Inventory extends Panel {
     
@@ -41,6 +42,8 @@ export default class Inventory extends Panel {
         this.itemDesc = document.createElement('p');
         this.itemOptions = document.createElement('ul');
         
+        this.rankbg = new MakeDom('div', 'rankBg');
+        
         this.itemRank = new ItemImage('icon_rank@2.png', "C", 0);
         this.itemRank.dom.classList.add('rank');
 
@@ -50,13 +53,15 @@ export default class Inventory extends Panel {
         this.itemOptions.className = 'itemOptions';
 
         statContent.appendChild(this.itemImg.dom);
-        this.itemImg.dom.appendChild(this.itemRank.dom);
+        this.rankbg.appendChild(this.itemRank.dom);
+        statContent.appendChild(this.rankbg);
 
         statContent.appendChild(this.itemName);
         statContent.appendChild(this.itemDesc);
         statContent.appendChild(this.itemOptions);
 
         wrapper.appendChild(statContent);
+        
         let scrollHeight = '320px';
 
         // IE 스크롤바 이슈 대응
@@ -167,7 +172,8 @@ export default class Inventory extends Panel {
             this.itemName.innerText = item.data.name;
             this.itemDesc.innerText = item.data.description;
             this.itemRank.updateIcon(item.data.rank);
-            this.itemRank.dom.style.display = 'block';
+            // this.itemRank.dom.style.display = 'block';
+            this.rankbg.style.display = 'block';
 
             if (this.itemOptions.children !== 0) {
                 this.itemOptions.innerHTML = '';
@@ -179,7 +185,9 @@ export default class Inventory extends Panel {
                 this.itemOptions.appendChild(li);
             });
         } else {
-            this.itemRank.dom.style.display = 'none';
+            // this.itemRank.dom.style.display = 'none';
+            this.rankbg.style.display = 'none';
+
             this.itemImg.updateImage(0,0);
             this.itemName.innerHTML = '';
             this.itemDesc.innerHTML = '';
