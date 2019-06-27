@@ -24,11 +24,6 @@
   transition: all 0.3s;
 }
 
-/* .iconBtn:hover, .iconBtn:active{
-  border: 1px solid #ffd800;
-  border-radius: 5px;
-} */
-
 .ico-life {
   background: url('~assets/items/items.png') no-repeat -576px -96px;
 }
@@ -208,7 +203,6 @@
 .flexWrap .flex-right {
   position: static;
   height: 100%;
-  
 }
 
 .flexWrap .flex-left {
@@ -220,13 +214,6 @@
   padding: 0 10px 10px;
   background-color: #281b10;
   border-radius: 10px;
-}
-
-.inventory .flex-left {
-  width: 28%;
-}
-.inventory .flex-right {
-  width: 67%;
 }
 
 .scrollView {
@@ -268,18 +255,13 @@
   box-sizing: border-box;
   background: url('~assets/ui/slotBg.png') no-repeat;
   background-size: contain;
+
+  border: 2px solid transparent;
 }
 
 .slot-list-box li.active {
   border: 2px solid #ffd800;
   border-radius: 8px;
-}
-.inventory .scrollbox {
-  padding: 0;
-}
-
-.inventory .slot-list-box li.slot:nth-child(6n) {
-  margin: 0 0 10px 0;
 }
 
 .flexWrap .flex-right .slot-list-box, 

@@ -12,11 +12,11 @@ export default class CharacterSelect extends Panel {
 
     this.pane = pane;
     this.pane.classList.add('screen');
-    
+
     // 캐릭터 전체
     this.inputs = inputs;
     this.callback = result;
-    
+
     // 선택한 캐릭터 정보
     this.selected = null;
     this.consumablesData = null;
@@ -41,7 +41,7 @@ export default class CharacterSelect extends Panel {
     this.nextButton.dom.classList.add('disabled');
     this.nextButton.moveToRight(-35);
     this.nextButton.dom.style.top = '50%';
-    
+
     // 모달 내부 컨텐츠 영역
     const wrap = document.createElement('div');
     wrap.classList.add('contents');
@@ -61,17 +61,17 @@ export default class CharacterSelect extends Panel {
     this.portrait.style.margin = '30px auto 10px';
 
     // 현재 hp 상태 아이콘 -> TODO : 클래스아이콘으로 변경하자.
-    this.recoveryBtn = new Button('','iconBtn');
+    this.recoveryBtn = new Button('', 'iconBtn');
     this.recoveryBtn.dom.classList.add('ico-life');
     this.recoveryBtn.dom.style.top = '60px';
     this.recoveryBtn.moveToRight(40);
-  
+
     const titleWrap = new MakeDom('div', 'titleWrap', null);
     this.descClass = new MakeDom('span', 'stat_class', null);
     this.descName = new MakeDom('span', 'stat_name', null);
     this.level = new MakeDom('span', 'stat_level', null);
     this.level.style.paddingRight = '10px';
-    
+
     // hp, exp 상태바
     const statWrap = new MakeDom('div', 'statWrap', null);
     this.hp = new StatusBar(0, 10);
@@ -89,7 +89,7 @@ export default class CharacterSelect extends Panel {
     const moreButton = new Button('자세히보기', 'submit');
     moreButton.moveToCenter(0);
     moreButton.moveToBottom(15);
-    moreButton.dom.addEventListener('click', (ok)=> {
+    moreButton.dom.addEventListener('click', (ok) => {
       this.hideModal();
       return this.callback(this.selected);
     });
@@ -104,14 +104,14 @@ export default class CharacterSelect extends Panel {
     characterDesc.appendChild(statWrap);
     characterDesc.appendChild(this.invenItems);
     characterDesc.appendChild(moreButton.dom);
-    
+
     // characterList
     const characterListWrap = new MakeDom('div', 'characterListWrap', null);
     characterListWrap.classList.add('flex-left');
 
     const characterList = new MakeDom('div', 'characterList', null);
     characterList.style.width = '410px';
-    
+
     let selectedDoll = null;
     let index = 0;
     let n = 0;
@@ -126,7 +126,7 @@ export default class CharacterSelect extends Panel {
         selectedDoll = doll.dom;
         this.select(input);
       }
-      
+
       if (n >= 4) {
         n = 0; // todo 타일용 index 따로 만들자.
       }
@@ -137,8 +137,8 @@ export default class CharacterSelect extends Panel {
       ++n;
 
       doll.stage.style.backgroundPosition = `${posX}px 0`;
-      doll.dom.addEventListener('click', function(){
-        if(selectedDoll) {
+      doll.dom.addEventListener('click', function () {
+        if (selectedDoll) {
           selectedDoll.classList.remove('active');
         }
         doll.dom.classList.add('active');
@@ -156,7 +156,7 @@ export default class CharacterSelect extends Panel {
 
     wrap.appendChild(characterListWrap);
     wrap.appendChild(characterDesc);
-    
+
     pane.appendChild(this.dom);
   }
 
@@ -187,17 +187,25 @@ export default class CharacterSelect extends Panel {
     }
   }
 
-  updateStatus(current){
+  updateStatus(current) {
     this.hp.update(current.health, current.maxHealth);
     this.exp.update(current.exp, current.maxexp);
   }
 
   createConsumablesItem(result) {
-
     this.invenItems.innerHTML = '';
 
-    this.consumablesData.forEach(item => {
-      if (item !== null) {
+    if (this.consumablesData.length === 0) {
+      for (let i = 0; i < 4; i++) {
+        let liWrap = new MakeDom('li');
+        let itemIcon = new MakeDom('p', 'img');
+        liWrap.classList.add('empty');
+        liWrap.style.disabled = 'disabled';
+        liWrap.appendChild(itemIcon);
+        this.invenItems.appendChild(liWrap);
+      }
+    } else {
+      this.consumablesData.forEach(item => {
         let liWrap = new MakeDom('li');
         let itemIcon = new ItemImage(item.data.image.texture, item.data.image.x, item.data.image.y);
         let itemCount = new MakeDom('span', 'itemCount', `x${item.owned}`);
@@ -205,42 +213,42 @@ export default class CharacterSelect extends Panel {
 
         liWrap.appendChild(itemIcon.dom);
         liWrap.appendChild(itemCount);
-        
-        if(result) {
+
+        if (result) {
           liWrap.addEventListener('click', result.bind(this, item));
         }
         this.invenItems.appendChild(liWrap);
-      } 
-    });
+      });
+    }
   }
 
-  hideModal(){
+  hideModal() {
     this.pane.parentNode.removeChild(this.pane);
   }
 }
 
 class StatusBar {
   constructor(currentValue, maxValue) {
-      this.progressHolder = document.createElement('div');
-      this.progressHolder.classList.add('progressHolder');
-      this.progressHolder.classList.add('status');
+    this.progressHolder = document.createElement('div');
+    this.progressHolder.classList.add('progressHolder');
+    this.progressHolder.classList.add('status');
 
-      this.progressBar = document.createElement('div');
-      this.progressBar.classList.add('progressbar');
+    this.progressBar = document.createElement('div');
+    this.progressBar.classList.add('progressbar');
 
-      this.maxValue = maxValue;
-      this.progressHolder.appendChild(this.progressBar);
+    this.maxValue = maxValue;
+    this.progressHolder.appendChild(this.progressBar);
 
-      this.rate = new MakeDom('span', 'progressRate', `${currentValue} / ${maxValue}`);
-      this.progressHolder.appendChild(this.rate);
+    this.rate = new MakeDom('span', 'progressRate', `${currentValue} / ${maxValue}`);
+    this.progressHolder.appendChild(this.rate);
 
-      this.dom = this.progressHolder;
-      this.update(currentValue, maxValue);
+    this.dom = this.progressHolder;
+    this.update(currentValue, maxValue);
   }
 
   update(currentValue, maxValue) {
     this.maxValue = maxValue;
-    
+
     let rate = Math.floor(currentValue * 100 / this.maxValue);
     rate = rate > 99 ? 100 : rate;
 
@@ -248,7 +256,7 @@ class StatusBar {
     this.rate.innerText = `${currentValue} / ${maxValue}`;
   }
 
-  setBar(_type){
+  setBar(_type) {
     this.progressBar.classList.add(_type);
   }
 }

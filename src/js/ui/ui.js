@@ -192,6 +192,9 @@ export default class DomUI extends EventEmitter {
         let option = new ItemImage(items.data.image.texture, items.data.image.x, items.data.image.y);
         options.appendChild(option.dom);
 
+        let name = new MakeDom('p', 'name', items.data.name);
+        options.appendChild(name);
+
         confirmModal.contents.appendChild(options);
     }
 

@@ -446,8 +446,8 @@
         "rank": "C",
         "image": {
             "texture": "items.png",
-            "x": 0,
-            "y": 13
+            "x": 10,
+            "y": 12
         },
         "description": "가벼운 모자",
         "category": "accessory",
@@ -549,7 +549,6 @@
         }
     },
 
-
     "2001": {
         "id": 2001,
         "name": "약초",
@@ -570,7 +569,7 @@
     "2002": {
         "id": 2002,
         "name": "희귀 약초",
-        "rank": "C",
+        "rank": "B",
         "image": {
             "texture": "items.png",
             "x": 7,
@@ -622,7 +621,7 @@
     "3003": {
         "id": 3003,
         "name": "대형 회복약 제작서",
-        "rank": "C",
+        "rank": "B",
         "image": {
             "texture": "items.png",
             "x": 3,
@@ -639,7 +638,7 @@
     "3004": {
         "id": 3004,
         "name": "부활 물약 제작서",
-        "rank": "C",
+        "rank": "A",
         "image": {
             "texture": "items.png",
             "x": 3,

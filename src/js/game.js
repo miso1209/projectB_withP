@@ -232,7 +232,8 @@ export default class Game extends EventEmitter {
             // 그냥 평범하게 집에 들어간다
             this.ui.showTheaterUI(0.5);
 
-            this.$enterStage("assets/mapdata/house.json", "house-gate").then(() => {
+            // this.$enterStage("assets/mapdata/house.json", "house-gate").then(() => {
+            this.$enterStage("assets/mapdata/open_road_3.json", "road3-to-road2").then(() => {
                 this.exploreMode.interactive = true;
                 this.stage.showPathHighlight = true;
                 this.ui.hideTheaterUI(0.5);

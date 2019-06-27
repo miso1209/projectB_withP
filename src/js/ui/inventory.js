@@ -40,6 +40,9 @@ export default class Inventory extends Panel {
         this.itemName = document.createElement('p');
         this.itemDesc = document.createElement('p');
         this.itemOptions = document.createElement('ul');
+        
+        this.itemRank = new ItemImage('icon_rank@2.png', "C", 0);
+        this.itemRank.dom.classList.add('rank');
 
         this.itemName.className = 'itemImg';
         this.itemName.className = 'itemName';
@@ -47,6 +50,8 @@ export default class Inventory extends Panel {
         this.itemOptions.className = 'itemOptions';
 
         statContent.appendChild(this.itemImg.dom);
+        this.itemImg.dom.appendChild(this.itemRank.dom);
+
         statContent.appendChild(this.itemName);
         statContent.appendChild(this.itemDesc);
         statContent.appendChild(this.itemOptions);
@@ -109,11 +114,13 @@ export default class Inventory extends Panel {
                     ++index;
 
                     const itemImage = new ItemImage(item.data.image.texture, item.data.image.x, item.data.image.y);
+                    const iconRank = new ItemImage('icon_rank.png', item.data.rank, 0);
 
                     const slot = document.createElement('li');
                     slot.classList.add('slot');
                     slot.appendChild(itemImage.dom);
-
+                    slot.appendChild(iconRank.dom);
+                    
                     const num = document.createElement('span');
                     num.className = 'inventory-itemCount';
                     num.innerText = item.owned;
@@ -159,6 +166,8 @@ export default class Inventory extends Panel {
             this.itemImg.updateImage(item.data.image.x, item.data.image.y);
             this.itemName.innerText = item.data.name;
             this.itemDesc.innerText = item.data.description;
+            this.itemRank.updateIcon(item.data.rank);
+            this.itemRank.dom.style.display = 'block';
 
             if (this.itemOptions.children !== 0) {
                 this.itemOptions.innerHTML = '';
@@ -170,6 +179,7 @@ export default class Inventory extends Panel {
                 this.itemOptions.appendChild(li);
             });
         } else {
+            this.itemRank.dom.style.display = 'none';
             this.itemImg.updateImage(0,0);
             this.itemName.innerHTML = '';
             this.itemDesc.innerHTML = '';

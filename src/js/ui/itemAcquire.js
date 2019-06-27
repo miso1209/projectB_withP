@@ -43,6 +43,8 @@ export default class ItemAcquire extends Panel {
     this.options = new MakeDom('div', 'contents-option');
     contents.appendChild(this.options);
 
+    
+
     this.update();
     this.initButton();
   }
@@ -73,15 +75,24 @@ export default class ItemAcquire extends Panel {
         let wrap = new MakeDom('section', 'option');
         let option = new ItemImage(item.data.image.texture, item.data.image.x, item.data.image.y);
         let count = new MakeDom('span', '', `x${item.owned}`);
+        let name = new MakeDom('p', 'name', item.name);
+
         wrap.appendChild(option.dom);
         wrap.appendChild(count);
+        wrap.appendChild(name);
+
         this.options.appendChild(wrap);
       });
     } else {
       let option = new ItemImage(this.items.data.image.texture, this.items.data.image.x, this.items.data.image.y);
       let count = new MakeDom('span', '', `x${this.items.owned}`);
+      let name = new MakeDom('p', 'name', this.items.name);
+      const comment = new MakeDom('p', 'comment', '를 획득하였습니다.');
+      
       this.options.appendChild(option.dom);
       this.options.appendChild(count);
+      this.options.appendChild(name);
+      // this.options.appendChild(comment);
     }
   }
 
