@@ -122,7 +122,7 @@ body.battle .gnbContainer.battleMode {
   display: block;
 }
 
-.uiContainer, #theater {
+.uiContainer, .container, #theater {
   position: absolute;
   z-index: 999;
   
@@ -574,8 +574,8 @@ button, .button {
 .contents-option p {
   font-size: 13px;
   overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;	
+  /* text-overflow:ellipsis;
+  white-space:nowrap;	 */
 }
 
 /* 아이템 획득창 */
@@ -583,7 +583,8 @@ button, .button {
   left: 0;
   right: 0;
   top: 40px;
-  padding: 10px;
+  padding: 10px 20px;
+  margin: 0 auto;
 }
 
 .acquireModal .contents .desc {
@@ -614,16 +615,16 @@ button, .button {
   flex-direction: row;
   width: 100%;
   max-height: 180px;
-  
 }
 
 .acquireModal .contents-option.items section {
   width: 30%;
+  padding: 5px 0;
   margin-bottom: 10px;
 }
 
 .contents-option section:not(:first-child){
-  margin-left: 10px;
+  margin-left: 5px;
 }
 
 /* 아이템 조합창 */
@@ -847,11 +848,6 @@ button.disabled span {
 .inventory .slot-list-box li.slot:nth-child(6n) {
   margin: 0 0 10px 0;
 }
-
-.inventory li {
-  position: relative;
-}
-
 .inventory li .icon {
   position: absolute;
   
@@ -1426,3 +1422,11 @@ button.disabled span {
 .equipInven .scrollView{
   left: 0;
 }
+.equipInven .slot-list-box {
+  display: block;
+  text-align: left;
+}
+.equipInven .slot-list-box li{
+  display: inline-block;
+}
+

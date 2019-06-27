@@ -235,7 +235,6 @@
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-
   position: absolute;
   top: 0;
   left: 0;
@@ -248,9 +247,10 @@
 
 .slot-list-box li.slot {
   position: relative;
+  
   width: 70px;
   height: 70px;
-  margin: 0 10px 10px 0;
+  margin: 0 9px 10px 0;
   padding: 10px 10px;
   box-sizing: border-box;
   background: url('~assets/ui/slotBg.png') no-repeat;

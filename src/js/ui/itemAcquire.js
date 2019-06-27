@@ -8,13 +8,15 @@ export default class ItemAcquire extends Panel {
   constructor(pane, text, items, result) {
     super();
 
+    pane.classList.add('screen');
+
     let domheight = 240;
-    
-    if (text) {
-      domheight += 40;
+
+    if (items.length > 3) {
+      domheight += 80;
     }
-    const modal = new Modal(pane, 300, domheight);
-    
+
+    const modal = new Modal(pane, 360, domheight);
     this.callback = result;
 
     // 레시피, 아이템인 경우

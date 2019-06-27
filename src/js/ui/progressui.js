@@ -34,9 +34,7 @@ export default class ProgressUI extends Panel {
   
     update() {
         this.timer = setInterval(() => {
-    
-            if (this.progress * this.interval === 100) {
-    
+            if ( Math.floor(this.progress * this.interval) === 100) {
                 clearInterval(this.timer);
             
                 this.onComplete('loading_complete');

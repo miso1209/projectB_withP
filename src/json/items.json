@@ -5,7 +5,7 @@
         "rank": "C",
         "image": {
             "texture": "items.png",
-            "x": 0,
+            "x": 1,
             "y": 9
         },
         "description": "흔히 볼 수 있는 평범한 무기",
@@ -24,7 +24,7 @@
         "rank": "C",
         "image": {
             "texture": "items.png",
-            "x": 1,
+            "x": 4,
             "y": 9
         },
         "description": "견습자용 검",
@@ -39,44 +39,25 @@
     },
     "3": {
         "id": 3,
-        "name": "사냥꾼의 단검",
-        "rank": "C",
+        "name": "철검",
+        "rank": "B",
         "image": {
             "texture": "items.png",
-            "x": 3,
+            "x": 10,
             "y": 9
         },
-        "description": "샤냥꾼이 쓰는 단검",
+        "description": "철로 만들어진 대장간 최고 인기아이템",
         "category": "weapon",
         "classes": ["warrior"],
         "subcategory": "sword",
         "options": [],
         "generateFloor": {
-            "begin": 1,
+            "begin": 21,
             "end": 100
         }
     },
     "4": {
         "id": 4,
-        "name": "여행자의 단검",
-        "rank": "C",
-        "image": {
-            "texture": "items.png",
-            "x": 4,
-            "y": 9
-        },
-        "description": "여행자의 갑옷과 세트",
-        "category": "weapon",
-        "classes": ["warrior"],
-        "subcategory": "sword",
-        "options": [],
-        "generateFloor": {
-            "begin": 1,
-            "end": 100
-        }
-    },
-    "5": {
-        "id": 5,
         "name": "여행자의 검",
         "rank": "C",
         "image": {
@@ -94,16 +75,35 @@
             "end": 100
         }
     },
-    "10": {
-        "id": 10,
-        "name": "경기병의 대검",
+    "5": {
+        "id": 5,
+        "name": "사냥꾼의 단검",
         "rank": "C",
         "image": {
             "texture": "items.png",
-            "x": 10,
+            "x": 7,
             "y": 9
         },
-        "description": "",
+        "description": "샤냥꾼이 쓰는 단검",
+        "category": "weapon",
+        "classes": ["warrior"],
+        "subcategory": "sword",
+        "options": [],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
+    },
+    "10": {
+        "id": 10,
+        "name": "바스타드 소드",
+        "rank": "C",
+        "image": {
+            "texture": "items.png",
+            "x": 11,
+            "y": 9
+        },
+        "description": "양손검 바스타드 소드",
         "category": "weapon",
         "classes": ["warrior"],
         "subcategory": "broadsword",
@@ -115,20 +115,77 @@
     },
     "11": {
         "id": 11,
-        "name": "경기병의 대검2",
-        "rank": "C",
+        "name": "바스타드 소드",
+        "rank": "B",
         "image": {
             "texture": "items.png",
-            "x": 11,
+            "x": 12,
             "y": 9
         },
-        "description": "",
+        "description": "양손검 바스타드 소드",
         "category": "weapon",
         "classes": ["warrior"],
         "subcategory": "broadsword",
         "options": [],
         "generateFloor": {
-            "begin": 1,
+            "begin": 21,
+            "end": 100
+        }
+    },
+    "12": {
+        "id": 12,
+        "name": "바스타드 소드",
+        "rank": "A",
+        "image": {
+            "texture": "items.png",
+            "x": 13,
+            "y": 9
+        },
+        "description": "양손검 바스타드 소드",
+        "category": "weapon",
+        "classes": ["warrior"],
+        "subcategory": "broadsword",
+        "options": [],
+        "generateFloor": {
+            "begin": 21,
+            "end": 100
+        }
+    },
+    "13": {
+        "id": 13,
+        "name": "바스타드 소드",
+        "rank": "S",
+        "image": {
+            "texture": "items.png",
+            "x": 14,
+            "y": 9
+        },
+        "description": "양손검 바스타드 소드",
+        "category": "weapon",
+        "classes": ["warrior"],
+        "subcategory": "broadsword",
+        "options": [],
+        "generateFloor": {
+            "begin": 21,
+            "end": 100
+        }
+    },
+    "14": {
+        "id": 14,
+        "name": "바스타드 소드",
+        "rank": "U",
+        "image": {
+            "texture": "items.png",
+            "x": 15,
+            "y": 9
+        },
+        "description": "양손검 바스타드 소드",
+        "category": "weapon",
+        "classes": ["warrior"],
+        "subcategory": "broadsword",
+        "options": [],
+        "generateFloor": {
+            "begin": 21,
             "end": 100
         }
     },
@@ -170,6 +227,44 @@
             "end": 100
         }
     },
+    "203": {
+        "id": 203,
+        "name": "석궁",
+        "rank": "C",
+        "image": {
+            "texture": "items.png",
+            "x": 15,
+            "y": 8
+        },
+        "description": "나무로 만든 활22",
+        "category": "weapon",
+        "classes": ["archer"],
+        "subcategory": "bow",
+        "options": [],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
+    },
+    "204": {
+        "id": 204,
+        "name": "아이스 보우",
+        "rank": "B",
+        "image": {
+            "texture": "items.png",
+            "x": 15,
+            "y": 8
+        },
+        "description": "나무로 만든 활22",
+        "category": "weapon",
+        "classes": ["archer"],
+        "subcategory": "bow",
+        "options": [],
+        "generateFloor": {
+            "begin": 21,
+            "end": 100
+        }
+    },
     "301": {
         "id": 301,
         "name": "나무지팡이",
@@ -208,14 +303,15 @@
             "end": 100
         }
     },
+
     "303": {
         "id": 303,
         "name": "수행자의 원드",
         "rank": "C",
         "image": {
             "texture": "items.png",
-            "x": 3,
-            "y": 8
+            "x": 5,
+            "y": 2
         },
         "description": "수행자의 원드",
         "category": "weapon",
@@ -230,41 +326,80 @@
     "304": {
         "id": 304,
         "name": "수행자의 원드",
-        "rank": "C",
+        "rank": "B",
         "image": {
             "texture": "items.png",
-            "x": 4,
-            "y": 8
+            "x": 6,
+            "y": 2
         },
         "description": "수행자의 원드",
         "category": "weapon",
         "classes": ["wizard", "healer"],
-        "subcategory": "",
+        "subcategory": "wond",
         "options": [],
         "generateFloor": {
-            "begin": 1,
+            "begin": 21,
             "end": 100
         }
     },
     "305": {
         "id": 305,
         "name": "수행자의 원드",
-        "rank": "C",
+        "rank": "A",
         "image": {
             "texture": "items.png",
-            "x": 5,
-            "y": 8
+            "x": 7,
+            "y": 2
         },
         "description": "수행자의 원드",
         "category": "weapon",
         "classes": ["wizard", "healer"],
-        "subcategory": "",
+        "subcategory": "wond",
         "options": [],
         "generateFloor": {
-            "begin": 1,
+            "begin": 41,
             "end": 100
         }
     },
+    "306": {
+        "id": 306,
+        "name": "수행자의 원드",
+        "rank": "S",
+        "image": {
+            "texture": "items.png",
+            "x": 20,
+            "y": 6
+        },
+        "description": "수행자의 원드",
+        "category": "weapon",
+        "classes": ["wizard", "healer"],
+        "subcategory": "wond",
+        "options": [],
+        "generateFloor": {
+            "begin": 61,
+            "end": 100
+        }
+    },
+    "307": {
+        "id": 307,
+        "name": "수행자의 원드",
+        "rank": "U",
+        "image": {
+            "texture": "items.png",
+            "x": 21,
+            "y": 6
+        },
+        "description": "수행자의 원드",
+        "category": "weapon",
+        "classes": ["wizard", "healer"],
+        "subcategory": "wond",
+        "options": [],
+        "generateFloor": {
+            "begin": 81,
+            "end": 100
+        }
+    },
+
     "401": {
         "id": 401,
         "name": "기본갑옷",
@@ -306,7 +441,7 @@
     "403": {
         "id": 403,
         "name": "여행자의 갑옷",
-        "rank": "C",
+        "rank": "B",
         "image": {
             "texture": "items.png",
             "x": 6,
@@ -318,7 +453,7 @@
         "subcategory": "medium-armor",
         "options": ["stamina(+5)"],
         "generateFloor": {
-            "begin": 1,
+            "begin": 21,
             "end": 100
         }
     },
@@ -342,6 +477,102 @@
             "end": 100
         }
     },
+    "502": {
+        "id": 502,
+        "name": "수행자의 로브",
+        "rank": "C",
+        "image": {
+            "texture": "items.png",
+            "x": 9,
+            "y": 11
+        },
+        "description": "면으로 만들어진 실용적인 로브",
+        "category": "armor",
+        "classes": ["wizard", "healer"],
+        "subcategory": "light-armor",
+        "options": ["stamina(+2)"],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
+    },
+    "503": {
+        "id": 503,
+        "name": "수행자의 로브",
+        "rank": "B",
+        "image": {
+            "texture": "items.png",
+            "x": 10,
+            "y": 11
+        },
+        "description": "면으로 만들어진 실용적인 로브",
+        "category": "armor",
+        "classes": ["wizard", "healer"],
+        "subcategory": "light-armor",
+        "options": ["stamina(+2)"],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
+    },
+    "504": {
+        "id": 504,
+        "name": "수행자의 로브",
+        "rank": "A",
+        "image": {
+            "texture": "items.png",
+            "x": 12,
+            "y": 11
+        },
+        "description": "면으로 만들어진 실용적인 로브",
+        "category": "armor",
+        "classes": ["wizard", "healer"],
+        "subcategory": "light-armor",
+        "options": ["stamina(+2)"],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
+    },
+    "505": {
+        "id": 505,
+        "name": "수행자의 로브",
+        "rank": "S",
+        "image": {
+            "texture": "items.png",
+            "x": 11,
+            "y": 11
+        },
+        "description": "면으로 만들어진 실용적인 로브",
+        "category": "armor",
+        "classes": ["wizard", "healer"],
+        "subcategory": "light-armor",
+        "options": ["stamina(+2)"],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
+    },
+    "506": {
+        "id": 506,
+        "name": "수행자의 로브",
+        "rank": "U",
+        "image": {
+            "texture": "items.png",
+            "x": 13,
+            "y": 11
+        },
+        "description": "면으로 만들어진 실용적인 로브",
+        "category": "armor",
+        "classes": ["wizard", "healer"],
+        "subcategory": "light-armor",
+        "options": ["stamina(+2)"],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
+    },
+
     "601": {
         "id": 601,
         "name": "견습자의 반지",
@@ -364,7 +595,7 @@
     "602": {
         "id": 602,
         "name": "여행자의 반지",
-        "rank": "C",
+        "rank": "B",
         "image": {
             "texture": "items.png",
             "x": 15,
@@ -376,12 +607,12 @@
         "subcategory": "accessory-ring",
         "options": ["strength(+5)"],
         "generateFloor": {
-            "begin": 1,
+            "begin": 21,
             "end": 100
         }
     },
-    "603": {
-        "id": 603,
+    "608": {
+        "id": 608,
         "name": "견습자의 목걸이",
         "rank": "C",
         "image": {
@@ -400,10 +631,10 @@
         }
     },
 
-    "604": {
-        "id": 604,
+    "609": {
+        "id": 609,
         "name": "여행자의 목걸이",
-        "rank": "C",
+        "rank": "B",
         "image": {
             "texture": "items.png",
             "x": 2,
@@ -415,7 +646,7 @@
         "subcategory": "accessory-necklace",
         "options": ["agility(+7)"],
         "generateFloor": {
-            "begin": 1,
+            "begin": 21,
             "end": 100
         }
     },
@@ -446,8 +677,8 @@
         "rank": "C",
         "image": {
             "texture": "items.png",
-            "x": 10,
-            "y": 12
+            "x": 0,
+            "y": 13
         },
         "description": "가벼운 모자",
         "category": "accessory",
@@ -527,7 +758,7 @@
         "category": "consumables",
         "options": ["healthRecovery(1)"],
         "generateFloor": {
-            "begin": 1,
+            "begin": 21,
             "end": 100
         }
     },
@@ -544,10 +775,11 @@
         "category": "consumables",
         "options": ["recovery()"],
         "generateFloor": {
-            "begin": 1,
+            "begin": 21,
             "end": 100
         }
     },
+
 
     "2001": {
         "id": 2001,
@@ -579,7 +811,7 @@
         "category": "material",
         "options": [],
         "generateFloor": {
-            "begin": 1,
+            "begin": 21,
             "end": 100
         }
     },
@@ -621,7 +853,7 @@
     "3003": {
         "id": 3003,
         "name": "대형 회복약 제작서",
-        "rank": "B",
+        "rank": "C",
         "image": {
             "texture": "items.png",
             "x": 3,
@@ -638,7 +870,7 @@
     "3004": {
         "id": 3004,
         "name": "부활 물약 제작서",
-        "rank": "A",
+        "rank": "B",
         "image": {
             "texture": "items.png",
             "x": 3,
@@ -648,7 +880,7 @@
         "category": "valuables",
         "options": [],
         "generateFloor": {
-            "begin": 1,
+            "begin": 21,
             "end": 100
         }
     },

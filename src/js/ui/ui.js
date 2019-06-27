@@ -134,7 +134,8 @@ export default class DomUI extends EventEmitter {
         const title = document.createElement('h2');
         title.className = 'stageTitle';
         title.innerText = text;
-
+        pane.classList.remove('uiContainer');
+        pane.classList.add('container');
         pane.appendChild(title);
         pane.style.pointerEvents = 'none';
 
@@ -217,28 +218,31 @@ export default class DomUI extends EventEmitter {
 
     showCraftUI(itemId, result) {
         const pane = this.createContainer();
-        let domHeight = 300;
+        let domHeight = 240;
 
-        const modal = new Modal(pane, 360, domHeight, () => {
-            result(itemId);
-            this.removeContainer(pane);
-        });
-    
+        // const modal = new Modal(pane, 360, domHeight, () => {
+        //     result(itemId);
+        //     this.removeContainer(pane);
+        // });
+
+        const modal = new Modal(pane, 360, domHeight);
         modal.addTitle('아이템 조합중');
-        modal.addCloseButton();
-        modal.addConfirmButton('조합완료');
+        // modal.addCloseButton();
+        // modal.addConfirmButton('조합완료');
     
         modal.dom.style.top = '50%';
         modal.dom.style.marginTop = domHeight * -0.5 + 'px';
 
         const itemText = document.createElement('div');
         itemText.className = 'contents';
-        itemText.innerText = "아이템을 조합중";
+        itemText.innerText = "아이템을 조합중입니다.";
         itemText.style.top = '60px';
 
-        const interval = 10; // 1 ~ 10
+        const interval = 4;
         const loading = new ProgressUI(modal.dom, interval, (onComplete)=>{
             itemText.innerText = "아이템 조합 성공!"
+            this.removeContainer(pane);
+            result(itemId);
         });
     
         loading.moveToCenter(130);
