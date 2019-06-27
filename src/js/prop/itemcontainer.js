@@ -9,7 +9,8 @@ export default class ItemContainer extends PropBase {
     }
 
     touch(game) {
-       console.log('open inventory')
+        const inputs = game.getInvenotryData();
+        game.ui.showInventory(inputs);
     }
 
     getName() {

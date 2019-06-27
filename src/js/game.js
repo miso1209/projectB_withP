@@ -159,13 +159,11 @@ export default class Game extends EventEmitter {
             this.storage.resetData();
             // TODO : 배틀 테스트를 위해서 추가한것인가?
             this.storage.data.characters[1] = { level: 1, exp: 0, equips: {}};
-            this.storage.data.characters[2] = { level: 1, exp: 0, equips: {}};
-            this.storage.data.characters[3] = { level: 1, exp: 0, equips: {}};
 
             // 파티 등록
             this.storage.data.party[0] = 1;
-            this.storage.data.party[1] = 2;
-            this.storage.data.party[2] = 3;
+            this.storage.data.party[1] = 0;
+            this.storage.data.party[2] = 0;
             this.storage.data.party[3] = 0;
             this.storage.data.party[4] = 0;
 
@@ -234,6 +232,11 @@ export default class Game extends EventEmitter {
 
             await this.$enterStage("assets/mapdata/house.json", "house-gate");
             // await this.$enterStage("assets/mapdata/castle_boss-final.json", "castle1_5-to-castle1_4");
+            this.exploreMode.interactive = true;
+            this.stage.showPathHighlight = true;
+            this.ui.hideTheaterUI(0.5);
+            this.ui.showMenu();
+            this.stage.enter();
         }
     }
 
@@ -360,7 +363,7 @@ export default class Game extends EventEmitter {
     }
 
     async $nextFloor(from, dir) {
-        this.currentFloor += 100;
+        this.currentFloor+=100;
         this.ui.showTheaterUI(0.5);
         this.ui.hideMenu();
         await this.$leaveStage(from);
@@ -446,11 +449,7 @@ export default class Game extends EventEmitter {
         // 진입 컷신을 사용한다
         await this.$fadeIn(0.5);
         await cutscene.$play();
-        this.exploreMode.interactive = true;
-        this.stage.showPathHighlight = true;
-        this.ui.hideTheaterUI(0.5);
-        this.ui.showMenu();
-        this.stage.enter();
+        // this.stage.enter();
     }
 
     async $enterStageIns(stage, eventName) {

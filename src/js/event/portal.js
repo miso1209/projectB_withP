@@ -32,6 +32,7 @@ export class Portal2 {
             game.stage.showPathHighlight = true;
             game.ui.hideTheaterUI(0.5);
             game.ui.showMenu();
+            game.stage.enter();
         };
 
         $t();
@@ -69,6 +70,7 @@ export class Portal5 {
             game.stage.showPathHighlight = true;
             game.ui.hideTheaterUI(0.5);
             game.ui.showMenu();
+            game.stage.enter();
         };
 
         $t();
