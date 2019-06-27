@@ -172,7 +172,7 @@ export default class Game extends EventEmitter {
             // 현지 진행해야하는 컷신 아이디를 적는다
             this.storage.data.cutscene = 1;
 
-            this.storage.data.inventory = { 3001: 1, 3004: 1 };
+            this.storage.data.inventory = { 3001: 1, 3004: 1, 2001: 4 };
 
             // 필드에 보이는 캐릭터
             this.storage.data.controlCharacter = 1;

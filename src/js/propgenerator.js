@@ -17,29 +17,48 @@ export default class PropGenerator {
     constructor() {
     }
     createChest(currentFloor, isBoss) {
+        const itemsByRanked = [
+            {
+                items: [1,2,3,4,5,6],
+                ranks: [RANK.C, RANK.C, RANK.A]
+            }, {
+                items: [1,2,3,4,5,6],
+                ranks: [RANK.C, RANK.B, RANK.S]
+            }, {
+                items: [1,2,3,4,5,6],
+                ranks: [RANK.B, RANK.A, RANK.U]
+            }
+        ];
+
+        let rewardsData = null;
+        const rankIndex = this.getRank();
+        rewardsData = itemsByRanked[rankIndex];
+        rewardsData.items = rewardsData.items[Math.round(Math.random() * (rewardsData.items.length - 1))];
+
+        const rewards = [];
+        for (let i=0; i<rewardsData.items; i++) {
+            const itemRank = rewardsData.ranks[this.getRank()];
+            const item = this.getItem(currentFloor, itemRank);
+            rewards.push({ id: item.id, owned: 1 });
+        }
+
         let chest = {
             type: "chest",
             texture: PIXI.Texture.fromFrame('castle_treasurebox.png'),
             movable: false,
             xsize: 1,
-            ysize: 2
+            ysize: 2,
+            rewards: rewards,
+            rank: rankIndex
         };
         if (Math.random() <= 0.5) {
-            chest = {
-                type: "chest",
+            chest = Object.assign(chest, {
                 texture: PIXI.Texture.fromFrame('castle_treasurebox_flip.png'),
-                movable: false,
                 xsize: 2,
                 ysize: 1,
-                imageOffset: {
-                    x:-16,
-                    y:0
-                },
-                nameTagOffset: {
-                    x: -16,
-                    y: -8
-                }
-            };
+                imageOffset: { x:-16, y:0 },
+                nameTagOffset: { x: -16, y: -8 }
+            });
         }
 
         return chest;
@@ -49,7 +68,6 @@ export default class PropGenerator {
         let success = false;
         const recipes = [];
         let rank = this.getOneOfAllRank().display;
-        console.log("rank",rank);
 
         while (!success) {
             const filteredRecipes = [];
@@ -80,9 +98,11 @@ export default class PropGenerator {
         }
 
         const recipe = recipes[Math.round(Math.random() * (recipes.length - 1))];
-        console.log(recipe)
-
-        // 여기에 리워드 박아서 주면 되겠다.
+        let recipeRank = (recipe.rank === 'U' || recipe.rank === 'S')?2:1;
+        recipeRank -= recipe.rank === 'C'?1:0;
+        // const anim = new PIXI.extras.AnimatedSprite(loadAniTexture('recipeshelf_1x1_sprite', 24));
+        // anim.gotoAndStop(1);
+        
         return {
             tileData: {
                 type: "recipe",
@@ -90,11 +110,8 @@ export default class PropGenerator {
                 movable: false,
                 xsize: 1,
                 ysize: 1,
-                rank: 'C',
-                recipe: 3001
-            },
-            directions: {
-                ne: true
+                rank: recipeRank,
+                recipe: recipe.id
             }
         }
     }
@@ -227,6 +244,43 @@ export default class PropGenerator {
         }
 
         return result;
+    }
+
+    getItem(floor, rank) {
+        let success = false;
+        const resultItems = [];
+
+        while (!success) {
+            const filteredItems = [];
+            for (let key in Items) {
+                const item = Items[key];
+                if (item.rank === rank) {
+                    filteredItems.push(item);
+                }
+            }
+    
+            filteredItems.forEach((item) => {
+                if (item.generateFloor.begin <= floor && item.generateFloor.end >= floor) {
+                    resultItems.push(item);
+                }
+            });
+
+            if (resultItems.length === 0) {
+                rank = this.getUnderRank(rank);
+                if (rank === RANK.UNKNOWN) {
+                    rank = RANK.C;
+                    console.log('no rank, no floor', floor, rank);
+                    floor--;
+                }
+                success = false;
+            } else {
+                success = true;
+            }
+        }
+
+        const selectedItem = resultItems[Math.round(Math.random() * (resultItems.length - 1))];
+
+        return selectedItem;
     }
 
     getMonster(floor, rank) {

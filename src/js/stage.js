@@ -303,37 +303,42 @@ export default class Stage extends PIXI.Container {
     getRandomPositions(xsize, ysize, tileSet) {
         const tileList = [];
 
-        tileSet.forEach((tile) => {
-            let emptyFlag = true;
+        for (let key in tileSet) {
+            const directionTiles = tileSet[key];
 
-            for (let y = 0; y < ysize; y++) {
-                for (let x = 0; x < xsize; x++) {
-                    if (!this.pathFinder.isMovable(tile.gridX - x, tile.gridY - y)) {
-                        emptyFlag = false;
+            directionTiles.forEach((tile) => {
+                let emptyFlag = true;
+    
+                for (let y = 0; y < ysize; y++) {
+                    for (let x = 0; x < xsize; x++) {
+                        if (!this.pathFinder.isMovable(tile.gridX - x, tile.gridY - y)) {
+                            emptyFlag = false;
+                        }
                     }
                 }
-            }
-
-            for (let y = -1; y < ysize+1; y++) {
-                for (let x = -1; x < xsize+1; x++) {
-                    if (this.eventMap[(tile.gridX - x) + (tile.gridY - y) * this.mapWidth] && !(this.eventMap[(tile.gridX - x) + (tile.gridY - y) * this.mapWidth] instanceof Portal4)) {
-                        emptyFlag = false;
+    
+                for (let y = -1; y < ysize+1; y++) {
+                    for (let x = -1; x < xsize+1; x++) {
+                        if (this.eventMap[(tile.gridX - x) + (tile.gridY - y) * this.mapWidth] && !(this.eventMap[(tile.gridX - x) + (tile.gridY - y) * this.mapWidth] instanceof Portal4)) {
+                            emptyFlag = false;
+                        }
                     }
                 }
-            }
+    
+                // 해당 좌표에 오브젝트가 없고, 해당 좌표의 무버블이 1이여야함. => 움직일 수 있는 좌표를 찾아본다.
+                if (tile && emptyFlag) {
+                    tileList.push({key:key, tile: tile});
+                }
+            });
+        }
 
-            // 해당 좌표에 오브젝트가 없고, 해당 좌표의 무버블이 1이여야함. => 움직일 수 있는 좌표를 찾아본다.
-            if (tile && emptyFlag) {
-                tileList.push(tile);
-            }
-        });
+        const tileData = tileList[Math.round(Math.random() * (tileList.length - 1))];
 
-        const tile = tileList[Math.round(Math.random() * (tileList.length - 1))];
-
-        if (tile) {
+        if (tileData) {
             return {
-                x: tile.gridX,
-                y: tile.gridY
+                x: tileData.tile.gridX,
+                y: tileData.tile.gridY,
+                direction: tileData.key
             };
         } else {
             return false;
@@ -893,7 +898,7 @@ export default class Stage extends PIXI.Container {
     // 최초 Map Generator에서 생성 시, 몬스터를 찍어내도록 하는것은 어떨까?..
     addMonster(monster, monsterOptions) {
         // 임시 하드코딩. 다음엔 Generate 된 몬스터 파티를 받도록 하자.
-        const spawnPos = monsterOptions.pos?monsterOptions.pos:this.getRandomPositions(1, 1, this.groundMap);
+        const spawnPos = monsterOptions.pos?monsterOptions.pos:this.getRandomPositions(1, 1, { ne:this.groundMap });
         const options = {  type: monsterOptions.type, src: monster };
 
         const prop = this.newTile(spawnPos.x, spawnPos.y, options);
@@ -923,6 +928,7 @@ export default class Stage extends PIXI.Container {
         let spawnPos = this.getRandomPositions(options.xsize, options.ysize, tiles);
 
         if (spawnPos) {
+            options.direction = spawnPos.direction;
             const prop = this.newTile(spawnPos.x, spawnPos.y, options);
             for (let y=0;y<options.ysize;y++) {
                 for (let x=0;x<options.xsize;x++) {
@@ -974,18 +980,18 @@ export default class Stage extends PIXI.Container {
         mapData.centerX = Math.floor((mapData.xMin + mapData.xMax) / 2);
         mapData.centerY = Math.floor((mapData.yMin + mapData.yMax) / 2);
         
-        const resultTiles = [];
+        const resultTiles = {ne:[], nw:[], se:[], sw:[]};
         // 모서리는 각 xMin, xMax, yMin, yMax의 타일이다.
         this.groundMap.forEach((tile) => {
             // 모서리 타일 추가.
             if (tile && tile.gridX <= mapData.xMax && tile.gridX >= mapData.xMin && tile.gridY === mapData.yMin && options && options.xSize >= options.ySize && options.directions.ne) {
-                resultTiles.push(tile);
+                resultTiles.ne.push(tile);
             } else if (tile && tile.gridX <= mapData.xMax && tile.gridX >= mapData.xMin && tile.gridY === mapData.yMax && options.xSize >= options.ySize && options.directions.sw) {
-                resultTiles.push(tile);
+                resultTiles.sw.push(tile);
             } else if (tile && tile.gridY <= mapData.yMax && tile.gridY >= mapData.yMin && tile.gridX === mapData.xMin && options.xSize <= options.ySize && options.directions.nw) {
-                resultTiles.push(tile);
+                resultTiles.nw.push(tile);
             } else if (tile && tile.gridY <= mapData.yMax && tile.gridY >= mapData.yMin && tile.gridX === mapData.xMax && options.xSize <= options.ySize && options.directions.se) {
-                resultTiles.push(tile);
+                resultTiles.se.push(tile);
             }
         });
 

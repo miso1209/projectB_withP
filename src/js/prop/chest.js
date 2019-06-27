@@ -6,22 +6,15 @@ export default class Chest extends PropBase {
 
         this.isInteractive = true;
         this.isOpened = false;
+        this.rewards = tileData.rewards;
+        this.rank = tileData.rank;
+        this.direction = tileData.direction;
+        console.log('chest : ', this.rewards, this.rank, this.direction);
     }
 
     touch(game) {
         if (!this.isOpened) {
-            game.addItems([
-                {
-                    id: 1,
-                    owned: 1
-                },{
-                    id: 1001,
-                    owned: 1
-                },{
-                    id: 1002,
-                    owned: 1
-                }
-            ]);
+            game.addItems(this.rewards);
 
             this.isOpened = true;
         } else {

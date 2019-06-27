@@ -7,11 +7,14 @@ export default class Recipe extends PropBase {
         this.isInteractive = true;
         this.isOpened = false;
         this.recipe = tileData.recipe;
-        console.log(this.recipe);
+        this.direction = tileData.direction;
+        this.rank = tileData.rank;
+        console.log('recipe : ', this.recipe, this.rank, this.direction);
     }
 
     touch(game) {
         if (!this.isOpened) {
+            console.log('addItem',this.recipe);
             game.addItem(this.recipe, 1);
 
             this.isOpened = true;
