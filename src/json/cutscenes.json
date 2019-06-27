@@ -167,6 +167,23 @@
             "command": "battle",
             "arguments": []
         }
+    ],
+    "9": [{
+            "command": "goto",
+            "arguments": [45, 54]
+        },{
+            "command": "delay",
+            "arguments": [0.5]
+        },{
+            "command": "look",
+            "arguments": [160, -80]
+        },{
+            "command": "delay",
+            "arguments": [0.5]
+        },{
+            "command": "battle",
+            "arguments": []
+        }
     ]
 }
 

@@ -199,6 +199,7 @@ export default class MapGenerator {
     }
 
     async loadMap() {
+        const lastBoss = 'castle_boss-final';
         const middleBoss = 'castle_boss-middle';
         const stair = 'castle_room_stair';
         const portal = 'castle_portal';
@@ -220,12 +221,13 @@ export default class MapGenerator {
                 const neighbor = this.getNeighbor(x,y);
                 
                 if (this.map[y][x] === MAP_DATA.BOSS) {
-                    const stageName = path.basename(`assets/mapdata/${middleBoss}.json`, ".json");
+                    const stageName = path.basename(`assets/mapdata/${this.currentFloor===100?lastBoss:middleBoss}.json`, ".json");
                     const stage = new Stage(neighbor);
                     await stage.$load(stageName);
                     stage.setTags(this.tags);
 
-                    if (!this.hasTag('hasarcher')) {
+                    if (this.currentFloor === 100) {
+                    } else if (!this.hasTag('hasarcher')) {
                         const monster = this.propGenerator.createStoryMonster('archer');
                         stage.addMonster(monster, {
                             type: "archer",

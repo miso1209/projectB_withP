@@ -824,46 +824,11 @@ export default class Stage extends PIXI.Container {
         return null;
     }
 
-    randomPropGenerate() {
-        let chest = {
-            type: "chest",
-            texture: PIXI.Texture.fromFrame('castle_treasurebox.png'),
-            movable: false,
-            xsize: 1,
-            ysize: 2
-        };
-        if (Math.random() <= 0.5) {
-            chest = {
-                type: "chest",
-                texture: PIXI.Texture.fromFrame('castle_treasurebox_flip.png'),
-                movable: false,
-                xsize: 2,
-                ysize: 1,
-                imageOffset: {
-                    x:-16,
-                    y:0
-                },
-                nameTagOffset: {
-                    x: -16,
-                    y: -8
-                }
-            };
-        }
-        this.addProp(chest);
-
-        let recipe = {
-            type: "recipe",
-            texture: PIXI.Texture.fromFrame('recipeshelf_front_1x1_flip.png'),
-            movable: false,
-            xsize: 1,
-            ysize: 1
-        };
-        this.addProp(recipe);
-    }
-
     enter() {
         // 중간보스룸 컷씬
-        if (this.name === 'castle_boss-middle') {
+        if (this.name === 'castle_boss-final') {
+            this.emit('playcutscene', 9);
+        } else if (this.name === 'castle_boss-middle') {
             this.monsters.forEach((monster) => {
                 monster.currentDirection = getDirection(monster.gridX, monster.gridY, monster.gridX, monster.gridY + 1);
                 monster.changeVisualToDirection(monster.currentDirection);
@@ -939,8 +904,6 @@ export default class Stage extends PIXI.Container {
             this.addObjRefToLocation(prop, spawnPos.x, spawnPos.y);
             this.arrangeDepthsFromLocation(prop, spawnPos.x, spawnPos.y);
             this.setObjectEmitter(prop);
-        } else {
-            console.log('SPAWN FAIL!.');
         }
     }
 
@@ -1245,6 +1208,21 @@ export default class Stage extends PIXI.Container {
                 this.arrangeDepthsFromLocation(obj, obj.gridX, obj.gridY);
             }
         }	
+    }
+
+
+    lookAt(x, y, instantFollow, callback) {
+        if (true) {
+            const px = this.externalCenter.x - (this.player.position.x + x) * this.currentScale;
+            const py = this.externalCenter.y - (this.player.position.y + y) * this.currentScale;
+            
+            if (instantFollow) {
+                this.mapContainer.position.x = px;
+                this.mapContainer.position.y = py;
+            } else {
+                this.tweens.addTween(this.mapContainer.position, 1.5, { x: px, y: py }, 0, "easeOut_ex", true, callback);
+            }
+        }
     }
 
 

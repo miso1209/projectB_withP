@@ -89,7 +89,6 @@ export default class PropGenerator {
                 rank = this.getUnderRank(rank);
                 if (rank === RANK.UNKNOWN) {
                     rank = RANK.C;
-                    console.log('no rank, no floor', floor, rank);
                     floor--;
                 }
                 success = false;
@@ -270,7 +269,6 @@ export default class PropGenerator {
                 rank = this.getUnderRank(rank);
                 if (rank === RANK.UNKNOWN) {
                     rank = RANK.C;
-                    console.log('no rank, no floor', floor, rank);
                     floor--;
                 }
                 success = false;
@@ -307,7 +305,6 @@ export default class PropGenerator {
                 rank = this.getUnderRank(rank);
                 if (rank === RANK.UNKNOWN) {
                     rank = RANK.C;
-                    console.log('no rank, no floor', floor, rank);
                     floor--;
                 }
                 success = false;

@@ -220,7 +220,7 @@ export default class Game extends EventEmitter {
         this.player.controlCharacter = this.storage.data.controlCharacter;
     }
 
-    start() {
+    async start() {
         this.initPlayer();
 
         // TODO : 마지막 플레이된 컷신을 찾아서 해당 컷신을 실행하도록 한다.
@@ -232,13 +232,8 @@ export default class Game extends EventEmitter {
             // 그냥 평범하게 집에 들어간다
             this.ui.showTheaterUI(0.5);
 
-            // this.$enterStage("assets/mapdata/house.json", "house-gate").then(() => {
-            this.$enterStage("assets/mapdata/castle_boss-final.json", "castle1_5-to-castle1_4").then(() => {
-                this.exploreMode.interactive = true;
-                this.stage.showPathHighlight = true;
-                this.ui.hideTheaterUI(0.5);
-                this.ui.showMenu();
-            });
+            await this.$enterStage("assets/mapdata/house.json", "house-gate");
+            // await this.$enterStage("assets/mapdata/castle_boss-final.json", "castle1_5-to-castle1_4");
         }
     }
 
@@ -300,7 +295,6 @@ export default class Game extends EventEmitter {
                     this.addQuest(...func.arguments);
                     next();
                 } else if (func.command === "addcharacter") {
-                    console.log(...func.arguments);
                     this.addCharacter(...func.arguments);
                     next();
                 } else if (func.command === "battle") {
@@ -311,6 +305,10 @@ export default class Game extends EventEmitter {
                     this.onNotification = false;
 
                     this.stage.storyBattle();
+                } else if (func.command === "look") {
+                    this.stage.lookAt(func.arguments[0],func.arguments[1],false,() => {
+                        next();
+                    });
                 }
             } else {
                 const t = async() => {
@@ -362,7 +360,7 @@ export default class Game extends EventEmitter {
     }
 
     async $nextFloor(from, dir) {
-        this.currentFloor ++;
+        this.currentFloor += 100;
         this.ui.showTheaterUI(0.5);
         this.ui.hideMenu();
         await this.$leaveStage(from);
@@ -413,6 +411,12 @@ export default class Game extends EventEmitter {
     async $enterStage(stagePath, eventName) {
         const stageName = path.basename(stagePath, ".json");
         const stage = new Stage();
+        stage.on('playcutscene', async (...args) => {
+            this._playCutscene(...args);
+        });
+        stage.on('seePlayer', async (...args) => { await this.$battleCutscene(...args); });
+        stage.on('battle', async (...args) => { await this.$objBattle(...args); });
+
         this.currentFloor = 0;
         this.ui.hideMinimap();
         await stage.$load(stageName);
@@ -442,6 +446,11 @@ export default class Game extends EventEmitter {
         // 진입 컷신을 사용한다
         await this.$fadeIn(0.5);
         await cutscene.$play();
+        this.exploreMode.interactive = true;
+        this.stage.showPathHighlight = true;
+        this.ui.hideTheaterUI(0.5);
+        this.ui.showMenu();
+        this.stage.enter();
     }
 
     async $enterStageIns(stage, eventName) {
