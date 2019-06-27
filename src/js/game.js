@@ -233,7 +233,7 @@ export default class Game extends EventEmitter {
             this.ui.showTheaterUI(0.5);
 
             // this.$enterStage("assets/mapdata/house.json", "house-gate").then(() => {
-            this.$enterStage("assets/mapdata/open_road_3.json", "road3-to-road2").then(() => {
+            this.$enterStage("assets/mapdata/castle_boss-final.json", "castle1_5-to-castle1_4").then(() => {
                 this.exploreMode.interactive = true;
                 this.stage.showPathHighlight = true;
                 this.ui.hideTheaterUI(0.5);

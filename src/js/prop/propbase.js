@@ -12,7 +12,18 @@ export default class PropBase extends PIXI.Container {
             // 스프라이트 정보를 출력한다
             const texture = options.texture;
 
-            if (options.isAnimationTile) {
+            if (options.animations.length > 0) {
+                const animations = [];
+                options.animations.forEach((animation) => {
+                    animations.push(animation.texture);
+                });
+                const sprite = new PIXI.extras.AnimatedSprite(animations);
+                sprite.loop = true;
+                sprite.animationSpeed = options.speed?options.speed:1;
+                sprite.play();
+                this.tileTexture = sprite;
+                this.tileTexture.position.y = -this.tileTexture.height;
+            } else if (options.isAnimationTile) {
                 const sprite = new PIXI.extras.AnimatedSprite(loadAniTexture(texture, options.animationLength));
                 sprite.loop = true;
                 sprite.stop();
