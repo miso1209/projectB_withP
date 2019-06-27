@@ -36,6 +36,9 @@ export default class PropBase extends PIXI.Container {
             }
             this.addChild(this.tileTexture);
 
+            if (options.blendMode) {
+                this.tileTexture.blendMode = PIXI.BLEND_MODES[options.blendMode];
+            }
             if (options.imageOffset) {
                 this.tileTexture.position.x += options.imageOffset.x;
                 this.tileTexture.position.y += options.imageOffset.y;
