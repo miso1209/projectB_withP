@@ -265,11 +265,11 @@ export default class MapGenerator {
                     await stage.$load(stageName);
                     stage.setTags(this.tags);
 
-                    if (Math.random() <= 0.3) {
+                    if (Math.random() <= 0.5) {
                         let recipe = this.propGenerator.createRecipe(this.currentFloor);
                         stage.addProp(recipe.tileData);
                     }
-                    if (Math.random() <= 0.3) {
+                    if (Math.random() <= 0.5) {
                         let chest = this.propGenerator.createChest(this.currentFloor);
                         stage.addProp(chest);
                     }
@@ -287,11 +287,11 @@ export default class MapGenerator {
                     await stage.$load(stageName);
                     stage.setTags(this.tags);
 
-                    if (Math.random() <= 0.1) {
+                    if (Math.random() <= 0.15) {
                         let recipe = this.propGenerator.createRecipe(this.currentFloor);
                         stage.addProp(recipe.tileData);
                     }
-                    if (Math.random() <= 0.1) {
+                    if (Math.random() <= 0.15) {
                         let chest = this.propGenerator.createChest(this.currentFloor);
                         stage.addProp(chest);
                     }
@@ -304,11 +304,11 @@ export default class MapGenerator {
                     await stage.$load(stageName);
                     stage.setTags(this.tags);
 
-                    if (Math.random() <= 0.1) {
+                    if (Math.random() <= 0.15) {
                         let recipe = this.propGenerator.createRecipe(this.currentFloor);
                         stage.addProp(recipe.tileData);
                     }
-                    if (Math.random() <= 0.1) {
+                    if (Math.random() <= 0.15) {
                         let chest = this.propGenerator.createChest(this.currentFloor);
                         stage.addProp(chest);
                     }

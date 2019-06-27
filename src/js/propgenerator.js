@@ -44,7 +44,9 @@ export default class PropGenerator {
 
         let chest = {
             type: "chest",
-            texture: PIXI.Texture.fromFrame('castle_treasurebox.png'),
+            texture: 'castle_treasurebox_sprite',
+            isAnimationTile: true,
+            animationLength: 24,
             movable: false,
             xsize: 1,
             ysize: 2,
@@ -53,7 +55,6 @@ export default class PropGenerator {
         };
         if (Math.random() <= 0.5) {
             chest = Object.assign(chest, {
-                texture: PIXI.Texture.fromFrame('castle_treasurebox_flip.png'),
                 xsize: 2,
                 ysize: 1,
                 imageOffset: { x:-16, y:0 },
@@ -100,13 +101,13 @@ export default class PropGenerator {
         const recipe = recipes[Math.round(Math.random() * (recipes.length - 1))];
         let recipeRank = (recipe.rank === 'U' || recipe.rank === 'S')?2:1;
         recipeRank -= recipe.rank === 'C'?1:0;
-        // const anim = new PIXI.extras.AnimatedSprite(loadAniTexture('recipeshelf_1x1_sprite', 24));
-        // anim.gotoAndStop(1);
         
         return {
             tileData: {
                 type: "recipe",
-                texture: PIXI.Texture.fromFrame('recipeshelf_front_1x1_flip.png'),
+                texture: 'recipeshelf_1x1_sprite',
+                isAnimationTile: true,
+                animationLength: 24,
                 movable: false,
                 xsize: 1,
                 ysize: 1,

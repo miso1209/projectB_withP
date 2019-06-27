@@ -1,5 +1,12 @@
 import PropBase from './propbase';
 
+const DIR_TO_FRAME = {
+    ne: 0,
+    nw: 2,
+    sw: 4,
+    se: 6
+};
+
 export default class Chest extends PropBase {
     constructor(x, y, tileData) {
         super(x, y, tileData);
@@ -9,19 +16,23 @@ export default class Chest extends PropBase {
         this.rewards = tileData.rewards;
         this.rank = tileData.rank;
         this.direction = tileData.direction;
-        console.log('chest : ', this.rewards, this.rank, this.direction);
+        this.animationIndex = DIR_TO_FRAME[this.direction] + (this.rank * 8);
+        this.tileTexture.gotoAndStop(this.animationIndex);
     }
 
     touch(game) {
         if (!this.isOpened) {
             game.addItems(this.rewards);
-
+            this.tileTexture.gotoAndStop(this.animationIndex + 1);
             this.isOpened = true;
         } else {
             game.ui.showDialog([
                 { text: "상자는 비어있다." }
             ], () => {});
         }
+    }
+    showOutline() {
+
     }
 
     getName() {

@@ -35,6 +35,8 @@
     ["recipeshelf_front_1x1.png", "assets/mapdata/recipeshelf_front_1x1.png"],
     ["castle_treasurebox.png", "assets/mapdata/castle_treasurebox.png"],
     ["castle_treasurebox_flip.png", "assets/mapdata/castle_treasurebox_flip.png"],
+    ["assets/mapdata/recipeshelf_1x1_sprite.json"],
+    ["assets/mapdata/castle_treasurebox_sprite.json"],
 
     ["assets/sprite/elid/elid_atk_nw.json"],
     ["assets/sprite/elid/elid_atk_sw.json"],

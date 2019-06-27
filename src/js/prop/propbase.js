@@ -1,3 +1,5 @@
+import { loadAniTexture } from "../utils";
+
 export default class PropBase extends PIXI.Container {
     constructor(x, y, options) {
         super();
@@ -7,13 +9,21 @@ export default class PropBase extends PIXI.Container {
         this.groupId = options.groupId;
 
         if (options.texture) {
-
             // 스프라이트 정보를 출력한다
             const texture = options.texture;
-            const sprite = new PIXI.Sprite(texture);
-            sprite.position.y = -texture.height;
-            this.addChild(sprite);
-            this.tileTexture = sprite;
+
+            if (options.isAnimationTile) {
+                const sprite = new PIXI.extras.AnimatedSprite(loadAniTexture(texture, options.animationLength));
+                sprite.loop = true;
+                sprite.stop();
+                this.tileTexture = sprite;
+                this.tileTexture.position.y = -this.tileTexture.height;
+            } else {
+                const sprite = new PIXI.Sprite(texture);
+                this.tileTexture = sprite;
+                this.tileTexture.position.y = -texture.height;
+            }
+            this.addChild(this.tileTexture);
 
             if (options.imageOffset) {
                 this.tileTexture.position.x += options.imageOffset.x;
@@ -22,8 +32,8 @@ export default class PropBase extends PIXI.Container {
             
 
             if (options.flipX) {
-                sprite.anchor.x = 1;
-                sprite.scale.x = -1;
+                this.tileTexture.anchor.x = 1;
+                this.tileTexture.scale.x = -1;
             }
         }
 

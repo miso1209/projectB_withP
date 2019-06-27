@@ -939,6 +939,8 @@ export default class Stage extends PIXI.Container {
             this.addObjRefToLocation(prop, spawnPos.x, spawnPos.y);
             this.arrangeDepthsFromLocation(prop, spawnPos.x, spawnPos.y);
             this.setObjectEmitter(prop);
+        } else {
+            console.log('SPAWN FAIL!.');
         }
     }
 
