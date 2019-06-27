@@ -12,7 +12,7 @@ export default class PropBase extends PIXI.Container {
             // 스프라이트 정보를 출력한다
             const texture = options.texture;
 
-            if (options.animations.length > 0) {
+            if (options.animations && options.animations.length > 0) {
                 const animations = [];
                 options.animations.forEach((animation) => {
                     animations.push(animation.texture);
