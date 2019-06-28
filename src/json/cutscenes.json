@@ -30,7 +30,6 @@
         }, {
             "command": "dialog",
             "arguments": [
-                
                 { "text": "우선 여기 빈 탁자에 작업도구를 준비해보자 ", "speaker": 1}
             ]
         }, { 
@@ -39,25 +38,30 @@
         }
     ],
     "2": [
-        { 
-            "command": "leavestage",
-            "arguments": [] 
-        }, {
-            "command": "enterstage",
-            "arguments": ["house", "room-gate"]
-        }, {
-            "command": "dialog",
-            "arguments": [ {"text":"이런, 누군가가 쓰러져있잖아", "speaker": 1}]
-        }, {
-            "command": "goto",
-            "arguments": [5, 13]
-        }, {
+        {
             "command": "dialog",
             "arguments": [
-                {"text": "으아아아!!!!!!", "speaker": 1},
-                {"text": "피.. 피가 엄청나다.", "speaker": 1},
-                {"text": "작업도구로 회복약을 만들어서 가져와보자 ", "speaker": 1}
+                { "text": "흐음.. 우선 작업도구는 전부 준비했고..", "speaker": 1},
+                { "text": "던전으로 출발해 보실까?", "speaker": 1}
             ]
+        }, {
+            "command": "goto",
+            "arguments": [1, 13]
+        }, { 
+            "command": "leavestage",
+            "arguments": ["house-gate"] 
+        }, {
+            "command": "enterstage",
+            "arguments": ["open_road_1", "house-gate"]
+        }, {
+            "command": "goto",
+            "arguments": [23, 9]
+        }, {
+            "command": "dialog",
+            "arguments": [ {"text":"이런, 누군가가 쓰러져있잖아..?", "speaker": 1}]
+        }, {
+            "command": "dialog",
+            "arguments": [ {"text":"한번 말을걸어보자!.", "speaker": 1}]
         }
     ],
     "3": [

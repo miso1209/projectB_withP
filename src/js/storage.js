@@ -52,6 +52,18 @@ export default class Storage {
         this.save();
     }
 
+    getLocation() {
+        return this.data.location;
+    }
+
+    saveLocation(stagePath, eventName) {
+        this.data.location = {
+            stagePath: stagePath,
+            eventName: eventName
+        };
+        this.save();
+    }
+
     addCharacter(id, character) {
         if (!this.data.characters[id]) {
             this.data.characters[id] = character;

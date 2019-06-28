@@ -171,6 +171,8 @@ export default class Game extends EventEmitter {
             // 현지 진행해야하는 컷신 아이디를 적는다
             this.storage.data.cutscene = 1;
 
+            this.storage.data.location = {};
+
             this.storage.data.inventory = { 3001: 1, 3004: 1, 2001: 4 };
 
             // 필드에 보이는 캐릭터
@@ -237,7 +239,7 @@ export default class Game extends EventEmitter {
             // 그냥 평범하게 집에 들어간다
             this.ui.showTheaterUI(0.5);
 
-            await this.$enterStage("assets/mapdata/house.json", "house-gate");
+            await this.$enterStage(this.storage.getLocation().stagePath, this.storage.getLocation().eventName);
             // await this.$enterStage("assets/mapdata/castle_boss-final.json", "castle1_5-to-castle1_4");
             this.exploreMode.interactive = true;
             this.stage.showPathHighlight = true;
@@ -418,6 +420,7 @@ export default class Game extends EventEmitter {
     }
     
     async $enterStage(stagePath, eventName) {
+        this.storage.saveLocation(stagePath, eventName);
         const stageName = path.basename(stagePath, ".json");
         const stage = new Stage();
         stage.on('playcutscene', async (...args) => {

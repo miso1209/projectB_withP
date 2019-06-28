@@ -1091,6 +1091,7 @@ export default class Stage extends PIXI.Container {
     }
 
     onObjMoveStepEnd(obj) {
+        console.log(obj.gridX, obj.gridY);
         obj.currentPathStep--;
         obj.currentTarget = null;
         obj.currentTargetTile = null;

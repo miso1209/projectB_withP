@@ -6,7 +6,7 @@
         { "text": "작업용 테이블 찾기", "event": "addtag", "args":["worktable"] }
     ],
     "rewards": [
-        { "text": "약초 x2",  "script": "addItem(2001, 2)" },
-        { "script": "playCutscene(2)" }
+        { "text": "약초 1",  "script": "addItem(2001, 1)" },
+        { "script": "_playCutscene(2)" }
     ]
 }}
