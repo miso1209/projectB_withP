@@ -67,6 +67,7 @@ export default class DomUI extends EventEmitter {
 
         this.player = null;
         this.playerInvenData = null;
+        this.characters = null;
     }
 
     createContainer() {
@@ -75,9 +76,7 @@ export default class DomUI extends EventEmitter {
         container.style.top = this.gamePane.offsetTop + 'px';
         document.body.appendChild(container);
         
-        // event prevent??
         container.style.pointerEvents = 'auto';
-    
         return container;
     }
     
@@ -252,7 +251,7 @@ export default class DomUI extends EventEmitter {
             this.removeContainer(pane);
 
             if (result) {
-                console.log(response);
+                // console.log(response);
                 result();
             }
         });
@@ -267,13 +266,11 @@ export default class DomUI extends EventEmitter {
 
     showParty(inputs, partyinputs){
         const pane = this.createContainer();
-        
-        const party = new PartyUI(pane, inputs, partyinputs, (id, character) => {
+        const party = new PartyUI(pane, inputs, partyinputs, (id, result) => {
             if(id === 'buttoncallback') {
-                console.log('buttoncallback' , character);
-                this.emit(character);
+                this.emit(result);
             } else {
-                this.emit('setParty', id, character);
+                this.emit('setParty', id, result);
             }
         });
     }
@@ -345,6 +342,7 @@ export default class DomUI extends EventEmitter {
                     characterDetail.updateEquip();
                     characterDetail.pauseData = null;
                 }
+
                 characterDetail.selected = this.player;
                 characterDetail.updateStat();
 
