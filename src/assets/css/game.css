@@ -521,8 +521,10 @@ button, .button {
 .dialog.portrait .dialog-speaker {
   display: block;
 }
-
-.dialog.portrait .name{
+.dialog .name {
+  display: none;
+}
+.dialog.portrait .name {
   display: block;
   position: absolute;
   left: 0;

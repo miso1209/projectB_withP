@@ -11,7 +11,7 @@ export default class Dialog extends Panel {
         dialog.dom.className = 'dialog';
         dialog.moveToBottom(20);
         this.dom = dialog.dom;
-        this.speaker = null;
+        this.speakers = null;
 
         // dialogText
         const dialogText = document.createElement('p');
@@ -47,7 +47,7 @@ export default class Dialog extends Panel {
 
     nextDialog(event) {
         event.preventDefault();
-    
+        
         if (this.currentIndex < 0) {
             return;
         }
@@ -65,9 +65,9 @@ export default class Dialog extends Panel {
                 }
                 this.currentIndex = -1;
                 this.dom.removeEventListener('click', this.nextDialog, true);
-        
                 return;
             }
+
             this.setText(this.data[this.currentIndex].text);
             this.showSpeaker(this.data[this.currentIndex].speaker);
         }
@@ -82,14 +82,16 @@ export default class Dialog extends Panel {
     }
     
     showSpeaker(id) {
-        if (id === 0) { // system dialog
+        let speaker = this.speakers[id];
+        
+        if (speaker === undefined) {
             this.dom.classList.remove('portrait');
             return;
+        } else {
+            this.dom.classList.add('portrait');
+            this.speakerImg.src = `/src/assets/${speaker.portrait}`;
+            this.speakerName.innerText = `${speaker.displayname}`;
         }
-        
-        this.dom.classList.add('portrait');
-        this.speakerImg.src = `/src/assets/${this.speaker.data.portrait}`;
-        this.speakerName.innerText = `${this.speaker.displayName}`;
     }
     
     setText(text) {

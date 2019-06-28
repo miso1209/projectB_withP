@@ -10,6 +10,7 @@ import Explore  from "./explore";
 
 import Combiner from './combiner';
 import Character from './character';
+import Characters from './characters';
 import Quest from './quest';
 
 import ScriptParser from './scriptparser';
@@ -19,6 +20,7 @@ import Portal from './portal';
 import Notification from './notification';
 import Item from './item';
 import MapGenerator from './mapgenerator';
+import { timingSafeEqual } from 'crypto';
 
 
 export default class Game extends EventEmitter {
@@ -126,7 +128,6 @@ export default class Game extends EventEmitter {
             this.ui.player = this.player.characters[cid];
         });
 
-        // this.ui.on('playerInvenData', (category) => {
         this.ui.on('playerInvenData', (option) => {
             this.ui.playerInvenData = this.getFiteredInventoryData({category: option.category, class: option.class});
         });
@@ -179,6 +180,8 @@ export default class Game extends EventEmitter {
         }
 
         this.player = new Player();
+        
+        console.log(this.player);
 
         // 태그정보를 로딩한다
         for(const tag of this.storage.data.tags) {
@@ -217,6 +220,8 @@ export default class Game extends EventEmitter {
         }
         
         this.ui.player = this.player;
+        this.ui.characters = Characters;
+        // console.log(this.ui.characters);
         this.player.controlCharacter = this.storage.data.controlCharacter;
     }
 
@@ -615,6 +620,7 @@ export default class Game extends EventEmitter {
 
         // 캐릭터 데이터를 저장해야 하는지 확인
         if (this.player) {
+            // console.log(this.player.characters);
             for (const cid in this.player.characters) {
                 const c = this.player.characters[cid];
                 if (c.isDirty()) {

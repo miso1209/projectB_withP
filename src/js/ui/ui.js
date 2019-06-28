@@ -162,10 +162,12 @@ export default class DomUI extends EventEmitter {
         const dialog = new Dialog(pane, 700, 140, script);
     
         dialog.setText(script[0].text);
+        
         if (script[0].speaker) {
-            dialog.speaker = this.player.characters[script[0].speaker];
+            dialog.speakers = this.characters;
             dialog.showSpeaker(script[0].speaker);
         }
+
         dialog.onComplete = callback;
     }
 
@@ -220,16 +222,8 @@ export default class DomUI extends EventEmitter {
         const pane = this.createContainer();
         let domHeight = 240;
 
-        // const modal = new Modal(pane, 360, domHeight, () => {
-        //     result(itemId);
-        //     this.removeContainer(pane);
-        // });
-
         const modal = new Modal(pane, 360, domHeight);
         modal.addTitle('아이템 조합중');
-        // modal.addCloseButton();
-        // modal.addConfirmButton('조합완료');
-    
         modal.dom.style.top = '50%';
         modal.dom.style.marginTop = domHeight * -0.5 + 'px';
 
@@ -317,6 +311,7 @@ export default class DomUI extends EventEmitter {
         const characterDetail = new CharacterDetail(pane, player, (result, option) => {
             
             if (option === 'close') {
+                // 시뮬레이션 취소하고-캐릭터 선택창 이동 
                 this.emit('cancelSimulate');
                 this.emit('characterselect');
                 return;
@@ -350,7 +345,6 @@ export default class DomUI extends EventEmitter {
                     characterDetail.updateEquip();
                     characterDetail.pauseData = null;
                 }
-
                 characterDetail.selected = this.player;
                 characterDetail.updateStat();
 
