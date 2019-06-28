@@ -72,6 +72,9 @@ export default class Dialog extends Panel {
             const speaker = this.data[this.currentIndex].speaker;
             if(speaker) {
                 this.showSpeaker(speaker);
+            } else {
+                this.dom.classList.remove('portrait');
+                this.speakerImg.style.display = 'none';
             }
         }
     }
@@ -87,14 +90,10 @@ export default class Dialog extends Panel {
     showSpeaker(id) {
         let speaker = this.speakers[id];
         
-        if (speaker === undefined) {
-            this.dom.classList.remove('portrait');
-            return;
-        } else {
-            this.dom.classList.add('portrait');
-            this.speakerImg.src = `/src/assets/${speaker.portrait}`;
-            this.speakerName.innerText = `${speaker.displayname}`;
-        }
+        this.dom.classList.add('portrait');
+        this.speakerImg.src = `/src/assets/${speaker.portrait}`;
+        this.speakerImg.style.display = 'block';
+        this.speakerName.innerText = `${speaker.displayname}`;
     }
     
     setText(text) {

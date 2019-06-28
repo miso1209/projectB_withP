@@ -76,7 +76,7 @@ export default class DomUI extends EventEmitter {
         container.className = 'uiContainer';
         container.style.top = this.gamePane.offsetTop + 'px';
         document.body.appendChild(container);
-        // container.style.pointerEvents = 'auto';
+
         return container;
     }
     
@@ -104,14 +104,6 @@ export default class DomUI extends EventEmitter {
         this.theaterUI.classList.remove('show');
     }
 
-    showZoomBtn(){
-        this.zoomBtn.style.opacity = '1';
-    }
-
-    hideZoomBtn(){
-        this.zoomBtn.style.opacity = '0';
-    }
-
     showMinimap() {
         this.minimapDOM.style.display = 'block';
     }
@@ -128,14 +120,17 @@ export default class DomUI extends EventEmitter {
     }
     
     showStageTitle(text) {
-        // const pane = this.createContainer();
-        const title = document.createElement('h2');
-        title.className = 'stageTitle';
-        title.innerText = text;
-        // pane.classList.remove('uiContainer');
-        // pane.classList.add('container');
-        this.displayLayer.appendChild(title);
-        // pane.style.pointerEvents = 'none';
+        let tt = this.displayLayer.querySelector('.stageTitle');
+        const stageTitle = new MakeDom('h2', 'stageTitle');
+
+        if(this.displayLayer.querySelector('.stageTitle')) {
+            stageTitle.innerText = text; 
+            this.displayLayer.removeChild(tt);
+            this.displayLayer.appendChild(stageTitle);   
+        } else {
+            this.displayLayer.appendChild(stageTitle);   
+            stageTitle.innerText = text; 
+        }
     }
     
     showDialog(script, callback) {

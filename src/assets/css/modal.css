@@ -14,7 +14,6 @@
 }
 
 .iconBtn {
-  /* padding: 8px; */
   width: 32px;
   height: 32px;
   
@@ -58,6 +57,24 @@
   animation-iteration-count: infinite;
 }
 
+.ico-class {
+  display: inline-block;
+
+  width: 32px;
+  height: 32px;
+  
+  overflow: hidden;
+  background: url('~assets/items/items.png') no-repeat -608px -96px;
+
+  border: 1px solid transparent;
+  border-radius: 5px;
+  transition: all 0.3s;
+}
+.infoWrap .ico-class {
+  position: absolute;
+  left: 40px;
+  top: 60px;
+}
 .modal {
   position: relative;
   z-index: 10;

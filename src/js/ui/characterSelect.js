@@ -60,6 +60,9 @@ export default class CharacterSelect extends Panel {
     this.portrait.style.display = 'block';
     this.portrait.style.margin = '30px auto 10px';
 
+    this.playerClass = new MakeDom('div', 'ico-class');
+    // this.characterClass.moveToRight(40);
+
     // 현재 hp 상태 아이콘 -> TODO : 클래스아이콘으로 변경하자.
     this.recoveryBtn = new Button('', 'iconBtn');
     this.recoveryBtn.dom.classList.add('ico-life');
@@ -98,6 +101,7 @@ export default class CharacterSelect extends Panel {
     titleWrap.appendChild(this.descClass);
     infoWrap.appendChild(this.portrait);
     infoWrap.appendChild(this.recoveryBtn.dom);
+    // infoWrap.appendChild(this.playerClass);
 
     characterDesc.appendChild(titleWrap);
     characterDesc.appendChild(infoWrap);
@@ -168,6 +172,7 @@ export default class CharacterSelect extends Panel {
     this.descName.innerText = current.name;
     this.portrait.src = path + current.data.portrait;
     this.level.innerText = 'Lv.' + current.level;
+    // this.playerClass.innerText = current.data.class;
 
     this.updateHealth();
     this.updateStatus(current);
