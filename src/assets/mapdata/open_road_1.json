@@ -1088,7 +1088,7 @@
          "margin":0,
          "name":"object1x2",
          "spacing":0,
-         "tilecount":2,
+         "tilecount":3,
          "tileheight":48,
          "tiles":[
                 {
@@ -1126,6 +1126,38 @@
                 {
                  "id":1,
                  "image":"healer_warrior_dead.png",
+                 "imageheight":48,
+                 "imagewidth":48,
+                 "properties":[
+                        {
+                         "name":"movable",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"name",
+                         "type":"string",
+                         "value":"deadman"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"ally_warrior"
+                        }, 
+                        {
+                         "name":"xsize",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"ysize",
+                         "type":"int",
+                         "value":2
+                        }]
+                }, 
+                {
+                 "id":2,
+                 "image":"healer_warrior_alive.png",
                  "imageheight":48,
                  "imagewidth":48,
                  "properties":[

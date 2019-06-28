@@ -369,7 +369,7 @@ export default class Game extends EventEmitter {
     }
 
     async $nextFloor(from, dir) {
-        this.currentFloor+=100;
+        this.currentFloor++;
         this.ui.showTheaterUI(0.5);
         this.ui.hideMenu();
         await this.$leaveStage(from);
@@ -734,6 +734,13 @@ export default class Game extends EventEmitter {
     addCharacter(id, character) {
         this.player.addCharacter(id, character);
         this.storage.addCharacter(id, character);
+
+        this.player.party.enterMemberAnyPlace(this.player.characters[id]);
+        this.player.party.confirm();
+
+        const party = this.player.party.getPartyIndex();
+        this.storage.saveParty(party);
+
         this.emit('addcharacter', id, character);
     }
 

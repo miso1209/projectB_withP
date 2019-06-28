@@ -58,26 +58,27 @@ export default class PropBase extends PIXI.Container {
     }
 
     showOutline() {
-        if (!this.outline) {
-            const lineWidth = 2;
-            const canvas = document.createElement('canvas');
-            canvas.width = this.tileTexture.width + lineWidth * 2;
-            canvas.height = this.tileTexture.height + lineWidth * 2;
-
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(this.tileTexture.texture.baseTexture.source, 0, 0, canvas.width, canvas.height);
-            ctx.globalCompositeOperation = "source-in";
-            ctx.fillStyle = "white";
-            ctx.fillRect(0,0,canvas.width, canvas.height);
-            
-            this.outline = new PIXI.Sprite(PIXI.Texture.fromCanvas(canvas));
-            this.outline.visible = false;
-            this.outline.position.x = this.tileTexture.position.x - lineWidth * this.tileTexture.scale.x;
-            this.outline.position.y = this.tileTexture.position.y - lineWidth * this.tileTexture.scale.y;
-            this.outline.scale.copy(this.tileTexture.scale);
-            
-            this.addChildAt(this.outline, 0); // 먼저 그려야 한다
+        if (this.outline) {
+            this.removeChild(this.outline);
         }
+        const lineWidth = 2;
+        const canvas = document.createElement('canvas');
+        canvas.width = this.tileTexture.width + lineWidth * 2;
+        canvas.height = this.tileTexture.height + lineWidth * 2;
+
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(this.tileTexture.texture.baseTexture.source, 0, 0, canvas.width, canvas.height);
+        ctx.globalCompositeOperation = "source-in";
+        ctx.fillStyle = "white";
+        ctx.fillRect(0,0,canvas.width, canvas.height);
+        
+        this.outline = new PIXI.Sprite(PIXI.Texture.fromCanvas(canvas));
+        this.outline.visible = false;
+        this.outline.position.x = this.tileTexture.position.x - lineWidth * this.tileTexture.scale.x;
+        this.outline.position.y = this.tileTexture.position.y - lineWidth * this.tileTexture.scale.y;
+        this.outline.scale.copy(this.tileTexture.scale);
+        
+        this.addChildAt(this.outline, 0); // 먼저 그려야 한다
 
         this.outline.visible = true;
     }
@@ -93,39 +94,40 @@ export default class PropBase extends PIXI.Container {
             return; 
         }
 
-        if (!this.nametag) {
+        if (this.nametag) {
+            this.removeChild(this.nametag);
+        }
 
-            const style = new PIXI.TextStyle({fontSize: 1, fill : 0xffffff, align : 'center' });
-            const text = new PIXI.Text(this.getName(), style);
-            const textMetrics = PIXI.TextMetrics.measureText(this.getName(), style);
-            text.anchor.x = 0.5;
-            text.anchor.y = 0.5;
+        const style = new PIXI.TextStyle({fontSize: 1, fill : 0xffffff, align : 'center' });
+        const text = new PIXI.Text(this.getName(), style);
+        const textMetrics = PIXI.TextMetrics.measureText(this.getName(), style);
+        text.anchor.x = 0.5;
+        text.anchor.y = 0.5;
 
 
-            // 배경이 되는 반투명 박스를 만든다
-            const box = new PIXI.Sprite(PIXI.Texture.WHITE);
-            box.tint = 0;
-            box.alpha = 0.3;
-            box.anchor.x = 0.5;
-            box.anchor.y = 0.5;
-            box.width = textMetrics.width + 2;
-            box.height = textMetrics.height;
+        // 배경이 되는 반투명 박스를 만든다
+        const box = new PIXI.Sprite(PIXI.Texture.WHITE);
+        box.tint = 0;
+        box.alpha = 0.3;
+        box.anchor.x = 0.5;
+        box.anchor.y = 0.5;
+        box.width = textMetrics.width + 2;
+        box.height = textMetrics.height;
 
-            // TODO : 이미지가 아니라 프랍자체에 붙여야 한다.
-            this.nametag = new PIXI.Container();
-            this.nametag.addChild(box);
-            this.nametag.addChild(text);
-            this.nametag.position.x = (this.tileTexture.width / 2) + (this.nameTagOffset?this.nameTagOffset.x:0);
-            this.nametag.position.y = -(this.tileTexture.height / 2) + (this.nameTagOffset?this.nameTagOffset.y:0);
-            this.addChild(this.nametag);
-            this.nametag.visible = false;
+        // TODO : 이미지가 아니라 프랍자체에 붙여야 한다.
+        this.nametag = new PIXI.Container();
+        this.nametag.addChild(box);
+        this.nametag.addChild(text);
+        this.nametag.position.x = (this.tileTexture.width / 2) + (this.nameTagOffset?this.nameTagOffset.x:0);
+        this.nametag.position.y = -(this.tileTexture.height / 2) + (this.nameTagOffset?this.nameTagOffset.y:0);
+        this.addChild(this.nametag);
+        this.nametag.visible = false;
 
-            const scale = 1 / 1.5;
-            if (this.flipX) {
-                this.nametag.scale.set(-scale, scale);
-            } else {
-                this.nametag.scale.set(scale, scale);
-            }
+        const scale = 1 / 1.5;
+        if (this.flipX) {
+            this.nametag.scale.set(-scale, scale);
+        } else {
+            this.nametag.scale.set(scale, scale);
         }
 
         this.nametag.visible = true;

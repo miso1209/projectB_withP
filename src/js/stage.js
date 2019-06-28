@@ -282,7 +282,8 @@ export default class Stage extends PIXI.Container {
 
     // Emitter가 있는 obj일 경우, emitter 설정해준다.
     setObjectEmitter(obj) {
-        if (obj.hasEmitter) {
+        if (obj.hasEmitter && !obj.hasListener) {
+            obj.hasListener = true;
             obj.on('delete', () => {
                 // 같은 그룹 ID 모두 제거하며, 해당 좌표의 그라운드가 있는지 판별하여 movable 넣어준다. => 어떤 때 문제가 발생할 수 있을까..?
                 this.deleteObj(obj);
@@ -453,29 +454,17 @@ export default class Stage extends PIXI.Container {
     }
 
     deleteObj(obj) {
-        if (obj && !obj.groupId) {
-            const isMonsterIndex = this.monsters.indexOf(obj);
-            if (isMonsterIndex >= 0) {
-                this.monsters.splice(isMonsterIndex, 1);
-            }
-            const groundTile = this.getGroundTileAt(obj.gridX, obj.gridY);
-            this.pathFinder.setDynamicCell(obj.gridX, obj.gridY, groundTile?groundTile.movable:false);
-            this.removeObjRefFromLocation(obj);
-        } else {
-            for (let key in this.objectMap) {
-                const deleteObj = this.objectMap[key];
-                
-                if (deleteObj && deleteObj.groupId && obj.groupId === deleteObj.groupId) {
-                    const isMonsterIndex = this.monsters.indexOf(deleteObj);
-                    if (isMonsterIndex >= 0) {
-                        this.monsters.splice(isMonsterIndex, 1);
-                    }
-                    const groundTile = this.getGroundTileAt(deleteObj.gridX, deleteObj.gridY);
-                    this.pathFinder.setDynamicCell(deleteObj.gridX, deleteObj.gridY, groundTile?groundTile.movable:false);
-                    this.removeObjRefFromLocation(deleteObj);
-                }
+        const isMonsterIndex = this.monsters.indexOf(obj);
+        if (isMonsterIndex >= 0) {
+            this.monsters.splice(isMonsterIndex, 1);
+        }
+        for (let y=obj.ymin; y<=obj.ymax; y++) {
+            for (let x=obj.xmin; x<= obj.xmax; x++) {
+                const groundTile = this.getGroundTileAt(x, y);
+                this.pathFinder.setDynamicCell(x, y, groundTile?groundTile.movable:false);
             }
         }
+        this.removeObjRefFromLocation(obj);
     }
     
     newTile(x, y, tileData) {
@@ -1289,8 +1278,17 @@ export default class Stage extends PIXI.Container {
     }
 
     removeObjRefFromLocation(obj) {
-        const index = obj.gridX + obj.gridY * this.mapWidth;
-        this.objectMap[index] = null;
+        let deleteFlag = true;
+        while (deleteFlag) {
+            const index = this.objectMap.indexOf(obj);
+
+            if (index >= 0) {
+                this.objectMap[index] = null;
+            } else {
+                deleteFlag = false;
+            }
+        }
+        
         this.objectContainer.removeChild(obj);
     }
     

@@ -381,7 +381,9 @@ export default class Character {
             // 레벨업을 한다
             this.exp -= this.maxexp;
             this.level++;
-            this.health = this.maxHealth;
+            if (this.health > 0) {
+                this.health = this.maxHealth;
+            }
             // 이벤트를 외부에 알린다
         }
         // 업데이트 된 내용을 저장하도록 한다

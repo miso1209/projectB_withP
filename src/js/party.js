@@ -20,6 +20,41 @@ export default class Party {
         }
     }
 
+    getPartyIndex() {
+        const result = [];
+
+        for (let i=0;i<=PARTY_SIZE;i++) {
+            if (this.members[i]) {
+                result.push(this.members[i].id);
+            } else {
+                result.push(0);
+            }
+        }
+
+        return result;
+    }
+
+    membersCount() {
+        let result = 0;
+
+        for (let i=0; i<PARTY_SIZE;i++) {
+            if(this.members[i]) {
+                result++;
+            }
+        }
+
+        return result;
+    }
+
+    enterMemberAnyPlace(character) {
+        for (let i=0; i<PARTY_SIZE;i++) {
+            if(!this.members[i]) {
+                this.set(i, character);
+                break;
+            }
+        }
+    }
+
     set(index, character) {
         const characterIndex = this.members.indexOf(character);
         if (characterIndex>=0) {
