@@ -22,6 +22,7 @@ import Chest from './chest';
 import Recipe from './recipe';
 import PortalStone from './portal_stone';
 import Archer from './archer';
+import Warrior from './warrior';
 
 Prop.Register("default", (...args) => { return new StaticProp(...args); });
 Prop.Register("gate", (...args) => { return new Gate(...args); });
@@ -34,3 +35,4 @@ Prop.Register("wizard", (...args) => { return new Wizard(...args); });
 Prop.Register("chest", (...args) => { return new Chest(...args); });
 Prop.Register("recipe", (...args) => { return new Recipe(...args); });
 Prop.Register("portal_stone", (...args) => { return new PortalStone(...args); })
+Prop.Register("ally_warrior", (...args) => { return new Warrior(...args); })

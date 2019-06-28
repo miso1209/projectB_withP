@@ -17,6 +17,8 @@ export default class Wizard extends PropBase {
             x: 0,
             y: -(this.tileTexture.height / 2)
         };
+
+        this.displayName = 'Lv.1 ???';
         // 초기에 이름을 보이고, hideName을 오버라이딩 하여, hide 하지 않도록 한다.
         this.showName();
     }
@@ -67,6 +69,6 @@ export default class Wizard extends PropBase {
     }
 
     getName() {
-        return "Lv1. Elid";
+        return this.displayName;
     }
 }

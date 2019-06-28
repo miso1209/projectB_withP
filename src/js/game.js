@@ -215,6 +215,8 @@ export default class Game extends EventEmitter {
             quest.foreEachEvent(this.on.bind(this));
             this.player.quests[questId] = quest;
         }
+        
+        this.ui.player = this.player;
         this.player.controlCharacter = this.storage.data.controlCharacter;
     }
 
@@ -270,7 +272,6 @@ export default class Game extends EventEmitter {
             const func = script.next();
             if (func) {
                 if (func.command === "dialog") {
-                    this.ui.player = this.player;
                     this.ui.showDialog(func.arguments, next);
                 } else if (func.command === "delay") {
                     const delay = func.arguments[0] * 1000;
