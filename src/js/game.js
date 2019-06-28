@@ -21,6 +21,7 @@ import Notification from './notification';
 import Item from './item';
 import MapGenerator from './mapgenerator';
 import { timingSafeEqual } from 'crypto';
+import PropGenerator from './propgenerator';
 
 
 export default class Game extends EventEmitter {
@@ -173,7 +174,7 @@ export default class Game extends EventEmitter {
 
             this.storage.data.location = {};
 
-            this.storage.data.inventory = { 3001: 1, 3004: 1, 2001: 4 };
+            this.storage.data.inventory = { 3001: 1, 3004: 1, 1004: 5, 2001: 5 };
 
             // 필드에 보이는 캐릭터
             this.storage.data.controlCharacter = 1;
@@ -182,8 +183,6 @@ export default class Game extends EventEmitter {
         }
 
         this.player = new Player();
-        
-        console.log(this.player);
 
         // 태그정보를 로딩한다
         for(const tag of this.storage.data.tags) {
@@ -223,7 +222,6 @@ export default class Game extends EventEmitter {
         
         this.ui.player = this.player;
         this.ui.characters = Characters;
-        // console.log(this.ui.characters);
         this.player.controlCharacter = this.storage.data.controlCharacter;
     }
 
@@ -239,8 +237,8 @@ export default class Game extends EventEmitter {
             // 그냥 평범하게 집에 들어간다
             this.ui.showTheaterUI(0.5);
 
-            await this.$enterStage(this.storage.getLocation().stagePath, this.storage.getLocation().eventName);
-            // await this.$enterStage("assets/mapdata/castle_boss-final.json", "castle1_5-to-castle1_4");
+            // await this.$enterStage(this.storage.getLocation().stagePath, this.storage.getLocation().eventName);
+            await this.$enterStage("assets/mapdata/castle_boss-final.json", "down");
             this.exploreMode.interactive = true;
             this.stage.showPathHighlight = true;
             this.ui.hideTheaterUI(0.5);
@@ -316,6 +314,9 @@ export default class Game extends EventEmitter {
                     this.onNotification = false;
 
                     this.stage.storyBattle();
+                }  else if (func.command === "monsterEvent") {
+                    this.stage.monsterEvent();
+                    next();
                 } else if (func.command === "look") {
                     this.stage.lookAt(func.arguments[0],func.arguments[1],false,() => {
                         next();
@@ -371,7 +372,7 @@ export default class Game extends EventEmitter {
     }
 
     async $nextFloor(from, dir) {
-        this.currentFloor++;
+        this.currentFloor+=100;
         this.ui.showTheaterUI(0.5);
         this.ui.hideMenu();
         await this.$leaveStage(from);
@@ -414,15 +415,22 @@ export default class Game extends EventEmitter {
         this.exploreMode.setInteractive(false);
     }
 
-    async $objBattle(obj) {
+    async $objBattle(obj, options) {
         await this.$fadeIn(0.5);
-        await this.$enterBattle(obj);
+        await this.$enterBattle(obj, options);
     }
     
     async $enterStage(stagePath, eventName) {
         this.storage.saveLocation(stagePath, eventName);
         const stageName = path.basename(stagePath, ".json");
         const stage = new Stage();
+        
+        // ==================================================================================
+        stage.neighbor = {
+            ouput: 'up'
+        }
+        // ==================================================================================
+
         stage.on('playcutscene', async (...args) => {
             this._playCutscene(...args);
         });
@@ -432,6 +440,15 @@ export default class Game extends EventEmitter {
         this.currentFloor = 0;
         this.ui.hideMinimap();
         await stage.$load(stageName);
+
+        // ==================================================================================
+        const propGenerator = new PropGenerator();
+        const monster = propGenerator.createStoryMonster('dragon');
+        stage.addMonster(monster, {
+            type: "dragon",
+            pos: {x:44, y:52}
+        });
+        // ==================================================================================
         for(const tag of this.player.tags) {
             stage.applyTag(tag);
         }
@@ -505,7 +522,7 @@ export default class Game extends EventEmitter {
     }
 
     // if (!this.currentMode instanceof Explore) { return; }
-    async $enterBattle(monster) {
+    async $enterBattle(monster, battleOptions) {
         const monsterObj = monster;
         monster = monster.src;
         if (this.currentMode instanceof Explore) {
@@ -531,7 +548,7 @@ export default class Game extends EventEmitter {
             const allies = this.player.party.getBattleAllies();
 
             // 배틀을 사용한다
-            const options = {
+            let options = {
                 allies: allies,
                 enemies: enemies,
                 background: "battle_background.png",
@@ -540,8 +557,9 @@ export default class Game extends EventEmitter {
                 screenHeight: this.screenHeight,
                 rewards: monster.rewards,
                 exp: monster.exp,
-                gold: monster.gold,
+                gold: monster.gold
             };
+            options = Object.assign(options, battleOptions);
             this.currentMode = new Battle(options);
 
             // 보상을 여기서 추가해야 할 것 같다 battle에서 주는것은 아닐 것 같다.

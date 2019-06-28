@@ -37,6 +37,7 @@ export default class AnimatedCharacter extends PIXI.Container {
         // 그림자를 추가한다
         const shadow = new PIXI.Sprite(PIXI.Texture.fromFrame("shadow.png"));
         shadow.position.y = -shadow.height;
+        this.shadow = shadow;
         this.container.addChild(shadow);
 
         // 모든 필드 캐릭터는 동일한 데이터를 사용한다
@@ -75,7 +76,7 @@ export default class AnimatedCharacter extends PIXI.Container {
             this.anim.name = name;
             this.anim.textures = ani.textures;
             this.anim.scale.x = ani.flipX ? -1 : 1;
-            this.anim.position.x = ani.flipX ? this.anim.width : 0;
+            this.anim.position.x = (ani.flipX ? this.anim.width : 0) + this.offset.x;
             this.anim.gotoAndPlay(0);
         }
     }

@@ -32,7 +32,8 @@ export default class MapGenerator {
     // Input 방향을 입력받는다.
     async createMap(input) {
         // 한 층의 룸의 갯수는 기본적으로 6개이고 5개 층마다 1개씩 늘어난다. ==> 100층은 26개 + a의 룸. (boss룸은 추가로 붙는다.)
-        const roomCount = 6 + Math.floor(this.currentFloor / 5);
+        // 6 + Math.floor(this.currentFloor / 5)
+        const roomCount = 3;
         let bossFloor = (this.currentFloor % 10 === 0)?true : false;
         let width = 500;
         let height = 500;
@@ -227,6 +228,11 @@ export default class MapGenerator {
                     stage.setTags(this.tags);
 
                     if (this.currentFloor === 100) {
+                        const monster = this.propGenerator.createStoryMonster('dragon');
+                        stage.addMonster(monster, {
+                            type: "dragon",
+                            pos: {x:44, y:52}
+                        });
                     } else if (!this.hasTag('hasarcher')) {
                         const monster = this.propGenerator.createStoryMonster('archer');
                         stage.addMonster(monster, {

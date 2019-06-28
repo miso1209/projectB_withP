@@ -38,6 +38,13 @@
     ["assets/mapdata/recipeshelf_1x1_sprite.json"],
     ["assets/mapdata/castle_treasurebox_sprite.json"],
 
+    ["assets/sprite/dragon/dragon_atk_nw.json"],
+    ["assets/sprite/dragon/dragon_atk_sw.json"],
+    ["assets/sprite/dragon/dragon_idle_nw.json"],
+    ["assets/sprite/dragon/dragon_idle_sw.json"],
+    ["assets/sprite/dragon/dragon_walk_nw.json"],
+    ["assets/sprite/dragon/dragon_walk_sw.json"],
+
     ["assets/sprite/elid/elid_atk_nw.json"],
     ["assets/sprite/elid/elid_atk_sw.json"],
     ["assets/sprite/elid/elid_idle_nw.json"],

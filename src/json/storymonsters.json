@@ -3,13 +3,13 @@
         "name" : "Lv 1 밀루다[B]",
         "field": {
             "character": 2,
-            "direction": "se",
+            "direction": "sw",
             "x": 2,
             "y": 4
         },
         "battle": {
             "characters": [
-                { "id":4, "level":1 },{ "id":4, "level":1 },{ "id":4, "level":1 }
+                { "id":10007, "level":1 },{ "id":4, "level":1 },{ "id":10007, "level":1 }
             ]
         },
         "gold": 50,
@@ -18,5 +18,26 @@
             "1": 1
         },
         "description": "밀루다 획득 스토리 몬스터."
+    },
+    "dragon": {
+        "name" : "Lv 80 블루 드래곤[U]",
+        "field": {
+            "character": 10008,
+            "direction": "sw",
+            "x": 2,
+            "y": 4
+        },
+        "battle": {
+            "characters": [
+                { "id":10005, "level":50 },{ "id":10008, "level":80 },{ "id":10005, "level":50 },
+                { "id":10005, "level":40 },{ "id":10005, "level":40 },{ "id":10005, "level":40 }
+            ]
+        },
+        "gold": 50,
+        "exp": 3,
+        "rewards": {
+            "1": 1
+        },
+        "description": "최종 스토리 몬스터."
     }
 }

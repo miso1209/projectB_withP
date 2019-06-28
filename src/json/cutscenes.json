@@ -180,11 +180,29 @@
             "arguments": [0.5]
         },{
             "command": "look",
-            "arguments": [160, -80]
+            "arguments": [120, -80]
         },{
             "command": "delay",
             "arguments": [0.5]
-        },{
+        },
+        {
+            "command": "monsterEvent",
+            "arguments": []
+        },
+        {
+            "command": "delay",
+            "arguments": [2.5]
+        },
+        {
+            "command": "dialog",
+            "arguments": [
+                {"text": "..."},
+                {"text": "결국 여기까지 올라왔구나 인간...."},
+                {"text": "너의 탐욕이 너를 파멸할 것이다."},
+                {"text": "웃기는 소리하지 말고 덤벼라!.", "speaker": 1}
+            ]
+        },
+        {
             "command": "battle",
             "arguments": []
         }

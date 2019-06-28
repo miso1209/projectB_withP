@@ -69,7 +69,10 @@ export default class Dialog extends Panel {
             }
 
             this.setText(this.data[this.currentIndex].text);
-            this.showSpeaker(this.data[this.currentIndex].speaker);
+            const speaker = this.data[this.currentIndex].speaker;
+            if(speaker) {
+                this.showSpeaker(speaker);
+            }
         }
     }
 

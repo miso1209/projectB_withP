@@ -540,5 +540,50 @@
             "x": 0,
             "y": -48
         }
+    },
+    "10008" : {
+        "name": "dragon",
+        "displayname": "용",
+        "class": "wizzard",
+        "portrait": "",
+        "base": {
+            "health": 100,
+            "strength": 7,
+            "intellect": 4,
+            "agility": 4,
+            "stamina": 4,
+            "speed": 1,
+            "critical": 0.08,
+            "regist": 0
+        },
+        "levelup": {
+            "health": 30,
+            "strength": 1.4,
+            "intellect": 1.4,
+            "agility": 1.4,
+            "stamina": 1.4,
+            "speed": 0,
+            "critical": 0.02,
+            "regist": 0.3
+        },
+
+        "skills": {
+            "a": "slash",
+            "b": "slash",
+            "extra": "slash"
+        },
+        "skillactiveprobability": 0,
+        "animations": {
+            "dragon_idle_nw": { "length": 7 },
+            "dragon_idle_sw": { "length": 7 },
+            "dragon_atk_nw": { "length": 7 },
+            "dragon_atk_sw": { "length": 7 },
+            "dragon_walk_nw": { "length": 7 },
+            "dragon_walk_sw": { "length": 7 }
+        },
+        "offset": {
+            "x": -140,
+            "y": -258
+        }
     }
 }

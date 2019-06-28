@@ -92,12 +92,13 @@ export class Battle extends EventEmitter {
         this.extraSkillQueue = [];
         this.pause = true;
 
+        this.offset = options.offset;
         // 이전투가 끝났을때 최종보상
         this.rewards = options.rewards;
         this.exp = options.exp;
         this.gold = options.gold;
 
-        this.setScale(2);
+        this.setScale(options.scale?options.scale:2);
         this.focusCenter();
     }
 
@@ -107,6 +108,8 @@ export class Battle extends EventEmitter {
             character.position.x = STAGE_BASE_POSITION.ENEMY_X + character.gridPosition.x * 36 + character.gridPosition.y * 36;
             character.position.y = STAGE_BASE_POSITION.ENEMY_Y + character.gridPosition.x * 20 - character.gridPosition.y * 20;
             character.animation.changeVisualToDirection(DIRECTIONS.SW);
+            character.container.scale.x = 0.6;
+            character.container.scale.y = 0.6;
             this.characters.addChild(character.container);
         }
 
@@ -123,8 +126,8 @@ export class Battle extends EventEmitter {
     }
 
     focusCenter() {
-        const offsetX = 0;
-        const offsetY = -0;
+        const offsetX = (this.offset&&this.offset.x)?this.offset.x:0;
+        const offsetY = (this.offset&&this.offset.y)?this.offset.y:0;
         this.container.position.x = (this.screenSize.width - this.battlefield.width * this.container.scale.x) / 2 + offsetX;
         this.container.position.y = (this.screenSize.height - this.battlefield.height * this.container.scale.y) / 2 + offsetY;
     }

@@ -7,6 +7,7 @@ export default class PropBase extends PIXI.Container {
         this.gridY = y;
 
         this.groupId = options.groupId;
+        this.type = options.type;
 
         if (options.texture) {
             // 스프라이트 정보를 출력한다

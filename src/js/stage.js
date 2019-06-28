@@ -116,6 +116,7 @@ export default class Stage extends PIXI.Container {
         this.TILE_HALF_H = map.tileHeight / 2;
 
         const arraySize = this.mapWidth * this.mapHeight;
+        this.bottomMap = new Array(arraySize);
         this.groundMap = new Array(arraySize);
         this.objectMap = new Array(arraySize);
         this.eventMap = new Array(arraySize);
@@ -213,6 +214,9 @@ export default class Stage extends PIXI.Container {
 
     setBottomTile(x, y, src) {
         const tile = this.newTile(x, y, src);
+        if (!this.bottomMap[x + y * this.mapWidth]) {
+            this.bottomMap[x + y * this.mapWidth] = tile;
+        }
         this.bottomContainer.addChild(tile);
     }
 
@@ -816,7 +820,10 @@ export default class Stage extends PIXI.Container {
     enter() {
         // 중간보스룸 컷씬
         if (this.name === 'castle_boss-final') {
-            this.emit('playcutscene', 9);
+            if (this.monsters.length > 0) {
+                this.emit('playcutscene', 9);
+            } else {
+            }
         } else if (this.name === 'castle_boss-middle') {
             this.monsters.forEach((monster) => {
                 monster.currentDirection = getDirection(monster.gridX, monster.gridY, monster.gridX, monster.gridY + 1);
@@ -1086,12 +1093,19 @@ export default class Stage extends PIXI.Container {
 
     storyBattle() {
         this.monsters.forEach((monster) => {
-            monster.move();
+            monster.move(this);
+        });
+    }
+
+    monsterEvent() {
+        this.monsters.forEach((monster) => {
+            if(monster.event) {
+                monster.event(this);
+            }
         });
     }
 
     onObjMoveStepEnd(obj) {
-        console.log(obj.gridX, obj.gridY);
         obj.currentPathStep--;
         obj.currentTarget = null;
         obj.currentTargetTile = null;

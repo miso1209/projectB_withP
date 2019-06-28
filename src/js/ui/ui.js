@@ -163,8 +163,8 @@ export default class DomUI extends EventEmitter {
     
         dialog.setText(script[0].text);
         
+        dialog.speakers = this.characters;
         if (script[0].speaker) {
-            dialog.speakers = this.characters;
             dialog.showSpeaker(script[0].speaker);
         }
 
