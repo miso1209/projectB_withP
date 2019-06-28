@@ -788,6 +788,7 @@ button.disabled span {
 }
 
 .inventory-detail .rankBg {
+  display: none;
   position: absolute;
   top: -35px;
   left: 95px;
