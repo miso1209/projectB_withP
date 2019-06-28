@@ -570,9 +570,9 @@
         "skills": {
             "a": "slash",
             "b": "slash",
-            "extra": "slash"
+            "extra": "breath"
         },
-        "skillactiveprobability": 0,
+        "skillactiveprobability": 1.4,
         "animations": {
             "dragon_idle_nw": { "length": 7 },
             "dragon_idle_sw": { "length": 7 },

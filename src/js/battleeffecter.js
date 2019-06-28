@@ -21,7 +21,7 @@ export class BattleEffecter extends PIXI.Container {
         if (options.animation) {
             anim = new PIXI.extras.AnimatedSprite(loadAniTexture(`${options.name}_`, options.animationLength));
             anim.animationSpeed = options.speed;
-            anim.loop = false;
+            anim.loop = options.loop?options.loop:false;
             anim.play();
         } else {
             anim = new PIXI.Sprite(PIXI.Texture.fromFrame(options.name));
@@ -30,8 +30,8 @@ export class BattleEffecter extends PIXI.Container {
         anim.anchor.x = 0.5;
         anim.anchor.y = 0.5;
         anim.blendMode = PIXI.BLEND_MODES.ADD;
-        anim.position.x = target.position.x + target.animation.width / 2;
-        anim.position.y = target.position.y - target.animation.height - 24;
+        anim.position.x = target.position.x + target.animation.width / 2 + (options.offset?options.offset.x:0);
+        anim.position.y = target.position.y - target.animation.height - 24 + (options.offset?options.offset.y:0);
         anim.position.x += ((target.animation.offset && target.animation.offset.x)?target.animation.offset.x:0) * target.animation.scale.x;
         anim.position.y -= ((target.animation.offset && target.animation.offset.y)?(target.animation.offset.y):0) * target.animation.scale.y;
 

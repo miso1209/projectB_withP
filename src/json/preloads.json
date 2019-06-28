@@ -137,6 +137,7 @@
     ["assets/effects/shotingeffect.json"],
     ["assets/effects/healeffect.json"],
     ["assets/effects/firerainprop.json"],
+    ["assets/effects/breath.json"],
     ["assets/effects/explosion.json"],
     ["assets/effects/barrier.json"],
     ["assets/effects/firecape.json"],

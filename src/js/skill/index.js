@@ -12,6 +12,7 @@ import ArrowOfTracker from './arrowoftracker';
 import CriticalAttack from './criticalattack';
 import AntiPower from './antipower';
 import FireCape from './firecape';
+import Breath from './breath';
 
 const skills = require('json/skills.json');
 
@@ -27,6 +28,10 @@ export default class Skill {
         return func(skills[name], ...args);
     }
 }
+// BOSS
+Skill.Register("breath", (...arg) => {
+    return new Breath(...arg);
+});
 
 // Hector
 Skill.Register("crouch", (...arg) => {
