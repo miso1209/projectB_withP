@@ -46,7 +46,9 @@ export default class Dragon extends PropBase {
     }
 
     die(game) {
+        this.emit('deleteList');
         const t = async () => {
+            game.ui.showTheaterUI();
             game.exploreMode.interactive = false;
             game.ui.hideMenu();
 
@@ -54,13 +56,15 @@ export default class Dragon extends PropBase {
                 { text: "....." },
                 { text: "너의 탐욕에 언젠가 후회할 날이 올 것이다..." }
             ], async () => {
-                await game.$fadeOut(1);
+                game.stage.tweens.addTween(this, 1.5, { alpha: 0 }, 0, "easeOut", true, async ()=>{
+                    await game.$fadeOut(1);
 
-                this.emit('delete');
-
-                await game.$fadeIn(1);
-                game.ui.showMenu();
-                game.exploreMode.interactive = true;
+                    await game.$fadeIn(1);
+                    game.ui.showMenu();
+                    game.ui.hideTheaterUI();
+                    game.exploreMode.interactive = true;
+                    game._playCutscene(10);
+                });
             });
         }
 

@@ -33,8 +33,10 @@ export default class ArrowOfTracker extends SkillBase {
             case 30: {
                 const arrow = this.addEffect(this.owner, { name: 'arrow.png', animation: false, removeFrame: 60 });
 
-                const toX = this.target.position.x + this.target.width / 2;
-                const toY = this.target.position.y - this.target.height / 2;
+                let toX = this.target.position.x + this.target.width / 2;
+                let toY = this.target.position.y - this.target.height - 24;
+                toX += (this.target.animation.offset && this.target.animation.offset.x)?this.target.animation.offset.x:0;
+                toY -= (this.target.animation.offset && this.target.animation.offset.y)?(this.target.animation.offset.y):0;
                 
                 const duration = 50;
 

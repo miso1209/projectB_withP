@@ -40,14 +40,17 @@ export default class FireRain extends SkillBase {
                     const fireBall = this.addEffect(this.owner, { name: 'fireball.png', animation: false, removeFrame: 60 });
                     fireBall.position.y -= 500;
 
+                    let toX = target.position.x + target.width / 2;
+                    let toY = target.position.y - target.height - 24;
+                    toX += (target.animation.offset && target.animation.offset.x)?target.animation.offset.x:0;
+                    toY -= (target.animation.offset && target.animation.offset.y)?(target.animation.offset.y):0;
+    
                     const dist = {
-                        x: target.position.x - fireBall.position.x,
-                        y: target.position.y - fireBall.position.y
+                        x: toX - fireBall.position.x,
+                        y: toY - fireBall.position.y
                     }
                     fireBall.rotation = Math.atan2(dist.y, dist.x);
-    
-                    const toX = target.position.x + target.width / 2;
-                    const toY = target.position.y - target.height / 2;
+
                     this.tweens.addTween(fireBall.position, 0.25, { x: toX, y: toY }, delay, "easeOut", false );
                     this.tweens.addTween(fireBall, 0.07, { alpha: 0 }, delay + 0.18, "linear", false );
 

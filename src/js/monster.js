@@ -13,10 +13,12 @@ export default class Monster {
         let result = 0;
 
         this.battleCharacters.forEach((c) => {
-            const character = new Character(c.id, c.rank);
-            character.level = c.level;
-
-            result += character.totalPowerFigure;
+            if (c.id !== 0) {
+                const character = new Character(c.id, c.rank);
+                character.level = c.level;
+    
+                result += character.totalPowerFigure;
+            }
         });
 
         return result;

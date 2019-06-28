@@ -108,8 +108,6 @@ export class Battle extends EventEmitter {
             character.position.x = STAGE_BASE_POSITION.ENEMY_X + character.gridPosition.x * 36 + character.gridPosition.y * 36;
             character.position.y = STAGE_BASE_POSITION.ENEMY_Y + character.gridPosition.x * 20 - character.gridPosition.y * 20;
             character.animation.changeVisualToDirection(DIRECTIONS.SW);
-            character.container.scale.x = 0.6;
-            character.container.scale.y = 0.6;
             this.characters.addChild(character.container);
         }
 

@@ -25,10 +25,17 @@ export default class BattleCharacter extends EventEmitter{
         this.progressBar = new BattleProgressBar();
         this.progressBar.show();
         this.progressBar.tinting('0xff0000');
+        const offsetX = (this.animation.offset && this.animation.offset.x)?this.animation.offset.x:0;
+        const offsetY = (this.animation.offset && this.animation.offset.y)?(this.animation.offset.y):0;
         this.progressBar.setPosition({
-            x: this.animation.width / 2,
-            y: -this.animation.height,
+            x: this.animation.width / 2 + offsetX,
+            y: -this.animation.height -48 - offsetY,
         });
+
+        if(character.id === 10008) {
+            animation.scale.x = 0.6;
+            animation.scale.y = 0.6;
+        }
 
         this.container.addChild(this.animation);
         this.container.addChild(this.buffContainer);

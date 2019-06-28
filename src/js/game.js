@@ -20,7 +20,7 @@ import Portal from './portal';
 import Notification from './notification';
 import Item from './item';
 import MapGenerator from './mapgenerator';
-import { timingSafeEqual } from 'crypto';
+// 제거할 것.
 import PropGenerator from './propgenerator';
 
 
@@ -237,8 +237,8 @@ export default class Game extends EventEmitter {
             // 그냥 평범하게 집에 들어간다
             this.ui.showTheaterUI(0.5);
 
-            // await this.$enterStage(this.storage.getLocation().stagePath, this.storage.getLocation().eventName);
-            await this.$enterStage("assets/mapdata/castle_boss-final.json", "down");
+            await this.$enterStage(this.storage.getLocation().stagePath, this.storage.getLocation().eventName);
+            // await this.$enterStage("assets/mapdata/castle_boss-final.json", "down");
             this.exploreMode.interactive = true;
             this.stage.showPathHighlight = true;
             this.ui.hideTheaterUI(0.5);
@@ -426,9 +426,10 @@ export default class Game extends EventEmitter {
         const stage = new Stage();
         
         // ==================================================================================
-        stage.neighbor = {
-            ouput: 'up'
-        }
+        // 제거할 것.
+        // stage.neighbor = {
+        //     ouput: 'up'
+        // }
         // ==================================================================================
 
         stage.on('playcutscene', async (...args) => {
@@ -442,12 +443,13 @@ export default class Game extends EventEmitter {
         await stage.$load(stageName);
 
         // ==================================================================================
-        const propGenerator = new PropGenerator();
-        const monster = propGenerator.createStoryMonster('dragon');
-        stage.addMonster(monster, {
-            type: "dragon",
-            pos: {x:44, y:52}
-        });
+        // 제거할 것.
+        // const propGenerator = new PropGenerator();
+        // const monster = propGenerator.createStoryMonster('dragon');
+        // stage.addMonster(monster, {
+        //     type: "dragon",
+        //     pos: {x:44, y:52}
+        // });
         // ==================================================================================
         for(const tag of this.player.tags) {
             stage.applyTag(tag);
@@ -565,7 +567,7 @@ export default class Game extends EventEmitter {
 
             // 보상을 여기서 추가해야 할 것 같다 battle에서 주는것은 아닐 것 같다.
             this.currentMode.on('win', () => {
-                monsterObj.die(this);
+                this.stage.battleResult = 'win';
                 // 경험치 추가.
                 allies.forEach((ally) => {
                     if (ally.character) {
@@ -580,6 +582,7 @@ export default class Game extends EventEmitter {
                 }
             });
             this.currentMode.on('lose', async () => {
+                this.currentMode.battleResult = 'lose';
                 this.stage.pathFinder.setDynamicCell(this.stage.player.gridX, this.stage.player.gridY, false);
                 this.stage.leave();
                 await this.$leaveBattle();
@@ -588,6 +591,9 @@ export default class Game extends EventEmitter {
             });
             this.currentMode.on('closeBattle', async () => {
                 await this.$leaveBattle();
+                if (this.stage.battleResult === 'win') {
+                    monsterObj.die(this);
+                }
                 this.stage.enter();
             });
             

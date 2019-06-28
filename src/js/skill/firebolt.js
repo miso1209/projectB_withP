@@ -20,14 +20,17 @@ export default class FireBolt extends SkillBase {
             case 30: {
                 const fireBall = this.addEffect(this.owner, { name: 'fireball.png', animation: false, removeFrame: 60 });
 
+                let toX = this.target.position.x + this.target.width / 2;
+                let toY = this.target.position.y - this.target.height - 24;
+                toX += (this.target.animation.offset && this.target.animation.offset.x)?this.target.animation.offset.x:0;
+                toY -= (this.target.animation.offset && this.target.animation.offset.y)?(this.target.animation.offset.y):0;
+
                 const dist = {
-                    x: this.target.position.x - this.owner.position.x,
-                    y: this.target.position.y - this.owner.position.y
+                    x: toX - fireBall.position.x,
+                    y: toY - fireBall.position.y
                 }
                 fireBall.rotation = Math.atan2(dist.y, dist.x);
 
-                const toX = this.target.position.x + this.target.width / 2;
-                const toY = this.target.position.y - this.target.height / 2;
                 this.tweens.addTween(fireBall.position, 0.25, { x: toX, y: toY }, 0, "easeOut", true );
                 this.tweens.addTween(fireBall, 0.1, { alpha: 0 }, 0.15, "easeOut", true );
 

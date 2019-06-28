@@ -206,6 +206,24 @@
             "command": "battle",
             "arguments": []
         }
+    ],
+    "10": [
+        {
+            "command": "dialog",
+            "arguments": [
+                {"text": "드디어 이 험난한 여정이 끝났구나..", "speaker": 1},
+                {"text": "이제 집에가서 좀 쉬어야겠어.", "speaker": 1}
+            ]
+        }, { 
+            "command": "leavestage",
+            "arguments": [] 
+        }, {
+            "command": "enterstage",
+            "arguments": ["house", "house-gate"]
+        }, {
+            "command": "delay",
+            "arguments": [0.5]
+        }
     ]
 }
 
