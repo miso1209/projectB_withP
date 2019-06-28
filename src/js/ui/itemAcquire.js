@@ -45,8 +45,6 @@ export default class ItemAcquire extends Panel {
     this.options = new MakeDom('div', 'contents-option');
     contents.appendChild(this.options);
 
-    
-
     this.update();
     this.initButton();
   }
@@ -71,9 +69,6 @@ export default class ItemAcquire extends Panel {
   }
 
   update() {
-    
-    console.log(this.items);
-
     if (this.items.length > 0) {
       this.options.classList.add('items');
       this.items.forEach((item) => {

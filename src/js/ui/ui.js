@@ -14,8 +14,6 @@ import Minimap from "./minimap";
 import PartyUI from "./partyui";
 import ItemAcquire from "./itemAcquire";
 
-
-
 export default class DomUI extends EventEmitter {
     constructor() {
         super();
@@ -36,6 +34,11 @@ export default class DomUI extends EventEmitter {
         this.gnbContainer.style.opacity = '0';
         document.body.appendChild(this.gnbContainer);
 
+        // 스테이지타이틀, 튜토리얼 툴팁용 레이어
+        this.displayLayer = new MakeDom('div', 'container');
+        this.displayLayer.style.top = this.gamePane.offsetTop + 'px';
+        document.body.appendChild(this.displayLayer);
+
         const gnb = new MakeDom('div', 'gnb');
         this.gnbContainer.appendChild(gnb);
 
@@ -46,9 +49,7 @@ export default class DomUI extends EventEmitter {
         this.minimapDOM.style.display = 'none';
         
         this.gnbContainer.appendChild(this.minimapDOM);
-
         this.minimap = new Minimap(160, 100, this.minimapDOM);
-        
         const menuData = [
             {name:'캐릭터', event: "characterselect"},
             {name:'보관함', event: "inventory"},
@@ -75,8 +76,7 @@ export default class DomUI extends EventEmitter {
         container.className = 'uiContainer';
         container.style.top = this.gamePane.offsetTop + 'px';
         document.body.appendChild(container);
-        
-        container.style.pointerEvents = 'auto';
+        // container.style.pointerEvents = 'auto';
         return container;
     }
     
@@ -128,32 +128,14 @@ export default class DomUI extends EventEmitter {
     }
     
     showStageTitle(text) {
-        // TODO : safari에서 오류.. 애니메이션 수정할 것.
-        const pane = this.createContainer();
+        // const pane = this.createContainer();
         const title = document.createElement('h2');
         title.className = 'stageTitle';
         title.innerText = text;
-        pane.classList.remove('uiContainer');
-        pane.classList.add('container');
-        pane.appendChild(title);
-        pane.style.pointerEvents = 'none';
-
-        const titleAnimation = title.animate([
-            { transform: 'scale(0)', opacity: 0 }, 
-            { transform: 'scale(1)', opacity: 1 },
-            { transform: 'scale(1)', opacity: 1 },
-            { transform: 'scale(0)', opacity: 0 }
-
-        ], { 
-            duration: 3000,
-            easing: 'ease-out'
-        });
-        
-        titleAnimation.play();
-
-        setTimeout(() => {
-            pane.parentNode.removeChild(pane);
-        }, 3000);
+        // pane.classList.remove('uiContainer');
+        // pane.classList.add('container');
+        this.displayLayer.appendChild(title);
+        // pane.style.pointerEvents = 'none';
     }
     
     showDialog(script, callback) {
@@ -251,7 +233,6 @@ export default class DomUI extends EventEmitter {
             this.removeContainer(pane);
 
             if (result) {
-                // console.log(response);
                 result();
             }
         });

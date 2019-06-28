@@ -12,6 +12,41 @@
 }
 
 
+@-webkit-keyframes titleShow {
+  from,
+  to {
+    opacity: 0;
+    transform: scale(0);
+  }
+  35%,
+  65%{
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes titleShow {
+  from,
+  to {
+    opacity: 0;
+    transform: scale(0);
+  }
+  35%,
+  65% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
+.titleShow {
+  -webkit-animation-name: titleShow;
+  animation-name: titleShow;
+  -webkit-transform-origin: center bottom;
+  transform-origin: center bottom;
+}
+
+
 /*!
  * animate.css -http://daneden.me/animate
  * Version - 3.7.0

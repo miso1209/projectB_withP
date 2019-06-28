@@ -139,7 +139,7 @@ body.battle .gnbContainer.battleMode {
   overflow: hidden;
   
   /* 클릭이벤트 막기. */
-  /* pointer-events: none; */
+  pointer-events: none;
   background:none;
 }
 
@@ -404,7 +404,6 @@ button, .button {
   text-align: center;
 
   color: #fff;
-
   /* offset-x | offset-y | blur-radius | color */
   text-shadow: 2px 2px 2px #333; 
   border-bottom: 3px solid #fff;
@@ -412,6 +411,9 @@ button, .button {
   transform: scaleX(0);
   opacity:0;
   transition: all 0.5s;
+
+  -webkit-animation: titleShow 2.5s both;
+  animation: titleShow 2.5s both;
 }
 
 .stageTitle.animate {

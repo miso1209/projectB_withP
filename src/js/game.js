@@ -456,6 +456,7 @@ export default class Game extends EventEmitter {
         // 집일경우 2배줌
         if (stageName === 'house') {
             stage.zoomTo(2, true);
+            this.ui.showStageTitle('아지트');
         } else {
             stage.zoomTo(1.5, true);
         }

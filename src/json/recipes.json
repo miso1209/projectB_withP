@@ -1,51 +1,47 @@
 {
     "3001": {
-        "description": "소형 회복약 레시피",
         "id": 3001,
         "item": 1001,
         "materials": [
             { "item":2001, "count": 1 }
-        ],
-        "rank": "C",
-        "generateFloor": {
-            "begin": 1,
-            "end": 100
-        }
+        ]
     },"3002": {
         "id": 3002,
         "item": 1002,
         "materials": [
-            { "item":2001, "count": 1 }
+            { "item":2001, "count": 10 }
         ]
     }, "3003": {
         "id": 3003,
         "item": 1003,
         "materials": [
-            { "item":2001, "count": 1 }
+            { "item":2001, "count": 20 },
+            { "item":2004, "count": 10 }
         ]
     }, "3004": {
         "id": 3004,
         "item": 1004,
         "materials": [
-            { "item":2001, "count": 1 }
+            { "item":2002, "count": 20 },
+            { "item":2003, "count": 10 }
         ]
     }, "3005": {
         "id": 3005,
         "item": 1,
         "materials": [
-            { "item":2001, "count": 1 }
+            { "item":2007, "count": 1 }
         ]
     }, "3006": {
         "id": 3006,
         "item": 401,
         "materials": [
-            { "item":2001, "count": 1 }
+            { "item":2007, "count": 3 }
         ]
     }, "3007": {
         "id": 3007,
         "item": 701,
         "materials": [
-            { "item":2001, "count": 1 }
+            { "item":2007, "count": 5 }
         ]
     }
 }

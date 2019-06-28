@@ -94,8 +94,8 @@
             "end": 100
         }
     },
-    "10": {
-        "id": 10,
+    "6": {
+        "id": 6,
         "name": "바스타드 소드",
         "rank": "C",
         "image": {
@@ -113,8 +113,8 @@
             "end": 100
         }
     },
-    "11": {
-        "id": 11,
+    "7": {
+        "id": 7,
         "name": "바스타드 소드",
         "rank": "B",
         "image": {
@@ -132,8 +132,8 @@
             "end": 100
         }
     },
-    "12": {
-        "id": 12,
+    "8": {
+        "id": 8,
         "name": "바스타드 소드",
         "rank": "A",
         "image": {
@@ -151,13 +151,13 @@
             "end": 100
         }
     },
-    "13": {
-        "id": 13,
-        "name": "바스타드 소드",
+    "9": {
+        "id": 9,
+        "name": "드래곤 슬레이어",
         "rank": "S",
         "image": {
             "texture": "items.png",
-            "x": 14,
+            "x": 19,
             "y": 9
         },
         "description": "양손검 바스타드 소드",
@@ -170,9 +170,9 @@
             "end": 100
         }
     },
-    "14": {
-        "id": 14,
-        "name": "바스타드 소드",
+    "10": {
+        "id": 10,
+        "name": "크림슨 소드",
         "rank": "U",
         "image": {
             "texture": "items.png",
@@ -217,7 +217,7 @@
             "x": 15,
             "y": 8
         },
-        "description": "나무로 만든 활22",
+        "description": "견습자용 활",
         "category": "weapon",
         "classes": ["archer"],
         "subcategory": "bow",
@@ -230,32 +230,13 @@
     "203": {
         "id": 203,
         "name": "석궁",
-        "rank": "C",
-        "image": {
-            "texture": "items.png",
-            "x": 15,
-            "y": 8
-        },
-        "description": "나무로 만든 활22",
-        "category": "weapon",
-        "classes": ["archer"],
-        "subcategory": "bow",
-        "options": [],
-        "generateFloor": {
-            "begin": 1,
-            "end": 100
-        }
-    },
-    "204": {
-        "id": 204,
-        "name": "아이스 보우",
         "rank": "B",
         "image": {
             "texture": "items.png",
-            "x": 15,
+            "x": 16,
             "y": 8
         },
-        "description": "나무로 만든 활22",
+        "description": "철로 만들어진 튼튼한 석궁",
         "category": "weapon",
         "classes": ["archer"],
         "subcategory": "bow",
@@ -265,16 +246,73 @@
             "end": 100
         }
     },
+    "204": {
+        "id": 204,
+        "name": "아이스 보우",
+        "rank": "A",
+        "image": {
+            "texture": "items.png",
+            "x": 17,
+            "y": 8
+        },
+        "description": "아이스보우",
+        "category": "weapon",
+        "classes": ["archer"],
+        "subcategory": "bow",
+        "options": [],
+        "generateFloor": {
+            "begin": 41,
+            "end": 100
+        }
+    },
+    "205": {
+        "id": 205,
+        "name": "팔라디움 숏보우",
+        "rank": "S",
+        "image": {
+            "texture": "items.png",
+            "x": 19,
+            "y": 8
+        },
+        "description": "연속샷이 가능한 숏보우",
+        "category": "weapon",
+        "classes": ["archer"],
+        "subcategory": "bow",
+        "options": [],
+        "generateFloor": {
+            "begin": 61,
+            "end": 100
+        }
+    },
+    "206": {
+        "id": 206,
+        "name": "드워프의 석궁",
+        "rank": "U",
+        "image": {
+            "texture": "items.png",
+            "x": 21,
+            "y": 8
+        },
+        "description": "드워프가 만든 에메랄드 석궁",
+        "category": "weapon",
+        "classes": ["archer"],
+        "subcategory": "bow",
+        "options": [],
+        "generateFloor": {
+            "begin": 61,
+            "end": 100
+        }
+    },
     "301": {
         "id": 301,
         "name": "나무지팡이",
         "rank": "C",
         "image": {
             "texture": "items.png",
-            "x": 0,
-            "y": 8
+            "x": 5,
+            "y": 2
         },
-        "description": "나무로 만든 지팡이",
+        "description": "흔히 볼 수 있는 나무로 만든 지팡이",
         "category": "weapon",
         "classes": ["wizard", "healer"],
         "subcategory": "wond",
@@ -284,28 +322,9 @@
             "end": 100
         }
     },
+    
     "302": {
         "id": 302,
-        "name": "떡갈나무 지팡이",
-        "rank": "C",
-        "image": {
-            "texture": "items.png",
-            "x": 2,
-            "y": 8
-        },
-        "description": "떡갈나무로 만든 지팡이",
-        "category": "weapon",
-        "classes": ["wizard", "healer"],
-        "subcategory": "wond",
-        "options": [],
-        "generateFloor": {
-            "begin": 1,
-            "end": 100
-        }
-    },
-
-    "303": {
-        "id": 303,
         "name": "수행자의 원드",
         "rank": "C",
         "image": {
@@ -317,83 +336,83 @@
         "category": "weapon",
         "classes": ["wizard", "healer"],
         "subcategory": "wond",
-        "options": [],
+        "options": ["intellect(+1)"],
         "generateFloor": {
             "begin": 1,
             "end": 100
         }
     },
-    "304": {
-        "id": 304,
-        "name": "수행자의 원드",
+    "303": {
+        "id": 303,
+        "name": "마법사의 원드",
         "rank": "B",
         "image": {
             "texture": "items.png",
             "x": 6,
             "y": 2
         },
-        "description": "수행자의 원드",
+        "description": "마법사가 사용하는 원드",
         "category": "weapon",
         "classes": ["wizard", "healer"],
         "subcategory": "wond",
-        "options": [],
+        "options": ["intellect(+2)"],
         "generateFloor": {
             "begin": 21,
             "end": 100
         }
     },
-    "305": {
-        "id": 305,
-        "name": "수행자의 원드",
+    "304": {
+        "id": 304,
+        "name": "마스터의 원드",
         "rank": "A",
         "image": {
             "texture": "items.png",
             "x": 7,
             "y": 2
         },
-        "description": "수행자의 원드",
+        "description": "오랜 수행을 거친 마법사를 위한 원드",
         "category": "weapon",
         "classes": ["wizard", "healer"],
         "subcategory": "wond",
-        "options": [],
+        "options": ["intellect(+3)"],
         "generateFloor": {
             "begin": 41,
             "end": 100
         }
     },
-    "306": {
-        "id": 306,
-        "name": "수행자의 원드",
+    "305": {
+        "id": 305,
+        "name": "현자의 지팡이",
         "rank": "S",
         "image": {
             "texture": "items.png",
-            "x": 20,
-            "y": 6
+            "x": 8,
+            "y": 2
         },
         "description": "수행자의 원드",
         "category": "weapon",
         "classes": ["wizard", "healer"],
         "subcategory": "wond",
-        "options": [],
+        "options": ["intellect(+4)"],
         "generateFloor": {
             "begin": 61,
             "end": 100
         }
     },
-    "307": {
-        "id": 307,
-        "name": "수행자의 원드",
+    "306": {
+        "id": 306,
+        "name": "사파이어 원드",
         "rank": "U",
         "image": {
             "texture": "items.png",
             "x": 21,
             "y": 6
         },
-        "description": "수행자의 원드",
+        "description": "고위마법을 사용할 수 있다",
         "category": "weapon",
         "classes": ["wizard", "healer"],
         "subcategory": "wond",
-        "options": [],
+        "options": ["intellect(+5)"],
         "generateFloor": {
             "begin": 81,
             "end": 100
@@ -411,7 +430,7 @@
         },
         "description": "흔히 볼 수 있는 평범한 갑옷",
         "category": "armor",
-        "classes": ["warrior"],
+        "classes": ["warrior", "archer"],
         "subcategory": "medium-armor",
         "options": ["stamina(+3)"],
         "generateFloor": {
@@ -430,7 +449,7 @@
         },
         "description": "견습자용 갑옷",
         "category": "armor",
-        "classes": ["warrior", "wizard", "healer", "archer"],
+        "classes": ["warrior", "archer"],
         "subcategory": "medium-armor",
         "options": ["stamina(+3)"],
         "generateFloor": {
@@ -449,11 +468,87 @@
         },
         "description": "여행자의 검과 세트",
         "category": "armor",
-        "classes": ["warrior", "wizard", "healer", "archer"],
+        "classes": ["warrior", "archer"],
         "subcategory": "medium-armor",
         "options": ["stamina(+5)"],
         "generateFloor": {
             "begin": 21,
+            "end": 100
+        }
+    },
+    "404": {
+        "id": 404,
+        "name": "사냥꾼의 갑옷",
+        "rank": "A",
+        "image": {
+            "texture": "items.png",
+            "x": 4,
+            "y": 12
+        },
+        "description": "여행자의 검과 세트",
+        "category": "armor",
+        "classes": ["warrior", "archer"],
+        "subcategory": "medium-armor",
+        "options": ["stamina(+5)"],
+        "generateFloor": {
+            "begin": 21,
+            "end": 100
+        }
+    },
+    "405": {
+        "id": 405,
+        "name": "빨간모자의 갑옷",
+        "rank": "S",
+        "image": {
+            "texture": "items.png",
+            "x": 5,
+            "y": 12
+        },
+        "description": "여행자의 검과 세트",
+        "category": "armor",
+        "classes": ["warrior", "archer"],
+        "subcategory": "medium-armor",
+        "options": ["stamina(+5)"],
+        "generateFloor": {
+            "begin": 21,
+            "end": 100
+        }
+    },
+    "406": {
+        "id": 406,
+        "name": "크림슨 아머",
+        "rank": "U",
+        "image": {
+            "texture": "items.png",
+            "x": 5,
+            "y": 12
+        },
+        "description": "크림슨 헬멧과 세트",
+        "category": "armor",
+        "classes": ["warrior", "archer"],
+        "subcategory": "medium-armor",
+        "options": ["stamina(+5)"],
+        "generateFloor": {
+            "begin": 21,
+            "end": 100
+        }
+    },
+    "407": {
+        "id": 407,
+        "name": "팔라디움 갑옷",
+        "rank": "C",
+        "image": {
+            "texture": "items.png",
+            "x": 6,
+            "y": 12
+        },
+        "description": "흔히 보는 병사의 갑옷",
+        "category": "armor",
+        "classes": ["warrior"],
+        "subcategory": "heavy-armor",
+        "options": ["stamina(+7)"],
+        "generateFloor": {
+            "begin": 1,
             "end": 100
         }
     },
@@ -498,7 +593,7 @@
     },
     "503": {
         "id": 503,
-        "name": "수행자의 로브",
+        "name": "집시의 로브",
         "rank": "B",
         "image": {
             "texture": "items.png",
@@ -509,9 +604,9 @@
         "category": "armor",
         "classes": ["wizard", "healer"],
         "subcategory": "light-armor",
-        "options": ["stamina(+2)"],
+        "options": ["stamina(+3)"],
         "generateFloor": {
-            "begin": 1,
+            "begin": 21,
             "end": 100
         }
     },
@@ -528,9 +623,9 @@
         "category": "armor",
         "classes": ["wizard", "healer"],
         "subcategory": "light-armor",
-        "options": ["stamina(+2)"],
+        "options": ["stamina(+4)"],
         "generateFloor": {
-            "begin": 1,
+            "begin": 41,
             "end": 100
         }
     },
@@ -547,9 +642,9 @@
         "category": "armor",
         "classes": ["wizard", "healer"],
         "subcategory": "light-armor",
-        "options": ["stamina(+2)"],
+        "options": ["stamina(+5)"],
         "generateFloor": {
-            "begin": 1,
+            "begin": 61,
             "end": 100
         }
     },
@@ -566,9 +661,9 @@
         "category": "armor",
         "classes": ["wizard", "healer"],
         "subcategory": "light-armor",
-        "options": ["stamina(+2)"],
+        "options": ["stamina(+6)"],
         "generateFloor": {
-            "begin": 1,
+            "begin": 81,
             "end": 100
         }
     },
@@ -586,7 +681,7 @@
         "category": "accessory",
         "classes": ["warrior", "wizard", "healer", "archer"],
         "subcategory": "accessory-ring",
-        "options": ["agility(+5)"],
+        "options": ["agility(+1)"],
         "generateFloor": {
             "begin": 1,
             "end": 100
@@ -605,9 +700,66 @@
         "category": "accessory",
         "classes": ["warrior", "wizard", "healer", "archer"],
         "subcategory": "accessory-ring",
-        "options": ["strength(+5)"],
+        "options": ["agility(+2)"],
         "generateFloor": {
             "begin": 21,
+            "end": 100
+        }
+    },
+    "603": {
+        "id": 603,
+        "name": "집행자의 반지",
+        "rank": "A",
+        "image": {
+            "texture": "items.png",
+            "x": 17,
+            "y": 3
+        },
+        "description": "",
+        "category": "accessory",
+        "classes": ["warrior", "wizard", "healer", "archer"],
+        "subcategory": "accessory-ring",
+        "options": ["agility(+3)"],
+        "generateFloor": {
+            "begin": 41,
+            "end": 100
+        }
+    },
+    "604": {
+        "id": 604,
+        "name": "루비 반지",
+        "rank": "S",
+        "image": {
+            "texture": "items.png",
+            "x": 11,
+            "y": 3
+        },
+        "description": "루비로 만들어진 보석반지",
+        "category": "accessory",
+        "classes": ["warrior", "wizard", "healer", "archer"],
+        "subcategory": "accessory-ring",
+        "options": ["agility(+4)"],
+        "generateFloor": {
+            "begin": 61,
+            "end": 100
+        }
+    },
+    "605": {
+        "id": 605,
+        "name": "엔젤링",
+        "rank": "U",
+        "image": {
+            "texture": "items.png",
+            "x": 12,
+            "y": 3
+        },
+        "description": "여행자의 목걸이와 세트",
+        "category": "accessory",
+        "classes": ["warrior", "wizard", "healer", "archer"],
+        "subcategory": "accessory-ring",
+        "options": ["agility(+5)"],
+        "generateFloor": {
+            "begin": 81,
             "end": 100
         }
     },
@@ -624,7 +776,7 @@
         "category": "accessory",
         "classes": ["warrior", "wizard", "healer", "archer"],
         "subcategory": "accessory-necklace",
-        "options": ["agility(+10)"],
+        "options": ["agility(+2)"],
         "generateFloor": {
             "begin": 1,
             "end": 100
@@ -644,7 +796,7 @@
         "category": "accessory",
         "classes": ["warrior", "wizard", "healer", "archer"],
         "subcategory": "accessory-necklace",
-        "options": ["agility(+7)"],
+        "options": ["agility(+3)"],
         "generateFloor": {
             "begin": 21,
             "end": 100
@@ -664,60 +816,193 @@
         "category": "accessory",
         "classes": ["warrior", "wizard", "healer", "archer"],
         "subcategory": "gloves",
-        "options": [],
+        "options": ["strength(+1)"],
         "generateFloor": {
             "begin": 1,
+            "end": 100
+        }
+    },
+    "702": {
+        "id": 702,
+        "name": "건틀릿",
+        "rank": "B",
+        "image": {
+            "texture": "items.png",
+            "x": 16,
+            "y": 11
+        },
+        "description": "흔히 볼 수 있는 평범한 건틀릿",
+        "category": "accessory",
+        "classes": ["warrior", "wizard", "healer", "archer"],
+        "subcategory": "gloves",
+        "options": ["strength(+1)"],
+        "generateFloor": {
+            "begin": 21,
+            "end": 100
+        }
+    },
+    "703": {
+        "id": 703,
+        "name": "건틀릿",
+        "rank": "A",
+        "image": {
+            "texture": "items.png",
+            "x": 17,
+            "y": 11
+        },
+        "description": "흔히 볼 수 있는 평범한 건틀릿",
+        "category": "accessory",
+        "classes": ["warrior", "wizard", "healer", "archer"],
+        "subcategory": "gloves",
+        "options": ["strength(+1)"],
+        "generateFloor": {
+            "begin": 41,
+            "end": 100
+        }
+    },
+    "704": {
+        "id": 704,
+        "name": "건틀릿",
+        "rank": "S",
+        "image": {
+            "texture": "items.png",
+            "x": 18,
+            "y": 11
+        },
+        "description": "흔히 볼 수 있는 평범한 건틀릿",
+        "category": "accessory",
+        "classes": ["warrior", "wizard", "healer", "archer"],
+        "subcategory": "gloves",
+        "options": ["strength(+1)"],
+        "generateFloor": {
+            "begin": 61,
+            "end": 100
+        }
+    },
+
+    "707": {
+        "id": 707,
+        "name": "크림슨 건틀릿",
+        "rank": "U",
+        "image": {
+            "texture": "items.png",
+            "x": 19,
+            "y": 11
+        },
+        "description": "흔히 볼 수 있는 평범한 건틀릿",
+        "category": "accessory",
+        "classes": ["warrior", "wizard", "healer", "archer"],
+        "subcategory": "gloves",
+        "options": ["strength(+7)"],
+        "generateFloor": {
+            "begin": 81,
             "end": 100
         }
     },
 
     "801": {
         "id": 801,
-        "name": "기본 투구",
+        "name": "기본 헬멧",
         "rank": "C",
         "image": {
             "texture": "items.png",
             "x": 10,
             "y": 12
         },
-        "description": "흔히 구할 수 있는 투구",
+        "description": "흔히 구할 수 있는 헬멧",
         "category": "accessory",
         "classes": ["warrior", "wizard", "healer", "archer"],
         "subcategory": "helmet",
-        "options": ["speed(+1)"],
+        "options": ["stamina(+1)"],
         "generateFloor": {
             "begin": 1,
             "end": 100
         }
     },
-
-    "851": {
-        "id": 851,
-        "name": "기본 방패",
-        "rank": "C",
+    "802": {
+        "id": 802,
+        "name": "티타늄 헬멧",
+        "rank": "B",
         "image": {
             "texture": "items.png",
-            "x": 0,
-            "y": 10
+            "x": 11,
+            "y": 12
         },
-        "description": "흔히 구할 수 있는 방패",
+        "description": "티타늄으로 만들어진 헬멧",
         "category": "accessory",
-        "classes": ["warrior"],
-        "subcategory": "shield",
-        "options": ["speed(+1)"],
+        "classes": ["warrior", "wizard", "healer", "archer"],
+        "subcategory": "helmet",
+        "options": ["stamina(+1)"],
         "generateFloor": {
             "begin": 1,
             "end": 100
         }
     },
+    "803": {
+        "id": 803,
+        "name": "A급 헬멧",
+        "rank": "A",
+        "image": {
+            "texture": "items.png",
+            "x": 12,
+            "y": 12
+        },
+        "description": "흔히 구할 수 있는 헬멧",
+        "category": "accessory",
+        "classes": ["warrior", "wizard", "healer", "archer"],
+        "subcategory": "helmet",
+        "options": ["stamina(+1)"],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
+    },
+    "804": {
+        "id": 804,
+        "name": "S급 헬멧",
+        "rank": "S",
+        "image": {
+            "texture": "items.png",
+            "x": 15,
+            "y": 12
+        },
+        "description": "흔히 구할 수 있는 헬멧",
+        "category": "accessory",
+        "classes": ["warrior", "wizard", "healer", "archer"],
+        "subcategory": "helmet",
+        "options": ["stamina(+1)"],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
+    },
+    "805": {
+        "id": 805,
+        "name": "크림슨플레어 헬멧",
+        "rank": "U",
+        "image": {
+            "texture": "items.png",
+            "x": 16,
+            "y": 12
+        },
+        "description": "크림슨아머와 세트",
+        "category": "accessory",
+        "classes": ["warrior", "wizard", "healer", "archer"],
+        "subcategory": "helmet",
+        "options": ["stamina(+1)"],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
+    }, 
 
-    "901": {
-        "id": 901,
-        "name": "기본 신발",
+    "806": {
+        "id": 806,
+        "name": "부츠",
         "rank": "C",
         "image": {
             "texture": "items.png",
-            "x": 0,
+            "x": 1,
             "y": 13
         },
         "description": "면으로 만들어진 실용적인 부츠",
@@ -727,6 +1012,178 @@
         "options": ["speed(+1)"],
         "generateFloor": {
             "begin": 1,
+            "end": 100
+        }
+    },
+    "807": {
+        "id": 807,
+        "name": "부츠",
+        "rank": "B",
+        "image": {
+            "texture": "items.png",
+            "x": 2,
+            "y": 13
+        },
+        "description": "면으로 만들어진 실용적인 부츠",
+        "category": "accessory",
+        "classes": ["warrior", "wizard", "healer", "archer"],
+        "subcategory": "",
+        "options": ["speed(+2)"],
+        "generateFloor": {
+            "begin": 21,
+            "end": 100
+        }
+    },
+    "808": {
+        "id": 808,
+        "name": "부츠",
+        "rank": "A",
+        "image": {
+            "texture": "items.png",
+            "x": 3,
+            "y": 13
+        },
+        "description": "면으로 만들어진 실용적인 부츠",
+        "category": "accessory",
+        "classes": ["warrior", "wizard", "healer", "archer"],
+        "subcategory": "",
+        "options": ["speed(+3)"],
+        "generateFloor": {
+            "begin": 41,
+            "end": 100
+        }
+    },
+    "809": {
+        "id": 809,
+        "name": "부츠",
+        "rank": "S",
+        "image": {
+            "texture": "items.png",
+            "x": 8,
+            "y": 13
+        },
+        "description": "면으로 만들어진 실용적인 부츠",
+        "category": "accessory",
+        "classes": ["warrior", "wizard", "healer", "archer"],
+        "subcategory": "",
+        "options": ["speed(+4)"],
+        "generateFloor": {
+            "begin": 61,
+            "end": 100
+        }
+    },
+    "810": {
+        "id": 810,
+        "name": "부츠",
+        "rank": "U",
+        "image": {
+            "texture": "items.png",
+            "x": 7,
+            "y": 13
+        },
+        "description": "면으로 만들어진 실용적인 부츠",
+        "category": "accessory",
+        "classes": ["warrior", "wizard", "healer", "archer"],
+        "subcategory": "",
+        "options": ["speed(+5)"],
+        "generateFloor": {
+            "begin": 81,
+            "end": 100
+        }
+    },
+
+    "901": {
+        "id": 901,
+        "name": "기본 방패",
+        "rank": "C",
+        "image": {
+            "texture": "items.png",
+            "x": 0,
+            "y": 10
+        },
+        "description": "흔히 구할 수 있는 나무 방패",
+        "category": "accessory",
+        "classes": ["warrior"],
+        "subcategory": "shield",
+        "options": ["stamina(+1)"],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
+    },
+    "902": {
+        "id": 902,
+        "name": "기본 강철 방패",
+        "rank": "B",
+        "image": {
+            "texture": "items.png",
+            "x": 2,
+            "y": 10
+        },
+        "description": "흔히 구할 수 있는 나무 방패",
+        "category": "accessory",
+        "classes": ["warrior"],
+        "subcategory": "shield",
+        "options": ["stamina(+2)"],
+        "generateFloor": {
+            "begin": 21,
+            "end": 100
+        }
+    },
+    "903": {
+        "id": 903,
+        "name": "기본 방패",
+        "rank": "A",
+        "image": {
+            "texture": "items.png",
+            "x": 3,
+            "y": 10
+        },
+        "description": "흔히 구할 수 있는 나무 방패",
+        "category": "accessory",
+        "classes": ["warrior"],
+        "subcategory": "shield",
+        "options": ["stamina(+3)"],
+        "generateFloor": {
+            "begin": 41,
+            "end": 100
+        }
+    },
+    "904": {
+        "id": 904,
+        "name": "기본 방패",
+        "rank": "S",
+        "image": {
+            "texture": "items.png",
+            "x": 7,
+            "y": 10
+        },
+        "description": "흔히 구할 수 있는 나무 방패",
+        "category": "accessory",
+        "classes": ["warrior"],
+        "subcategory": "shield",
+        "options": ["stamina(+4)"],
+        "generateFloor": {
+            "begin": 61,
+            "end": 100
+        }
+    },
+    "905": {
+        "id": 905,
+        "name": "크림슨 쉴드",
+        "rank": "U",
+        "image": {
+            "texture": "items.png",
+            "x": 9,
+            "y": 10
+        },
+        "description": "크림슨 소드와 세트",
+        "category": "accessory",
+        "classes": ["warrior"],
+        "subcategory": "shield",
+        "options": ["stamina(+5)"],
+        "generateFloor": {
+            "begin": 81,
             "end": 100
         }
     },
@@ -828,6 +1285,108 @@
             "y": 4
         },
         "description": "흔히 볼수 없는 식물",
+        "category": "material",
+        "options": [],
+        "generateFloor": {
+            "begin": 21,
+            "end": 100
+        }
+    },
+    "2003": {
+        "id": 2003,
+        "name": "파란 버섯",
+        "rank": "C",
+        "image": {
+            "texture": "items.png",
+            "x": 6,
+            "y": 4
+        },
+        "description": "아지트 근처 숲에서 자라는 파란버섯",
+        "category": "material",
+        "options": [],
+        "generateFloor": {
+            "begin": 21,
+            "end": 100
+        }
+    },
+    "2004": {
+        "id": 2004,
+        "name": "빨간 버섯",
+        "rank": "C",
+        "image": {
+            "texture": "items.png",
+            "x": 5,
+            "y": 4
+        },
+        "description": "아지트 근처 숲에서 자라는 파란버섯",
+        "category": "material",
+        "options": [],
+        "generateFloor": {
+            "begin": 21,
+            "end": 100
+        }
+    },
+    "2005": {
+        "id": 2005,
+        "name": "떡갈나무",
+        "rank": "C",
+        "image": {
+            "texture": "items.png",
+            "x": 2,
+            "y": 8
+        },
+        "description": "아지트 근처 떡갈나무 숲",
+        "category": "material",
+        "options": [],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
+    },
+    "2006": {
+        "id": 2006,
+        "name": "강철",
+        "rank": "C",
+        "image": {
+            "texture": "items.png",
+            "x": 19,
+            "y": 4
+        },
+        "description": "검을 만드는 재료. 상자나 몬스터에게서 구할 수 있다",
+        "category": "material",
+        "options": [],
+        "generateFloor": {
+            "begin": 1,
+            "end": 100
+        }
+    },
+    "2007": {
+        "id": 2007,
+        "name": "강철",
+        "rank": "C",
+        "image": {
+            "texture": "items.png",
+            "x": 21,
+            "y": 4
+        },
+        "description": "검을 만드는 기본 재료",
+        "category": "material",
+        "options": [],
+        "generateFloor": {
+            "begin": 21,
+            "end": 100
+        }
+    },
+    "2008": {
+        "id": 2008,
+        "name": "아다만타이트",
+        "rank": "B",
+        "image": {
+            "texture": "items.png",
+            "x": 18,
+            "y": 4
+        },
+        "description": "검을 만드는 기본 재료",
         "category": "material",
         "options": [],
         "generateFloor": {

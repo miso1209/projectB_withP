@@ -185,7 +185,6 @@ export default class Inventory extends Panel {
                 this.itemOptions.appendChild(li);
             });
         } else {
-            // this.itemRank.dom.style.display = 'none';
             this.rankbg.style.display = 'none';
 
             this.itemImg.updateImage(0,0);
