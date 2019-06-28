@@ -20,9 +20,6 @@ import Portal from './portal';
 import Notification from './notification';
 import Item from './item';
 import MapGenerator from './mapgenerator';
-// 제거할 것.
-import PropGenerator from './propgenerator';
-
 
 export default class Game extends EventEmitter {
     constructor(pixi) {
@@ -424,13 +421,6 @@ export default class Game extends EventEmitter {
         this.storage.saveLocation(stagePath, eventName);
         const stageName = path.basename(stagePath, ".json");
         const stage = new Stage();
-        
-        // ==================================================================================
-        // 제거할 것.
-        // stage.neighbor = {
-        //     ouput: 'up'
-        // }
-        // ==================================================================================
 
         stage.on('playcutscene', async (...args) => {
             this._playCutscene(...args);
@@ -441,16 +431,6 @@ export default class Game extends EventEmitter {
         this.currentFloor = 0;
         this.ui.hideMinimap();
         await stage.$load(stageName);
-
-        // ==================================================================================
-        // 제거할 것.
-        // const propGenerator = new PropGenerator();
-        // const monster = propGenerator.createStoryMonster('dragon');
-        // stage.addMonster(monster, {
-        //     type: "dragon",
-        //     pos: {x:44, y:52}
-        // });
-        // ==================================================================================
         for(const tag of this.player.tags) {
             stage.applyTag(tag);
         }

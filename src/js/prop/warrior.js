@@ -52,13 +52,21 @@ export default class Warrior extends PropBase {
             const potionCount = game.player.inventory.getCount(1001);
 
             if (potionCount < 1 && !this.healed) {
+                game.exploreMode.interactive = false;
+                game.ui.hideMenu();
+
                 game.ui.showDialog([
                     { speaker: 1, text: "저기요 괜찮으세요?" },
                     { text: "..." },
                     { speaker: 1, text: "아무래도 포션을 만들어서 회복시켜줘야겠어!." },
                     { speaker: 1, text: "집으로 돌아가서 포션을 만들자!." }
-                ], () => {});
+                ], () => {
+                    game.ui.showMenu();
+                    game.exploreMode.interactive = true;
+                });
             } else if(this.healed) {
+                game.exploreMode.interactive = false;
+                game.ui.hideMenu();
                 game.ui.showDialog([
                     { speaker: 2, text: "정말 감사합니다.. 어떻게 감사의 말씀을 드려야할지.." },
                     { speaker: 1, text: "아닙니다. 건강해지셔서 정말 다행입니다." },
@@ -66,8 +74,6 @@ export default class Warrior extends PropBase {
                     { speaker: 1, text: "괜찮으시다면 저와 탑을 올라주실수 있을까요" },
                     { speaker: 2, text: "저희도 성에 볼일이 있었는데 잘 되었네요!. 가시죠!." }
                 ], async () => {
-                    game.exploreMode.interactive = false;
-                    game.ui.hideMenu();
                     await game.$fadeOut(1);
 
                     game.addCharacter(2, { level: 1, exp: 0, equips: {}});

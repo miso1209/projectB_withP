@@ -42,8 +42,8 @@ export default class FireRain extends SkillBase {
 
                     let toX = target.position.x + target.width / 2;
                     let toY = target.position.y - target.height - 24;
-                    toX += (target.animation.offset && target.animation.offset.x)?target.animation.offset.x:0;
-                    toY -= (target.animation.offset && target.animation.offset.y)?(target.animation.offset.y):0;
+                    toX += ((target.animation.offset && target.animation.offset.x)?target.animation.offset.x:0)* target.animation.scale.x;
+                    toY -= ((target.animation.offset && target.animation.offset.y)?(target.animation.offset.y):0)* target.animation.scale.x;
     
                     const dist = {
                         x: toX - fireBall.position.x,

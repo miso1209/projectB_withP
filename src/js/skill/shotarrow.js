@@ -23,8 +23,8 @@ export default class ShotArrow extends SkillBase {
 
                 let toX = this.target.position.x + this.target.width / 2;
                 let toY = this.target.position.y - this.target.height - 24;
-                toX += (this.target.animation.offset && this.target.animation.offset.x)?this.target.animation.offset.x:0;
-                toY -= (this.target.animation.offset && this.target.animation.offset.y)?(this.target.animation.offset.y):0;
+                toX += ((this.target.animation.offset && this.target.animation.offset.x)?this.target.animation.offset.x:0) * this.target.animation.scale.x;
+                toY -= ((this.target.animation.offset && this.target.animation.offset.y)?(this.target.animation.offset.y):0) * this.target.animation.scale.y;
                 
                 const duration = 25;
 

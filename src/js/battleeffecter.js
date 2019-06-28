@@ -32,8 +32,8 @@ export class BattleEffecter extends PIXI.Container {
         anim.blendMode = PIXI.BLEND_MODES.ADD;
         anim.position.x = target.position.x + target.animation.width / 2;
         anim.position.y = target.position.y - target.animation.height - 24;
-        anim.position.x += (target.animation.offset && target.animation.offset.x)?target.animation.offset.x:0;
-        anim.position.y -= (target.animation.offset && target.animation.offset.y)?(target.animation.offset.y):0;
+        anim.position.x += ((target.animation.offset && target.animation.offset.x)?target.animation.offset.x:0) * target.animation.scale.x;
+        anim.position.y -= ((target.animation.offset && target.animation.offset.y)?(target.animation.offset.y):0) * target.animation.scale.y;
 
         this.detailEffectContainer.addChild(anim);
 
@@ -64,8 +64,8 @@ export class BattleEffecter extends PIXI.Container {
         text.alpha = 0;
         text.position.x = (options.target.position.x + options.target.animation.width / 2) + offset.x;
         text.position.y = (options.target.position.y - options.target.animation.height) + offset.y - 24;
-        text.position.x += (options.target.animation.offset && options.target.animation.offset.x)?options.target.animation.offset.x:0;
-        text.position.y -= (options.target.animation.offset && options.target.animation.offset.y)?(options.target.animation.offset.y):0;
+        text.position.x += ((options.target.animation.offset && options.target.animation.offset.x)?options.target.animation.offset.x:0) * options.target.animation.scale.x;
+        text.position.y -= ((options.target.animation.offset && options.target.animation.offset.y)?(options.target.animation.offset.y):0)* options.target.animation.scale.y;
         this.detailEffectContainer.addChild(text);
 
         this.tweens.addTween(text.position, 0.5, {y: text.position.y - 15}, 0, "easeOut", true, null);
