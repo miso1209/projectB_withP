@@ -12,6 +12,7 @@ export default class Character {
         this.id = id;
         this.level = 1;
         this.exp = 0;
+        // [의문] 캐릭터의 강함 (같은 몬스터여도 필드 보스일때 더 강하다던가..) 를 처리하려고 rank를 두고, 그에따라서 올스텟을 조절하였는데.. 이게 맞나 싶다.
         this.rank = rank?rank:{ strong: 1, display: 'C' };
         
         const data = characters[id];
@@ -443,6 +444,8 @@ export default class Character {
         return this.dirty = false;
     }
 
+    // [정리]UI에서 장비 클릭 시, 실제 장비를 착용하는 것 은 아니지만, 그때그때 착용한 데이터를 보여주려고 만들다보니.. 이상해졌다.. 어떻게 수정해야할까.
+    // (누를 때 마다 착용처리 하면 되긴 한다.)
     simulationEquip(slot, itemId) {
         this.refreshSimulationData();
 

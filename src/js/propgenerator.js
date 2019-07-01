@@ -13,6 +13,8 @@ const RANK = {
     UNKNOWN: 'UNKNOWN'
 };
 
+// [정리] 아이템을 생성하는, 가져오는 랭크의 산출 방식이 문제있어 보인다..
+// 원래는 어떻게 랜덤처리 할까..
 export default class PropGenerator {
     constructor() {
     }
@@ -254,7 +256,7 @@ export default class PropGenerator {
             const filteredItems = [];
             for (let key in Items) {
                 const item = Items[key];
-                if (item.rank === rank) {
+                if (item.rank === rank && item.category !== 'valuables') {
                     filteredItems.push(item);
                 }
             }

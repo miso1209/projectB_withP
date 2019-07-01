@@ -38,6 +38,8 @@ export class Portal2 {
         $t();
     }
 }
+
+// Touch가 아니라, 밟았을 때 작동하는 포털이다.
 export class Portal5 {
     constructor(x,y, src) {
         this.name = src.name;
@@ -51,9 +53,9 @@ export class Portal5 {
         this.forceStop = true;
     }
 
-
     touch(game) {
     }
+
     onEvent(game) {
         // 월드 진입컷신을 만들어서 넣어준다.
         const $t = async () => {
@@ -77,6 +79,7 @@ export class Portal5 {
     }
 }
 
+// 스테이지의 경로가 아니라, 스테이지 객체를 넘겨줄 때 사용하는 포털이다. (밟았을 때 작동.)
 export class Portal3 {
     constructor(x,y, src) {
         this.name = src.name;
@@ -101,14 +104,10 @@ export class Portal3 {
     }
 
     touch(game) {
-        // 월드 진입컷신을 만들어서 넣어준다.
-        const $t = async () => {
-        };
-
-        $t();
     }
 }
 
+// 실제로 작동하는 포털은 아니지만, 플레이어의 Input 위치만을 알려주는 포털이다 ( Hall의 경우 입구로 들어오지만, 해당 입구는 이벤트가 없음 )
 export class Portal4 {
     constructor(x,y, src) {
         this.name = src.name;
@@ -139,6 +138,7 @@ export class Portal4 {
     }
 }
 
+// 층을 갈아엎을때 사용되는 포털이다 => 새로운 인스턴트 던전( 새로운 층 )을 생성할때 사용되는 포털이다.
 export class NextFloorPortal {
     constructor(x,y, src) {
         this.name = src.name;

@@ -1,6 +1,5 @@
 import Stage  from "./stage";
 import path from 'path';
-import Monster from './monster';
 import PropGenerator from "./propgenerator";
 
 const MAP_DATA = {
@@ -14,7 +13,8 @@ const MAP_DATA = {
     OUTPUT: ' ◎ ',
     STAIR: ' N ',
 };
-
+// [정리] 지금 맵 생성 방식이나, 객체를 전부 들고있는것 모두 문제있다..
+// 어떻게 수정해야할까.. 어떻게 처리해야 맵 정보를 담고있고 ,즉시 생성할 수 있도록 데이터만 들고있을 수 있지..?
 // Seed값을 가지고 랜덤생성 하던가, 데이터를 가지고 있어야 할 것 같다. 인스턴스로 다 들고있으니 너무 무식하고, 메모리 낭비가 심할 것.
 export default class MapGenerator {
     constructor() {

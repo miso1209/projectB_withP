@@ -62,6 +62,7 @@ const isBoxInFront = function (box1, box2) {
     else if (box2.ymin > box1.ymax) { return false; }
 };
 
+// [정리] 지금 Stage쪽이 아주 난잡하고 별에 별 많은것이 섞여있다.. 몬스터 움직임 처리라던가..
 export default class Stage extends PIXI.Container {
     constructor(neighbor) {
         super();
@@ -193,21 +194,6 @@ export default class Stage extends PIXI.Container {
         }
     }
 
-    setStagePortal(portals) {
-        const outDir = {
-            up: 'down',
-            left: 'right',
-            right: 'left',
-            down: 'up'
-        }
-        this.eventMap.forEach((event) => {
-            if(event) {
-                event.targetStage = portals[event.name];
-                event.to = outDir[event.name];
-            }
-        });
-    }
-
     setTags(tags) {
         this.tags = tags;
     }
@@ -244,6 +230,7 @@ export default class Stage extends PIXI.Container {
         }
     }
 
+    // [정리] 미리 생성된 맵을 사용하는 경우, 층을 올라가는 경우, 그밖의 경우가 전부 다르게 짜여저 있어서 포탈 Class도 여러개인데.. 어떻게 처리해야할까
     setEventTile(x, y, tile) {
         if (tile.name === 'up' || tile.name === 'down' || tile.name === 'left' || tile.name === 'right') {
             if (this.neighbor.output === tile.name) {
@@ -260,6 +247,7 @@ export default class Stage extends PIXI.Container {
         }
         this.pathFinder.setCell(x, y, true);
     }
+
     setObjectTile(x, y, src) {
         const tile = this.newTile(x, y, src);
         for(let j = 0; j < src.xsize; ++j ) {
@@ -272,203 +260,6 @@ export default class Stage extends PIXI.Container {
                 }
             }
         }
-    }
-
-    getTileMovable(x, y) {
-        let result = true;
-
-        if (this.groundMap[x + y * this.mapWidth]) {
-            result = result && this.groundMap[x + y * this.mapWidth];
-        }
-        
-        return result;
-    }
-
-    // Emitter가 있는 obj일 경우, emitter 설정해준다.
-    setObjectEmitter(obj) {
-        if (obj.hasEmitter && !obj.hasListener) {
-            obj.hasListener = true;
-            obj.on('delete', () => {
-                // 같은 그룹 ID 모두 제거하며, 해당 좌표의 그라운드가 있는지 판별하여 movable 넣어준다. => 어떤 때 문제가 발생할 수 있을까..?
-                this.deleteObj(obj);
-            });
-            obj.on('deleteList', () => {
-                const isMonsterIndex = this.monsters.indexOf(obj);
-                if (isMonsterIndex >= 0) {
-                    this.monsters.splice(isMonsterIndex, 1);
-                }
-            });
-            obj.on('move', () => {
-                const path = this.getRandomPath(obj);
-                this.moveMonster(obj, path);
-            });
-        }
-    }
-
-    getRandomPositions(xsize, ysize, tileSet) {
-        const tileList = [];
-
-        for (let key in tileSet) {
-            const directionTiles = tileSet[key];
-
-            directionTiles.forEach((tile) => {
-                let emptyFlag = true;
-    
-                for (let y = 0; y < ysize; y++) {
-                    for (let x = 0; x < xsize; x++) {
-                        if (!this.pathFinder.isMovable(tile.gridX - x, tile.gridY - y)) {
-                            emptyFlag = false;
-                        }
-                    }
-                }
-    
-                for (let y = -1; y < ysize+1; y++) {
-                    for (let x = -1; x < xsize+1; x++) {
-                        if (this.eventMap[(tile.gridX - x) + (tile.gridY - y) * this.mapWidth] && !(this.eventMap[(tile.gridX - x) + (tile.gridY - y) * this.mapWidth] instanceof Portal4)) {
-                            emptyFlag = false;
-                        }
-                    }
-                }
-    
-                // 해당 좌표에 오브젝트가 없고, 해당 좌표의 무버블이 1이여야함. => 움직일 수 있는 좌표를 찾아본다.
-                if (tile && emptyFlag) {
-                    tileList.push({key:key, tile: tile});
-                }
-            });
-        }
-
-        const tileData = tileList[Math.round(Math.random() * (tileList.length - 1))];
-
-        if (tileData) {
-            return {
-                x: tileData.tile.gridX,
-                y: tileData.tile.gridY,
-                direction: tileData.key
-            };
-        } else {
-            return false;
-        }
-    }
-
-    getRandomPath(obj) {
-        const tileList = [];
-        let toTile = null;
-
-        this.groundMap.forEach((tile) => {
-            if (tile) {
-                tileList.push(tile);
-            }
-        });
-
-        toTile = tileList[Math.round(Math.random() * (tileList.length-1))];
-        let path = [].concat(this.pathFinder.solve(obj.gridX, obj.gridY, toTile.gridX, toTile.gridY, false));
-
-        if (path && path[0] === null) {
-            path = [];
-        }
-
-        return path.reverse();
-    }
-
-    getPlayerPath(obj) {
-        let path = [].concat(this.pathFinder.solve(obj.gridX, obj.gridY, this.player.gridX, this.player.gridY, false));
-
-        if (path && path[0] === null) {
-            path = [];
-        } else {
-            path.splice(0, 1);
-        }
-        path.push({x:obj.gridX, y:obj.gridY});
-        path.push({x:obj.gridX, y:obj.gridY});
-        path.push({x:obj.gridX, y:obj.gridY});
-
-        return path.reverse();
-    }
-
-    moveMonster(obj, path, callback) {
-        if (obj.isStop) {
-            return;
-        }
-        if (path.length === 0) {
-            if (callback) {
-                callback();
-            } else {
-                obj.move();
-            }
-            return;
-        }
-        
-
-        // 여기에서 플레이어 전투 판정.. => 플레이어를 바라보고, 전투를 시작한다.
-        if (this.player) {
-            const dist = Math.sqrt((this.player.gridX - obj.gridX)**2 + (this.player.gridY - obj.gridY)**2);
-
-            // 범위안에 들어왔으니 전투씬 진입.
-            if (dist <= 5 && !obj.battle) {
-                this.leave();
-                obj.changeVisualToDirection(obj.currentDirection);
-                obj.tileTexture.isMoving = true;
-                obj.isStop = false;
-                obj.battle = true;
-                obj.showBattleIcon();
-                this.stopObject(this.player);
-                this.interactTarget = null;
-                this.onObjMoveStepEnd(this.player);
-                this.player.position.x = this.getTilePosXFor(this.player.gridX, this.player.gridY);
-                this.player.position.y = this.getTilePosYFor(this.player.gridX, this.player.gridY);
-
-                this.emit('seePlayer');
-                path = this.getPlayerPath(obj);
-                callback =  () => {
-                    obj.currentDirection = getDirection(obj.gridX, obj.gridY, this.player.gridX, this.player.gridY);
-                    obj.tileTexture.isMoving = false;
-                    obj.tileTexture.changeVisualToDirection(obj.currentDirection);
-
-                    this.player.changeVisualToDirection(getDirection(this.player.gridX, this.player.gridY, obj.gridX, obj.gridY));
-                    this.leave();
-                    this.emit('battle', obj);
-                };
-            }
-        }
-        
-        obj.currentDirection = getDirection(obj.gridX, obj.gridY, path[0].x, path[0].y);
-        obj.tileTexture.isMoving = true;
-        obj.tileTexture.changeVisualToDirection(obj.currentDirection);
-
-        // 해당자리 Movable변경,
-        const groundTile = this.getGroundTileAt(obj.gridX, obj.gridY);
-        this.pathFinder.setDynamicCell(obj.gridX, obj.gridY, groundTile?groundTile.movable:false);
-        this.pathFinder.setDynamicCell(path[0].x, path[0].y, false);
-
-        const to = {
-            x: this.getTilePosXFor(path[0].x, path[0].y) - this.TILE_HALF_W,
-            y: this.getTilePosYFor(path[0].x, path[0].y) + this.TILE_HALF_H
-        };
-
-        this.arrangeObjLocation(obj, path[0].x, path[0].y);
-        this.arrangeDepthsFromLocation(obj, path[0].x, path[0].y);
-        path.splice(0, 1);
-        // Monster Speed
-        const speed = 0.3;
-
-        this.tweens.addTween(obj.position, speed, { x: to.x, y: to.y }, 0, "linear", true , () => {
-            obj.tileTexture.isMoving = false;
-            this.moveMonster(obj, path, callback);
-        });
-    }
-
-    deleteObj(obj) {
-        const isMonsterIndex = this.monsters.indexOf(obj);
-        if (isMonsterIndex >= 0) {
-            this.monsters.splice(isMonsterIndex, 1);
-        }
-        for (let y=obj.ymin; y<=obj.ymax; y++) {
-            for (let x=obj.xmin; x<= obj.xmax; x++) {
-                const groundTile = this.getGroundTileAt(x, y);
-                this.pathFinder.setDynamicCell(x, y, groundTile?groundTile.movable:false);
-            }
-        }
-        this.removeObjRefFromLocation(obj);
     }
     
     newTile(x, y, tileData) {
@@ -817,148 +608,6 @@ export default class Stage extends PIXI.Container {
         return null;
     }
 
-    enter() {
-        // 중간보스룸 컷씬
-        if (this.name === 'castle_boss-final') {
-            if (this.monsters.length > 0) {
-                this.emit('playcutscene', 9);
-            } else {
-            }
-        } else if (this.name === 'castle_boss-middle') {
-            this.monsters.forEach((monster) => {
-                monster.currentDirection = getDirection(monster.gridX, monster.gridY, monster.gridX, monster.gridY + 1);
-                monster.changeVisualToDirection(monster.currentDirection);
-            });
-
-            // 밀루다층 하드코딩.
-            if (this.tags.indexOf('hasarcher') >= 0) {
-                if (this.monsters.length > 0) {
-                    this.emit('playcutscene', 8);
-                }
-            } else {
-                if (this.monsters.length > 0) {
-                    this.emit('playcutscene', 6);
-                } else {
-                    this.emit('playcutscene', 7);
-                }
-            }
-        } else {
-            this.monsters.forEach((monster) => {
-                monster.move();
-            });
-        }
-    }
-
-    leave() {
-        this.monsters.forEach((monster) => {
-            monster.stop();
-        });
-    }
-
-    // 몬스터를 해당 좌표에 찍어낸다. 어디서 호출해야 하는가?
-    // 최초 Map Generator에서 생성 시, 몬스터를 찍어내도록 하는것은 어떨까?..
-    addMonster(monster, monsterOptions) {
-        // 임시 하드코딩. 다음엔 Generate 된 몬스터 파티를 받도록 하자.
-        const spawnPos = monsterOptions.pos?monsterOptions.pos:this.getRandomPositions(1, 1, { ne:this.groundMap });
-        const options = {  type: monsterOptions.type, src: monster };
-
-        const prop = this.newTile(spawnPos.x, spawnPos.y, options);
-        this.pathFinder.setDynamicCell(prop.gridX, prop.gridY, false);
-
-        this.addObjRefToLocation(prop, spawnPos.x, spawnPos.y);
-        this.arrangeDepthsFromLocation(prop, spawnPos.x, spawnPos.y);
-        this.setObjectEmitter(prop);
-        
-        this.monsters.push(prop);
-    }
-
-    addProp(options, directions) {
-        const tiles = this.getPropPositions({
-            xMin: 2,
-            yMin: 2
-        },{
-            xSize: options.xsize,
-            ySize: options.ysize,
-            directions: directions?directions:{
-                ne: true,
-                nw: true,
-                se: true,
-                sw: true,
-            }
-        });
-        let spawnPos = this.getRandomPositions(options.xsize, options.ysize, tiles);
-
-        if (spawnPos) {
-            options.direction = spawnPos.direction;
-            const prop = this.newTile(spawnPos.x, spawnPos.y, options);
-            for (let y=0;y<options.ysize;y++) {
-                for (let x=0;x<options.xsize;x++) {
-                    this.pathFinder.setDynamicCell(prop.gridX - x, prop.gridY - y, false);
-                }
-            }
-    
-            this.addObjRefToLocation(prop, spawnPos.x, spawnPos.y);
-            this.arrangeDepthsFromLocation(prop, spawnPos.x, spawnPos.y);
-            this.setObjectEmitter(prop);
-        }
-    }
-
-    getPropPositions(offset, options) {
-        const mapData = {
-            xMin: null,
-            yMin: null,
-            xMax: null,
-            yMax: null,
-            centerX: null,
-            centerY: null
-        };
-
-        this.groundMap.forEach((tile) => {
-            if (tile && (mapData.xMin > tile.gridX || mapData.xMin === null)) {
-                mapData.xMin = tile.gridX;
-            }
-            if (tile && (mapData.xMax < tile.gridX || mapData.xMax === null)) {
-                mapData.xMax = tile.gridX;
-            }
-            if (tile && (mapData.yMin > tile.gridY || mapData.yMin === null)) {
-                mapData.yMin = tile.gridY;
-            }
-            if (tile && (mapData.yMax < tile.gridY || mapData.yMax === null)) {
-                mapData.yMax = tile.gridY;
-            }
-        });
-        let mapOffset = Object.assign({
-            xMin: 0,
-            xMax: 0,
-            yMin: 0,
-            yMax: 0
-        }, offset);
-
-        for (let key in mapOffset) {
-            mapData[key] += mapOffset[key];
-        }
-
-        mapData.centerX = Math.floor((mapData.xMin + mapData.xMax) / 2);
-        mapData.centerY = Math.floor((mapData.yMin + mapData.yMax) / 2);
-        
-        const resultTiles = {ne:[], nw:[], se:[], sw:[]};
-        // 모서리는 각 xMin, xMax, yMin, yMax의 타일이다.
-        this.groundMap.forEach((tile) => {
-            // 모서리 타일 추가.
-            if (tile && tile.gridX <= mapData.xMax && tile.gridX >= mapData.xMin && tile.gridY === mapData.yMin && options && options.xSize >= options.ySize && options.directions.ne) {
-                resultTiles.ne.push(tile);
-            } else if (tile && tile.gridX <= mapData.xMax && tile.gridX >= mapData.xMin && tile.gridY === mapData.yMax && options.xSize >= options.ySize && options.directions.sw) {
-                resultTiles.sw.push(tile);
-            } else if (tile && tile.gridY <= mapData.yMax && tile.gridY >= mapData.yMin && tile.gridX === mapData.xMin && options.xSize <= options.ySize && options.directions.nw) {
-                resultTiles.nw.push(tile);
-            } else if (tile && tile.gridY <= mapData.yMax && tile.gridY >= mapData.yMin && tile.gridX === mapData.xMax && options.xSize <= options.ySize && options.directions.se) {
-                resultTiles.se.push(tile);
-            }
-        });
-
-        return resultTiles;
-    }
-
     addCharacter(character, x, y) {
         // 해당 좌표에 오브젝트를 추가한다
         // 오브젝트가 없는 곳에만 오브젝트를 추가할수 있다 (현재는)
@@ -977,7 +626,6 @@ export default class Stage extends PIXI.Container {
     }
 
     moveCharacter(character, x, y) {
-
         const target = this.getInteractiveTarget(x, y);
         const ignoreTarget = target ? true : false;
 
@@ -999,7 +647,7 @@ export default class Stage extends PIXI.Container {
                     }
                 }
             }
-        } 
+        }
 
         if (path) {
             // 아웃라인을 제거한다
@@ -1089,20 +737,6 @@ export default class Stage extends PIXI.Container {
         this.moveEngine.addMovable(obj); 
         return true;
       
-    }
-
-    storyBattle() {
-        this.monsters.forEach((monster) => {
-            monster.move(this);
-        });
-    }
-
-    monsterEvent() {
-        this.monsters.forEach((monster) => {
-            if(monster.event) {
-                monster.event(this);
-            }
-        });
     }
 
     onObjMoveStepEnd(obj) {
@@ -1214,22 +848,6 @@ export default class Stage extends PIXI.Container {
         }	
     }
 
-
-    lookAt(x, y, instantFollow, callback) {
-        if (true) {
-            const px = this.externalCenter.x - (this.player.position.x + x) * this.currentScale;
-            const py = this.externalCenter.y - (this.player.position.y + y) * this.currentScale;
-            
-            if (instantFollow) {
-                this.mapContainer.position.x = px;
-                this.mapContainer.position.y = py;
-            } else {
-                this.tweens.addTween(this.mapContainer.position, 1.5, { x: px, y: py }, 0, "easeOut_ex", true, callback);
-            }
-        }
-    }
-
-
     checkForFollowCharacter(obj, instantFollow) {
         if (true) {
             const px = this.externalCenter.x - obj.position.x * this.currentScale;
@@ -1273,7 +891,6 @@ export default class Stage extends PIXI.Container {
         this.addObjRefToLocation(obj, x, y);
     }
     
-    // 내일 여기 Depth 판정좀 봐보자.
     arrangeDepthsFromLocation(obj, gridX, gridY) {
         let targetIndex = null;
         for (let y = gridY; y < this.mapHeight; y++) {
@@ -1331,5 +948,401 @@ export default class Stage extends PIXI.Container {
     update() {
         this.moveEngine.update();
         this.tweens.update();
+    }
+
+    // 심대수 작성 ===================================================================================
+    // [정리] 미리 생성된 맵에 포탈을 달아주기 위해 있는부분이다.
+    setStagePortal(portals) {
+        const outDir = {
+            up: 'down',
+            left: 'right',
+            right: 'left',
+            down: 'up'
+        }
+        this.eventMap.forEach((event) => {
+            if(event) {
+                event.targetStage = portals[event.name];
+                event.to = outDir[event.name];
+            }
+        });
+    }
+
+    getTileMovable(x, y) {
+        let result = true;
+
+        if (this.groundMap[x + y * this.mapWidth]) {
+            result = result && this.groundMap[x + y * this.mapWidth];
+        }
+        
+        return result;
+    }
+
+    // Emitter가 있는 obj일 경우, emitter 설정해준다.
+    setObjectEmitter(obj) {
+        if (obj.hasEmitter && !obj.hasListener) {
+            obj.hasListener = true;
+            obj.on('delete', () => {
+                // 같은 그룹 ID 모두 제거하며, 해당 좌표의 그라운드가 있는지 판별하여 movable 넣어준다. => 어떤 때 문제가 발생할 수 있을까..?
+                this.deleteObj(obj);
+            });
+            obj.on('deleteList', () => {
+                const isMonsterIndex = this.monsters.indexOf(obj);
+                if (isMonsterIndex >= 0) {
+                    this.monsters.splice(isMonsterIndex, 1);
+                }
+            });
+            obj.on('move', () => {
+                const path = this.getRandomPath(obj);
+                this.moveMonster(obj, path);
+            });
+        }
+    }
+
+    // [정리] 몬스터의 움직임을 처리하기 위해 존재한다. 여기 있는것이 맞는가?
+    getRandomPositions(xsize, ysize, tileSet) {
+        const tileList = [];
+
+        for (let key in tileSet) {
+            const directionTiles = tileSet[key];
+
+            directionTiles.forEach((tile) => {
+                let emptyFlag = true;
+    
+                for (let y = 0; y < ysize; y++) {
+                    for (let x = 0; x < xsize; x++) {
+                        if (!this.pathFinder.isMovable(tile.gridX - x, tile.gridY - y)) {
+                            emptyFlag = false;
+                        }
+                    }
+                }
+    
+                for (let y = -1; y < ysize+1; y++) {
+                    for (let x = -1; x < xsize+1; x++) {
+                        if (this.eventMap[(tile.gridX - x) + (tile.gridY - y) * this.mapWidth] && !(this.eventMap[(tile.gridX - x) + (tile.gridY - y) * this.mapWidth] instanceof Portal4)) {
+                            emptyFlag = false;
+                        }
+                    }
+                }
+    
+                // 해당 좌표에 오브젝트가 없고, 해당 좌표의 무버블이 1이여야함. => 움직일 수 있는 좌표를 찾아본다.
+                if (tile && emptyFlag) {
+                    tileList.push({key:key, tile: tile});
+                }
+            });
+        }
+
+        const tileData = tileList[Math.round(Math.random() * (tileList.length - 1))];
+
+        if (tileData) {
+            return {
+                x: tileData.tile.gridX,
+                y: tileData.tile.gridY,
+                direction: tileData.key
+            };
+        } else {
+            return false;
+        }
+    }
+
+    // [정리] 몬스터의 움직임 경로를 찾아내기위해 존재하는데.. 여기있는게 맞나 싶다.
+    getRandomPath(obj) {
+        const tileList = [];
+        let toTile = null;
+
+        this.groundMap.forEach((tile) => {
+            if (tile) {
+                tileList.push(tile);
+            }
+        });
+
+        toTile = tileList[Math.round(Math.random() * (tileList.length-1))];
+        let path = [].concat(this.pathFinder.solve(obj.gridX, obj.gridY, toTile.gridX, toTile.gridY, false));
+
+        if (path && path[0] === null) {
+            path = [];
+        }
+
+        return path.reverse();
+    }
+
+    // [정리] 오브젝트가 플레이어에게 가는 Path를 구한 뒤, 끝에 Path 3개 를 붙이고 리버스 하는 이유는, 초기에 움직이기 전, Delay를 주기 위함이다.
+    getPlayerPath(obj) {
+        let path = [].concat(this.pathFinder.solve(obj.gridX, obj.gridY, this.player.gridX, this.player.gridY, false));
+
+        if (path && path[0] === null) {
+            path = [];
+        } else {
+            path.splice(0, 1);
+        }
+        // 플레이어에게 향하기 전, 잠시 딜레이를 주기위해 제자리걸음 3칸 한다.
+        path.push({x:obj.gridX, y:obj.gridY});
+        path.push({x:obj.gridX, y:obj.gridY});
+        path.push({x:obj.gridX, y:obj.gridY});
+
+        return path.reverse();
+    }
+
+    // [정리] 몬스터의 움직임을 처리한다. 계속해서 움직이고, 플레이어 발견 시, 정지하고 플레이어에게 걸어간다.
+    moveMonster(obj, path, callback) {
+        if (obj.isStop) {
+            return;
+        }
+        if (path.length === 0) {
+            if (callback) {
+                callback();
+            } else {
+                obj.move();
+            }
+            return;
+        }
+        
+
+        // 여기에서 플레이어 전투 판정.. => 플레이어를 바라보고, 전투를 시작한다.
+        if (this.player) {
+            const dist = Math.sqrt((this.player.gridX - obj.gridX)**2 + (this.player.gridY - obj.gridY)**2);
+
+            // 범위안에 들어왔으니 전투씬 진입.
+            if (dist <= 5 && !obj.battle) {
+                this.leave();
+                obj.changeVisualToDirection(obj.currentDirection);
+                obj.tileTexture.isMoving = true;
+                obj.isStop = false;
+                obj.battle = true;
+                obj.showBattleIcon();
+                this.stopObject(this.player);
+                this.interactTarget = null;
+                this.onObjMoveStepEnd(this.player);
+                this.player.position.x = this.getTilePosXFor(this.player.gridX, this.player.gridY);
+                this.player.position.y = this.getTilePosYFor(this.player.gridX, this.player.gridY);
+
+                this.emit('seePlayer');
+                path = this.getPlayerPath(obj);
+                callback =  () => {
+                    obj.currentDirection = getDirection(obj.gridX, obj.gridY, this.player.gridX, this.player.gridY);
+                    obj.tileTexture.isMoving = false;
+                    obj.tileTexture.changeVisualToDirection(obj.currentDirection);
+
+                    this.player.changeVisualToDirection(getDirection(this.player.gridX, this.player.gridY, obj.gridX, obj.gridY));
+                    this.leave();
+                    this.emit('battle', obj);
+                };
+            }
+        }
+        
+        obj.currentDirection = getDirection(obj.gridX, obj.gridY, path[0].x, path[0].y);
+        obj.tileTexture.isMoving = true;
+        obj.tileTexture.changeVisualToDirection(obj.currentDirection);
+
+        // 해당자리 Movable변경,
+        const groundTile = this.getGroundTileAt(obj.gridX, obj.gridY);
+        this.pathFinder.setDynamicCell(obj.gridX, obj.gridY, groundTile?groundTile.movable:false);
+        this.pathFinder.setDynamicCell(path[0].x, path[0].y, false);
+
+        const to = {
+            x: this.getTilePosXFor(path[0].x, path[0].y) - this.TILE_HALF_W,
+            y: this.getTilePosYFor(path[0].x, path[0].y) + this.TILE_HALF_H
+        };
+
+        this.arrangeObjLocation(obj, path[0].x, path[0].y);
+        this.arrangeDepthsFromLocation(obj, path[0].x, path[0].y);
+        path.splice(0, 1);
+        // Monster Speed
+        const speed = 0.3;
+
+        this.tweens.addTween(obj.position, speed, { x: to.x, y: to.y }, 0, "linear", true , () => {
+            obj.tileTexture.isMoving = false;
+            this.moveMonster(obj, path, callback);
+        });
+    }
+
+    deleteObj(obj) {
+        const isMonsterIndex = this.monsters.indexOf(obj);
+        if (isMonsterIndex >= 0) {
+            this.monsters.splice(isMonsterIndex, 1);
+        }
+        for (let y=obj.ymin; y<=obj.ymax; y++) {
+            for (let x=obj.xmin; x<= obj.xmax; x++) {
+                const groundTile = this.getGroundTileAt(x, y);
+                this.pathFinder.setDynamicCell(x, y, groundTile?groundTile.movable:false);
+            }
+        }
+        this.removeObjRefFromLocation(obj);
+    }
+
+    // [정리] 각 스테이지에 Enter되었을 때 발생하는 상황들인데. 하드코딩 되어있다. 따로 뺄 수 있을 것 같은데..
+    enter() {
+        // 중간보스룸 컷씬
+        if (this.name === 'castle_boss-final') {
+            if (this.monsters.length > 0) {
+                this.emit('playcutscene', 9);
+            } else {
+            }
+        } else if (this.name === 'castle_boss-middle') {
+            this.monsters.forEach((monster) => {
+                monster.currentDirection = getDirection(monster.gridX, monster.gridY, monster.gridX, monster.gridY + 1);
+                monster.changeVisualToDirection(monster.currentDirection);
+            });
+
+            // 밀루다층 하드코딩.
+            if (this.tags.indexOf('hasarcher') >= 0) {
+                if (this.monsters.length > 0) {
+                    this.emit('playcutscene', 8);
+                }
+            } else {
+                if (this.monsters.length > 0) {
+                    this.emit('playcutscene', 6);
+                } else {
+                    this.emit('playcutscene', 7);
+                }
+            }
+        } else {
+            this.monsters.forEach((monster) => {
+                monster.move();
+            });
+        }
+    }
+
+    leave() {
+        this.monsters.forEach((monster) => {
+            monster.stop();
+        });
+    }
+
+    // 몬스터를 해당 좌표에 찍어낸다. 어디서 호출해야 하는가?
+    // 최초 Map Generator에서 생성 시, 몬스터를 찍어내도록 하는것은 어떨까?..
+    addMonster(monster, monsterOptions) {
+        // 임시 하드코딩. 다음엔 Generate 된 몬스터 파티를 받도록 하자.
+        const spawnPos = monsterOptions.pos?monsterOptions.pos:this.getRandomPositions(1, 1, { ne:this.groundMap });
+        const options = {  type: monsterOptions.type, src: monster };
+
+        const prop = this.newTile(spawnPos.x, spawnPos.y, options);
+        this.pathFinder.setDynamicCell(prop.gridX, prop.gridY, false);
+
+        this.addObjRefToLocation(prop, spawnPos.x, spawnPos.y);
+        this.arrangeDepthsFromLocation(prop, spawnPos.x, spawnPos.y);
+        this.setObjectEmitter(prop);
+        
+        this.monsters.push(prop);
+    }
+
+    // 상자를 배치하기 위해 만들어진 함수인데.. 제약사항이 너무 많다. 생성 요청 시 생성되지 않을때도 있다. 찍어낼 수 있는 좌표가 없을때가 있다.
+    addProp(options, directions) {
+        const tiles = this.getPropPositions({
+            xMin: 2,
+            yMin: 2
+        },{
+            xSize: options.xsize,
+            ySize: options.ysize,
+            directions: directions?directions:{
+                ne: true,
+                nw: true,
+                se: true,
+                sw: true,
+            }
+        });
+        let spawnPos = this.getRandomPositions(options.xsize, options.ysize, tiles);
+
+        if (spawnPos) {
+            options.direction = spawnPos.direction;
+            const prop = this.newTile(spawnPos.x, spawnPos.y, options);
+            for (let y=0;y<options.ysize;y++) {
+                for (let x=0;x<options.xsize;x++) {
+                    this.pathFinder.setDynamicCell(prop.gridX - x, prop.gridY - y, false);
+                }
+            }
+    
+            this.addObjRefToLocation(prop, spawnPos.x, spawnPos.y);
+            this.arrangeDepthsFromLocation(prop, spawnPos.x, spawnPos.y);
+            this.setObjectEmitter(prop);
+        }
+    }
+
+    // 오브젝트가 위치할 수 있는 맵의 타일을 읽어온다. 문제는 방향이 미리 정해져 있어야 한다는 것 이다.
+    getPropPositions(offset, options) {
+        const mapData = {
+            xMin: null,
+            yMin: null,
+            xMax: null,
+            yMax: null,
+            centerX: null,
+            centerY: null
+        };
+
+        this.groundMap.forEach((tile) => {
+            if (tile && (mapData.xMin > tile.gridX || mapData.xMin === null)) {
+                mapData.xMin = tile.gridX;
+            }
+            if (tile && (mapData.xMax < tile.gridX || mapData.xMax === null)) {
+                mapData.xMax = tile.gridX;
+            }
+            if (tile && (mapData.yMin > tile.gridY || mapData.yMin === null)) {
+                mapData.yMin = tile.gridY;
+            }
+            if (tile && (mapData.yMax < tile.gridY || mapData.yMax === null)) {
+                mapData.yMax = tile.gridY;
+            }
+        });
+        let mapOffset = Object.assign({
+            xMin: 0,
+            xMax: 0,
+            yMin: 0,
+            yMax: 0
+        }, offset);
+
+        for (let key in mapOffset) {
+            mapData[key] += mapOffset[key];
+        }
+
+        mapData.centerX = Math.floor((mapData.xMin + mapData.xMax) / 2);
+        mapData.centerY = Math.floor((mapData.yMin + mapData.yMax) / 2);
+        
+        const resultTiles = {ne:[], nw:[], se:[], sw:[]};
+        // 모서리는 각 xMin, xMax, yMin, yMax의 타일이다.
+        this.groundMap.forEach((tile) => {
+            // 모서리 타일 추가.
+            if (tile && tile.gridX <= mapData.xMax && tile.gridX >= mapData.xMin && tile.gridY === mapData.yMin && options && options.xSize >= options.ySize && options.directions.ne) {
+                resultTiles.ne.push(tile);
+            } else if (tile && tile.gridX <= mapData.xMax && tile.gridX >= mapData.xMin && tile.gridY === mapData.yMax && options.xSize >= options.ySize && options.directions.sw) {
+                resultTiles.sw.push(tile);
+            } else if (tile && tile.gridY <= mapData.yMax && tile.gridY >= mapData.yMin && tile.gridX === mapData.xMin && options.xSize <= options.ySize && options.directions.nw) {
+                resultTiles.nw.push(tile);
+            } else if (tile && tile.gridY <= mapData.yMax && tile.gridY >= mapData.yMin && tile.gridX === mapData.xMax && options.xSize <= options.ySize && options.directions.se) {
+                resultTiles.se.push(tile);
+            }
+        });
+
+        return resultTiles;
+    }
+
+    // [정리] 스토리 몬스터의 경우 컷씬으로 반드시 배틀 범위안에 둔 후, 나중에 move를 호출하여, 배틀에 진입하게 만들었는데..
+    // 이런 방식 말고, 바로 전투를 진행하도록 해야할 것 같은데.. 사실 그러면 함수명도 바뀌어야 맞는 것 같다. 
+    storyBattle() {
+        this.monsters.forEach((monster) => {
+            monster.move(this);
+        });
+    }
+
+    // [정리] 맵 진입 시, 이벤트를 가지면 실행하려고 만들었는데.. 애매하다..
+    monsterEvent() {
+        this.monsters.forEach((monster) => {
+            if(monster.event) {
+                monster.event(this);
+            }
+        });
+    }
+
+    // 현재 위치로부터 x, y pixel 떨어진 위치를 바라보기 위해 만든 함수이다.
+    lookAt(x, y, instantFollow, callback) {
+        if (true) {
+            const px = this.externalCenter.x - (this.player.position.x + x) * this.currentScale;
+            const py = this.externalCenter.y - (this.player.position.y + y) * this.currentScale;
+            
+            if (instantFollow) {
+                this.mapContainer.position.x = px;
+                this.mapContainer.position.y = py;
+            } else {
+                this.tweens.addTween(this.mapContainer.position, 1.5, { x: px, y: py }, 0, "easeOut_ex", true, callback);
+            }
+        }
     }
 }

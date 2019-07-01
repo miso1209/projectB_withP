@@ -30,6 +30,7 @@ export class BattleEffecter extends PIXI.Container {
         anim.anchor.x = 0.5;
         anim.anchor.y = 0.5;
         anim.blendMode = PIXI.BLEND_MODES.ADD;
+        // [정리]Offset 들어가면서 좌표계산 엄청 이상해졌는데.. 정리좀 해야할듯 싶다.
         anim.position.x = target.position.x + target.animation.width / 2 + (options.offset?options.offset.x:0);
         anim.position.y = target.position.y - target.animation.height - 24 + (options.offset?options.offset.y:0);
         anim.position.x += ((target.animation.offset && target.animation.offset.x)?target.animation.offset.x:0) * target.animation.scale.x;
@@ -62,6 +63,7 @@ export class BattleEffecter extends PIXI.Container {
         const text = new PIXI.Text(options.outputText, style);
         text.anchor.x = 0.5;
         text.alpha = 0;
+        // [정리] 캐릭터의 Texture offset이 들어가면서 너무 복잡해짐.. 정리해아할 듯 하다.
         text.position.x = (options.target.position.x + options.target.animation.width / 2) + offset.x;
         text.position.y = (options.target.position.y - options.target.animation.height) + offset.y - 24;
         text.position.x += ((options.target.animation.offset && options.target.animation.offset.x)?options.target.animation.offset.x:0) * options.target.animation.scale.x;

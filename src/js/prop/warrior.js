@@ -50,6 +50,31 @@ export default class Warrior extends PropBase {
     touch(game) {
         if (!this.alreadyParty) {
             const potionCount = game.player.inventory.getCount(1001);
+            const healedDialog = async () => {
+                game.exploreMode.interactive = false;
+                game.ui.hideMenu();
+
+                game.ui.showDialog([
+                    { speaker: 2, text: "정말 감사합니다.. 어떻게 감사의 말씀을 드려야할지.." },
+                    { speaker: 1, text: "아닙니다. 건강해지셔서 정말 다행입니다." },
+                    { speaker: 3, text: "이 은혜를 어떻게 갚아야 할지 모르겠네요." },
+                    { speaker: 1, text: "괜찮으시다면 저와 탑을 올라주실수 있을까요" },
+                    { speaker: 2, text: "저희도 성에 볼일이 있었는데 잘 되었네요!. 가시죠!." }
+                ], async () => {
+                    game.exploreMode.interactive = false;
+                    game.ui.hideMenu();
+                    await game.$fadeOut(1);
+
+                    game.addCharacter(2, { level: 1, exp: 0, equips: {}});
+                    game.addCharacter(3, { level: 1, exp: 0, equips: {}});
+                    game.addTag("haswarrior");
+                    this.delete();
+
+                    await game.$fadeIn(1);
+                    game.ui.showMenu();
+                    game.exploreMode.interactive = true;
+                });
+            }
 
             if (potionCount < 1 && !this.healed) {
                 game.exploreMode.interactive = false;
@@ -65,26 +90,7 @@ export default class Warrior extends PropBase {
                     game.exploreMode.interactive = true;
                 });
             } else if(this.healed) {
-                game.exploreMode.interactive = false;
-                game.ui.hideMenu();
-                game.ui.showDialog([
-                    { speaker: 2, text: "정말 감사합니다.. 어떻게 감사의 말씀을 드려야할지.." },
-                    { speaker: 1, text: "아닙니다. 건강해지셔서 정말 다행입니다." },
-                    { speaker: 3, text: "이 은혜를 어떻게 갚아야 할지 모르겠네요." },
-                    { speaker: 1, text: "괜찮으시다면 저와 탑을 올라주실수 있을까요" },
-                    { speaker: 2, text: "저희도 성에 볼일이 있었는데 잘 되었네요!. 가시죠!." }
-                ], async () => {
-                    await game.$fadeOut(1);
-
-                    game.addCharacter(2, { level: 1, exp: 0, equips: {}});
-                    game.addCharacter(3, { level: 1, exp: 0, equips: {}});
-                    game.addTag("haswarrior");
-                    this.delete();
-
-                    await game.$fadeIn(1);
-                    game.ui.showMenu();
-                    game.exploreMode.interactive = true;
-                });
+                healedDialog();
             } else {
                 const t = async () => {
                     game.exploreMode.interactive = false;
@@ -93,6 +99,7 @@ export default class Warrior extends PropBase {
 
                     game.player.inventory.deleteItem(1001, 1);
                     game.addTag("healWarrior");
+                    this.healed = true;
                     this.tileTexture.texture = PIXI.Texture.fromFrame("healer_warrior_alive.png");
                     this.nameTagOffset = {
                         x: -15,
@@ -102,29 +109,7 @@ export default class Warrior extends PropBase {
                     this.showName();
 
                     await game.$fadeIn(1);
-                    game.ui.showMenu();
-                    game.exploreMode.interactive = true;
-
-                    game.ui.showDialog([
-                        { speaker: 2, text: "정말 감사합니다.. 어떻게 감사의 말씀을 드려야할지.." },
-                        { speaker: 1, text: "아닙니다. 건강해지셔서 정말 다행입니다." },
-                        { speaker: 3, text: "이 은혜를 어떻게 갚아야 할지 모르겠네요." },
-                        { speaker: 1, text: "괜찮으시다면 저와 탑을 올라주실수 있을까요" },
-                        { speaker: 2, text: "저희도 성에 볼일이 있었는데 잘 되었네요!. 가시죠!." }
-                    ], async () => {
-                        game.exploreMode.interactive = false;
-                        game.ui.hideMenu();
-                        await game.$fadeOut(1);
-
-                        game.addCharacter(2, { level: 1, exp: 0, equips: {}});
-                        game.addCharacter(3, { level: 1, exp: 0, equips: {}});
-                        game.addTag("haswarrior");
-                        this.delete();
-
-                        await game.$fadeIn(1);
-                        game.ui.showMenu();
-                        game.exploreMode.interactive = true;
-                    });
+                    await healedDialog();
                 }
 
                 game.ui.showConfirmModal("회복 시키시겠습니까?", true, (confirmed) => {

@@ -2,6 +2,8 @@ import Loader from './loader';
 import Storage from './storage';
 import DevConsole from './devconsole';
 import Game from './game';
+import Monster from './monster';
+import StoryMonsters from './storymonsters';
 
 export default class App {
     constructor() {
@@ -68,6 +70,8 @@ export default class App {
 
             this.newgame.addEventListener('click', ()=> {
                 // TODO: 로컬스토리지 지우고 게임시작.
+                // 경고창 띄워야 할 것 같다.
+                this.storage.data = null;
                 this.intro.parentNode.removeChild(this.intro);
                 this.startGame();
             });
@@ -104,7 +108,12 @@ export default class App {
                     { category: 'consumables', recipes: this.game.getRecipes('consumables') },
                     { category: 'weapon', recipes: this.game.getRecipes('weapon') }], 
                     (isOk) => { console.log(isOk); });
-              }
+            }
+            if (e.keyCode === 66) {
+                const monster = {src: new Monster(StoryMonsters['archer'])};
+                console.log(monster);
+                this.game.$enterBattle(monster);
+            }
         });
     }
 

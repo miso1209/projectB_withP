@@ -572,7 +572,7 @@
             "b": "slash",
             "extra": "breath"
         },
-        "skillactiveprobability": 1.4,
+        "skillactiveprobability": 1.0,
         "animations": {
             "dragon_idle_nw": { "length": 7 },
             "dragon_idle_sw": { "length": 7 },

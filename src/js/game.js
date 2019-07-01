@@ -111,6 +111,7 @@ export default class Game extends EventEmitter {
             this.equipItem(itemCategory, itemId, cid);
             this.ui.player = this.player.characters[cid];
         });
+        // [정리] 착용하지 않고, 미리 스텟을 볼 수 있도록 하다보니.. 이런 것들이 생겼다. 어떻게 수정해야할까
         this.ui.on('simulateEquip', (itemCategory, itemId, cid) => {
             this.player.characters[cid].simulationEquip(itemCategory, itemId);
             this.ui.player = this.player.characters[cid];
@@ -368,8 +369,10 @@ export default class Game extends EventEmitter {
         }
     }
 
+    // [정리] 기존처럼 Map을 바로 생성하는 것 이 아니라, 미치 다 생성해서 들고있어서, Stage객체를 가지고 있다.
+    // 던전에서는 어떤 방향으로 입장하는지 모르기 때문에 입장 방향도 dir 이라는 파라메타로 넘겨준다.
     async $nextFloor(from, dir) {
-        this.currentFloor++;
+        this.currentFloor+=100;
         this.ui.showTheaterUI(0.5);
         this.ui.hideMenu();
         await this.$leaveStage(from);
@@ -461,6 +464,8 @@ export default class Game extends EventEmitter {
         // this.stage.enter();
     }
 
+    // [정리] 인스턴트 던전 => 스테이지 객체를 모두 만들어서 들고있는 던전에 입장할때만 사용하는 EnterStage..
+    // 위의 EnterStage랑 갈려서 두개로 쪼개졌는데.. 문제 있다.. 던전생성 방식을 바꿔야 할까..?
     async $enterStageIns(stage, eventName) {
         stage.zoomTo(1.5, true);
 
@@ -504,7 +509,6 @@ export default class Game extends EventEmitter {
         this.stage = null;
     }
 
-    // if (!this.currentMode instanceof Explore) { return; }
     async $enterBattle(monster, battleOptions) {
         const monsterObj = monster;
         monster = monster.src;

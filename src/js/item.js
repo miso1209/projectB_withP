@@ -15,6 +15,10 @@ export default class Item {
         return this.data.name;
     }
 
+    get rank() {
+        return this.data.rank;
+    }
+
     get category() {
         return this.data.category;
     }
