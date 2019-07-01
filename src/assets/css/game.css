@@ -97,6 +97,7 @@
   right: 0;
   width: 980px;
   margin: 0 auto;
+  text-align: center;
   transition: all 0.8s;
   pointer-events: none;
 } 
@@ -395,6 +396,21 @@ button, .button {
   padding: 0 0 5px;
 }
 
+.stageInfo{
+  opacity: 0;
+
+  position: absolute;
+  width: 160px;
+  padding: 0 10px;
+
+  right: 10px;
+  top: 20px;
+
+  text-align: left;
+  font-size: 12px;
+  color: #fff;
+  box-sizing: border-box;
+}
 .stageTitle {
   display: inline-block;
   margin:15% auto;
@@ -603,7 +619,7 @@ button, .button {
 .acquireModal .contents-option {
   width: 100%;
 
-  margin: 9% auto;
+  margin: 7% auto;
   vertical-align: middle;
 }
 

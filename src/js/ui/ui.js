@@ -66,6 +66,10 @@ export default class DomUI extends EventEmitter {
             });
         });
 
+        // 스테이지 정보
+        this.stageInfo = new MakeDom('div', 'stageInfo');
+        this.gnbContainer.appendChild(this.stageInfo);
+
         this.player = null;
         this.playerInvenData = null;
         this.characters = null;
@@ -109,6 +113,7 @@ export default class DomUI extends EventEmitter {
     }
     hideMinimap() {
         this.minimapDOM.style.display = 'none';
+        this.stageInfo.style.textAlign = 'right';
     }
     
     hasModal() {
@@ -118,7 +123,12 @@ export default class DomUI extends EventEmitter {
         }
         return false;
     }
-    
+
+    showStageInfo(text) {
+        this.stageInfo.style.opacity = '1';
+        this.stageInfo.innerText = text;
+    }
+
     showStageTitle(text) {
         let tt = this.displayLayer.querySelector('.stageTitle');
         const stageTitle = new MakeDom('h2', 'stageTitle');
@@ -131,6 +141,7 @@ export default class DomUI extends EventEmitter {
             this.displayLayer.appendChild(stageTitle);   
             stageTitle.innerText = text; 
         }
+        this.showStageInfo(text);
     }
     
     showDialog(script, callback) {

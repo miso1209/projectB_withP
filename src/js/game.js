@@ -444,6 +444,7 @@ export default class Game extends EventEmitter {
             this.ui.showStageTitle('아지트');
         } else {
             stage.zoomTo(1.5, true);
+            this.ui.showStageInfo('');
         }
 
         this.stage = stage;
