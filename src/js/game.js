@@ -513,6 +513,9 @@ export default class Game extends EventEmitter {
     async $enterBattle(monster, battleOptions) {
         const monsterObj = monster;
         monster = monster.src;
+
+        
+
         if (this.currentMode instanceof Explore) {
             
             // 인카운터 정보를 이용해서 배틀 데이터를 만든다
@@ -545,7 +548,8 @@ export default class Game extends EventEmitter {
                 screenHeight: this.screenHeight,
                 rewards: monster.rewards,
                 exp: monster.exp,
-                gold: monster.gold
+                gold: monster.gold,
+                scale: 1.8
             };
             options = Object.assign(options, battleOptions);
             this.currentMode = new Battle(options);

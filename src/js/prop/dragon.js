@@ -83,11 +83,13 @@ export default class Dragon extends PropBase {
     move(stage) {
         stage.emit('seePlayer');
         stage.emit('battle', this, { 
-            scale: 2,
-            offset: {
-                x: 0,
-                y: 50
-            }
+            scale: 1.8,
+            background: "battle_background2.png",
+            battlefield: "battleMapBoss.png",
+            // offset: {
+            //     x: 0,
+            //     y: 50
+            // }
         });
     }
 

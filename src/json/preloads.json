@@ -5,7 +5,9 @@
     ["player4_active.png", "assets/player4_active.png"],
     ["player5_active.png", "assets/player5_active.png"],
     ["battleMap1.png", "assets/battleMap1.png"],
+    ["battleMapBoss.png", "assets/battleMapBoss.png"],
     ["battle_background.png", "assets/battle_background.png"],
+    ["battle_background2.png", "assets/battle_background2.png"],
         
     ["items.png", "assets/items/items.png"],
     ["nineBox_01.png", "assets/ui/modal/nineBox_01.png"],
