@@ -3,6 +3,7 @@
         "id": 3001,
         "item": 1001,
         "level": 1,
+        "gold": 1,
         "materials": [
             { "item":2001, "count": 1 }
         ],
@@ -11,6 +12,7 @@
         "id": 3002,
         "item": 1002,
         "level": 1,
+        "gold": 1,
         "materials": [
             { "item":2001, "count": 10 }
         ],
@@ -19,6 +21,7 @@
         "id": 3003,
         "item": 1003,
         "level": 1,
+        "gold": 1,
         "materials": [
             { "item":2001, "count": 20 },
             { "item":2004, "count": 10 }
@@ -28,6 +31,7 @@
         "id": 3004,
         "item": 1004,
         "level": 1,
+        "gold": 1,
         "materials": [
             { "item":2002, "count": 20 },
             { "item":2003, "count": 10 }
@@ -37,6 +41,7 @@
         "id": 3005,
         "item": 1,
         "level": 1,
+        "gold": 1,
         "materials": [
             { "item":2007, "count": 1 }
         ],
@@ -45,6 +50,7 @@
         "id": 3006,
         "item": 401,
         "level": 1,
+        "gold": 1,
         "materials": [
             { "item":2007, "count": 3 }
         ],
@@ -53,6 +59,7 @@
         "id": 3007,
         "item": 701,
         "level": 1,
+        "gold": 1,
         "materials": [
             { "item":2007, "count": 5 }
         ],

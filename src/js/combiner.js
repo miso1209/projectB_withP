@@ -102,7 +102,8 @@ export default class Combiner {
         }
 
         for(const mat of recipe.materials) {
-            inventory.deleteItem(mat.item, mat.count)
+            inventory.deleteItem(mat.item, mat.count);
+            inventory.gold -= recipe.gold;
         }
 
         // 새로운 아이넴을 추가한다
@@ -115,6 +116,7 @@ export default class Combiner {
         for(const mat of recipe.materials) {
             available &= (mat.count <= inventory.getCount(mat.item));
         }
+        available &= (recipe.gold <= inventory.gold);
         return available;
 
     }
