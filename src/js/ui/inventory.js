@@ -9,6 +9,7 @@ export default class Inventory extends Panel {
         super();
 
         this.inputs = inputs;
+
         const inventory = new Modal(pane, 800, 460);
         this.dom = inventory.dom;
         this.dom.classList.add('inventory');
@@ -31,8 +32,7 @@ export default class Inventory extends Panel {
         const wrapper = document.createElement('div');
         wrapper.classList.add('flexWrap');
         wrapper.classList.add('contents');
-
-        // # stat
+        
         const statContent = document.createElement('div');
         statContent.classList.add('flex-left');
         statContent.classList.add('inventory-detail');
@@ -60,6 +60,13 @@ export default class Inventory extends Panel {
         statContent.appendChild(this.itemDesc);
         statContent.appendChild(this.itemOptions);
 
+
+        const depositWrap = new MakeDom('div', 'depositWrap');
+        this.gold = new MakeDom('div', 'inventory_gold', 0);
+        depositWrap.appendChild(this.gold);
+        statContent.appendChild(depositWrap);
+
+        // # stat
         wrapper.appendChild(statContent);
         
         let scrollHeight = '320px';
@@ -89,7 +96,6 @@ export default class Inventory extends Panel {
         wrapper.appendChild(scrollView);
         inventory.dom.appendChild(wrapper);
     }
-
 
     scrolled(event) {
         //visible height + pixel scrolled = total height 

@@ -247,6 +247,10 @@ export default class DomUI extends EventEmitter {
     showInventory(inputs) {
         const pane = this.createContainer();
         const inventory = new Inventory(pane, inputs);
+        
+        console.log(this.player.inventory.gold);
+        inventory.gold.innerText = `${this.player.inventory.gold}`;
+
         inventory.moveToRight(70);
         inventory.onTabSelected(inventory.tabs[0].category);
     }

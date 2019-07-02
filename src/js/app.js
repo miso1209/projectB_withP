@@ -4,6 +4,9 @@ import DevConsole from './devconsole';
 import Game from './game';
 import Monster from './monster';
 import StoryMonsters from './storymonsters';
+import MakeDom from './ui/component/makedom';
+import SystemModal from './ui/systemmodal';
+
 
 export default class App {
     constructor() {
@@ -47,6 +50,22 @@ export default class App {
 
         this.intro = intro;
     }
+    
+    showConfirmModal(result) {
+        let text = '지난 게임의 데이터가 모두 삭제됩니다. 계속하시겠습니까?';
+        
+        const container = new MakeDom('div', 'container');
+        container.classList.add('screen');
+        container.style.top = this.pixi.view.offsetTop + 'px';
+        this.intro.appendChild(container);
+
+        const confirmModal = new SystemModal(container, 300, 200, text, true, result);
+        confirmModal.dom.style.top = '50%';
+        confirmModal.dom.style.marginTop = 200 * -0.5 + 'px';
+        confirmModal.contents.style.margin = '10% auto';
+        confirmModal.contents.style.fontSize = '1.1rem';
+    }
+
 
     showIntro() {
         const loader = new Loader();
@@ -70,11 +89,16 @@ export default class App {
 
             this.newgame.addEventListener('click', ()=> {
                 // TODO: 로컬스토리지 지우고 게임시작.
-                // 경고창 띄워야 할 것 같다.
-                this.storage.data = null;
-                console.log('New Game => 데이터 제거. ( 컨펌모달 같은 것 있어야 겠다. )');
-                this.intro.parentNode.removeChild(this.intro);
-                this.startGame();
+                this.showConfirmModal((result) => {
+                    if(result === 'ok') {
+                        this.storage.data = null;
+                        this.intro.parentNode.removeChild(this.intro);
+                        this.startGame();
+                    } else {
+                        this.intro.parentNode.removeChild(this.intro);
+                        this.startGame();
+                    }
+                });
             });
 
             this.loadgame.addEventListener('click', ()=> {

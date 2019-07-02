@@ -148,7 +148,7 @@ body.battle .gnbContainer.battleMode {
   pointer-events: auto;
 }
 
-.uiContainer.screen {
+.uiContainer.screen, .container.screen {
   background: rgba(1,1,1,.7);
   z-index: 1111;
   position: fixed;
@@ -796,6 +796,35 @@ button.disabled span {
 
 
 /* inventory  */
+.depositWrap {
+  position: absolute;
+  left: 25px;
+  bottom: 20px;
+  padding: 5px 10px 5px 40px;
+  width: inherit;
+  text-align: center;
+  background: #1f130a;
+  border-radius: 15px;
+}
+
+.depositWrap::before{
+  content: '';
+  position: absolute;
+  left: 0;
+  top: -3px;
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  background: url(~assets/ui/gold.png) no-repeat;
+  background-size: contain;
+}
+
+.inventory_gold {
+  font-size: 14px;
+  color: #ffd800;
+  overflow: hidden;
+}
+
 .inventory-detail {
   padding: 20px 10px;
   text-align: center;
@@ -1043,7 +1072,7 @@ button.disabled span {
   width: 70px;
   height: 65px;
   margin: 0 auto;
-  background: url(~assets/ui/characterbg.png) no-repeat -96px 0;
+  background: url(~assets/ui/characterbg@2.png) no-repeat 0 0;
   opacity: 0;
 }
 
