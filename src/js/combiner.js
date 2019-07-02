@@ -21,7 +21,7 @@ export default class Combiner {
             accessory: 3,
             material: 4,
             consumables: 5,
-            valuables: 6
+            recipes: 6
         };
         const rankSorting = {
             U: 1,
@@ -33,7 +33,7 @@ export default class Combiner {
         const result = [];
         const playerRecipes = {};
         inventory.forEach((item) => {
-            if (item.category === 'valuables') {
+            if (item.category === 'recipes') {
                 const itemId = recipes[item.id].item;
                 const recipeItem = items[itemId];
 

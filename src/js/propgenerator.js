@@ -76,7 +76,7 @@ export default class PropGenerator {
             const filteredRecipes = [];
             for (let key in Items) {
                 const item = Items[key];
-                if (item.rank === rank && item.category === "valuables") {
+                if (item.rank === rank && item.category === "recipes") {
                     filteredRecipes.push(item);
                 }
             }
@@ -256,7 +256,7 @@ export default class PropGenerator {
             const filteredItems = [];
             for (let key in Items) {
                 const item = Items[key];
-                if (item.rank === rank && item.category !== 'valuables') {
+                if (item.rank === rank && item.category !== 'recipes') {
                     filteredItems.push(item);
                 }
             }

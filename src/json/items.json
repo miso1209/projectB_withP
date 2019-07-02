@@ -315,7 +315,7 @@
         "description": "흔히 볼 수 있는 나무로 만든 지팡이",
         "category": "weapon",
         "classes": ["wizard", "healer"],
-        "subcategory": "wond",
+        "subcategory": "wand",
         "options": ["intellect(+1)"],
         "generateFloor": {
             "begin": 1,
@@ -335,7 +335,7 @@
         "description": "수행자의 원드",
         "category": "weapon",
         "classes": ["wizard", "healer"],
-        "subcategory": "wond",
+        "subcategory": "wand",
         "options": ["intellect(+1)"],
         "generateFloor": {
             "begin": 1,
@@ -354,7 +354,7 @@
         "description": "마법사가 사용하는 원드",
         "category": "weapon",
         "classes": ["wizard", "healer"],
-        "subcategory": "wond",
+        "subcategory": "wand",
         "options": ["intellect(+2)"],
         "generateFloor": {
             "begin": 21,
@@ -373,7 +373,7 @@
         "description": "오랜 수행을 거친 마법사를 위한 원드",
         "category": "weapon",
         "classes": ["wizard", "healer"],
-        "subcategory": "wond",
+        "subcategory": "wand",
         "options": ["intellect(+3)"],
         "generateFloor": {
             "begin": 41,
@@ -392,7 +392,7 @@
         "description": "수행자의 원드",
         "category": "weapon",
         "classes": ["wizard", "healer"],
-        "subcategory": "wond",
+        "subcategory": "wand",
         "options": ["intellect(+4)"],
         "generateFloor": {
             "begin": 61,
@@ -411,7 +411,7 @@
         "description": "고위마법을 사용할 수 있다",
         "category": "weapon",
         "classes": ["wizard", "healer"],
-        "subcategory": "wond",
+        "subcategory": "wand",
         "options": ["intellect(+5)"],
         "generateFloor": {
             "begin": 81,
@@ -1405,7 +1405,7 @@
             "y": 6
         },
         "description": "소지 시 소형 회복약을 제작할 수 있는 제작서 이다.",
-        "category": "valuables",
+        "category": "recipes",
         "options": [],
         "generateFloor": {
             "begin": 1,
@@ -1422,7 +1422,7 @@
             "y": 6
         },
         "description": "소지 시 중형 회복약을 제작할 수 있는 제작서 이다.",
-        "category": "valuables",
+        "category": "recipes",
         "options": [],
         "generateFloor": {
             "begin": 1,
@@ -1439,7 +1439,7 @@
             "y": 6
         },
         "description": "소지 시 대형 회복약을 제작할 수 있는 제작서 이다.",
-        "category": "valuables",
+        "category": "recipes",
         "options": [],
         "generateFloor": {
             "begin": 1,
@@ -1456,7 +1456,7 @@
             "y": 6
         },
         "description": "소지 시 부활 물약을 제작할 수 있는 제작서 이다.",
-        "category": "valuables",
+        "category": "recipes",
         "options": [],
         "generateFloor": {
             "begin": 21,
@@ -1473,7 +1473,7 @@
             "y": 6
         },
         "description": "소지 시 기본검을 제작할 수 있는 제작서 이다.",
-        "category": "valuables",
+        "category": "recipes",
         "options": [],
         "generateFloor": {
             "begin": 1,
@@ -1486,7 +1486,7 @@
         "rank": "C",
         "image": { "texture": "items.png", "x": 3, "y": 6 },
         "description": "소지 시 기본갑옷을 제작할 수 있는 제작서 이다.",
-        "category": "valuables",
+        "category": "recipes",
         "options": [],
         "generateFloor": {
             "begin": 1,
@@ -1499,7 +1499,7 @@
         "rank": "C",
         "image": { "texture": "items.png", "x": 3, "y": 6 },
         "description": "소지 시 기본장갑을 제작할 수 있는 제작서 이다.",
-        "category": "valuables",
+        "category": "recipes",
         "options": [],
         "generateFloor": {
             "begin": 1,

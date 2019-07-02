@@ -23,7 +23,7 @@ export default class Inventory extends Panel {
             {category: 'accessory'},
             {category: 'material'},
             {category: 'consumables'},
-            {category: 'valuables'}
+            {category: 'recipes'}
         ];
         
         inventory.addTab(this.tabs, this.tabs[0].category, this.onTabSelected.bind(this));
