@@ -34,7 +34,7 @@
   position: absolute;
   z-index: 9999;
   
-  top: 120px;
+  top: 200px;
   left: 0;
   right: 0;
   width: 980px;
@@ -104,8 +104,8 @@
 
 .minimap {
   position: absolute;
-  top: 15px;
-  right: 5px;
+  top: 35px;
+  right: 10px;
   width: 160px;
   height: 100px;
   margin: 0 10px 10px 0;
@@ -144,19 +144,37 @@ body.battle .gnbContainer.battleMode {
   background:none;
 }
 
+.container::after{
+  content: '';
+  display: block;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: inherit;
+
+  width: 980px;
+  height: 500px;
+  background: url(~assets/border.png) no-repeat;
+  pointer-events: none;
+}
+
 .uiContainer * {
   pointer-events: auto;
 }
 
 .uiContainer.screen, .container.screen {
-  background: rgba(1,1,1,.7);
   z-index: 1111;
   position: fixed;
 
   pointer-events: auto;
   transition: all 0.3s;
+  background: rgba(1,1,1,.7);
 }
-
+.container.screen::after{
+  background: none;
+}
 #theater {
   z-index: 99;
   top: 20px;
@@ -194,7 +212,7 @@ body.battle .gnbContainer.battleMode {
 }
 
 #theater.dim {
-  z-index: 9999;
+  z-index: 111;
   background-color: rgba(0,0,0,1);
 }
 
@@ -330,7 +348,7 @@ button, .button {
   position: absolute;
   left: 10px;
   top: 0;
-  margin: 20px 10px 0;
+  margin: 35px 10px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -404,7 +422,7 @@ button, .button {
   padding: 0 10px;
 
   right: 10px;
-  top: 20px;
+  top: 40px;
 
   text-align: left;
   font-size: 12px;

@@ -19,20 +19,18 @@ export default class App {
             backgroundColor: 0x000000,
             view: document.getElementById('canvas'),
         });
+
+        console.log(this.pixi.view.offsetTop + 'px');
     }
 
     // dom - intro
     initIntro() {
         // intro 단계에서는 ui 접근이 되지 않으므로 dom 생성은 여기서.
-        const intro = document.createElement('div');
-        intro.className = 'intro';
-        intro.style.top = this.pixi.view.offsetTop + 'px';
-        
-        const logo = document.createElement('div');
-        logo.className = 'logo';
+        this.intro = new MakeDom('div', 'intro');
+        this.intro.style.top = this.pixi.view.offsetTop + 'px';
 
-        const buttonWrap = document.createElement('div');
-        buttonWrap.className = 'buttonWrap';
+        const logo = new MakeDom('div', 'logo');
+        const buttonWrap = new MakeDom('div', 'buttonWrap');
 
         this.newgame = document.createElement('a');
         this.newgame.className = 'intro-button_new';
@@ -44,11 +42,10 @@ export default class App {
 
         buttonWrap.appendChild(this.newgame);
         buttonWrap.appendChild(this.loadgame);
-        intro.appendChild(logo);
-        intro.appendChild(buttonWrap);
-        document.body.appendChild(intro);
-
-        this.intro = intro;
+        this.intro.appendChild(logo);
+        this.intro.appendChild(buttonWrap);
+        
+        document.body.appendChild(this.intro);
     }
     
     showConfirmModal(result) {
@@ -69,23 +66,11 @@ export default class App {
 
     showIntro() {
         const loader = new Loader();
-        // loader.add('opening.png', 'assets/opening.png');
         loader.add('border.png', 'assets/border.png');
 
         loader.load(() => {
             // dom 으로 변경
             this.initIntro();
-
-            // 화면을 그린다
-            // 버튼을 클릭하면 게임을 시작한다
-            // const sprite = new PIXI.Sprite(PIXI.Texture.fromFrame('opening.png'))
-            // sprite.interactive = true;
-            // sprite.mouseup = () => {
-            //     this.pixi.stage.removeChildren();
-            //     this.startGame();
-            // };
-            // this.pixi.stage.addChild(sprite);
-            // this.pixi.stage.addChild(new PIXI.Sprite(PIXI.Texture.fromFrame("border.png")));
 
             this.newgame.addEventListener('click', ()=> {
                 // TODO: 로컬스토리지 지우고 게임시작.
@@ -111,7 +96,7 @@ export default class App {
     startGame() {
         this.game = new Game(this.pixi);
         // TODO: 나중에 dom 으로 바꾸도록 한다
-        this.pixi.stage.addChild(new PIXI.Sprite(PIXI.Texture.fromFrame("border.png"))); 
+        // this.pixi.stage.addChild(new PIXI.Sprite(PIXI.Texture.fromFrame("border.png"))); 
 
         // 게임을 시작한다
         this.game.setStorage(this.storage);
@@ -119,7 +104,6 @@ export default class App {
         
         // TODO : ui 에서 ui2 로 변경중
         this.ui = this.game.ui;
-        //this.setUICallback();
 
         this.game.$preload().then(() => {
             this.game.start();
