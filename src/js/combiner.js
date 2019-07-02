@@ -14,7 +14,9 @@ export default class Combiner {
     constructor() {
     }
 
-    getRecipes(inventory) {
+    getRecipes(player) {
+        const inventory = player.inventory;
+        let level = 1;
         const sorting = {
             weapon: 1,
             armor: 2,
@@ -32,6 +34,10 @@ export default class Combiner {
         };
         const result = [];
         const playerRecipes = {};
+        for (let key in player.characters) {
+            const character = player.characters[key];
+            level = level<=character.level?character.level:level;
+        }
         inventory.forEach((item) => {
             if (item.category === 'recipes') {
                 const itemId = recipes[item.id].item;
@@ -48,12 +54,11 @@ export default class Combiner {
             playerRecipes[key].forEach((recipe) => {
                 recipe.owned = inventory.getCount(recipe.item);
                 recipe.data = items[recipe.item];
-                recipe.available = true;
+                recipe.available = this.isAvailable(recipe.id, inventory, level).success;
+                recipe.reason = this.isAvailable(recipe.id, inventory, level).reason;
                 for(const mat of recipe.materials) {
                     mat.owned = inventory.getCount(mat.item);
                     mat.data = items[mat.item];
-    
-                    recipe.available &= (mat.count <= mat.owned);
                 }
             });
             
@@ -84,6 +89,8 @@ export default class Combiner {
             return 1;
         });
 
+        console.log(result);
+
         return result;
     }
 
@@ -97,7 +104,7 @@ export default class Combiner {
             throw Error("invalid recipe: " + id);
         }
 
-        if (!this.isAvailable(id, inventory)) {
+        if (!this.isAvailable(id, inventory).success) {
             throw Error("can not combine recipe: " + id);
         }
 
@@ -110,14 +117,23 @@ export default class Combiner {
         inventory.addItem(recipe.item);
     }
 
-    isAvailable(id, inventory) {
-        let available = true;
+    isAvailable(id, inventory, level) {
+        const result = {
+            success: true,
+            reason: ''
+        };
         const recipe = recipes[id];
         for(const mat of recipe.materials) {
-            available &= (mat.count <= inventory.getCount(mat.item));
+            result.success &= (mat.count <= inventory.getCount(mat.item));
         }
-        available &= (recipe.gold <= inventory.gold);
-        return available;
+        result.reason += result.success?'':'[재료 부족]';
+
+        result.success &= (recipe.gold <= inventory.gold);
+        result.reason += (recipe.gold <= inventory.gold)?'':'[Gold 부족]';
+
+        result.success &= (recipe.level <= level);
+        result.reason += (recipe.level <= level)?'':'[제한레벨 미달.]';
+        return result;
 
     }
 }

@@ -663,7 +663,7 @@ export default class Game extends EventEmitter {
 
     // 인벤토리에 있는 레시피들을 가져와야할듯하다.
     getRecipes() {
-        const recipes = this.combiner.getRecipes(this.player.inventory);
+        const recipes = this.combiner.getRecipes(this.player);
         return recipes;
     }
 
