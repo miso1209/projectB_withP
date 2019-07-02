@@ -70,7 +70,7 @@ export default class DomUI extends EventEmitter {
         this.stageInfo = new MakeDom('div', 'stageInfo');
         this.gnbContainer.appendChild(this.stageInfo);
 
-        this.player = null;
+        this.character = null;
         this.playerInvenData = null;
         this.characters = null;
     }
@@ -244,15 +244,14 @@ export default class DomUI extends EventEmitter {
         });
     }
 
-    showInventory(inputs) {
+    showInventory(inputs, inven_gold) {
         const pane = this.createContainer();
         const inventory = new Inventory(pane, inputs);
-        
-        // console.log(this.player.inventory);
-
-        if(this.player.inventory) {
-            inventory.gold.innerText = this.player.inventory.gold;
+    
+        if (inven_gold) {
+            inventory.gold.innerText = inven_gold;
         }
+
         inventory.moveToRight(70);
         inventory.onTabSelected(inventory.tabs[0].category);
     }
@@ -336,7 +335,7 @@ export default class DomUI extends EventEmitter {
                     characterDetail.pauseData = null;
                 }
 
-                characterDetail.selected = this.player;
+                characterDetail.selected = this.character;
                 characterDetail.updateStat();
 
             } else {

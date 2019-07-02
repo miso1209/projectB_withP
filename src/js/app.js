@@ -15,17 +15,13 @@ export default class App {
         this.game = null;
 
         this.pixi = new PIXI.Application(980, 500, { 
-            // backgroundColor: 0x6BACDE,
             backgroundColor: 0x000000,
             view: document.getElementById('canvas'),
         });
-
-        console.log(this.pixi.view.offsetTop + 'px');
     }
 
     // dom - intro
     initIntro() {
-        // intro 단계에서는 ui 접근이 되지 않으므로 dom 생성은 여기서.
         this.intro = new MakeDom('div', 'intro');
         this.intro.style.top = this.pixi.view.offsetTop + 'px';
 
@@ -44,7 +40,7 @@ export default class App {
         buttonWrap.appendChild(this.loadgame);
         this.intro.appendChild(logo);
         this.intro.appendChild(buttonWrap);
-        
+
         document.body.appendChild(this.intro);
     }
     
@@ -67,13 +63,11 @@ export default class App {
     showIntro() {
         const loader = new Loader();
         loader.add('border.png', 'assets/border.png');
-
         loader.load(() => {
-            // dom 으로 변경
+
             this.initIntro();
 
             this.newgame.addEventListener('click', ()=> {
-                // TODO: 로컬스토리지 지우고 게임시작.
                 this.showConfirmModal((result) => {
                     if(result === 'ok') {
                         this.storage.data = null;
@@ -97,12 +91,9 @@ export default class App {
         this.game = new Game(this.pixi);
         // TODO: 나중에 dom 으로 바꾸도록 한다
         // this.pixi.stage.addChild(new PIXI.Sprite(PIXI.Texture.fromFrame("border.png"))); 
-
         // 게임을 시작한다
         this.game.setStorage(this.storage);
         this.dev.setGame(this.game);
-        
-        // TODO : ui 에서 ui2 로 변경중
         this.ui = this.game.ui;
 
         this.game.$preload().then(() => {

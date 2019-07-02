@@ -67,7 +67,8 @@ export default class Game extends EventEmitter {
         this.ui.on('inventory', () => {
             // 게임에서 인벤토리 데이터를 얻어온다
             const inputs = this.getInvenotryData();
-            this.ui.showInventory(inputs);
+            const inven_gold = this.player.inventory.gold;
+            this.ui.showInventory(inputs, inven_gold);
         });
         
         this.ui.on('party', () => {
@@ -109,22 +110,21 @@ export default class Game extends EventEmitter {
         });
         this.ui.on('equipItem', (itemCategory, itemId, cid) => {
             this.equipItem(itemCategory, itemId, cid);
-            this.ui.player = this.player.characters[cid];
+            this.ui.character = this.player.characters[cid];
         });
         // [정리] 착용하지 않고, 미리 스텟을 볼 수 있도록 하다보니.. 이런 것들이 생겼다. 어떻게 수정해야할까
         this.ui.on('simulateEquip', (itemCategory, itemId, cid) => {
             this.player.characters[cid].simulationEquip(itemCategory, itemId);
-            this.ui.player = this.player.characters[cid];
+            this.ui.character = this.player.characters[cid];
         });
         this.ui.on('cancelSimulate', () => {
             for (const cid in this.player.characters) {
                 this.player.characters[cid].refreshSimulationData();
             }
         });
-
         this.ui.on('unequipItem', (itemCategory, cid) => {
             this.unequipItem(itemCategory, cid);
-            this.ui.player = this.player.characters[cid];
+            this.ui.character = this.player.characters[cid];
         });
 
         this.ui.on('playerInvenData', (option) => {
@@ -637,6 +637,7 @@ export default class Game extends EventEmitter {
 
         // 캐릭터 데이터를 저장해야 하는지 확인
         if (this.player) {
+            
             // console.log(this.player.characters);
             for (const cid in this.player.characters) {
                 const c = this.player.characters[cid];
@@ -647,6 +648,7 @@ export default class Game extends EventEmitter {
             }
 
             if (this.player.inventory.isDirty()) {
+                console.log('update---');
                 this.storage.updateInventory(this.player.inventory.save());
                 this.player.inventory.clearDirty();
             }

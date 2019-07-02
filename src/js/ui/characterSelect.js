@@ -174,8 +174,8 @@ export default class CharacterSelect extends Panel {
     this.level.innerText = 'Lv.' + current.level;
     // this.playerClass.innerText = current.data.class;
 
-    this.updateHealth();
     this.updateStatus(current);
+    // this.updateHealth();
   }
 
   updateHealth() {
@@ -195,6 +195,7 @@ export default class CharacterSelect extends Panel {
   updateStatus(current) {
     this.hp.update(current.health, current.maxHealth);
     this.exp.update(current.exp, current.maxexp);
+    this.updateHealth();
   }
 
   createConsumablesItem(result) {

@@ -24,7 +24,7 @@ export default class Inventory extends Panel {
             {category: 'accessory'},
             {category: 'material'},
             {category: 'consumables'},
-            {category: 'recipes'}
+            {category: 'valuables'}
         ];
         
         inventory.addTab(this.tabs, this.tabs[0].category, this.onTabSelected.bind(this));
@@ -59,7 +59,6 @@ export default class Inventory extends Panel {
         statContent.appendChild(this.itemName);
         statContent.appendChild(this.itemDesc);
         statContent.appendChild(this.itemOptions);
-
 
         const depositWrap = new MakeDom('div', 'depositWrap');
         this.gold = new MakeDom('div', 'inventory_gold', 0);
