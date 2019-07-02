@@ -2,46 +2,60 @@
     "3001": {
         "id": 3001,
         "item": 1001,
+        "level": 1,
         "materials": [
             { "item":2001, "count": 1 }
-        ]
+        ],
+        "description": "소형 회복약 제작서"
     },"3002": {
         "id": 3002,
         "item": 1002,
+        "level": 1,
         "materials": [
             { "item":2001, "count": 10 }
-        ]
+        ],
+        "description": "중형 회복약 제작서"
     }, "3003": {
         "id": 3003,
         "item": 1003,
+        "level": 1,
         "materials": [
             { "item":2001, "count": 20 },
             { "item":2004, "count": 10 }
-        ]
+        ],
+        "description": "대형 회복약 제작서"
     }, "3004": {
         "id": 3004,
         "item": 1004,
+        "level": 1,
         "materials": [
             { "item":2002, "count": 20 },
             { "item":2003, "count": 10 }
-        ]
+        ],
+        "description": "부활 물약 제작서"
     }, "3005": {
         "id": 3005,
         "item": 1,
+        "level": 1,
         "materials": [
             { "item":2007, "count": 1 }
-        ]
+        ],
+        "description": "기본검 제작서"
     }, "3006": {
         "id": 3006,
         "item": 401,
+        "level": 1,
         "materials": [
             { "item":2007, "count": 3 }
-        ]
+        ],
+        "description": "견습자의 갑옷 제작서"
     }, "3007": {
         "id": 3007,
         "item": 701,
+        "level": 1,
         "materials": [
             { "item":2007, "count": 5 }
-        ]
+        ],
+        "description": "건틀릿 제작서"
     }
 }

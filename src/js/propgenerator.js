@@ -1,8 +1,10 @@
 import FloorMonsters from "./floormonsters";
 import StoryMonsters from "./storymonsters";
+import RecipesDrop from "./recipesdrop";
 import Character from "./character";
 import Monster from "./monster";
 import Items from "./items";
+import Recipes from "./recipes";
 
 const RANK = {
     C: 'C',
@@ -70,29 +72,34 @@ export default class PropGenerator {
     createRecipe(floor, isBoss) {
         let success = false;
         const recipes = [];
-        let rank = this.getOneOfAllRank().display;
 
         while (!success) {
+            const rankNumber = {
+                C: 0,
+                B: 1,
+                A: 2,
+                S: 3,
+                U: 4
+            };
             const filteredRecipes = [];
+
+            const dropData = RecipesDrop[floor];
+
             for (let key in Items) {
-                const item = Items[key];
-                if (item.rank === rank && item.category === "recipes") {
-                    filteredRecipes.push(item);
+                if (Items[key].category === "recipes" && rankNumber[Items[key].rank] >= rankNumber[dropData.boundedRank.min] && rankNumber[Items[key].rank] <= rankNumber[dropData.boundedRank.max]) {
+                    filteredRecipes.push(Items[key]);
                 }
             }
-    
+
             filteredRecipes.forEach((item) => {
-                if (item.generateFloor.begin <= floor && item.generateFloor.end >= floor) {
+                const id = item.id;
+                if (Recipes[id].level >= dropData.boundedLevel.min && Recipes[id].level <= dropData.boundedLevel.max) {
                     recipes.push(item);
                 }
             });
 
             if (recipes.length === 0) {
-                rank = this.getUnderRank(rank);
-                if (rank === RANK.UNKNOWN) {
-                    rank = RANK.C;
-                    floor--;
-                }
+                floor--;
                 success = false;
             } else {
                 success = true;
@@ -256,7 +263,7 @@ export default class PropGenerator {
             const filteredItems = [];
             for (let key in Items) {
                 const item = Items[key];
-                if (item.rank === rank && item.category !== 'recipes') {
+                if (item.rank === rank && item.category === 'consumables' || item.category === 'material') {
                     filteredItems.push(item);
                 }
             }
