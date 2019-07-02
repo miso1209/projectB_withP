@@ -5,7 +5,7 @@
         "class": "warrior",
         "portrait": "player1_active.png",
         "base": {
-            "health": 2000000000000,
+            "health": 200,
             "strength": 5,
             "intellect": 5,
             "agility": 5,

@@ -1,12 +1,25 @@
-{"1": {
-    "id": 1,
-    "title": "새로운 시작",
-    "description" : "주인없는 집에서의 새로운 시작! 장소는 해결되었으니 이제 본격적으로 일을 해보자.",
-    "objectives": [
-        { "text": "작업용 테이블 찾기", "event": "addtag", "args":["worktable"] }
-    ],
-    "rewards": [
-        { "text": "약초 1",  "script": "addItem(2001, 1)" },
-        { "script": "_playCutscene(2)" }
-    ]
-}}
+{
+    "1": {
+        "id": 1,
+        "title": "새로운 시작",
+        "description" : "주인없는 집에서의 새로운 시작! 장소는 해결되었으니 이제 본격적으로 일을 해보자.",
+        "objectives": [
+            { "text": "작업용 테이블 찾기", "event": "addtag", "args":["worktable"] }
+        ],
+        "rewards": [
+            { "text": "약초 1",  "script": "addItem(2001, 1)" },
+            { "script": "_playCutscene(2)" }
+        ]
+    },
+    "2": {
+        "id": 2,
+        "title": "포션제작",
+        "description" : "쓰러져 있는 모험가들을 구출하기 위해 소형 회복약을 제작하자!.",
+        "objectives": [
+            { "text": "소형 회복약 만들기 ", "event": "additem", "args":[1001, 1] }
+        ],
+        "rewards": [
+            { "text": "소형 회복약 x 5",  "script": "addItem(1001, 5)" }
+        ]
+    }
+}

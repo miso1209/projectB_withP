@@ -122,10 +122,10 @@ export default class PropGenerator {
         // 원래 필드에 C - U 까지 전부 나왔지만, 미들보스에서만 S - U등급의 몬스터가 나오는 것으로 변경.
         const monstersByRanked = [
             {
-                monsters: [1,2,3],
+                monsters: [1,2,3,4],
                 ranks: [RANK.C, RANK.B, RANK.A]
             }, {
-                monsters: [2,3,4],
+                monsters: [2,3,4,5],
                 ranks: [RANK.C, RANK.B, RANK.A]
                 // ranks: [RANK.C, RANK.A, RANK.S]
             }, {

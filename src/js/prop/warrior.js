@@ -86,6 +86,7 @@ export default class Warrior extends PropBase {
                     { speaker: 1, text: "아무래도 포션을 만들어서 회복시켜줘야겠어!." },
                     { speaker: 1, text: "집으로 돌아가서 포션을 만들자!." }
                 ], () => {
+                    game.addQuest(2);
                     game.ui.showMenu();
                     game.exploreMode.interactive = true;
                 });

@@ -72,6 +72,7 @@ export default class App {
                 // TODO: 로컬스토리지 지우고 게임시작.
                 // 경고창 띄워야 할 것 같다.
                 this.storage.data = null;
+                console.log('New Game => 데이터 제거. ( 컨펌모달 같은 것 있어야 겠다. )');
                 this.intro.parentNode.removeChild(this.intro);
                 this.startGame();
             });
@@ -111,7 +112,6 @@ export default class App {
             }
             if (e.keyCode === 66) {
                 const monster = {src: new Monster(StoryMonsters['archer'])};
-                console.log(monster);
                 this.game.$enterBattle(monster);
             }
         });
