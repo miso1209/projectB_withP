@@ -60,10 +60,10 @@ export default class Inventory extends Panel {
         statContent.appendChild(this.itemDesc);
         statContent.appendChild(this.itemOptions);
 
-        const depositWrap = new MakeDom('div', 'depositWrap');
-        this.gold = new MakeDom('div', 'inventory_gold', 0);
-        depositWrap.appendChild(this.gold);
-        statContent.appendChild(depositWrap);
+        const costswrap = new MakeDom('div', 'costswrap');
+        this.gold = new MakeDom('div', 'gold', 0);
+        costswrap.appendChild(this.gold);
+        statContent.appendChild(costswrap);
 
         // # stat
         wrapper.appendChild(statContent);

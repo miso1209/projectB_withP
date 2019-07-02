@@ -3,6 +3,7 @@ import Panel from './component/panel';
 import Button from './component/button';
 import ListBox from './component/listbox';
 import ItemImage from './component/itemimage';
+import MakeDom from './component/makedom';
 
 
 class CombinerUI extends Panel {
@@ -15,6 +16,7 @@ class CombinerUI extends Panel {
     
         this.recipe = null;
         this.materialsData = null;
+
     
         const contents = document.createElement('div');
         contents.classList.add('contents');
@@ -37,6 +39,9 @@ class CombinerUI extends Panel {
         contents.appendChild(this.itemName);
         contents.appendChild(combineItem);
     
+        this.comment = new MakeDom('p', 'comment');
+        
+
         // 아이템 옵션
         this.options = document.createElement('ul');
         this.options.classList.add('options');
@@ -44,7 +49,12 @@ class CombinerUI extends Panel {
         // 재료 리스트
         this.materialInfo = document.createElement('ul');
         this.materialInfo.classList.add('materialInfo');
-        
+    
+        const costswrap = new MakeDom('div', 'costswrap');
+        this.costs = new MakeDom('div', 'gold', '0');
+        // this.costs.classList.add('disabled');
+        costswrap.appendChild(this.costs);
+
         const combineButton = new Button('제작');
         combineButton.moveToCenter(10);
         combineButton.moveToBottom(15);
@@ -54,20 +64,34 @@ class CombinerUI extends Panel {
     
         contents.appendChild(this.options);
         contents.appendChild(this.materialInfo);
-    
+        
+        contents.appendChild(costswrap);
+        contents.appendChild(this.comment);
+
         this.dom.appendChild(contents);
-        this.dom.appendChild(combineButton.dom);
+        this.dom.appendChild(this.button);
     
         this.button.removeEventListener('click', this.doCombineItem.bind(this));
     }
-  
+
+    checkReason(){
+        // 제작할 수 없는 원인 췍
+    }
+
     update() {
         if (this.recipe !== null) {
             if (this.recipe.available === 1) {
+                this.costs.classList.remove('disabled');
+                this.comment.style.display = 'none';
+
                 this.button.classList.remove('disabled');
                 this.button.classList.add('isAvailable');
                 this.button.addEventListener('click', this.doCombineItem.bind(this));
             } else {
+                this.costs.classList.add('disabled');
+                this.comment.innerText = '제작에 필요한 레벨이 부족합니다. ';
+                this.comment.style.display = 'block';
+
                 this.button.classList.add('disabled');
                 this.button.classList.remove('isAvailable');
                 this.button.removeEventListener('click', this.doCombineItem.bind(this));
@@ -76,13 +100,15 @@ class CombinerUI extends Panel {
             // 기존데이터 초기화
             this.materialInfo.innerHTML = '';
             this.options.innerHTML = '';
-    
+
             // this.recipe.data
+            this.costs.innerText = this.recipe.gold;
             this.itemImg.updateImage(this.recipe.data.image.x, this.recipe.data.image.y);
             this.itemName.innerText = this.recipe.data.name;
             this.itemDesc.innerText = this.recipe.data.description;
             this.materialsData = this.recipe.materials;
-        
+            
+
             // 아이템 효과는 배열로 전달된다.
             for (const option of this.recipe.data.options ) {
                 let node = document.createElement('li');
@@ -98,7 +124,11 @@ class CombinerUI extends Panel {
                 let material1 = new ItemImage(mat.data.image.texture, mat.data.image.x, mat.data.image.y);
                 let material2 = document.createElement('p');
                 let material3 = document.createElement('p');
-            
+                
+                if ((mat.owned - mat.count) < 0) {
+                    material3.style.color = 'red';
+                }
+                
                 material2.innerText = `${mat.data.name}`;
                 material3.innerText = `${mat.owned} / ${mat.count}`;
         

@@ -669,6 +669,40 @@ button, .button {
   margin-left: 5px;
 }
 
+
+
+/* 골드 wrapper */
+.costswrap {
+  position: relative;
+  min-width: 200px;
+  min-height: 30px;
+  
+  padding: 5px 10px 5px 40px;
+  text-align: left;
+  background: #1f130a;
+  border-radius: 15px;
+}
+
+.costswrap::before {
+  content: '';
+  position: absolute;
+  left: -10px;
+  top: -3px;
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  background: url(~assets/ui/gold.png) no-repeat;
+  background-size: contain;
+}
+
+.gold {
+  font-size: 14px;
+  color: #ffd800;
+  overflow: hidden;
+  transition: color 0.3s;
+}
+
+
 /* 아이템 조합창 */
 .combineItemInfo {
   position: absolute;
@@ -679,15 +713,43 @@ button, .button {
   margin: 0 auto 10px;
 }
 
-.combineItemInfo .title{
+.combineItemInfo .title {
   position: static;
   font-size: 18px;
 }
 
-.combineItemInfo .materialsImg{
+.combineItemInfo .materialsImg {
   max-width: 100px;
   max-height: 100px;
   margin-top: 20px;
+}
+
+.combineItemInfo .comment {
+  display: none;
+  position: absolute;
+  top: 170px;
+  z-index: 111;
+  width: 100%;
+  height: 100%;
+  color: red;
+}
+
+.combineItemInfo .costswrap {
+  display: inline-block;
+  width: calc(100% - 50px);
+  margin: 10px 0 0;
+}
+
+.combineItemInfo .gold::before {
+  content: '비용 : ';
+  display: inline-block;
+  padding-right: 5px;
+}
+
+.combineItemInfo .gold.disabled {
+  font-size: 15px;
+  color: red;
+  overflow: hidden;
 }
 
 button.isAvailable, .isAvailable.button:active  {
@@ -716,7 +778,7 @@ button.disabled span {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
-  margin: 20px 0;
+  margin: 15px 0 20px;
 }
 
 .combineItem::after{
@@ -753,9 +815,12 @@ button.disabled span {
 
 /* 아이템 옵션 */
 .combineItemInfo .options {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+
   background: none;
-  max-height: 120px;
-  min-height: 100px;
+  height: 80px;
 }
 
 .combineItemInfo .options li {
@@ -815,43 +880,24 @@ button.disabled span {
 }
 
 
+
 /* inventory  */
-.depositWrap {
-  position: absolute;
-  left: 25px;
-  bottom: 20px;
-  min-height: 30px;
-  padding: 5px 10px 5px 35px;
-  width: inherit;
-  text-align: center;
-  background: #1f130a;
-  border-radius: 15px;
-}
-
-.depositWrap::before{
-  content: '';
-  position: absolute;
-  left: 0;
-  top: -3px;
-  display: inline-block;
-  width: 40px;
-  height: 40px;
-  background: url(~assets/ui/gold.png) no-repeat;
-  background-size: contain;
-}
-
-.inventory_gold {
-  font-size: 14px;
-  color: #ffd800;
-  overflow: hidden;
-}
-
 .inventory-detail {
   padding: 20px 10px;
   text-align: center;
 
   background: url(~assets/ui/frameRN.png) no-repeat 50% 0;
   background-size: 130px auto;
+}
+
+.inventory-detail .costswrap {
+  position: absolute;
+  left: 25px;
+  bottom: 20px;
+
+  width: inherit;
+
+  
 }
 
 .inventory-detail .img {
@@ -1090,11 +1136,11 @@ button.disabled span {
   left: 0;
   right: 0;
   
-  width: 70px;
+  /* width: 70px;
   height: 65px;
   margin: 0 auto;
   background: url(~assets/ui/characterbg@2.png) no-repeat 0 0;
-  opacity: 0;
+  opacity: 0; */
 }
 
 .doll .imgWrap {

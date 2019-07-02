@@ -9,11 +9,11 @@ export default class Tab {
             {category: 'accessory', x:11, y:3},
             {category: 'material', x:11, y:4},
             {category: 'consumables', x:5, y:3},
-            {category: 'recipes', x:3, y:2}
+            {category: 'valuables', x:3, y:2}
         ];
-  
+
         const tabButton = document.createElement('li');
-        const tabImg = new ItemImage('items.png', 10, 10);
+        const tabImg = new ItemImage('items.png', 0, 0);
         
         for (const icon of iconMap) {
             if (icon.category === tab.category) {

@@ -189,6 +189,7 @@ export default class DomUI extends EventEmitter {
     }
 
     showCombineItemList(inputs, callback) { // 제작하기 버튼 콜백
+        console.log(inputs);
         const pane = this.createContainer();
         pane.classList.add('screen');
     
