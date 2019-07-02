@@ -800,7 +800,8 @@ button.disabled span {
   position: absolute;
   left: 25px;
   bottom: 20px;
-  padding: 5px 10px 5px 40px;
+  min-height: 30px;
+  padding: 5px 10px 5px 35px;
   width: inherit;
   text-align: center;
   background: #1f130a;

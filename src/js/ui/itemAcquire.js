@@ -10,7 +10,7 @@ export default class ItemAcquire extends Panel {
 
     pane.classList.add('screen');
 
-    let domheight = 250;
+    let domheight = 240;
 
     if (items.length > 3) {
       domheight += 80;
