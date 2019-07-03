@@ -65,9 +65,10 @@ export default class Game extends EventEmitter {
         // ui 이벤트 연결
         // 어느 시점에 해야 좋을까?
         this.ui.on('inventory', () => {
-            // 게임에서 인벤토리 데이터를 얻어온다
+            // 게임에서 인벤토리 데이터를 얻어온다 / 골드정보
             const inputs = this.getInvenotryData();
             const inven_gold = this.player.inventory.gold;
+
             this.ui.showInventory(inputs, inven_gold);
         });
         

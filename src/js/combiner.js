@@ -104,7 +104,7 @@ export default class Combiner {
             throw Error("invalid recipe: " + id);
         }
 
-        if (!this.isAvailable(id, inventory).success) {
+        if(!recipe.available) {
             throw Error("can not combine recipe: " + id);
         }
 
@@ -120,19 +120,31 @@ export default class Combiner {
     isAvailable(id, inventory, level) {
         const result = {
             success: true,
-            reason: ''
+            reason: []
         };
         const recipe = recipes[id];
         for(const mat of recipe.materials) {
             result.success &= (mat.count <= inventory.getCount(mat.item));
         }
-        result.reason += result.success?'':'[재료 부족]';
+        
+        // result.reason += result.success?'':'[재료 부족]';
 
+        // result.success &= (recipe.gold <= inventory.gold);
+        // result.reason += (recipe.gold <= inventory.gold)?'':'[Gold 부족]';
+
+        // result.success &= (recipe.level <= level);
+        // result.reason += (recipe.level <= level)?'':'[제한레벨 미달.]';
+
+        result.reason.push(result.success?{materials: true}:{materials: false});
+        
         result.success &= (recipe.gold <= inventory.gold);
-        result.reason += (recipe.gold <= inventory.gold)?'':'[Gold 부족]';
+        result.reason.push((recipe.gold <= inventory.gold)?{gold: true}:{gold: false});
 
         result.success &= (recipe.level <= level);
-        result.reason += (recipe.level <= level)?'':'[제한레벨 미달.]';
+        result.reason.push((recipe.level <= level)?{level: true}:{level: false});
+        
+        // console.log(result);
+        
         return result;
 
     }

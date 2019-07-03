@@ -26,18 +26,15 @@ export default class DomUI extends EventEmitter {
         this.theaterUI = new MakeDom('div');
         this.theaterUI.id = 'theater';
         this.theaterUI.style.top = this.gamePane.offsetTop + 'px';
-        document.body.appendChild(this.theaterUI);
 
         // 메인 ui 를 설정한다
         this.gnbContainer = new MakeDom('div', 'gnbContainer');
         this.gnbContainer.style.top = this.gamePane.offsetTop + 'px';
         this.gnbContainer.style.opacity = '0';
-        document.body.appendChild(this.gnbContainer);
 
         // 스테이지타이틀, 튜토리얼 툴팁용 레이어
         this.displayLayer = new MakeDom('div', 'container');
         this.displayLayer.style.top = this.gamePane.offsetTop + 'px';
-        document.body.appendChild(this.displayLayer);
 
         const gnb = new MakeDom('div', 'gnb');
         this.gnbContainer.appendChild(gnb);
@@ -53,9 +50,9 @@ export default class DomUI extends EventEmitter {
         const menuData = [
             {name:'캐릭터', event: "characterselect"},
             {name:'보관함', event: "inventory"},
-            {name:'파티', event: "party"}
+            {name:'파티', event: "party"},
             // {name:'퀘스트', event: "quest"},
-            // {name:'설정', event: "options"}
+            {name:'설정', event: "options"}
         ];
         
         menuData.forEach(menu => {
@@ -65,6 +62,11 @@ export default class DomUI extends EventEmitter {
                 this.emit(menu.event);
             });
         });
+
+        document.body.appendChild(this.gnbContainer);
+        document.body.appendChild(this.displayLayer);
+        document.body.appendChild(this.theaterUI);
+
 
         // 스테이지 정보
         this.stageInfo = new MakeDom('div', 'stageInfo');
@@ -189,7 +191,6 @@ export default class DomUI extends EventEmitter {
     }
 
     showCombineItemList(inputs, callback) { // 제작하기 버튼 콜백
-        console.log(inputs);
         const pane = this.createContainer();
         pane.classList.add('screen');
     

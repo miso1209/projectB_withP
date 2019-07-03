@@ -41,7 +41,6 @@ class CombinerUI extends Panel {
     
         this.comment = new MakeDom('p', 'comment');
         
-
         // 아이템 옵션
         this.options = document.createElement('ul');
         this.options.classList.add('options');
@@ -74,29 +73,36 @@ class CombinerUI extends Panel {
         this.button.removeEventListener('click', this.doCombineItem.bind(this));
     }
 
-    checkReason(){
-        // 제작할 수 없는 원인 췍
+    checkReason() {
+        let reasons = this.recipe.reason;
+
+        reasons.forEach(reason => {
+            if(reason.level === false) {
+                this.comment.innerText = '제작에 필요한 레벨이 부족합니다. ';
+                this.comment.style.display = 'block';
+            } else if (reason.gold === false) {
+                this.costs.classList.add('disabled');
+            }
+        });
     }
 
     update() {
         if (this.recipe !== null) {
             if (this.recipe.available === 1) {
-                this.costs.classList.remove('disabled');
                 this.comment.style.display = 'none';
+                this.costs.classList.remove('disabled');
 
                 this.button.classList.remove('disabled');
                 this.button.classList.add('isAvailable');
                 this.button.addEventListener('click', this.doCombineItem.bind(this));
             } else {
-                this.costs.classList.add('disabled');
-                this.comment.innerText = '제작에 필요한 레벨이 부족합니다. ';
-                this.comment.style.display = 'block';
+                this.checkReason();
 
                 this.button.classList.add('disabled');
                 this.button.classList.remove('isAvailable');
                 this.button.removeEventListener('click', this.doCombineItem.bind(this));
             }
-    
+
             // 기존데이터 초기화
             this.materialInfo.innerHTML = '';
             this.options.innerHTML = '';
@@ -107,26 +113,23 @@ class CombinerUI extends Panel {
             this.itemName.innerText = this.recipe.data.name;
             this.itemDesc.innerText = this.recipe.data.description;
             this.materialsData = this.recipe.materials;
-            
 
             // 아이템 효과는 배열로 전달된다.
             for (const option of this.recipe.data.options ) {
-                let node = document.createElement('li');
-                node.className = 'li';
+                let node = new MakeDom('li', 'li');
                 node.innerText = option.toString();
                 this.options.appendChild(node);
             }
             
             this.materialsData.forEach(mat => {
-                let node = document.createElement('li');
-                node.className = 'li';
-        
+                let node = new MakeDom('li', 'li');
                 let material1 = new ItemImage(mat.data.image.texture, mat.data.image.x, mat.data.image.y);
                 let material2 = document.createElement('p');
                 let material3 = document.createElement('p');
-                
-                if ((mat.owned - mat.count) < 0) {
-                    material3.style.color = 'red';
+
+                // 스타일이 적용되는 타겟이 각각 생성되므로, ui 단계에서 체크
+                if (mat.owned - mat.count < 0) {
+                    material3.style.color = '#fd6240';
                 }
                 
                 material2.innerText = `${mat.data.name}`;
