@@ -50,11 +50,11 @@ export default class CharacterSelect extends Panel {
     this.dom.appendChild(wrap);
 
     // 캐릭터 설명 - characterDesc
-    const characterDesc = new MakeDom('div', 'descWrap', null);
+    const characterDesc = new MakeDom('div', 'descWrap');
     characterDesc.classList.add('characterDesc');
     characterDesc.classList.add('flex-right');
 
-    const infoWrap = new MakeDom('div', 'infoWrap', null);
+    const infoWrap = new MakeDom('div', 'infoWrap');
 
     this.portrait = document.createElement('img');
     this.portrait.style.display = 'block';
@@ -69,14 +69,14 @@ export default class CharacterSelect extends Panel {
     this.recoveryBtn.dom.style.top = '60px';
     this.recoveryBtn.moveToRight(40);
 
-    const titleWrap = new MakeDom('div', 'titleWrap', null);
-    this.descClass = new MakeDom('span', 'stat_class', null);
-    this.descName = new MakeDom('span', 'stat_name', null);
-    this.level = new MakeDom('span', 'stat_level', null);
+    const titleWrap = new MakeDom('div', 'titleWrap');
+    this.descClass = new MakeDom('span', 'stat_class');
+    this.descName = new MakeDom('span', 'stat_name');
+    this.level = new MakeDom('span', 'stat_level');
     this.level.style.paddingRight = '10px';
 
     // hp, exp 상태바
-    const statWrap = new MakeDom('div', 'statWrap', null);
+    const statWrap = new MakeDom('div', 'statWrap');
     this.hp = new StatusBar(0, 10);
     this.exp = new StatusBar(0, 10);
     this.exp.setBar('exp');
@@ -110,10 +110,10 @@ export default class CharacterSelect extends Panel {
     characterDesc.appendChild(moreButton.dom);
 
     // characterList
-    const characterListWrap = new MakeDom('div', 'characterListWrap', null);
+    const characterListWrap = new MakeDom('div', 'characterListWrap');
     characterListWrap.classList.add('flex-left');
 
-    const characterList = new MakeDom('div', 'characterList', null);
+    const characterList = new MakeDom('div', 'characterList');
     characterList.style.width = '410px';
 
     let selectedDoll = null;

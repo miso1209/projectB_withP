@@ -264,7 +264,7 @@ export default class CharacterDetail extends Panel {
 
     skillItemsData.forEach(d => {
       ++index;
-      let liWrap = new MakeDom('li', null, null);
+      let liWrap = new MakeDom('li');
       liWrap.index = index;
 
       if (d !== null) {

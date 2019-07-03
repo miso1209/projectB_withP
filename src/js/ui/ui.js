@@ -22,6 +22,9 @@ export default class DomUI extends EventEmitter {
         this.screenWidth = this.gamePane.screenWidth;
         this.screenHeight = this.gamePane.screenHeight;
         
+        // let header = document.querySelector('.project_header').clientHeight;
+        // console.dir(this.gamePane.offsetTop);
+        
         // theatreUI 를 설정한다
         this.theaterUI = new MakeDom('div');
         this.theaterUI.id = 'theater';
@@ -56,7 +59,7 @@ export default class DomUI extends EventEmitter {
         ];
         
         menuData.forEach(menu => {
-            let btn = new Button(menu.name, 'tabBtn');
+            let btn = new Button(menu.name, 'menu');
             gnb.appendChild(btn.dom);
             btn.dom.addEventListener('click', () => {
                 this.emit(menu.event);
@@ -112,7 +115,9 @@ export default class DomUI extends EventEmitter {
 
     showMinimap() {
         this.minimapDOM.style.display = 'block';
+        this.stageInfo.style.textAlign = 'left';
     }
+
     hideMinimap() {
         this.minimapDOM.style.display = 'none';
         this.stageInfo.style.textAlign = 'right';
@@ -209,8 +214,10 @@ export default class DomUI extends EventEmitter {
 
     showCraftUI(itemId, result) {
         const pane = this.createContainer();
-        let domHeight = 240;
+        pane.classList.add('screen');
 
+        let domHeight = 240;
+        
         const modal = new Modal(pane, 360, domHeight);
         modal.addTitle('아이템 조합중');
         modal.dom.style.top = '50%';
@@ -232,6 +239,15 @@ export default class DomUI extends EventEmitter {
         
         modal.dom.appendChild(itemText);
         modal.dom.appendChild(loading.dom);
+    }
+
+    showBlackScreen() {
+        console.log('showBlackScreen');
+        this.displayLayer.style.backgroundColor = 'rgba(0,0,0,1)';
+    }
+    hideBlackScreen() {
+        console.log('hideBlackScreen');
+        this.displayLayer.style.backgroundColor = 'transparent';
     }
 
     // 아이템 획득
@@ -283,13 +299,17 @@ export default class DomUI extends EventEmitter {
             if (selected !== null) {
                 this.showUseItemModal('포션을 사용하시겠습니까?', selected, (confirmed) => {
                     if (confirmed === "ok") {
-                        this.emit('useItem', selected.data.id, 1, characterSelect.selected);
-                        characterSelect.updateStatus(characterSelect.selected);
-                        
-                        this.emit('playerInvenData', {category:'consumables'});
-                        characterSelect.consumablesData = this.playerInvenData;
+                        if( characterSelect.selected.health === characterSelect.selected.maxHealth) {
+                            this.showConfirmModal('full--hp.....', false, ()=>{});
+                            console.log('full--hp');
+                        } else {
+                            this.emit('useItem', selected.data.id, 1, characterSelect.selected);
+                            characterSelect.updateStatus(characterSelect.selected);
+                            this.emit('playerInvenData', {category:'consumables'});
+                            characterSelect.consumablesData = this.playerInvenData;
 
-                        characterSelect.createConsumablesItem(useItem);
+                            characterSelect.createConsumablesItem(useItem);
+                        }
                     } 
                 });
             }

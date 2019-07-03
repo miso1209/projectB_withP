@@ -3,10 +3,10 @@ export default class MakeDom {
   constructor(element, classname, value) {
     const dom = document.createElement(element);
 
-    if (classname && classname !== null) {
+    if (classname) {
       dom.classList.add(classname);
     }
-    if (value && value !== null) {
+    if (value) {
       dom.innerText = value;
     }
     

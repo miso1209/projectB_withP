@@ -20,7 +20,6 @@ export default class PartyUI extends Panel {
 
     this.members = []; 
 
-    // this.isPartyMember = -1; // 현재 파티 구성원인 경우 인덱스값 저장..
     const modal = new Modal(pane, 800, 460, null);
     this.dom = modal.dom;
     this.dom.classList.add('party');

@@ -19,14 +19,14 @@ export default class Doll {
       const name = new MakeDom('p', 'name', item.data.displayname);
       const stat = new MakeDom('p', 'stat', item.totalPowerFigure);
 
-      const imgWrap = new MakeDom('p', 'imgWrap', null);
-      const profileimg = new MakeDom('img', 'profileImg', null);
+      const imgWrap = new MakeDom('p', 'imgWrap');
+      const profileimg = new MakeDom('img', 'profileImg');
 
       profileimg.src = this.path;
       imgWrap.style.width = '64px';
       imgWrap.style.height = '96px';
 
-      this.stage = new MakeDom('p', 'tilebg', null);
+      this.stage = new MakeDom('p', 'tilebg');
       imgWrap.appendChild(profileimg);
 
       this.profile = imgWrap;

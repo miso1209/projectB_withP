@@ -68,7 +68,6 @@ export default class Game extends EventEmitter {
             // 게임에서 인벤토리 데이터를 얻어온다 / 골드정보
             const inputs = this.getInvenotryData();
             const inven_gold = this.player.inventory.gold;
-
             this.ui.showInventory(inputs, inven_gold);
         });
         
@@ -373,7 +372,7 @@ export default class Game extends EventEmitter {
     // [정리] 기존처럼 Map을 바로 생성하는 것 이 아니라, 미치 다 생성해서 들고있어서, Stage객체를 가지고 있다.
     // 던전에서는 어떤 방향으로 입장하는지 모르기 때문에 입장 방향도 dir 이라는 파라메타로 넘겨준다.
     async $nextFloor(from, dir) {
-        this.currentFloor+=1;
+        this.currentFloor+=20;
         this.ui.showTheaterUI(0.5);
         this.ui.hideMenu();
         await this.$leaveStage(from);
@@ -515,8 +514,6 @@ export default class Game extends EventEmitter {
         const monsterObj = monster;
         monster = monster.src;
 
-        
-
         if (this.currentMode instanceof Explore) {
             
             // 인카운터 정보를 이용해서 배틀 데이터를 만든다
@@ -568,8 +565,9 @@ export default class Game extends EventEmitter {
                 // 아이템 추가
                 for (let itemID in monster.rewards) {
                     this.player.inventory.addItem(itemID, monster.rewards[itemID]);
-                    this.player.inventory.gold += monster.gold;
                 }
+
+                this.player.inventory.gold += monster.gold;
             });
             this.currentMode.on('lose', async () => {
                 this.currentMode.battleResult = 'lose';
@@ -852,10 +850,12 @@ export default class Game extends EventEmitter {
 
     //나중에 UI 로 뺴야 한다
     async $fadeOut(duration) {
+        // this.ui.showBlackScreen();
         await this.tweens.$addTween(this.blackScreen, duration, { alpha: 1 }, 0, "linear", true);
     }
 
     async $fadeIn(duration) {
+        // this.ui.showBlackScreen();
         await this.tweens.$addTween(this.blackScreen, duration, { alpha: 0 }, 0, "linear", true);
     }
 
