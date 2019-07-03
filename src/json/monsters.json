@@ -1,0 +1,114 @@
+{
+    "1": {
+        "description": "성에 넘쳐나는 도굴꾼이다.",
+        "character": {
+            "id": 10001,
+            "baseLevel": 1,
+            "levelUpPerFloor": 0.4
+        },
+        "score": 4,
+        "rarity": 200,
+        "rewards": [1001, 1002, 1003, 2001],
+        "gold": 1,
+        "exp": 0.3,
+        "goldPerLevel": 0.3,
+        "expPerLevel": 0.15,
+        "fieldSpeed": 0.3
+    },
+    "2": {
+        "description": "드물게 보이는 스켈레톤이다.",
+        "character": {
+            "id": 10002,
+            "baseLevel": 2,
+            "levelUpPerFloor": 0.4
+        },
+        "score": 4,
+        "rarity": 200,
+        "rewards": [1001, 1002, 1003, 2001],
+        "gold": 2,
+        "exp": 0.3,
+        "goldPerLevel": 0.3,
+        "expPerLevel": 0.15,
+        "fieldSpeed": 0.3
+    },
+    "3": {
+        "description": "드물게 보이는 네크로멘서이다.",
+        "character": {
+            "id": 10003,
+            "baseLevel": 2,
+            "levelUpPerFloor": 0.4
+        },
+        "score": 4,
+        "rarity": 200,
+        "rewards": [1001, 1002, 1003, 2001],
+        "gold": 2,
+        "exp": 0.3,
+        "goldPerLevel": 0.3,
+        "expPerLevel": 0.15,
+        "fieldSpeed": 0.3
+    },
+    "4": {
+        "description": "드물게 보이는 개굴전사이다.",
+        "character": {
+            "id": 10004,
+            "baseLevel": 2,
+            "levelUpPerFloor": 0.4
+        },
+        "score": 4,
+        "rarity": 200,
+        "rewards": [1001, 1002, 1003, 2001],
+        "gold": 2,
+        "exp": 0.3,
+        "goldPerLevel": 0.3,
+        "expPerLevel": 0.15,
+        "fieldSpeed": 0.3
+    },
+    "5": {
+        "description": "드물게 보이는 암흑기사이다.",
+        "character": {
+            "id": 10005,
+            "baseLevel": 2,
+            "levelUpPerFloor": 0.4
+        },
+        "score": 4,
+        "rarity": 200,
+        "rewards": [1001, 1002, 1003, 2001],
+        "gold": 2,
+        "exp": 0.3,
+        "goldPerLevel": 0.3,
+        "expPerLevel": 0.15,
+        "fieldSpeed": 0.3
+    },
+    "6": {
+        "description": "드물게 보이는 수도사이다.",
+        "character": {
+            "id": 10006,
+            "baseLevel": 2,
+            "levelUpPerFloor": 0.4
+        },
+        "score": 4,
+        "rarity": 200,
+        "rewards": [1001, 1002, 1003, 2001],
+        "gold": 2,
+        "exp": 0.3,
+        "goldPerLevel": 0.3,
+        "expPerLevel": 0.15,
+        "fieldSpeed": 0.3
+    },
+    "7": {
+        "description": "드물게 보이는 스켈레톤이다.",
+        "character": {
+            "id": 10007,
+            "baseLevel": 2,
+            "levelUpPerFloor": 0.4
+        },
+        "score": 4,
+        "rarity": 200,
+        "rewards": [1001, 1002, 1003, 2001],
+        "gold": 2,
+        "exp": 0.3,
+        "goldPerLevel": 0.3,
+        "expPerLevel": 0.15,
+        "fieldSpeed": 0.3
+    }
+}

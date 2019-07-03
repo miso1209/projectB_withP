@@ -8,12 +8,10 @@ import Skill from "./skill";
 // 캐릭터의 스탯과 장비에 대한 부분만 처리한다 
 
 export default class Character {
-    constructor(id, rank) {
+    constructor(id) {
         this.id = id;
         this.level = 1;
         this.exp = 0;
-        // [의문] 캐릭터의 강함 (같은 몬스터여도 필드 보스일때 더 강하다던가..) 를 처리하려고 rank를 두고, 그에따라서 올스텟을 조절하였는데.. 이게 맞나 싶다.
-        this.rank = rank?rank:{ strong: 1, display: 'C' };
         
         const data = characters[id];
         this.data = data;
@@ -84,41 +82,41 @@ export default class Character {
     }
 
     get baseMaxHealth() {
-        return this.getParam('health', this.level) * this.rank.strong;
+        return this.getParam('health', this.level);
     }
     
     get baseStrength() {
-        return this.getParam('strength', this.level) * this.rank.strong;
+        return this.getParam('strength', this.level);
     }
     
     get baseIntellect() {
-        return this.getParam('intellect', this.level) * this.rank.strong;
+        return this.getParam('intellect', this.level);
     }
     
     get baseAgility() {
-        return this.getParam('agility', this.level) * this.rank.strong;
+        return this.getParam('agility', this.level);
     }
 
     get baseStamina() {
-        return this.getParam('stamina', this.level) * this.rank.strong;
+        return this.getParam('stamina', this.level);
     }
 
     get baseSpeed() {
-        return this.getParam('speed', this.level) * this.rank.strong;
+        return this.getParam('speed', this.level);
     }
     
     get baseCritical() {
-        return this.getParam('critical', this.level) * this.rank.strong;
+        return this.getParam('critical', this.level);
     }
 
     get baseRegist() {
-        return this.getParam('regist', this.level) * this.rank.strong;
+        return this.getParam('regist', this.level);
     }
 
     get maxHealth() {
         // 소숫점의 체력은 버린다.
         const maxHealth = this.simulatedMaxHealth?this.simulatedMaxHealth:this.plusMaxHealth;
-        return Math.floor(this.baseMaxHealth + maxHealth) * this.rank.strong;
+        return Math.floor(this.baseMaxHealth + maxHealth);
     }
 
     get strength() {

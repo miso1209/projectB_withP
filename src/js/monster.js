@@ -15,7 +15,7 @@ export default class Monster {
         // [정리] 몬스터는 장비를 안 끼고 있다는 전제 하에 만든 것 인데.. 음
         this.battleCharacters.forEach((c) => {
             if (c.id !== 0) {
-                const character = new Character(c.id, c.rank);
+                const character = new Character(c.id);
                 character.level = c.level;
     
                 result += character.totalPowerFigure;

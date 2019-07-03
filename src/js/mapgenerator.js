@@ -1,6 +1,9 @@
 import Stage  from "./stage";
 import path from 'path';
 import PropGenerator from "./propgenerator";
+import FloorRecipes from "./floorrecipes";
+import FloorMonsters from "./floormonsters";
+import FloorChests from "./floormonsters";
 
 const MAP_DATA = {
     EMPTY: '   ',
@@ -239,7 +242,7 @@ export default class MapGenerator {
                             type: "archer",
                             pos: {x:45, y:70}
                         });
-                    } else { 
+                    } else if(Math.random() <= FloorMonsters[this.currentFloor].probability) {
                         const monster = this.propGenerator.createMonster(this.currentFloor, true);
                         stage.addMonster(monster, {
                             type: "monster",
@@ -273,19 +276,20 @@ export default class MapGenerator {
                     await stage.$load(stageName);
                     stage.setTags(this.tags);
 
-                    if (Math.random() <= 0.5) {
+                    if (Math.random() <= FloorRecipes[this.currentFloor].probability) {
                         let recipe = this.propGenerator.createRecipe(this.currentFloor);
-                        stage.addProp(recipe.tileData);
+                        stage.addProp(recipe);
                     }
-                    if (Math.random() <= 0.5) {
+                    if (Math.random() <= FloorChests[this.currentFloor].probability) {
                         let chest = this.propGenerator.createChest(this.currentFloor);
                         stage.addProp(chest);
                     }
-
-                    const monster = this.propGenerator.createMonster(this.currentFloor);
-                    stage.addMonster(monster, {
-                        type: "monster"
-                    });
+                    if(Math.random() <= FloorMonsters[this.currentFloor].probability) {
+                        const monster = this.propGenerator.createMonster(this.currentFloor);
+                        stage.addMonster(monster, {
+                            type: "monster"
+                        });
+                    }
     
                     realMap[y][x] = stage;
                 } else if (this.map[y][x] === MAP_DATA.PASSAGE && ((this.map[y-1] && this.map[y-1][x] !== MAP_DATA.EMPTY && this.map[y-1][x] !== MAP_DATA.PASSAGE) || (this.map[y+1] && this.map[y+1][x] !== MAP_DATA.EMPTY && this.map[y+1][x] !== MAP_DATA.PASSAGE))) {
@@ -295,11 +299,11 @@ export default class MapGenerator {
                     await stage.$load(stageName);
                     stage.setTags(this.tags);
 
-                    if (Math.random() <= 0.15) {
+                    if (Math.random() <= FloorRecipes[this.currentFloor].probability) {
                         let recipe = this.propGenerator.createRecipe(this.currentFloor);
-                        stage.addProp(recipe.tileData);
+                        stage.addProp(recipe);
                     }
-                    if (Math.random() <= 0.15) {
+                    if (Math.random() <= FloorChests[this.currentFloor].probability) {
                         let chest = this.propGenerator.createChest(this.currentFloor);
                         stage.addProp(chest);
                     }
@@ -312,11 +316,11 @@ export default class MapGenerator {
                     await stage.$load(stageName);
                     stage.setTags(this.tags);
 
-                    if (Math.random() <= 0.15) {
+                    if (Math.random() <= FloorRecipes[this.currentFloor].probability) {
                         let recipe = this.propGenerator.createRecipe(this.currentFloor);
-                        stage.addProp(recipe.tileData);
+                        stage.addProp(recipe);
                     }
-                    if (Math.random() <= 0.15) {
+                    if (Math.random() <= FloorChests[this.currentFloor].probability) {
                         let chest = this.propGenerator.createChest(this.currentFloor);
                         stage.addProp(chest);
                     }
