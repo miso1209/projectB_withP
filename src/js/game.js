@@ -172,7 +172,7 @@ export default class Game extends EventEmitter {
 
             this.storage.data.location = {};
 
-            this.storage.data.inventory = { 3001: 1, 3004: 1, 1004: 5, 2001: 5 };
+            this.storage.data.inventory = { 5001: 1, 5004: 1, 4001: 10 };
 
             // 필드에 보이는 캐릭터
             this.storage.data.controlCharacter = 1;

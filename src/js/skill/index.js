@@ -45,40 +45,40 @@ Skill.Register("runaway", (...arg) => {
 Skill.Register("slash", (...arg) => { 
     return new Slash(...arg); 
 });
-Skill.Register("shieldAttack", (...arg) => {
+Skill.Register("shieldattack", (...arg) => {
     return new ShieldAttack(...arg);
 });
-Skill.Register("doubleAttack", (...arg) => {
+Skill.Register("doubleattack", (...arg) => {
     return new DouobleAttack(...arg);
 });
 
 // Wizard
-Skill.Register("fireBolt", (...arg) => { 
+Skill.Register("firebolt", (...arg) => { 
     return new FireBolt(...arg); 
 });
-Skill.Register("fireCape", (...arg) => { 
+Skill.Register("firecape", (...arg) => { 
     return new FireCape(...arg); 
 });
-Skill.Register("fireRain", (...arg) => { 
+Skill.Register("firerain", (...arg) => { 
     return new FireRain(...arg); 
 });
 
 // Archer
-Skill.Register("shotArrow", (...arg) => { 
+Skill.Register("shotarrow", (...arg) => { 
     return new ShotArrow(...arg); 
 });
-Skill.Register("criticalAttack", (...arg) => { 
+Skill.Register("criticalattack", (...arg) => { 
     return new CriticalAttack(...arg); 
 });
-Skill.Register("arrowOfTracker", (...arg) => { 
+Skill.Register("arrowoftracker", (...arg) => { 
     return new ArrowOfTracker(...arg); 
 });
 
 // Healer
-Skill.Register("wandAttack", (...arg) => {
+Skill.Register("wandattack", (...arg) => {
     return new WandAttack(...arg);
 });
-Skill.Register("antiPower", (...arg) => {
+Skill.Register("antipower", (...arg) => {
     return new AntiPower(...arg);
 });
 Skill.Register("heal", (...arg) => {

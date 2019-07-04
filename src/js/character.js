@@ -23,7 +23,6 @@ export default class Character {
         this.plusStamina = 0;
         this.plusSpeed = 0;
         this.plusCritical = 0;
-        this.plusRegist = 0;
         this.plusAttack = 0;
         this.plusMagic = 0;
         this.plusArmor = 0;
@@ -41,7 +40,6 @@ export default class Character {
         this.simulatedStamina = 0;
         this.simulatedSpeed = 0;
         this.simulatedCritical = 0;
-        this.simulatedRegist = 0;
         this.simulatedAttack = 0;
         this.simulatedMagic = 0;
         this.simulatedArmor = 0;
@@ -109,10 +107,6 @@ export default class Character {
         return this.getParam('critical', this.level);
     }
 
-    get baseRegist() {
-        return this.getParam('regist', this.level);
-    }
-
     get maxHealth() {
         // 소숫점의 체력은 버린다.
         const maxHealth = this.simulatedMaxHealth?this.simulatedMaxHealth:this.plusMaxHealth;
@@ -128,12 +122,6 @@ export default class Character {
     get agility() {
         const agility = this.simulatedAgility?this.simulatedAgility:this.plusAgility;
         return this.baseAgility + agility;
-    }
-
-    // REG 저항력을 어디에 사용해야 할까.. 꼭 있어야 할까?
-    get regist() {
-        const regist = this.simulatedRegist?this.simulatedRegist:this.plusRegist;
-        return this.baseRegist + regist;
     }
 
     get intellect() {
@@ -320,9 +308,6 @@ export default class Character {
             case "critical":
                 this.plusCritical += Number(option.args[0]);
                 break;
-            case "regist":
-                this.plusRegist += Number(option.args[0]);
-                break;
         }
 
         this.refreshSimulationData();
@@ -364,9 +349,6 @@ export default class Character {
                 break;
             case "critical":
                 this.plusCritical -= Number(option.args[0]);
-                break;
-            case "regist":
-                this.plusRegist -= Number(option.args[0]);
                 break;
         }
 
@@ -480,7 +462,6 @@ export default class Character {
         this.simulatedStamina = this.plusStamina;
         this.simulatedSpeed = this.plusSpeed;
         this.simulatedCritical = this.plusCritical;
-        this.simulatedRegist = this.plusRegist;
         this.simulatedAttack = this.plusAttack;
         this.simulatedMagic = this.plusMagic;
         this.simulatedArmor = this.plusArmor;
@@ -525,9 +506,6 @@ export default class Character {
             case "critical":
                 this.simulatedCritical += Number(option.args[0]);
                 break;
-            case "regist":
-                this.simulatedRegist += Number(option.args[0]);
-                break;
         }
     }
 
@@ -565,9 +543,6 @@ export default class Character {
                 break;
             case "critical":
                 this.simulatedCritical -= Number(option.args[0]);
-                break;
-            case "regist":
-                this.simulatedRegist -= Number(option.args[0]);
                 break;
         }
     }

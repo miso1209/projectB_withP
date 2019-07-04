@@ -7,19 +7,19 @@
             { "text": "작업용 테이블 찾기", "event": "addtag", "args":["worktable"] }
         ],
         "rewards": [
-            { "text": "약초 1",  "script": "addItem(2001, 1)" },
+            { "text": "약초 x 10",  "script": "addItem(4001, 1)" },
             { "script": "_playCutscene(2)" }
         ]
     },
     "2": {
         "id": 2,
         "title": "포션제작",
-        "description" : "쓰러져 있는 모험가들을 구출하기 위해 소형 회복약을 제작하자!.",
+        "description" : "쓰러져 있는 모험가들을 구출하기 위해 체력포션(소)을 제작하자!.",
         "objectives": [
-            { "text": "소형 회복약 만들기 ", "event": "additem", "args":[1001, 1] }
+            { "text": "체력포션(소) 만들기 ", "event": "additem", "args":[3001, 1] }
         ],
         "rewards": [
-            { "text": "소형 회복약 x 5",  "script": "addItem(1001, 5)" }
+            { "text": "체력포션(소) x 5",  "script": "addItem(3001, 5)" }
         ]
     }
 }

@@ -49,7 +49,7 @@ export default class Warrior extends PropBase {
 
     touch(game) {
         if (!this.alreadyParty) {
-            const potionCount = game.player.inventory.getCount(1001);
+            const potionCount = game.player.inventory.getCount(3001);
             const healedDialog = async () => {
                 game.exploreMode.interactive = false;
                 game.ui.hideMenu();
@@ -98,7 +98,7 @@ export default class Warrior extends PropBase {
                     game.ui.hideMenu();
                     await game.$fadeOut(1);
 
-                    game.player.inventory.deleteItem(1001, 1);
+                    game.player.inventory.deleteItem(3001, 1);
                     game.addTag("healWarrior");
                     this.healed = true;
                     this.tileTexture.texture = PIXI.Texture.fromFrame("healer_warrior_alive.png");

@@ -9,7 +9,7 @@ export default class Tab {
             {category: 'accessory', x:11, y:3},
             {category: 'material', x:11, y:4},
             {category: 'consumables', x:5, y:3},
-            {category: 'valuables', x:3, y:2}
+            {category: 'recipes', x:3, y:2}
         ];
 
         const tabButton = document.createElement('li');
