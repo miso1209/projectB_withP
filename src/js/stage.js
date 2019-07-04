@@ -723,6 +723,8 @@ export default class Stage extends PIXI.Container {
         obj.currentPath = null;
         obj.currentTarget = null;
         obj.currentTargetTile = null;
+        obj.isMoving = false;
+        obj.animate('idle',true);
         obj.currentPathStep = 0;
         this.moveEngine.removeMovable(obj);
     }

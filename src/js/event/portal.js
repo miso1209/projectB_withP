@@ -92,12 +92,44 @@ export class Portal3 {
         this.to = src.target;
         this.forceStop = true;
     }
+    /*
+            game.ui.showConfirmModal("Lv.1 마법사를 파티로 영입 하시겠습니까?", true, (confirmed) => {
+                if (confirmed === "ok") {
+                    const t = async () => {
+                        game.addCharacter(5, { level: 1, exp: 0, equips: {}});
+                        game.addTag("haswizard");
+                        game.exploreMode.interactive = false;
+                        game.ui.hideMenu();
+                        await game.$fadeOut(1);
+                        this.delete();
+                        await game.$fadeIn(1);
+                        game.ui.showMenu();
+                        game.exploreMode.interactive = true;
+                    };
+
+                    t();
+                }
+            });
+    */
     onEvent(game) {
         // 월드 진입컷신을 만들어서 넣어준다.
         game.stage.stopObject(game.stage.player);
         const $t = async () => {
-            await game.$leaveStage(this.from)
-            await game.$enterStageIns(this.targetStage, this.to);
+            if (this.targetStage.name === "castle_boss-middle" || this.targetStage.name === "castle_boss-final") {
+                game.ui.showConfirmModal("보스 스테이지에 입장 하시겠습니까?", true, (confirmed) => {
+                    if (confirmed === "ok") {
+                        const t = async () => {
+                            await game.$leaveStage(this.from)
+                            await game.$enterStageIns(this.targetStage, this.to);
+                        };
+    
+                        t();
+                    }
+                });
+            } else {
+                await game.$leaveStage(this.from)
+                await game.$enterStageIns(this.targetStage, this.to);
+            }
         };
 
         $t();

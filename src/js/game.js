@@ -171,6 +171,7 @@ export default class Game extends EventEmitter {
             this.storage.data.cutscene = 1;
 
             this.storage.data.location = {};
+            this.storage.data.gold = 10;
 
             this.storage.data.inventory = { 5001: 1, 5004: 1, 4001: 10 };
 

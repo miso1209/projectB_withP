@@ -56,12 +56,25 @@ export default class Party {
     }
 
     set(index, character) {
-        const characterIndex = this.members.indexOf(character);
-        if (characterIndex>=0) {
-            this.members[characterIndex] = null;
-            this.members[index] = character;
+        const copyMembers = [].concat(this.members);
+        const characterIndex = copyMembers.indexOf(character);
+
+        if (characterIndex >= 0) {
+            copyMembers[characterIndex] = null;
+            copyMembers[index] = character;
         } else {
-            this.members[index] = character;
+            copyMembers[index] = character;
+        }
+        // --------------------------------------------------------
+        let partyHeath = 0;
+        copyMembers.forEach((member) => {
+            if (member) {
+                partyHeath += member.health;
+            }
+        });
+
+        if (partyHeath > 0) {
+            this.members = copyMembers;
         }
     }
 
