@@ -54,6 +54,8 @@
 
     ["assets/sprite/miluda/miluda_atk_sw.json"],
     ["assets/sprite/miluda/miluda_atk_nw.json"],
+    ["assets/sprite/miluda/miluda_walk_sw.json"],
+    ["assets/sprite/miluda/miluda_walk_nw.json"],
     ["assets/sprite/miluda/miluda_idle_sw.json"],
     ["assets/sprite/miluda/miluda_idle_nw.json"],
 
