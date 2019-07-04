@@ -275,7 +275,7 @@ export default class Character {
                     result = false;
                 }
                 break;
-            case "healthRecovery":
+            case "healthrecovery":
                 if (this.health > 0) {
                     this.health += Math.round(this.maxHealth * Number(option.args[0]));
                     this.health = Math.min(this.maxHealth, this.health);
@@ -286,7 +286,7 @@ export default class Character {
             case "recovery":
                 this.health = this.maxHealth;
                 break;
-            case "maxHealth":
+            case "maxhealth":
                 this.plusMaxHealth += Number(option.args[0]);
                 this.health = Math.min(this.maxHealth, this.health);
                 break;
@@ -328,7 +328,7 @@ export default class Character {
                 break;
             case "health":
                 break;
-            case "maxHealth":
+            case "maxhealth":
                 this.plusMaxHealth -= Number(option.args[0]);
                 this.health = Math.max(0, this.health);
                 break;
@@ -485,7 +485,7 @@ export default class Character {
                 break;
             case "health":
                 break;
-            case "maxHealth":
+            case "maxhealth":
                 this.simulatedMaxHealth += Number(option.args[0]);
                 break;
             case "strength":
@@ -523,7 +523,7 @@ export default class Character {
                 break;
             case "health":
                 break;
-            case "maxHealth":
+            case "maxhealth":
                 this.simulatedMaxHealth -= Number(option.args[0]);
                 break;
             case "strength":
