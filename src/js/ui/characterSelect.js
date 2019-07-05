@@ -7,7 +7,7 @@ import Button from "./component/button";
 import Doll from "./component/doll";
 
 export default class CharacterSelect extends Panel {
-  constructor(pane, inputs, result) {
+  constructor(pane, inputs, avatar, result) {
     super();
 
     this.pane = pane;
@@ -28,7 +28,7 @@ export default class CharacterSelect extends Panel {
     modal.dom.classList.add('characterSelect');
 
     this.dom = modal.dom;
-    this.avatar = null;
+    this.avatar = avatar;
 
     // 페이징버튼
     this.prevButton = new Button('', 'paging');
@@ -59,7 +59,15 @@ export default class CharacterSelect extends Panel {
     this.portrait.style.display = 'block';
     this.portrait.style.margin = '30px auto 10px';
 
-    this.playerClass = new MakeDom('div', 'ico-class');
+    this.changeAvatarBtn = new Button('', 'iconBtn');
+    this.changeAvatarBtn.dom.classList.add('ico-avatar');
+    this.changeAvatarBtn.dom.style.top = '60px';
+    this.changeAvatarBtn.moveToLeft(40);
+    
+    this.changeAvatarBtn.dom.addEventListener('click', (ok) => {
+      this.setMainAvatar();
+    });
+
     this.recoveryBtn = new Button('', 'iconBtn');
     this.recoveryBtn.dom.classList.add('ico-life');
     this.recoveryBtn.dom.style.top = '60px';
@@ -90,14 +98,15 @@ export default class CharacterSelect extends Panel {
     moreButton.moveToBottom(15);
     moreButton.dom.addEventListener('click', (ok) => {
       this.hideModal();
-      return this.callback(this.selected);
+      return this.callback('characterDetail', this.selected);
     });
 
     titleWrap.appendChild(this.level);
     titleWrap.appendChild(this.descClass);
+
     infoWrap.appendChild(this.portrait);
     infoWrap.appendChild(this.recoveryBtn.dom);
-    // infoWrap.appendChild(this.playerClass);
+    infoWrap.appendChild(this.changeAvatarBtn.dom);
 
     characterDesc.appendChild(titleWrap);
     characterDesc.appendChild(infoWrap);
@@ -109,20 +118,30 @@ export default class CharacterSelect extends Panel {
     const characterListWrap = new MakeDom('div', 'characterListWrap');
     characterListWrap.classList.add('flex-left');
 
-    const characterList = new MakeDom('div', 'characterList');
-    characterList.style.width = '410px';
+    this.characterList = new MakeDom('div', 'characterList');
+    this.characterList.style.width = '410px';
 
+    // paging
+    characterListWrap.appendChild(this.prevButton.dom);
+    characterListWrap.appendChild(this.nextButton.dom);
+    characterListWrap.appendChild(this.characterList);
+
+    wrap.appendChild(characterListWrap);
+    wrap.appendChild(characterDesc);
+
+    pane.appendChild(this.dom);
+
+    this.createCharacters();
+  }
+
+  createCharacters(){
     let selectedDoll = null;
     let index = 0;
     let n = 0;
-    
-    console.log(inputs);
 
     // 캐릭터 데이터가 6개 넘어갈 때 - 처리는 페이징 해야하는데 그러려면. .
-    inputs.forEach(input => {
+    this.inputs.forEach(input => {
       let doll = new Doll(input);
-
-      
       if (index === 0) {
         doll.dom.classList.add('active');
         selectedDoll = doll.dom;
@@ -148,18 +167,8 @@ export default class CharacterSelect extends Panel {
       });
 
       doll.dom.addEventListener('click', this.select.bind(this, input));
-      characterList.appendChild(doll.dom);
+      this.characterList.appendChild(doll.dom);
     });
-
-    // paging
-    characterListWrap.appendChild(this.prevButton.dom);
-    characterListWrap.appendChild(this.nextButton.dom);
-    characterListWrap.appendChild(characterList);
-
-    wrap.appendChild(characterListWrap);
-    wrap.appendChild(characterDesc);
-
-    pane.appendChild(this.dom);
   }
 
   select(current) {
@@ -170,7 +179,6 @@ export default class CharacterSelect extends Panel {
     this.descName.innerText = current.name;
     this.portrait.src = path + current.data.portrait;
     this.level.innerText = 'Lv.' + current.level;
-    // this.playerClass.innerText = current.data.class;
 
     this.updateStatus(current);
   }
@@ -193,8 +201,20 @@ export default class CharacterSelect extends Panel {
     this.hp.update(current.health, current.maxHealth);
     this.exp.update(current.exp, current.maxexp);
     this.updateHealth();
+    this.checkAvatar();
   }
 
+  checkAvatar() {
+    console.log(this.avatar, this.selected.id);
+
+    if (this.selected.id === `${this.avatar}`) {
+      console.log('메인캐릭터 왕관아이콘으로 넣어주세욤.');
+      this.changeAvatarBtn.dom.classList.add('active');
+    } else {
+      console.log('얘를 메인캐릭터로 바꿀수 잇는 버튼');
+      this.changeAvatarBtn.dom.classList.remove('active');
+    }
+  }
   createConsumablesItem(result) {
     this.invenItems.innerHTML = '';
 
@@ -225,10 +245,21 @@ export default class CharacterSelect extends Panel {
     }
   }
 
+  setMainAvatar() {
+    this.avatar = this.selected.id;
+
+    console.log('avatar - ' + this.avatar);
+
+    this.callback('setMainAvatar', this.avatar);
+    this.checkAvatar();
+  }
+
   hideModal() {
     this.pane.parentNode.removeChild(this.pane);
   }
 }
+
+
 
 class StatusBar {
   constructor(currentValue, maxValue) {

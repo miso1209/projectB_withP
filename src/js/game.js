@@ -651,7 +651,6 @@ export default class Game extends EventEmitter {
                 this.storage.updateInventory(this.player.inventory.save());
                 this.player.inventory.clearDirty();
             }
-           
         }
     }
 

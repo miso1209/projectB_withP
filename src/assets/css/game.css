@@ -228,6 +228,13 @@ body.battle .gnbContainer.battleMode {
   transition: all 0.3s;
 }
 
+.iconBtn:hover, .iconBtn:active, .iconBtn.active{
+  border: 1px solid red;
+}
+
+.ico-avatar{
+  background: url('~assets/items/items.png') no-repeat -576px -96px;
+}
 .ico-life {
   background: url('~assets/items/items.png') no-repeat -576px -96px;
 }
@@ -264,7 +271,6 @@ body.battle .gnbContainer.battleMode {
 
 .ico-class {
   display: inline-block;
-
   width: 32px;
   height: 32px;
   

@@ -22,9 +22,6 @@ export default class DomUI extends EventEmitter {
         this.screenWidth = this.gamePane.screenWidth;
         this.screenHeight = this.gamePane.screenHeight;
         
-        // let header = document.querySelector('.project_header').clientHeight;
-        // console.dir(this.gamePane.offsetTop);
-        
         // theatreUI 를 설정한다
         this.theaterUI = new MakeDom('div');
         this.theaterUI.id = 'theater';
@@ -288,10 +285,20 @@ export default class DomUI extends EventEmitter {
     }
 
     showCharacterSelect(inputs) {
+        const avatar = this.player.controlCharacter;
         const pane = this.createContainer();
-        const characterSelect = new CharacterSelect(pane, inputs, (info) => {
-            this.showCharacterDatail(info);
+        const characterSelect = new CharacterSelect(pane, inputs, avatar, (result, option) => {
+            if(result === 'characterDetail') {
+                this.showCharacterDatail(option);
+            } else if(result === 'setMainAvatar'){
+                console.log('setmainavatar');
+
+                this.emit('setMainAvatar', option);
+                characterSelect.avatar = this.player.controlCharacter;
+                characterSelect.checkAvatar();
+            }
         });
+        
         
         // consumables
         this.emit('playerInvenData', {category: 'consumables'});

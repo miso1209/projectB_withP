@@ -164,15 +164,14 @@ export default class PartyUI extends Panel {
 
     if(this.selected !== null) {
       this.selected.character = data;
-
-      // hp 0인 캐릭터를 파티에 넣을 때 남은 멤버의 hp의 합이 0이 되면 파티 수정 안되도록 막음..
-      if(this.selected.character.health === 0) {
-        console.log('사망한 캐릭터! ');
-        return;
-      }
       
       this.members.forEach(member => {
         if (member.x === this.selected.x && member.y === this.selected.y) {
+          // hp 0인 캐릭터를 파티에 넣을 때 남은 멤버의 hp의 합이 0이 되면 파티 수정 안되도록 막음..
+          if(this.selected.character.health === 0) {
+            console.log('사망한 캐릭터! ');
+            return;
+          }
           member = this.selected;
         }
       });
@@ -181,8 +180,6 @@ export default class PartyUI extends Panel {
 
       this.result(index, this.selected.character);
       this.updateMembers();
-    } else {
-      console.log('빈칸에..');
     }
   }
   
