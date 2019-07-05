@@ -124,12 +124,11 @@ export default class CharacterDetail extends Panel {
     
     // 스크롤영역 사이즈
     let scrollHeight = '200px';
-    let scrollWidth = '340px';
+    let scrollWidth = '330px';
 
     const scrollView = document.createElement('div');
     scrollView.classList.add('scrollView');
     scrollView.style.height = scrollHeight;
-    scrollView.style.width = scrollWidth;
 
     const scrollBlind = document.createElement('div');
     scrollBlind.className = 'scrollBlind';

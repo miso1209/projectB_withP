@@ -17,7 +17,7 @@ export default class Modal extends Panel {
         this.closeBtn = closeBtn.dom;
         this.closeBtn.style.display = 'none';
         this.closeBtn.addEventListener('click', this.closeModal.bind(this));
-
+        
         this.dom.appendChild(this.closeBtn);
     }
     
@@ -42,13 +42,13 @@ export default class Modal extends Panel {
     
     addTitle(text) {
         const title = document.createElement('h1');
-        title.innerText = text;
         title.className = 'title';
+        title.innerText = text;
         this.dom.appendChild(title);
     
         this.subTitle = document.createElement('h2');
-        this.subTitle.innerText = text;
         this.subTitle.className = 'sub-title';
+        this.subTitle.innerText = text;
         this.dom.appendChild(this.subTitle);
         this.subTitle.style.display = 'none';
     }

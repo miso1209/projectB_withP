@@ -28,6 +28,7 @@ export default class CharacterSelect extends Panel {
     modal.dom.classList.add('characterSelect');
 
     this.dom = modal.dom;
+    this.avatar = null;
 
     // 페이징버튼
     this.prevButton = new Button('', 'paging');
@@ -43,15 +44,13 @@ export default class CharacterSelect extends Panel {
     this.nextButton.dom.style.top = '50%';
 
     // 모달 내부 컨텐츠 영역
-    const wrap = document.createElement('div');
+    const wrap = new MakeDom('div', 'flexWrap')
     wrap.classList.add('contents');
-    wrap.classList.add('flexWrap');
     wrap.style.top = '70px';
     this.dom.appendChild(wrap);
 
-    // 캐릭터 설명 - characterDesc
-    const characterDesc = new MakeDom('div', 'descWrap');
-    characterDesc.classList.add('characterDesc');
+    // 캐릭터 info - characterDesc
+    const characterDesc = new MakeDom('div', 'characterDesc');
     characterDesc.classList.add('flex-right');
 
     const infoWrap = new MakeDom('div', 'infoWrap');
@@ -61,9 +60,6 @@ export default class CharacterSelect extends Panel {
     this.portrait.style.margin = '30px auto 10px';
 
     this.playerClass = new MakeDom('div', 'ico-class');
-    // this.characterClass.moveToRight(40);
-
-    // 현재 hp 상태 아이콘 -> TODO : 클래스아이콘으로 변경하자.
     this.recoveryBtn = new Button('', 'iconBtn');
     this.recoveryBtn.dom.classList.add('ico-life');
     this.recoveryBtn.dom.style.top = '60px';
@@ -119,12 +115,14 @@ export default class CharacterSelect extends Panel {
     let selectedDoll = null;
     let index = 0;
     let n = 0;
+    
+    console.log(inputs);
 
     // 캐릭터 데이터가 6개 넘어갈 때 - 처리는 페이징 해야하는데 그러려면. .
     inputs.forEach(input => {
       let doll = new Doll(input);
-      // doll.dom.classList.add('doll');
 
+      
       if (index === 0) {
         doll.dom.classList.add('active');
         selectedDoll = doll.dom;
@@ -175,7 +173,6 @@ export default class CharacterSelect extends Panel {
     // this.playerClass.innerText = current.data.class;
 
     this.updateStatus(current);
-    // this.updateHealth();
   }
 
   updateHealth() {

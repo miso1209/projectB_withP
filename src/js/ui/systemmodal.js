@@ -11,12 +11,11 @@ export default class SystemModal extends Panel {
         const confirmModal = new Modal(this.pane, width, height);
         confirmModal.dom.id = 'SYSTEM';
     
-        const descText = document.createElement('p');
-        descText.className = 'contents';
-        descText.innerText = text;
-        confirmModal.dom.appendChild(descText);
+        this.contents = document.createElement('p',);
+        this.contents.className = 'contents';
+        this.contents.innerText = text;
+        confirmModal.dom.appendChild(this.contents);
     
-        this.contents = descText;
         this.callback = callback;
         this.cancelable = cancelable;
 
@@ -27,8 +26,9 @@ export default class SystemModal extends Panel {
 
         if(this.cancelable) {
             okButton.moveToLeft(20);
-            cancelButton.moveToRight(20);
             okButton.moveToBottom(20);
+
+            cancelButton.moveToRight(20);
             cancelButton.moveToBottom(20);
 
             confirmModal.dom.appendChild(cancelButton.dom);

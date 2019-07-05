@@ -7,8 +7,8 @@ export default class Tab {
             {category: 'weapon', x:19, y:9},
             {category: 'armor', x:4, y:12},
             {category: 'accessory', x:11, y:3},
-            {category: 'material', x:11, y:4},
-            {category: 'consumables', x:5, y:3},
+            {category: 'material', x:5, y:3},
+            {category: 'consumables', x:10, y:0},
             {category: 'recipes', x:3, y:2}
         ];
 

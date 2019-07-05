@@ -4,6 +4,8 @@ import MakeDom from "./component/makedom";
 import Button from "./component/button";
 import Doll from "./component/doll";
 import ListBox from "./component/listbox";
+import SystemModal from "./systemmodal";
+
 
 const PARTY_SIZE = 6;
 
@@ -19,6 +21,7 @@ export default class PartyUI extends Panel {
     this.selected = null; // 리스트에서 선택된 캐릭터
 
     this.members = []; 
+  
 
     const modal = new Modal(pane, 800, 460, null);
     this.dom = modal.dom;
@@ -86,14 +89,16 @@ export default class PartyUI extends Panel {
 
   initList(){
     // 캐릭터 리스트 
-    this.list = new ListBox(280, 260, this.select.bind(this));
+    this.list = new ListBox(270, 200, this.select.bind(this));
     this.list.dom.style.top = '100px';
     this.ownedCharacters.appendChild(this.list.dom);
     this.list.update(this.inputs, 'character');
   }
-  
 
   updateMembers(){
+    console.log('updateMembers');
+
+    let totalhealth = 0;
     let selectedDoll = null;
 
     this.totaldps.innerText = `${this.party.totalPowerFigure}`;
@@ -107,7 +112,13 @@ export default class PartyUI extends Panel {
       };
     }
 
+    
     this.members.forEach(member => {
+
+      if(member.character !== null) {
+        totalhealth+=member.character.health;
+      }
+
       let doll = new Doll(member.character);
 
       if(doll.dom.hasChildNodes('img')) {
@@ -121,25 +132,45 @@ export default class PartyUI extends Panel {
           selectedDoll.classList.remove('active');
 
           if (selectedDoll.classList.contains('isCrew')) {
+            // 파티멤버 뺄 때-
+            if(member.character) {
+              totalhealth -= member.character.health;
+            }
+
+            console.log('totalhealth '+ totalhealth);
+
+            if(totalhealth < 1) {
+              console.log('총 hp가 0이 됨!!! ');
+              return;
+            }
+
             doll.dom.innerHTML = '';
             doll.dom.classList.remove('isCrew');
             doll.dom.classList.add('empty');
+
             member.character = null;
           }
         }
-
         doll.dom.classList.add('active');
         selectedDoll = doll.dom;
       });
 
       doll.dom.addEventListener('click', this.compose.bind(this, member));
     });
+    console.log('totalhealth '+ totalhealth);
   }
 
   select(data) {
+
     if(this.selected !== null) {
       this.selected.character = data;
 
+      // hp 0인 캐릭터를 파티에 넣을 때 남은 멤버의 hp의 합이 0이 되면 파티 수정 안되도록 막음..
+      if(this.selected.character.health === 0) {
+        console.log('사망한 캐릭터! ');
+        return;
+      }
+      
       this.members.forEach(member => {
         if (member.x === this.selected.x && member.y === this.selected.y) {
           member = this.selected;
@@ -147,13 +178,17 @@ export default class PartyUI extends Panel {
       });
 
       const index = this.selected.y * 3 + this.selected.x;
+
       this.result(index, this.selected.character);
       this.updateMembers();
+    } else {
+      console.log('빈칸에..');
     }
   }
   
   compose(member) {
     // 현재 선택된 멤버의 좌표를 저장-
+    // console.log('b');
     if(member.character === null) {
       const index = member.y * 3 + member.x;
       this.result(index, member.character);

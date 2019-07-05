@@ -70,18 +70,16 @@ export default class ListBox extends Panel {
       // IE 스크롤바 이슈 대응
       const scrollView = document.createElement('div');
       scrollView.className = 'scrollView';
+      scrollView.style.width = viewWidth;
   
       const scrollBlind = document.createElement('div');
       scrollBlind.className = 'scrollBlind';
       scrollBlind.style.height = viewHeight;
-      scrollBlind.style.width = viewWidth + '20px';
-  
-      scrollView.style.width = viewWidth;
   
       this.list = document.createElement('ul');
       this.list.classList.add('list-box');
+      this.list.classList.add('scrollbox');
       this.list.style.margin = '10px 0';
-      this.list.style.height = viewHeight;
       this.list.style.width = viewWidth;
   
       scrollView.appendChild(scrollBlind);
@@ -93,7 +91,6 @@ export default class ListBox extends Panel {
   
     update (listData, celltype) {
         if (listData.length < 1) {
-            // this.list.innerHTML = '해당 카테고리 레시피가 없습니다.';
             this.list.innerHTML = '데이터가 없습니다.';
             return;
         } else {

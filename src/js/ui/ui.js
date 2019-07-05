@@ -75,6 +75,8 @@ export default class DomUI extends EventEmitter {
         this.stageInfo = new MakeDom('div', 'stageInfo');
         this.gnbContainer.appendChild(this.stageInfo);
 
+
+        this.player = null;
         this.character = null;
         this.playerInvenData = null;
         this.characters = null;
@@ -277,7 +279,7 @@ export default class DomUI extends EventEmitter {
     showParty(inputs, partyinputs){
         const pane = this.createContainer();
         const party = new PartyUI(pane, inputs, partyinputs, (id, result) => {
-            if(id === 'buttoncallback') {
+            if (id === 'buttoncallback') {
                 this.emit(result);
             } else {
                 this.emit('setParty', id, result);

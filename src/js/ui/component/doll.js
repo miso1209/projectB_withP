@@ -1,24 +1,31 @@
 import MakeDom from "./makedom";
+import items from "../../items";
 
 export default class Doll {
-  constructor(item){ 
+  constructor(input){ 
     const doll = document.createElement('div');
     doll.classList.add('doll');
     
     this.profile = null;
+    this.avatar = null;
 
-    if (item === null) {
+    if (input === null) {
       doll.classList.add('empty');
     } else {
       doll.classList.add('isCrew');
 
       this.path = '/src/assets/sprite/';
-      this.path = `${this.path}${item.data.name}/${item.data.name}_idle_sw.png`;
+      this.path = `${this.path}${input.data.name}/${input.data.name}_idle_sw.png`;
       
       const infoWrap = new MakeDom('div', 'infoWrap');
-      const name = new MakeDom('p', 'name', item.data.displayname);
-      const stat = new MakeDom('p', 'stat', item.totalPowerFigure);
+      const name = new MakeDom('p', 'name', input.data.displayname);
+      const stat = new MakeDom('p', 'stat', input.totalPowerFigure);
+      
+      console.log(input);
 
+      const stat2 = new MakeDom('p', 'stat', `${input.health}`);
+      stat2.style.color = 'red';
+      
       const imgWrap = new MakeDom('p', 'imgWrap');
       const profileimg = new MakeDom('img', 'profileImg');
 
@@ -35,6 +42,8 @@ export default class Doll {
       doll.appendChild(this.stage);
       infoWrap.appendChild(name);
       infoWrap.appendChild(stat);
+      infoWrap.appendChild(stat2);
+
       doll.appendChild(imgWrap);
       doll.appendChild(infoWrap);
     }
