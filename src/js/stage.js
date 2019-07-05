@@ -746,6 +746,7 @@ export default class Stage extends PIXI.Container {
     }
 
     onObjMoveStepEnd(obj) {
+        console.log(obj);
         obj.currentPathStep--;
         obj.currentTarget = null;
         obj.currentTargetTile = null;
@@ -773,7 +774,9 @@ export default class Stage extends PIXI.Container {
         if (!pathEnded) {
             this.moveObjThrough(obj, obj.currentPath.slice(0, obj.currentPath.length-1));
         }
-        else {
+        else if(obj.newPath) {
+            this.moveObjThrough(obj, obj.newPath);
+        } else {
             // reached to the end of the path
             obj.isMoving = false;
             obj.changeVisualToDirection(obj.currentDirection);
