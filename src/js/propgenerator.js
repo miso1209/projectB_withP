@@ -36,7 +36,7 @@ export default class PropGenerator {
             }
 
             // Leader Extract, push monster to party
-            const itemData = this.getItem(items, floorData);
+            const itemData = this.getRarityItem(this.getFilteredItems(items, floorData));
             rewards.push({ id: itemData.id, owned: 1});
         }
 
@@ -72,7 +72,7 @@ export default class PropGenerator {
                 recipes.push(item);
             }
         }
-        const selectedItem = this.getItem(recipes, floorData);
+        const selectedItem = this.getRarityItem(this.getFilteredItems(recipes, floorData));
         
         return {
             type: "recipe",
@@ -117,7 +117,7 @@ export default class PropGenerator {
             }
 
             // Leader Extract, push monster to party
-            const monsterData = this.getItem(monsters, floorData);
+            const monsterData = this.getRarityItem(this.getFilteredItems(monsters, floorData));
             const monster = new Character(monsterData.character.id);
             monster.level = monsterData.character.baseLevel + Math.round(monsterData.character.levelUpPerFloor * (floor - 1));
             monster.level += isBoss?3:0; // Boss 일경우 3레벨 업.
@@ -155,8 +155,6 @@ export default class PropGenerator {
             monsterParty.exp = 1;
         }
 
-        console.log(monsterParty);
-
         return new Monster(monsterParty);
     }
 
@@ -164,7 +162,7 @@ export default class PropGenerator {
         return new Monster(StoryMonsters[type]);
     }
 
-    getItem(list, filter) {
+    getFilteredItems(list, filter) {
         const filteredList = [];
 
         for (let key in list) {
@@ -174,10 +172,8 @@ export default class PropGenerator {
                 filteredList.push(item);
             }
         }
-
-        const selectedItem = this.getRarityItem(filteredList);
         
-        return selectedItem;
+        return filteredList;
     }
 
     getRarityItem(list) {

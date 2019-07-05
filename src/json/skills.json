@@ -28,6 +28,19 @@
         ]
     },
 
+    "bleedslash": {
+        "name": "출혈베기",
+        "description": "깊게 베어 출혈을 유도한다.",
+        "skillExpressions": [
+            [
+                "attackCoefficient(0.6)"
+            ],
+            [
+                "attackCoefficient(0.2)"
+            ]
+        ]
+    },
+
     "shieldattack": {
         "name": "방패공격",
         "description": "방패로 공격한다.",

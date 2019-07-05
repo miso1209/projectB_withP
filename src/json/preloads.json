@@ -143,6 +143,7 @@
     ["assets/sprite/ghost/ghost_walk_nw.json"],
     
     ["assets/effects/portaleffect.json"],
+    ["assets/effects/bleed.json"],
     ["assets/effects/stun.json"],
     ["assets/effects/slash_1.json"],
     ["assets/effects/shotingeffect.json"],

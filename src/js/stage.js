@@ -626,6 +626,7 @@ export default class Stage extends PIXI.Container {
     }
 
     removeCharacter(character) {
+        this.stopObject(character);
         this.removeObjRefFromLocation(character);
     }
 
