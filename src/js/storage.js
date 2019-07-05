@@ -47,6 +47,11 @@ export default class Storage {
         }
     }
 
+    setControlCharacter(id) {
+        this.data.controlCharacter = id;
+        this.save();
+    }
+
     saveParty(party) {
         this.data.party = party;
         this.save();

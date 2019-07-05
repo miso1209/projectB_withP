@@ -54,6 +54,11 @@ export default class DevConsole {
         }
     }
 
+    setMainAvatar(...args) {
+        // 현재 퀘스트 상태를 출력한다
+        this.game.setMainAvatar(...args);
+    }
+
     addQuest(id) {
         this.game.addQuest(id);
     }

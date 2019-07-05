@@ -59,6 +59,13 @@
     ["assets/sprite/miluda/miluda_idle_sw.json"],
     ["assets/sprite/miluda/miluda_idle_nw.json"],
 
+    ["assets/sprite/assassin/assassin_atk_sw.json"],
+    ["assets/sprite/assassin/assassin_atk_nw.json"],
+    ["assets/sprite/assassin/assassin_walk_sw.json"],
+    ["assets/sprite/assassin/assassin_walk_nw.json"],
+    ["assets/sprite/assassin/assassin_idle_sw.json"],
+    ["assets/sprite/assassin/assassin_idle_nw.json"],
+
     ["assets/sprite/hector/hector_atk_nw.json"],
     ["assets/sprite/hector/hector_atk_sw.json"],
     ["assets/sprite/hector/hector_crouch_nw.json"],

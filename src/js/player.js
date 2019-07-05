@@ -33,6 +33,10 @@ export default class Player {
         }
     }
 
+    setControlCharacter(id) {
+        this.controlCharacter = id;
+    }
+
     hasTag(tag) {
         return this.tags.indexOf(tag) >= 0;
     }

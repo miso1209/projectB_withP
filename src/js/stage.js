@@ -625,6 +625,10 @@ export default class Stage extends PIXI.Container {
         this.arrangeDepthsFromLocation(character, x, y);
     }
 
+    removeCharacter(character) {
+        this.removeObjRefFromLocation(character);
+    }
+
     moveCharacter(character, x, y) {
         const target = this.getInteractiveTarget(x, y);
         const ignoreTarget = target ? true : false;

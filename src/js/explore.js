@@ -19,6 +19,16 @@ export default class Explore {
        this.game.stage.onTileSelected = this.onTileSelected.bind(this);
     }
 
+    changeController() {
+        const x = this.controller.gridX;
+        const y = this.controller.gridY;
+        const dir = this.controller.currentDir;
+        
+        this.game.stage.removeCharacter(this.controller);
+        this.controller = new AnimatedCharacter(this.game.player.controlCharacter);
+        this.controller.changeVisualToDirection(dir);
+        this.game.stage.addCharacter(this.controller, x, y);
+    }
    
     onGameClick(event) {
         // ui 가 클릭되었는지 확인

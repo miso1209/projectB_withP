@@ -666,6 +666,14 @@ export default class Game extends EventEmitter {
         return recipes;
     }
 
+    setMainAvatar(id) {
+        this.player.setControlCharacter(id);
+        this.storage.setControlCharacter(id);
+        if (this.currentMode.changeController) {
+            this.currentMode.changeController();
+        }
+    }
+
     // TODO : 나중에 밖으로 빼야 하나?
     getInvenotryData() {
         const sortByCategory = {};
