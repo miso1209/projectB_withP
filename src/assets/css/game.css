@@ -841,6 +841,12 @@ button.disabled span {
   pointer-events: none;
 }
 
+/* 레시피 리스트 */
+.recipeList.scrollView{
+  position: absolute;
+  left: 20px;
+}
+
 /* 
   아이템 조합 
 */

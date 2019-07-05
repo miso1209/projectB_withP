@@ -170,6 +170,7 @@ export default class RecipeUI extends Panel {
         this.tabs = [];
     
         this.list = new ListBox(320, 320, this.updateCombiner.bind(this));
+        this.list.dom.classList.add('recipeList');
         this.list.dom.style.top = '100px';
         this.dom.appendChild(this.list.dom);
     }
