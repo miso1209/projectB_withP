@@ -170,7 +170,7 @@ export default class Character {
 
     get attack() {
         const attack = this.simulatedAttack?this.simulatedAttack:this.plusAttack;
-        return Math.floor(this.strength * this.attackPotential * 10) + (attack);
+        return Math.floor(this.strength * this.attackPotential * 10) + Math.floor(this.agility * this.attackPotential * 2) + (attack);
     }
 
     get magic() {

@@ -725,6 +725,8 @@ export default class Stage extends PIXI.Container {
     stopObject(obj)  {
         this.highlightPath(obj.currentPath, null);
         obj.currentPath = null;
+        obj.path = undefined;
+        obj.newPath = undefined;
         obj.currentTarget = null;
         obj.currentTargetTile = null;
         obj.isMoving = false;
@@ -746,7 +748,6 @@ export default class Stage extends PIXI.Container {
     }
 
     onObjMoveStepEnd(obj) {
-        console.log(obj);
         obj.currentPathStep--;
         obj.currentTarget = null;
         obj.currentTargetTile = null;

@@ -131,7 +131,18 @@ export default class PropGenerator {
             monsterParty.gold += monsterData.gold + monsterData.goldPerLevel * monster.level;
             monsterParty.exp += monsterData.exp + monsterData.expPerLevel * monster.level;
 
-            // Item Rewards 추가해야할 것.
+            // Item Rewards
+           const rewardsItemList = [];
+           monsterData.rewards.forEach((itemId) => {
+               rewardsItemList.push(Items[itemId]);
+           });
+
+           const selectedItem = this.getRarityItem(rewardsItemList);
+           if (monsterParty.rewards[selectedItem.id]) {
+                monsterParty.rewards[selectedItem.id]++;
+           } else {
+                monsterParty.rewards[selectedItem.id] = 1;
+           }
         }
         monsterParty.gold = Math.round(monsterParty.gold);
         monsterParty.exp = Math.round(monsterParty.exp);
@@ -144,6 +155,8 @@ export default class PropGenerator {
             monsterParty.exp = 1;
         }
 
+        console.log(monsterParty);
+
         return new Monster(monsterParty);
     }
 
@@ -154,33 +167,42 @@ export default class PropGenerator {
     getItem(list, filter) {
         const filteredList = [];
 
-        let rarity = 0;
         for (let key in list) {
             const item = Object.assign({}, list[key]);
 
             if(item.score >= filter.boundedScore.min && item.score <= filter.boundedScore.max) {
-                rarity += item.rarity;
                 filteredList.push(item);
             }
         }
 
+        const selectedItem = this.getRarityItem(filteredList);
+        
+        return selectedItem;
+    }
+
+    getRarityItem(list) {
+        let rarity = 0;
+        list.forEach((item) => {
+            rarity += item.rarity;
+        });
+
         // 레어리티는 높을수록 잘 안나오는 것 이기 때문에 역수로 계산하며, 누적하면서 자신의 랜덤 인덱스를 구한다.
         let totalRarity = 0;
-        filteredList.forEach((item) => {
+        list.forEach((item) => {
             totalRarity += rarity / item.rarity;
             item.rarity = totalRarity;
         });
 
         let selectedItem = null;
         const randomIndex = Math.random() * totalRarity;
-        for (let item of filteredList) {
+        for (let item of list) {
             // 당첨 된 레시피를 최종 레시피로 선정한다.
             if (randomIndex <= item.rarity) {
                 selectedItem = item;
                 break;
             }
         }
-        
+
         return selectedItem;
     }
 }
