@@ -291,14 +291,11 @@ export default class DomUI extends EventEmitter {
             if(result === 'characterDetail') {
                 this.showCharacterDatail(option);
             } else if(result === 'setMainAvatar'){
-                console.log('setmainavatar');
-
                 this.emit('setMainAvatar', option);
                 characterSelect.avatar = this.player.controlCharacter;
                 characterSelect.checkAvatar();
             }
         });
-        
         
         // consumables
         this.emit('playerInvenData', {category: 'consumables'});
