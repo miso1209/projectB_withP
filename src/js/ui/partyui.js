@@ -97,7 +97,6 @@ export default class PartyUI extends Panel {
 
   updateMembers(){
     console.log('updateMembers');
-
     let totalhealth = 0;
     let selectedDoll = null;
 
@@ -111,10 +110,8 @@ export default class PartyUI extends Panel {
           y: Math.floor(i / 3)
       };
     }
-
     
     this.members.forEach(member => {
-
       if(member.character !== null) {
         totalhealth+=member.character.health;
       }
@@ -132,16 +129,13 @@ export default class PartyUI extends Panel {
           selectedDoll.classList.remove('active');
 
           if (selectedDoll.classList.contains('isCrew')) {
-            // 파티멤버 뺄 때-
+            
+            // 파티멤버 뺄 때-hp 체크
             if(member.character) {
+              if ((totalhealth - member.character.health) < 1) {
+                return;
+              } 
               totalhealth -= member.character.health;
-            }
-
-            console.log('totalhealth '+ totalhealth);
-
-            if(totalhealth < 1) {
-              console.log('총 hp가 0이 됨!!! ');
-              return;
             }
 
             doll.dom.innerHTML = '';
