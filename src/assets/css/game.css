@@ -254,40 +254,6 @@ body.battle .gnbContainer.battleMode {
   overflow: hidden;
 }
 
-.gnb-navi .nav {
-  position: static !important;
-  text-align: center;
-
-  width:140px;
-  height:30px;
-  
-  font-size: 16px;
-  color: #2a0a0f;
-  text-shadow: 0 0 0 transparent;
-  border: 1px solid #4e4a47;
-  box-shadow: inset 0 0 5px 0 rgba(0, 0, 0, 0.7);
-  /* background: url(~assets/ui/button.png) no-repeat #b2a9a0; */
-  background-color: #b2a9a0;
-  background-size: cover;
-
-  transition: all 0.3s;
-  pointer-events: auto;
-}
-
-.gnb-navi .nav:not(:first-child) {
-  margin-left: 6px;
-}
-
-.gnb-navi .nav:hover, 
-.gnb-navi .nav.active {
-  width:140px;
-  height:30px;
-  color: #dad0c7;
-  background: url(~assets/ui/button_active.png) no-repeat #2a0a0f;
-  background-color: #2a0a0f;
-  border: 1px solid #4e4a47;
-}
-
 /* display용 레이어 - 스테이지타이틀, 미니맵 좌표, 테두리 보더 */
 .container::after{
   content: '';
@@ -404,7 +370,6 @@ body.battle .gnbContainer.battleMode {
 .questWrap.open {
   right: 15px;
 }
-
 /* .gnb */
 
 /* icons */
@@ -458,15 +423,17 @@ body.battle .gnbContainer.battleMode {
   -webkit-animation-iteration-count: infinite;
   animation-iteration-count: infinite;
 }
-
+*.disabled {
+  opacity: 0.7;
+}
 
 button, .button{
   position: absolute;
-  width:140px;
-  height:30px;
+  width:118px;
+  height:44px;
   font-size: 16px;
   color: #2a0a0f;
-  background: url(~assets/ui/button.png) no-repeat;
+  background: url(~assets/ui/button2.png) no-repeat;
 }
 
 .modal .buttonWrap {
@@ -474,7 +441,7 @@ button, .button{
   bottom: 20px;
   left: 0;
   right: 0;
-  width: 80%;
+  width: 100%;
   margin: 0 auto;
   text-align: center;
 }
@@ -483,39 +450,38 @@ button, .button{
   margin-left: 10px;
 }
 
-.buttonWrap button, .buttonWrap .button, .buttonWrap .submit {
-  width: 100px;
-  height: 35px;
+.buttonWrap button, 
+.buttonWrap .button, 
+.buttonWrap .submit {
+  width: 118px;
+  height: 44px;
   background-size: cover;
 }
 
-*.disabled {
-  opacity: 0.7;
+.submit {
+  width: 118px;
+  height: 44px;
+  color: #fff;
+  background: url(~assets/ui/button_submit.png) no-repeat;
 }
 
-.button.submit {
-  background: url(~assets/ui/button.png) no-repeat;
-}
-
-.button.small {
+.button_small {
   width: 75px;
   height: 35px;
   background: url(~assets/ui/btn_1.png) no-repeat;
   background-size: contain;
   font-size: 14px;
-  text-shadow: 0px 1px 2px #111; 
 }
 
 .button:hover, .button:active {
   color: #fff;
-  background: url(~assets/ui/button_active.png) no-repeat;
-  opacity: 0.7;
+  background: url(~assets/ui/button_submit.png) no-repeat;
 }
 
-.button_small:hover, .button_small:active {
+/* .button_small:hover, .button_small:active {
   border-radius: 8px;
   box-shadow: 1px 1px 6px rgba(0,0,0,0.5);
-}
+} */
 
 .paging {
   background: url(~assets/ui/paging.png) no-repeat 0 0;
@@ -543,8 +509,8 @@ button, .button{
 } 
 .tabBtn {
   display: block;
-  width:118px;
-  height:50px;
+  width:114px;
+  height:52px;
   background: url(~assets/ui/tabBtn.png) no-repeat;
   margin-bottom: 5px;
   padding: 10px 10px;
@@ -577,8 +543,6 @@ button, .button{
 
 .tabPane .tabBtn:hover, 
 .tabPane .tabBtn.active {
-  width:118px;
-  height:50px;
   background: url(~assets/ui/tabBtn_active.png) no-repeat;
   margin-left: 45px;
 }
@@ -591,6 +555,39 @@ button, .button{
 .tabBtn:hover .img, 
 .tabBtn.active .img {
   opacity: 1;
+}
+
+
+.gnb-navi .nav {
+  position: static !important;
+  text-align: center;
+  width:140px;
+  height:30px;
+  font-size: 16px;
+  color: #2a0a0f;
+  text-shadow: 0 0 0 transparent;
+  /* border: 1px solid #4e4a47;
+  box-shadow: inset 0 0 5px 0 rgba(0, 0, 0, 0.7); */
+  background: url(~assets/ui/button.png) no-repeat #b2a9a0;
+  /* background-color: #b2a9a0; */
+  background-size: cover;
+
+  transition: all 0.3s;
+  pointer-events: auto;
+}
+
+.gnb-navi .nav:not(:first-child) {
+  margin-left: 6px;
+}
+
+.gnb-navi .nav:hover, 
+.gnb-navi .nav.active {
+  width:140px;
+  height:30px;
+  color: #dad0c7;
+  background: url(~assets/ui/button_active.png) no-repeat #2a0a0f;
+  background-color: #2a0a0f;
+  border: 1px solid #4e4a47;
 }
 
 
@@ -613,8 +610,8 @@ button, .button{
 .title {
   position: absolute;
   top: 20px;
-  left: 30px;
-  right: 30px;
+  left: 50px;
+  right: 50px;
 
   font-size: 20px;
   line-height: 1.2;
@@ -962,7 +959,7 @@ button, .button{
 }
 
 button.isAvailable, .isAvailable.button:active  {
-  background: url(~assets/ui/button.png) no-repeat;
+  background: url(~assets/ui/button2.png) no-repeat;
 }
 
 button.disabled {
