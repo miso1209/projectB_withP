@@ -7,8 +7,17 @@
   c_yellow : #ffd800;
   c_brown : #1f130a
   c_red : #fd6240
+
+  light-peach: #dad0c7;
+  greyish-brown: #4e4a47;
+  eggplant : #2a0a0f
+  b2a9a0
 */
 
+
+.avatar_health{
+  color: #fd6240;
+}
 /* Intro */
 .project_header {
   height: 200px;
@@ -86,29 +95,7 @@
 }
 /* .Intro */
 
-
-/* .gnbContainer {
-  position: absolute;
-  z-index: 999;
-  left: 0;
-  right: 0;
-  margin: 0 auto;
-  text-align: center;
-  transition: all 0.8s;
-  pointer-events: none;
-}  */
-
-
-/* 배틀모드 */
-body.battle .gnbContainer {
-  display: none;
-}
-
-body.battle .gnbContainer.battleMode {
-  display: block;
-}
-
-.uiContainer, .container, #theater, .gnbContainer {
+.uiContainer, .container, #theater {
   position: absolute;
   z-index: 999;
   top: 0;
@@ -129,8 +116,81 @@ body.battle .gnbContainer.battleMode {
 }
 
 .gnbContainer {
+  position: absolute;
+  left: 20px;
+  right: 0;
+  bottom: 0;
+  margin: 0 auto;
+  pointer-events: none;
+
+  width: 980px;
+  height: 90px;
+  background:url(~assets/ui/gnbBg.png) no-repeat;
+  background-size: 868px 90px;
+
   transition: all 0.8s;
 } 
+
+/* 배틀모드 */
+/* body.battle .gnbContainer {
+  display: none;
+}
+
+body.battle .gnbContainer.battleMode {
+  display: block;
+} */
+
+.gnbContainer::after{
+  display: block;
+  clear: both;
+  width: 100%;
+  height: 0;
+  content: '';
+}
+.gnb-profile {
+  float: left;
+  width: 216px;
+  height: 90px;
+}
+
+.gnb-navi {
+  float: left;
+  
+  margin: 47px 0 0 0;
+  padding: 3px;
+  background-color: #b2a9a0;
+  border: 1px solid #4e4a47;
+
+  pointer-events: none;
+}
+
+.gnb-navi .nav {
+  position: static !important;
+  text-align: center;
+
+  width:140px;
+  height:30px;
+  
+  font-size: 16px;
+  color: #2a0a0f;
+  text-shadow: 0 0 0 transparent;
+  background: url(~assets/ui/button.png) no-repeat;
+  
+  transition: all 0.3s;
+  pointer-events: auto;
+}
+
+.gnb-navi .nav:not(:first-child) {
+  margin-left: 6px;
+}
+
+.gnb-navi .nav:hover, 
+.gnb-navi .nav.active {
+  width:140px;
+  height:30px;
+  color: #dad0c7;
+  background: url(~assets/ui/button_active.png) no-repeat;
+}
 
 /* display용 레이어 - 스테이지타이틀, 미니맵 좌표, 테두리 보더 */
 .container::after{
@@ -207,14 +267,42 @@ body.battle .gnbContainer.battleMode {
 
 .minimap {
   position: absolute;
-  top: 35px;
-  right: 10px;
-  width: 160px;
-  height: 100px;
+  top: 40px;
+  right: 0;
   margin: 0 10px 10px 0;
-  background: url(~assets/ui/minimap.png) no-repeat;
+  background: url(~assets/ui/mapBg.png) no-repeat;
   background-size: contain;
   opacity: 0.6;
+}
+
+
+/* .minimap::before{
+  content: '';
+  position: absolute;
+  right: 10px;
+  top: 15px;
+  display: block;
+  width: 165px;
+  height: 26px;
+  background: url(~assets/ui/mapInfoBg.png) no-repeat;
+  border: 1px solid red;
+} */
+
+.stageInfo {
+  opacity: 0;
+  position: absolute;
+  width: 165px;
+  padding: 0 10px;
+  right: 10px;
+  top: 15px;
+
+  height: 26px;
+  text-align: center;
+  font-size: 12px;
+  line-height: 26px;
+  color: #fff;
+  box-sizing: border-box;
+  background: url(~assets/ui/mapInfoBg.png) no-repeat;
 }
 
 /* icons */
@@ -269,25 +357,8 @@ body.battle .gnbContainer.battleMode {
   animation-iteration-count: infinite;
 }
 
-.ico-class {
-  display: inline-block;
-  width: 32px;
-  height: 32px;
-  
-  overflow: hidden;
-  background: url('~assets/items/items.png') no-repeat -608px -96px;
-
-  border: 1px solid transparent;
-  border-radius: 5px;
-  transition: all 0.3s;
-}
-.infoWrap .ico-class {
-  position: absolute;
-  left: 40px;
-  top: 60px;
-}
-
 button, .button {
+  position: absolute;
   width: 118px;
   height: 44px;
   color: #fff;
@@ -296,23 +367,12 @@ button, .button {
 
   font-size: 14px;
   text-align: center;
-  text-shadow: 2px 2px 1px #111; 
   vertical-align: middle;
-  /* pointer-events: none; */
 }
 
 *.disabled {
-  /* cursor: not-allowed; */
   opacity: 0.7;
 }
-
-/* button span {
-  font-size: 14px;
-  line-height: 44px;
-  pointer-events: none;
-  text-shadow: 2px 2px 1px #111; 
-  vertical-align: middle;
-} */
 
 .submit {
   background: url(~assets/ui/button_s2.png) no-repeat;
@@ -327,12 +387,13 @@ button, .button {
   text-shadow: 0px 1px 2px #111; 
 }
 
-.buttonS span{
-  line-height: 35px;
+.button:hover, .button:active,
+button:hover, button:active,
+.buttonS:hover, .buttonS:active {
+  opacity: 0.7;
 }
 
 .buttonS:hover, .buttonS:active {
-  opacity: 0.7;
   border-radius: 8px;
   box-shadow: 1px 1px 6px rgba(0,0,0,0.5);
 }
@@ -414,41 +475,6 @@ button, .button {
 }
 
 
-/* gnb */
-.gnb {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  margin: 0 10px 15px;
-
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  text-align: right;
-
-  pointer-events: none;
-}
-
-.gnb .menu {
-  position: static !important;
-  text-align: center;
-
-  width:118px;
-  height:50px;
-
-  background: url(~assets/ui/tabBtn.png) no-repeat;
-  transition: all 0.3s;
-  pointer-events: auto;
-}
-
-.gnb .menu:hover, 
-.gnb .menu.active {
-  width:118px;
-  height:50px;
-  background: url(~assets/ui/tabBtn_active.png) no-repeat;
-}
-
 .zoomBtn {
   position: static !important;
   text-align: center;
@@ -493,21 +519,7 @@ button, .button {
   padding: 0 0 5px;
 }
 
-.stageInfo{
-  opacity: 0;
 
-  position: absolute;
-  width: 160px;
-  padding: 0 10px;
-
-  right: 20px;
-  top: 15px;
-
-  text-align: left;
-  font-size: 12px;
-  color: #fff;
-  box-sizing: border-box;
-}
 .stageTitle {
   display: inline-block;
   margin:15% auto;
@@ -1194,7 +1206,7 @@ button.disabled span {
     opacity: 0.3;
 }
 
-.doll {
+.avatar {
   position: relative;
   min-width: 25%;
   height: 140px;
@@ -1204,17 +1216,17 @@ button.disabled span {
   transition: border 0.3s;
 }
 
-.party .doll {
+.party .avatar {
   border-color: rgba(255,255,255,.3);
 }
 
-.doll:hover, .doll.active {
+.avatar:hover, .avatar.active {
   border: 2px solid #ffd800;
   box-shadow: 2px 2px 2px rgba(0,0,0,0.7);
   border-radius: 10px;
 }
 
-.doll .tilebg {
+.avatar .tilebg {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -1227,7 +1239,7 @@ button.disabled span {
   opacity: 0; */
 }
 
-.doll .imgWrap {
+.avatar .imgWrap {
   position: absolute;
   left: 0;
   right: 0;
@@ -1239,14 +1251,14 @@ button.disabled span {
   overflow: hidden;
 }
 
-.doll .profileImg {
+.avatar .profileImg {
   width: auto;
   height: inherit;
   vertical-align: bottom;
   margin: 0 auto;
 }
 
-.doll .infoWrap {
+.avatar .infoWrap {
   position: absolute;
   left: 0;
   right: 0;
@@ -1255,13 +1267,13 @@ button.disabled span {
   z-index: 111;
 }
 
-.doll .infoWrap * {
+.avatar .infoWrap * {
   font-size: 15px;
   padding-bottom: 3px;
   text-shadow: 1px 1px 1px rgba(0,0,0,0.7);
 }
 
-.doll .imgWrap::after{
+.avatar .imgWrap::after{
   content: '';
   display: inline-block;
   position: absolute;
@@ -1277,13 +1289,13 @@ button.disabled span {
   z-index: 1111;
 }
 
-.doll:hover .imgWrap, .doll.active .imgWrap {
+.avatar:hover .imgWrap, .avatar.active .imgWrap {
   width: 64px;
   height: 96px;
   transition: all 0.5s linear;
 } 
 
-.party .doll.isCrew::after {
+.party .avatar.isCrew::after {
   content: '-';
   display: block;
   position: absolute;
@@ -1295,7 +1307,7 @@ button.disabled span {
   color: rgba(255,214,6,.5)
 }
 
-.party .doll.empty::after {
+.party .avatar.empty::after {
   content: '+';
   display: block;
   position: absolute;

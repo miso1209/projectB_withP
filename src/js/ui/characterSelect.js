@@ -4,7 +4,7 @@ import MakeDom from "./component/makedom";
 import ItemImage from "./component/itemimage";
 import Button from "./component/button";
 // import { stringify } from "querystring";
-import Doll from "./component/doll";
+import Avatar from "./component/avatar";
 
 export default class CharacterSelect extends Panel {
   constructor(pane, inputs, avatar, result) {
@@ -135,16 +135,16 @@ export default class CharacterSelect extends Panel {
   }
 
   createCharacters(){
-    let selectedDoll = null;
+    let selectedavatar = null;
     let index = 0;
     let n = 0;
 
     // 캐릭터 데이터가 6개 넘어갈 때 - 처리는 페이징 해야하는데 그러려면. .
     this.inputs.forEach(input => {
-      let doll = new Doll(input);
+      let avatar = new Avatar(input);
       if (index === 0) {
-        doll.dom.classList.add('active');
-        selectedDoll = doll.dom;
+        avatar.dom.classList.add('active');
+        selectedavatar = avatar.dom;
         this.select(input);
       }
 
@@ -157,17 +157,17 @@ export default class CharacterSelect extends Panel {
       ++index;
       ++n;
 
-      doll.stage.style.backgroundPosition = `${posX}px 0`;
-      doll.dom.addEventListener('click', function () {
-        if (selectedDoll) {
-          selectedDoll.classList.remove('active');
+      avatar.stage.style.backgroundPosition = `${posX}px 0`;
+      avatar.dom.addEventListener('click', function () {
+        if (selectedavatar) {
+          selectedavatar.classList.remove('active');
         }
-        doll.dom.classList.add('active');
-        selectedDoll = doll.dom;
+        avatar.dom.classList.add('active');
+        selectedavatar = avatar.dom;
       });
 
-      doll.dom.addEventListener('click', this.select.bind(this, input));
-      this.characterList.appendChild(doll.dom);
+      avatar.dom.addEventListener('click', this.select.bind(this, input));
+      this.characterList.appendChild(avatar.dom);
     });
   }
 
@@ -205,16 +205,13 @@ export default class CharacterSelect extends Panel {
   }
 
   checkAvatar() {
-    console.log(this.avatar, this.selected.id);
-
     if (this.selected.id === `${this.avatar}`) {
-      console.log('메인캐릭터 왕관아이콘으로 넣어주세욤.');
       this.changeAvatarBtn.dom.classList.add('active');
     } else {
-      console.log('얘를 메인캐릭터로 바꿀수 잇는 버튼');
       this.changeAvatarBtn.dom.classList.remove('active');
     }
   }
+
   createConsumablesItem(result) {
     this.invenItems.innerHTML = '';
 
@@ -247,9 +244,6 @@ export default class CharacterSelect extends Panel {
 
   setMainAvatar() {
     this.avatar = this.selected.id;
-
-    console.log('avatar - ' + this.avatar);
-
     this.callback('setMainAvatar', this.avatar);
     this.checkAvatar();
   }

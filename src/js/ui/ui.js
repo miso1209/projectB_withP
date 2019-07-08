@@ -31,24 +31,27 @@ export default class DomUI extends EventEmitter {
 
         // 메인 ui 를 설정한다
         this.gnbContainer = new MakeDom('div', 'gnbContainer');
-        this.gnbContainer.style.top = this.gamePane.offsetTop + 'px';
+        this.gnbContainer.style.top = this.gamePane.offsetHeight + this.gamePane.offsetTop - 100 + 'px';
         this.gnbContainer.style.opacity = '0';
 
         // 스테이지타이틀, 튜토리얼 툴팁용 레이어
         this.displayLayer = new MakeDom('div', 'container');
         this.displayLayer.style.top = this.gamePane.offsetTop + 'px';
 
-        const gnb = new MakeDom('div', 'gnb');
+        const profile = new MakeDom('div', 'gnb-profile');
+        this.gnbContainer.appendChild(profile);
+
+        const gnb = new MakeDom('div', 'gnb-navi');
         this.gnbContainer.appendChild(gnb);
 
         this.minimapDOM = document.createElement('canvas');
         this.minimapDOM.classList.add('minimap');
-        this.minimapDOM.style.width = '160px';
-        this.minimapDOM.style.height = '100px';
+        this.minimapDOM.style.width = '165px';
+        this.minimapDOM.style.height = '132px';
         this.minimapDOM.style.display = 'none';
         
-        this.gnbContainer.appendChild(this.minimapDOM);
-        this.minimap = new Minimap(160, 100, this.minimapDOM);
+        this.displayLayer.appendChild(this.minimapDOM);
+        this.minimap = new Minimap(165, 130, this.minimapDOM);
         const menuData = [
             {name:'캐릭터', event: "characterselect"},
             {name:'보관함', event: "inventory"},
@@ -58,7 +61,7 @@ export default class DomUI extends EventEmitter {
         ];
         
         menuData.forEach(menu => {
-            let btn = new Button(menu.name, 'menu');
+            let btn = new Button(menu.name, 'nav');
             gnb.appendChild(btn.dom);
             btn.dom.addEventListener('click', () => {
                 this.playSound('assets/sounds/test.mp3');
@@ -73,7 +76,8 @@ export default class DomUI extends EventEmitter {
 
         // 스테이지 정보
         this.stageInfo = new MakeDom('div', 'stageInfo');
-        this.gnbContainer.appendChild(this.stageInfo);
+        this.displayLayer.appendChild(this.stageInfo);
+        
 
         this.player = null;
         this.character = null;
@@ -122,12 +126,10 @@ export default class DomUI extends EventEmitter {
 
     showMinimap() {
         this.minimapDOM.style.display = 'block';
-        this.stageInfo.style.textAlign = 'left';
     }
 
     hideMinimap() {
         this.minimapDOM.style.display = 'none';
-        this.stageInfo.style.textAlign = 'right';
     }
     
     hasModal() {
@@ -301,7 +303,7 @@ export default class DomUI extends EventEmitter {
             } else if(result === 'setMainAvatar'){
                 this.emit('setMainAvatar', option);
                 characterSelect.avatar = this.player.controlCharacter;
-                characterSelect.checkAvatar();
+                // characterSelect.checkAvatar();
             }
         });
         

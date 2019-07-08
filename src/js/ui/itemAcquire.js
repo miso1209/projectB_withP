@@ -72,26 +72,27 @@ export default class ItemAcquire extends Panel {
     if (this.items.length > 0) {
       this.options.classList.add('items');
       this.items.forEach((item) => {
+        // console.log(item);
         let wrap = new MakeDom('section', 'option');
         let option = new ItemImage(item.data.image.texture, item.data.image.x, item.data.image.y);
         let count = new MakeDom('span', '', `x${item.count}`);
         let name = new MakeDom('p', 'name', item.name);
-
         wrap.appendChild(option.dom);
         wrap.appendChild(count);
         wrap.appendChild(name);
-
         this.options.appendChild(wrap);
       });
     } else {
-      let option = new ItemImage(this.items.data.image.texture, this.items.data.image.x, this.items.data.image.y);
-      let count = new MakeDom('span', '', 'x 1');
-      let name = new MakeDom('p', 'name', this.items.name);
-      // const comment = new MakeDom('p', 'comment', '를 획득하였습니다.');
+      let item = this.items;
+
+      // console.log(item);
+
+      let option = new ItemImage(item.data.image.texture, item.data.image.x, item.data.image.y);
+      let count = new MakeDom('span', '', `x${item.count}`);
+      let name = new MakeDom('p', 'name', item.name);
       this.options.appendChild(option.dom);
       this.options.appendChild(count);
       this.options.appendChild(name);
-      // this.options.appendChild(comment);
     }
   }
 

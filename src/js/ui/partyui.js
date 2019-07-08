@@ -2,7 +2,7 @@ import Panel from "./component/panel";
 import Modal from "./component/modal";
 import MakeDom from "./component/makedom";
 import Button from "./component/button";
-import Doll from "./component/doll";
+import Avatar from "./component/avatar";
 import ListBox from "./component/listbox";
 import SystemModal from "./systemmodal";
 
@@ -96,9 +96,8 @@ export default class PartyUI extends Panel {
   }
 
   updateMembers(){
-    console.log('updateMembers');
     let totalhealth = 0;
-    let selectedDoll = null;
+    let selectedavatar = null;
 
     this.totaldps.innerText = `${this.party.totalPowerFigure}`;
     this.characterList.innerHTML = '';
@@ -116,19 +115,19 @@ export default class PartyUI extends Panel {
         totalhealth+=member.character.health;
       }
 
-      let doll = new Doll(member.character);
+      let avatar = new Avatar(member.character);
 
-      if(doll.dom.hasChildNodes('img')) {
-        doll.dom.classList.remove('empty');
+      if(avatar.dom.hasChildNodes('img')) {
+        avatar.dom.classList.remove('empty');
       }
 
-      this.characterList.appendChild(doll.dom);
+      this.characterList.appendChild(avatar.dom);
 
-      doll.dom.addEventListener('click', function(){
-        if(selectedDoll) {
-          selectedDoll.classList.remove('active');
+      avatar.dom.addEventListener('click', function(){
+        if(selectedavatar) {
+          selectedavatar.classList.remove('active');
 
-          if (selectedDoll.classList.contains('isCrew')) {
+          if (selectedavatar.classList.contains('isCrew')) {
             
             // 파티멤버 뺄 때-hp 체크
             if(member.character) {
@@ -138,30 +137,28 @@ export default class PartyUI extends Panel {
               totalhealth -= member.character.health;
             }
 
-            doll.dom.innerHTML = '';
-            doll.dom.classList.remove('isCrew');
-            doll.dom.classList.add('empty');
+            avatar.dom.innerHTML = '';
+            avatar.dom.classList.remove('isCrew');
+            avatar.dom.classList.add('empty');
 
             member.character = null;
           }
         }
-        doll.dom.classList.add('active');
-        selectedDoll = doll.dom;
+        avatar.dom.classList.add('active');
+        selectedavatar = avatar.dom;
       });
 
-      doll.dom.addEventListener('click', this.compose.bind(this, member));
+      avatar.dom.addEventListener('click', this.compose.bind(this, member));
     });
-    console.log('totalhealth '+ totalhealth);
+    // console.log('totalhealth '+ totalhealth);
   }
 
   select(data) {
-
     if(this.selected !== null) {
       this.selected.character = data;
-      
       this.members.forEach(member => {
         if (member.x === this.selected.x && member.y === this.selected.y) {
-          // hp 0인 캐릭터를 파티에 넣을 때 남은 멤버의 hp의 합이 0이 되면 파티 수정 안되도록 막음..
+          // 사망한 캐릭터를 파티에 넣을 때 남은 멤버의 hp의 합이 0이 되면 파티 수정 안되도록 막음..
           if(this.selected.character.health === 0) {
             console.log('사망한 캐릭터! ');
             return;

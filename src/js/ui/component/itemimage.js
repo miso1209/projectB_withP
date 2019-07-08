@@ -9,10 +9,6 @@ export default class ItemImage {
         if (this.orginal.includes('items')) {
             this.path = `url(/src/assets/items/${texture})`;
             this.type = 'img';
-        // } else if (this.orginal.includes('character')) {
-        //     this.path = `url(/src/assets/ui/${texture})`;
-        //     this.size = 96;
-        //     this.type = 'portrait';
         } else {
             this.path = `url(/src/assets/ui/${texture})`;
             this.size = 16;
