@@ -361,22 +361,22 @@ class RewardUI extends PIXI.Container {
         this.closeBtn.anchor.x = 1;
         this.closeBtn.width = 32;
         this.closeBtn.height = 32;
-        this.closeBtn.position.x = this.itemRewardContainer.position.x + this.itemRewardContainer.width - 25;
-        this.closeBtn.position.y = this.itemRewardContainer.position.y;
+        this.closeBtn.position.x = this.itemRewardContainer.position.x + this.itemRewardContainer.width - 47;
+        this.closeBtn.position.y = this.itemRewardContainer.position.y - 12;
         this.addChild(this.closeBtn);
 
 
         // 캐릭터 보상 모달 (하단)
         this.expRewardContainer = [];
-        const marginX = 34;
+        const marginX = 62.8;
         const size = {
-            width: 105,
-            height: 190
+            width: 81,
+            height: 170
         };
 
         reward.characters.forEach((character, i) => {
             const characterReward = new CharacterRewardUI(size);
-            characterReward.setPosition({ x: 90 + (i * (size.width + marginX)), y: 270 });
+            characterReward.setPosition({ x: 90 + (i * (size.width + marginX)), y: 290 });
             characterReward.setCharacter(character, reward.exp);
             this.addChild(characterReward);
 
@@ -403,8 +403,8 @@ class CharacterRewardUI extends Window {
         this.changeTitle(character.displayName, { fontSize: 20 });
         
         const offset = {
-            x: -16,
-            y: -28
+            x: -30,
+            y: -40
         }
 
         // 캐릭터 이미지 붙인다.

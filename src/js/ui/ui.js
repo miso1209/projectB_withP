@@ -48,12 +48,12 @@ export default class DomUI extends EventEmitter {
 
         this.minimapDOM = document.createElement('canvas');
         this.minimapDOM.classList.add('minimap');
-        this.minimapDOM.style.width = '160px';
-        this.minimapDOM.style.height = '132px';
+        this.minimapDOM.style.width = '165px';
+        this.minimapDOM.style.height = '106px';
         this.minimapDOM.style.display = 'none';
         
         this.displayLayer.appendChild(this.minimapDOM);
-        this.minimap = new Minimap(165, 130, this.minimapDOM);
+        this.minimap = new Minimap(165, 106, this.minimapDOM);
         const menuData = [
             {name:'캐릭터', event: "characterselect"},
             {name:'보관함', event: "inventory"},

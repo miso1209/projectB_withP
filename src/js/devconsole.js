@@ -91,6 +91,12 @@ export default class DevConsole {
         Sound.playBGM(...args);
     }
 
+    levelUp() {
+        for (let key in this.game.player.characters) {
+            this.game.player.characters[key].increaseExp(375000);
+        }
+    }
+
     setVolume(...args) {
         Sound.setVolume(...args);
     }

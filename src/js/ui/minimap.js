@@ -26,16 +26,8 @@ export default class Minimap extends PIXI.Application {
 
     makeNewMap(map, realmap) {
         this.stage.removeChildren();
+
         this.mapContainer = new PIXI.Container();
-
-        this.minimapPortrait = new PIXI.Sprite(PIXI.Texture.fromFrame('location_icon.png'));
-        this.minimapPortrait.scale.x = 0.05;
-        this.minimapPortrait.scale.y = 0.05;
-        this.minimapPortrait.anchor.x = 0.5;
-        this.minimapPortrait.anchor.y = 0.95;
-        this.minimapPortrait.position.x = this.screenWidth/2;
-        this.minimapPortrait.position.y = this.screenHeight/2;
-
         this.realmap = realmap;
         this.mapTile = {};
         this.mapLength = map[0].length;
@@ -53,7 +45,15 @@ export default class Minimap extends PIXI.Application {
             }
         }
         this.stage.addChild(this.mapContainer);
-        this.stage.addChild(this.minimapPortrait);
+
+        this.locationIcon = new PIXI.Sprite(PIXI.Texture.fromFrame('location_icon.png'));
+        this.locationIcon.scale.x = 0.05;
+        this.locationIcon.scale.y = 0.05;
+        this.locationIcon.anchor.x = 0.5;
+        this.locationIcon.anchor.y = 0.95;
+        this.locationIcon.position.x = this.screenWidth/2;
+        this.locationIcon.position.y = this.screenHeight/2;
+        this.stage.addChild(this.locationIcon);
     }
 
     moveTo(stage) {
@@ -67,6 +67,7 @@ export default class Minimap extends PIXI.Application {
                     this.mapContainer.position.x = (this.screenWidth / 2) - ((x * TILE_WIDTH / 2) - (y * TILE_WIDTH / 2) + TILE_WIDTH / 2);
                     this.mapContainer.position.y = (this.screenHeight / 2) - ((x * TILE_HEIGHT / 2) + (y * TILE_HEIGHT / 2) + TILE_HEIGHT / 2);
                     this.mapTile[Math.round(x + y * this.mapLength)].show();
+                    
                     if (stage.neighbor.up) {
                         this.mapTile[(x) + (y-1) * this.mapLength].show();
                     }
