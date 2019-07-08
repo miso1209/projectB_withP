@@ -6,17 +6,11 @@
 */
 export default class Sound {
     constructor() {
-        // Path 설정에 Require 들어가면 오류 생기는데.. webpack 한번 봐야할듯하다..
-        // 왜 오류가 발생하는가를 파악해야 할 것.
-        this.basePath = 'static/src/assets/sounds/';
+        this.BGM = null;
     }
 
     init() {
         this.pixiSound = require("pixi-sound").default;
-    }
-
-    setMute(mute) {
-        this.pixiSound.muteAll = mute;
     }
 
     setSpeed(speed) {
@@ -27,13 +21,32 @@ export default class Sound {
         this.pixiSound.volumeAll = volume;
     }
 
-    playBGM(fileName) {
-        const sound = this.pixiSound.Sound.from(this.basePath + fileName);
-        sound.play();
+    _addSound(fileName) {
+        const filePath = require('assets/sounds/' + fileName);
+        this.pixiSound.add(fileName, this.pixiSound.Sound.from(filePath));
     }
 
-    playSound(fileName) {
-        const sound = this.pixiSound.Sound.from(this.basePath + fileName);
-        sound.play();
+    _removeSound(fileName) {
+        this.pixiSound.remove(fileName);
+    }
+
+    playSound(fileName, options) {
+        // 사운드 등록이 안되어 있다면 등록.
+        if (!this.pixiSound.find(fileName)) {
+            this._addSound(fileName);
+        }
+
+        // 재생한다.
+        this.pixiSound.play(fileName, options);
+    }
+
+    playBGM(fileName, options) {
+        // 같은 BGM을 틀려는 경우만 아니라면, 이전의 BGM은 제거한다.
+        if (this.pixiSound.find(this.BGM) && this.BGM !== fileName) {
+            this._removeSound(this.BGM)
+        }
+        
+        this.playSound(fileName, options);
+        this.BGM = fileName;
     }
 }

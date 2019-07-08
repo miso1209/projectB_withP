@@ -237,7 +237,6 @@ export default class Game extends EventEmitter {
 
     async start() {
         this.initPlayer();
-        Sound.playBGM('road_bgm.wav');
 
         // TODO : 마지막 플레이된 컷신을 찾아서 해당 컷신을 실행하도록 한다.
         if (this.storage.data.cutscene) {
@@ -476,6 +475,9 @@ export default class Game extends EventEmitter {
         await this.$fadeIn(0.5);
         await cutscene.$play();
         // this.stage.enter();
+
+        // BGM 읽어오기, Scale(Zoom) 읽어오기 추가해야할 것.
+        Sound.playBGM('road_bgm.wav', { loop: true });
     }
 
     // [정리] 인스턴트 던전 => 스테이지 객체를 모두 만들어서 들고있는 던전에 입장할때만 사용하는 EnterStage..
@@ -504,13 +506,18 @@ export default class Game extends EventEmitter {
         this.stage.showPathHighlight = true;
         this.ui.hideTheaterUI(0.5);
         this.ui.showMenu();
+        this.ui.showMinimap();
         stage.enter();
+
+        // BGM 읽어오기, Scale(Zoom) 읽어오기 추가해야할 것.
+        Sound.playBGM('road_bgm.wav', { loop: true });
     }
 
     async $leaveStage(eventName) {
         if (!this.stage) { return; }
         this.ui.showTheaterUI(0.5);
         this.ui.hideMenu();
+        this.ui.hideMinimap();
 
         this.stage.leave();
         // 이벤트를 찾는다
@@ -607,6 +614,9 @@ export default class Game extends EventEmitter {
             this.ui.hideMenu();
             this.ui.hideMinimap();
             await this.$fadeIn(0.5);
+
+            // BGM 읽어오기, Scale(Zoom) 읽어오기 추가해야할 것.
+            Sound.playBGM('road_bgm.wav', { loop: true });
         }
     }
 

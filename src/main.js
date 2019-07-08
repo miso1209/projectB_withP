@@ -17,6 +17,8 @@ global.Sound = new Sound();
 
     자동 재생 정책 변경사항 참조 : https://developers.google.com/web/updates/2017/09/autoplay-policy-changes#webaudio
 */
+
+// 사용자 Click Interaction 발생 시, init한다.
 const soundInit = (e) => {
     global.Sound.init();
     global.removeEventListener('click', soundInit);
