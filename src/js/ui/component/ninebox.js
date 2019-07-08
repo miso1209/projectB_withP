@@ -21,7 +21,8 @@ export default class NineBox extends Panel {
                 pixel.classList.add('dialog');
                 gap = 16;
             } else {
-                gap = 26;
+                // gap = 26;
+                gap = 60;
             }
       
             if (pixel.classList.contains('_width')) {

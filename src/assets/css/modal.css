@@ -22,9 +22,10 @@
 .pixelBox {
   position: relative;
 
-  width: 39px;
-  height: 39px;
-
+  /* width: 39px;
+  height: 39px; */
+  width: 90px;
+  height: 90px;
   display: flex;
   flex-wrap: wrap;
   margin: 0 auto;
@@ -38,8 +39,10 @@
 }
 
 .pixel {
-  width: 13px;
-  height: 13px;
+  /* width: 13px;
+  height: 13px; */
+  width: 30px;
+  height: 30px;
   min-width: 8px;
   min-height: 8px;
   float: left;
