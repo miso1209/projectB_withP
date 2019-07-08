@@ -13,7 +13,12 @@ export default class Button extends Panel {
         } else {
             button.classList.add('button');
         }
+
+        
         this.dom = button;
+        this.dom.addEventListener('click', ()=>{
+            Sound.playSound('click_menu.mp3');
+        });
     }
 }
 

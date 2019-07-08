@@ -50,29 +50,32 @@ export default class ItemAcquire extends Panel {
   }
 
   initButton(){
+    const buttonWrap = new MakeDom('div', 'buttonWrap');
+
     const okButton = new Button('확인', 'submit');
     const cancelButton = new Button('취소');
 
     if (this.text !== null) {
-      okButton.moveToLeft(20);
-      cancelButton.moveToRight(20);
-      cancelButton.moveToBottom(20);
-      this.dom.appendChild(cancelButton.dom);
-      cancelButton.dom.addEventListener('click', this.onCancel.bind(this));
-    } else {
-      okButton.moveToCenter(0);
-    }
-
-    okButton.moveToBottom(20);
-    this.dom.appendChild(okButton.dom);
-    okButton.dom.addEventListener('click', this.onSubmit.bind(this));
+        okButton.moveToLeft(20);
+        cancelButton.moveToRight(20);
+        cancelButton.moveToBottom(20);
+        buttonWrap.appendChild(cancelButton.dom);
+        cancelButton.dom.addEventListener('click', this.onCancel.bind(this));
+      } else {
+        okButton.moveToCenter(0);
+      }
+  
+      okButton.moveToBottom(20);
+      buttonWrap.appendChild(okButton.dom);
+      okButton.dom.addEventListener('click', this.onSubmit.bind(this));
+      this.dom.appendChild(buttonWrap);
+    
   }
 
   update() {
     if (this.items.length > 0) {
       this.options.classList.add('items');
       this.items.forEach((item) => {
-        // console.log(item);
         let wrap = new MakeDom('section', 'option');
         let option = new ItemImage(item.data.image.texture, item.data.image.x, item.data.image.y);
         let count = new MakeDom('span', '', `x${item.count}`);
@@ -84,9 +87,6 @@ export default class ItemAcquire extends Panel {
       });
     } else {
       let item = this.items;
-
-      // console.log(item);
-
       let option = new ItemImage(item.data.image.texture, item.data.image.x, item.data.image.y);
       let count = new MakeDom('span', '', `x${item.count}`);
       let name = new MakeDom('p', 'name', item.name);

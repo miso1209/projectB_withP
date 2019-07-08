@@ -342,6 +342,7 @@ export default class Game extends EventEmitter {
                     await this.$fadeIn(1);
                     
                     this.ui.showMenu();
+                    this.ui.showProfile(this.player);
                     this.exploreMode.interactive = true;
                     if (this.stage) { this.stage.showPathHighlight = true; }
 
@@ -415,7 +416,6 @@ export default class Game extends EventEmitter {
         }
 
         await this.$enterStageIns(hall, hallKey);
-        this.ui.showMinimap();
         this.ui.showStageTitle(`- 어둠의 성탑 ${this.currentFloor}층 -`);
     }
 
@@ -445,7 +445,6 @@ export default class Game extends EventEmitter {
         stage.on('battle', async (...args) => { await this.$objBattle(...args); });
 
         this.currentFloor = 0;
-        this.ui.hideMinimap();
         await stage.$load(stageName);
         for(const tag of this.player.tags) {
             stage.applyTag(tag);
@@ -454,7 +453,6 @@ export default class Game extends EventEmitter {
         // 집일경우 2배줌
         if (stageName === 'house') {
             stage.zoomTo(2, true);
-            this.ui.showStageTitle('아지트');
         } else {
             stage.zoomTo(1.5, true);
         }

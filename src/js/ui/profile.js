@@ -9,7 +9,7 @@ export default class Profile extends Panel {
     this.player = player;
     const profileWrap = new MakeDom('div', 'profileWrap');
     const imageWrap = new MakeDom('div', 'imageWrap');
-    const button = new MakeDom('div', 'btn_change', '아바타 변경');
+    const button = new MakeDom('div', 'btn_change', '아바타 변경'); // 버튼 혹은 이벤트 엘리먼트로 변경하자
 
     button.addEventListener('click', ()=> {
       callback();
@@ -32,6 +32,8 @@ export default class Profile extends Panel {
   }
 
   updateAvatar(cid, player){
+    console.log('updateProfile');
+    
     const avatar = player.characters[cid];
 
     this.profileImg.src = `/src/assets/${avatar.data.portrait}`;

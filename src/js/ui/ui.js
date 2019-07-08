@@ -48,7 +48,7 @@ export default class DomUI extends EventEmitter {
 
         this.minimapDOM = document.createElement('canvas');
         this.minimapDOM.classList.add('minimap');
-        this.minimapDOM.style.width = '165px';
+        this.minimapDOM.style.width = '160px';
         this.minimapDOM.style.height = '132px';
         this.minimapDOM.style.display = 'none';
         
@@ -91,10 +91,26 @@ export default class DomUI extends EventEmitter {
         questWrap.addEventListener('click', ()=>{
             questWrap.classList.toggle('open');
         });
-        this.displayLayer.appendChild(questWrap);
+
+        if(this.displayLayer.querySelector('.questWrap')) {
+            console.log('aa');
+        } else {
+            this.displayLayer.appendChild(questWrap);
+        }
+    }
+    
+    hideQuest(){
+        const quest = this.displayLayer.querySelector('.questWrap');
+        if(quest) {
+            this.displayLayer.removeChild(quest);
+        }
     }
 
     showProfile(player){
+        console.log(player);
+
+        console.log('showProfile');
+
         if (this.player_profile)  {
             this.updateProfile();
             return;
@@ -138,6 +154,8 @@ export default class DomUI extends EventEmitter {
         // 기본 ui 를 가린다
         this.gnbContainer.style.opacity = '0';
         this.gnbContainer.style.display = 'none';
+        // 임시
+        this.hideQuest();
     }
 
     showTheaterUI(){

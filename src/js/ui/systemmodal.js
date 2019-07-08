@@ -19,26 +19,34 @@ export default class SystemModal extends Panel {
         this.callback = callback;
         this.cancelable = cancelable;
 
+        const buttonWrap = document.createElement('div');
+        buttonWrap.className = 'buttonWrap';
+
         const okButton = new Button('확인', 'submit');
         const cancelButton = new Button('취소');
-    
-        confirmModal.dom.appendChild(okButton.dom);
+
+        okButton.dom.style.position = 'static';
+        cancelButton.dom.style.position = 'static';
+        buttonWrap.appendChild(okButton.dom);
 
         if(this.cancelable) {
-            okButton.moveToLeft(20);
-            okButton.moveToBottom(20);
+            
+            // okButton.moveToLeft(20);
+            // okButton.moveToBottom(20);
 
-            cancelButton.moveToRight(20);
-            cancelButton.moveToBottom(20);
+            // cancelButton.moveToRight(20);
+            // cancelButton.moveToBottom(20);
 
-            confirmModal.dom.appendChild(cancelButton.dom);
+            buttonWrap.appendChild(cancelButton.dom);
             cancelButton.dom.addEventListener('click', this.onCancel.bind(this));
         } else {
             okButton.moveToCenter(0);
             okButton.moveToBottom(20);
         }
-    
         okButton.dom.addEventListener('click', this.onSubmit.bind(this));
+
+        
+        confirmModal.dom.appendChild(buttonWrap);
         this.dom = confirmModal.dom;
     }
   
