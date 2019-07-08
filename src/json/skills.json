@@ -174,8 +174,8 @@
     "breath": {
         "name": "용의 입김",
         "description": "모든 적에게 화염방사한다.",
-        "coolTime": 20,
-        "maxCoolTime": 20,
+        "coolTime": 8,
+        "maxCoolTime": 8,
         "skillExpressions": [
             [
                 "magicCoefficient(0.3)",

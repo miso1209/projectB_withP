@@ -36,7 +36,7 @@ export default class MapGenerator {
     async createMap(input) {
         // 한 층의 룸의 갯수는 기본적으로 6개이고 5개 층마다 1개씩 늘어난다. ==> 100층은 26개 + a의 룸. (boss룸은 추가로 붙는다.)
         // 6 + Math.floor(this.currentFloor / 5)
-        const roomCount = 3;
+        const roomCount = 6 + Math.floor(this.currentFloor / 5);
         let bossFloor = (this.currentFloor % 2 === 0)?true : false;
         let width = 500;
         let height = 500;

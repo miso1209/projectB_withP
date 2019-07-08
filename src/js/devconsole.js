@@ -1,3 +1,5 @@
+import items from "./items";
+
 // 이 함수에 하나씩 콘솔 명령어를 하나씩 추가하면 된다
 
 export default class DevConsole {
@@ -94,6 +96,13 @@ export default class DevConsole {
     levelUp() {
         for (let key in this.game.player.characters) {
             this.game.player.characters[key].increaseExp(375000);
+        }
+    }
+
+    getItem() {
+        for (let key in items) {
+            const item = items[key];
+            this.game.addItem(item.id, 1);
         }
     }
 
