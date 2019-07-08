@@ -446,7 +446,7 @@ body.battle .gnbContainer.battleMode {
   animation-iteration-count: infinite;
 }
 
-button, .button {
+/* button, .button {
   position: absolute;
   width: 118px;
   height: 44px;
@@ -457,17 +457,26 @@ button, .button {
   font-size: 14px;
   text-align: center;
   vertical-align: middle;
+} */
+
+button, .button{
+  position: absolute;
+  width:140px;
+  height:30px;
+  font-size: 16px;
+  color: #2a0a0f;
+  background: url(~assets/ui/button.png) no-repeat;
 }
 
 *.disabled {
   opacity: 0.7;
 }
 
-.submit {
-  background: url(~assets/ui/button_s2.png) no-repeat;
+.button.submit {
+  background: url(~assets/ui/button.png) no-repeat;
 }
 
-.buttonS {
+.button.small {
   width: 75px;
   height: 35px;
   background: url(~assets/ui/btn_1.png) no-repeat;
@@ -475,19 +484,18 @@ button, .button {
   font-size: 14px;
   text-shadow: 0px 1px 2px #111; 
 }
-
-.button:hover, .button:active,
-button:hover, button:active,
-.buttonS:hover, .buttonS:active {
+.button:hover, .button:active {
+  color: #fff;
+  background: url(~assets/ui/button_active.png) no-repeat;
   opacity: 0.7;
 }
 
-.buttonS:hover, .buttonS:active {
+.button_small:hover, .button_small:active {
   border-radius: 8px;
   box-shadow: 1px 1px 6px rgba(0,0,0,0.5);
 }
 
-.paging{
+.paging {
   background: url(~assets/ui/paging.png) no-repeat 0 0;
   width: 32px;
   height: 54px;

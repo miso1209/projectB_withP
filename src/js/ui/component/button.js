@@ -6,13 +6,13 @@ export default class Button extends Panel {
         super();
         const button = document.createElement('button');
         button.innerText = value;
-    
+        
         if (type !== undefined) {
-            button.classList.add(type);
+            button.classList.add(`${type}`);
+            
         } else {
-            button.className = 'button';
+            button.classList.add('button');
         }
-
         this.dom = button;
     }
 }

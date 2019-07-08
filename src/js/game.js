@@ -597,6 +597,7 @@ export default class Game extends EventEmitter {
             this.gamelayer.addChild(this.currentMode.stage);
             this.ui.hideTheaterUI(0.5);
             this.ui.hideMenu();
+            this.ui.hideMinimap();
             await this.$fadeIn(0.5);
         }
     }
@@ -611,6 +612,7 @@ export default class Game extends EventEmitter {
             // 배틀을 사용한다
             this.currentMode = this.exploreMode;
             this.ui.showMenu();
+            this.ui.showMinimap();
 
             await this.$fadeIn(0.5);
             this.exploreMode.setInteractive(true);

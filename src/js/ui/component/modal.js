@@ -11,6 +11,9 @@ export default class Modal extends Panel {
         const modal = new NineBox(this.pane, width, height);
         this.dom = modal.dom;
         this.dom.classList.add('modal');
+        this.dom.style.top = '50%';
+        this.dom.style.marginTop = height * -0.5 + 'px';
+        
         this.confirm_callback = callback;
 
         const closeBtn = new Button('', 'closeBtn');

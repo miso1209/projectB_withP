@@ -83,12 +83,12 @@ export default class CharacterDetail extends Panel {
     this.description = new MakeDom('p', 'description');
 
     const buttonWrap = new MakeDom('div');
-    this.equipBtn = new Button('장비장착', 'buttonS');
+    this.equipBtn = new Button('장비장착', 'button_small');
     this.equipBtn.dom.style.display = 'none';
     this.equipBtn.moveToRight(10);
     this.equipBtn.moveToBottom(10);
 
-    this.cancelBtn = new Button('취소', 'buttonS');
+    this.cancelBtn = new Button('취소', 'button_small');
     this.cancelBtn.dom.style.display = 'none';
     this.cancelBtn.moveToRight(90);
     this.cancelBtn.moveToBottom(10);
