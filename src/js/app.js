@@ -94,7 +94,6 @@ export default class App {
         // 게임을 시작한다
         this.game.setStorage(this.storage);
         this.dev.setGame(this.game);
-        this.ui = this.game.ui;
 
         this.game.$preload().then(() => {
             this.game.start();
@@ -103,7 +102,7 @@ export default class App {
 
         window.addEventListener("keydown", (e) => {
             if (e.keyCode === 68) { // d키 // ui 는 여기서 테스트 ---- 삭제 예정
-                this.ui.showCombineItemList([
+                this.game.ui.showCombineItemList([
                     { category: 'armor', recipes: this.game.getRecipes('armor') },
                     { category: 'consumables', recipes: this.game.getRecipes('consumables') },
                     { category: 'weapon', recipes: this.game.getRecipes('weapon') }], 

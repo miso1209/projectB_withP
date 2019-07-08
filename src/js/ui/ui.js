@@ -1,4 +1,6 @@
 import { EventEmitter } from "events";
+import pixiSound from "pixi-sound";
+
 import Button from './component/button';
 import Modal from "./component/modal";
 import SystemModal from "./systemmodal";
@@ -59,6 +61,7 @@ export default class DomUI extends EventEmitter {
             let btn = new Button(menu.name, 'menu');
             gnb.appendChild(btn.dom);
             btn.dom.addEventListener('click', () => {
+                this.playSound('assets/sounds/test.mp3');
                 this.emit(menu.event);
             });
         });
@@ -72,11 +75,16 @@ export default class DomUI extends EventEmitter {
         this.stageInfo = new MakeDom('div', 'stageInfo');
         this.gnbContainer.appendChild(this.stageInfo);
 
-
         this.player = null;
         this.character = null;
         this.playerInvenData = null;
         this.characters = null;
+    }
+
+    playSound(soundUrl) {
+        const spath = require('../../' + soundUrl);
+        const sound = pixiSound.Sound.from(spath);
+        sound.play();
     }
 
     createContainer() {
