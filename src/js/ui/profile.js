@@ -6,8 +6,6 @@ export default class Profile extends Panel {
 
     super();
     
-    console.log('----c---- profile ');
-
     this.player = player;
     const profileWrap = new MakeDom('div', 'profileWrap');
     const imageWrap = new MakeDom('div', 'imageWrap');
@@ -30,14 +28,10 @@ export default class Profile extends Panel {
     profileWrap.appendChild(imageWrap);
     profileWrap.appendChild(infoWrap);
 
-    // this.updateAvatar(this.player.controlCharacter);
-    // return profileWrap;
     this.dom = profileWrap;
   }
 
   updateAvatar(cid, player){
-    console.log('updateavatar!');
-
     const avatar = player.characters[cid];
 
     this.profileImg.src = `/src/assets/${avatar.data.portrait}`;

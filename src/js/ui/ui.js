@@ -15,6 +15,8 @@ import Minimap from "./minimap";
 import PartyUI from "./partyui";
 import ItemAcquire from "./itemAcquire";
 import Profile from "./profile";
+import QuestList from "./quest";
+
 
 export default class DomUI extends EventEmitter {
     constructor() {
@@ -82,6 +84,13 @@ export default class DomUI extends EventEmitter {
         this.characters = null;
     }
 
+
+    showQuest() {
+        // const questlist = new QuestList();
+        const questWrap = new MakeDom('div', 'questWrap', 'aaa');
+        this.displayLayer.appendChild(questWrap);
+    }
+
     showProfile(player){
         if (this.player_profile)  {
             this.updateProfile();
@@ -118,6 +127,8 @@ export default class DomUI extends EventEmitter {
         // 기본 ui 를 보여준다
         this.gnbContainer.style.opacity = '1';
         this.gnbContainer.style.display = 'block';
+
+        this.showQuest();
     }
 
     hideMenu() {
