@@ -137,6 +137,7 @@ export default class Game extends EventEmitter {
         
         this.ui.on('setMainAvatar', (id) => {
             this.setMainAvatar(id);
+            this.ui.showProfile(this.player);
         });
         // 게임 알림을 알려주는 notificatin 큐를 만든다
         this.notification = new Notification();
@@ -245,6 +246,7 @@ export default class Game extends EventEmitter {
             this.stage.showPathHighlight = true;
             this.ui.hideTheaterUI(0.5);
             this.ui.showMenu();
+            this.ui.showProfile(this.player);
             this.stage.enter();
         }
     }

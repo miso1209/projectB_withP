@@ -15,6 +15,7 @@ import MakeDom from "./component/makedom";
 import Minimap from "./minimap";
 import PartyUI from "./partyui";
 import ItemAcquire from "./itemAcquire";
+import Profile from "./profile";
 
 export default class DomUI extends EventEmitter {
     constructor() {
@@ -38,8 +39,8 @@ export default class DomUI extends EventEmitter {
         this.displayLayer = new MakeDom('div', 'container');
         this.displayLayer.style.top = this.gamePane.offsetTop + 'px';
 
-        const profile = new MakeDom('div', 'gnb-profile');
-        this.gnbContainer.appendChild(profile);
+        this.profile = new MakeDom('div', 'gnb-profile');
+        this.gnbContainer.appendChild(this.profile);
 
         const gnb = new MakeDom('div', 'gnb-navi');
         this.gnbContainer.appendChild(gnb);
@@ -73,16 +74,32 @@ export default class DomUI extends EventEmitter {
         document.body.appendChild(this.displayLayer);
         document.body.appendChild(this.theaterUI);
 
-
         // 스테이지 정보
         this.stageInfo = new MakeDom('div', 'stageInfo');
         this.displayLayer.appendChild(this.stageInfo);
-        
-
         this.player = null;
         this.character = null;
         this.playerInvenData = null;
         this.characters = null;
+    }
+
+    showProfile(player){
+        if (this.player_profile)  {
+            this.updateProfile();
+            return;
+        } 
+
+        this.player_profile = new Profile(player, () => {
+            this.emit('characterselect');
+        });
+
+        this.player_profile.updateAvatar(player.controlCharacter, this.player);
+        this.profile.appendChild(this.player_profile.dom);
+    }
+
+    updateProfile(){
+        // dps, gold 변할 때 같이 호출되야함.
+        this.player_profile.updateAvatar(this.player.controlCharacter, this.player);
     }
 
     playSound(soundUrl) {
@@ -194,10 +211,8 @@ export default class DomUI extends EventEmitter {
         confirmModal.contents.style.fontSize = '1.1rem';
 
         const options = new MakeDom('div', 'contents-option');
-       
         let option = new ItemImage(items.data.image.texture, items.data.image.x, items.data.image.y);
         options.appendChild(option.dom);
-
         let name = new MakeDom('p', 'name', items.data.name);
         options.appendChild(name);
 
@@ -303,7 +318,8 @@ export default class DomUI extends EventEmitter {
             } else if(result === 'setMainAvatar'){
                 this.emit('setMainAvatar', option);
                 characterSelect.avatar = this.player.controlCharacter;
-                // characterSelect.checkAvatar();
+
+                
             }
         });
         

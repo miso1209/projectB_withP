@@ -28,7 +28,7 @@ export default class CharacterSelect extends Panel {
     modal.dom.classList.add('characterSelect');
 
     this.dom = modal.dom;
-    this.avatar = avatar;
+    this.controlCharacter = avatar;
 
     // 페이징버튼
     this.prevButton = new Button('', 'paging');
@@ -205,7 +205,7 @@ export default class CharacterSelect extends Panel {
   }
 
   checkAvatar() {
-    if (this.selected.id === `${this.avatar}`) {
+    if (this.selected.id === `${this.controlCharacter}`) {
       this.changeAvatarBtn.dom.classList.add('active');
     } else {
       this.changeAvatarBtn.dom.classList.remove('active');
@@ -243,8 +243,8 @@ export default class CharacterSelect extends Panel {
   }
 
   setMainAvatar() {
-    this.avatar = this.selected.id;
-    this.callback('setMainAvatar', this.avatar);
+    this.controlCharacter = this.selected.id;
+    this.callback('setMainAvatar', this.controlCharacter);
     this.checkAvatar();
   }
 
