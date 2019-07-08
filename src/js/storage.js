@@ -1,5 +1,8 @@
-export default class Storage {
+import { EventEmitter } from "events";
+
+export default class Storage extends EventEmitter {
     constructor() {
+        super();
         this.VERSION = 0.2;
 
         if (localStorage.data) {
@@ -33,6 +36,7 @@ export default class Storage {
 
     save() {
         localStorage.data = JSON.stringify(this.data);
+        this.emit('save');
     }
 
     clear() {
@@ -73,6 +77,7 @@ export default class Storage {
         if (!this.data.characters[id]) {
             this.data.characters[id] = character;
         }
+        this.save();
     }
 
     setQuest(questId, questData) {

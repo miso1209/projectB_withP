@@ -67,7 +67,6 @@ export default class Stage extends PIXI.Container {
     constructor(neighbor) {
         super();
         this.neighbor = neighbor;
-        Object.assign(this, new EventEmitter());
     }
 
     // 로딩함수를 시험적으로 비동기로 만들어보자

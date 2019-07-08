@@ -9,7 +9,6 @@ export default class Wizard extends PropBase {
         this.isOpened = false;
         this.alreadyParty = false;
 
-        this.emitter = new EventEmitter();
         this.hasEmitter = true;
 
         // name tag의 offset을 설정할 수 있도록 한다.
@@ -54,14 +53,6 @@ export default class Wizard extends PropBase {
                 }
             });
         }
-    }
-
-    emit(...arg) {
-        this.emitter.emit(...arg);
-    }
-
-    on(...arg) {
-        this.emitter.on(...arg);
     }
 
     hideName() {

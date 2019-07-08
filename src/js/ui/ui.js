@@ -1,5 +1,4 @@
 import { EventEmitter } from "events";
-import pixiSound from "pixi-sound";
 
 import Button from './component/button';
 import Modal from "./component/modal";
@@ -65,7 +64,7 @@ export default class DomUI extends EventEmitter {
             let btn = new Button(menu.name, 'nav');
             gnb.appendChild(btn.dom);
             btn.dom.addEventListener('click', () => {
-                this.playSound('assets/sounds/test.mp3');
+                Sound.playSound('click_menu.mp3');
                 this.emit(menu.event);
             });
         });
@@ -100,12 +99,6 @@ export default class DomUI extends EventEmitter {
     updateProfile(){
         // dps, gold 변할 때 같이 호출되야함.
         this.player_profile.updateAvatar(this.player.controlCharacter, this.player);
-    }
-
-    playSound(soundUrl) {
-        const spath = require('../../' + soundUrl);
-        const sound = pixiSound.Sound.from(spath);
-        sound.play();
     }
 
     createContainer() {

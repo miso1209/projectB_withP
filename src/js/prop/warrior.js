@@ -1,5 +1,4 @@
 import PropBase from './propbase';
-import { EventEmitter } from 'events';
 
 export default class Warrior extends PropBase {
     constructor(x, y, tileData) {
@@ -9,7 +8,6 @@ export default class Warrior extends PropBase {
         this.isOpened = false;
         this.alreadyParty = false;
 
-        this.emitter = new EventEmitter();
         this.hasEmitter = true;
         this.healed = false;
 
@@ -120,14 +118,6 @@ export default class Warrior extends PropBase {
                 });
             }
         }
-    }
-
-    emit(...arg) {
-        this.emitter.emit(...arg);
-    }
-
-    on(...arg) {
-        this.emitter.on(...arg);
     }
 
     hideName() {

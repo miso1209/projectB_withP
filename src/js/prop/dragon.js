@@ -1,7 +1,6 @@
 import PropBase from './propbase';
 import AnimatedCharacter from '../animatedcharacter';
 import { getDirectionFromName } from '../utils';
-import { EventEmitter } from 'events';
 
 export default class Dragon extends PropBase {
     constructor(x, y, options) {
@@ -24,7 +23,6 @@ export default class Dragon extends PropBase {
         this.tileTexture.position.x = this.tileTexture.width / 2;
         fieldChar.shadow.visible = false;
 
-        this.emitter = new EventEmitter();
         this.hasEmitter = true;
         this.battle = false;
 
@@ -111,13 +109,6 @@ export default class Dragon extends PropBase {
         this.isStop = true;
     }
 
-    emit(...args) {
-        this.emitter.emit(...args);
-    }
-
-    on(...args) {
-        this.emitter.on(...args);
-    }
     changeVisualToDirection(...args) {
         this.tileTexture.changeVisualToDirection(...args);
     }

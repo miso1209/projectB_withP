@@ -1,6 +1,3 @@
-import EventEmitter from 'events';
-import { $sleep } from '../utils';
-
 export default class idle {
     constructor(game, x , y) {
         this.gridX = x;

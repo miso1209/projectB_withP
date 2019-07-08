@@ -1,4 +1,3 @@
-import EventEmitter from 'events';
 import { DIRECTIONS } from '../define';
 
 // 일반 문을 열고 들어왔을때를 위한 연출

@@ -155,6 +155,10 @@ export default class Game extends EventEmitter {
 
     setStorage(storage) {
         this.storage = storage;
+        this.storage.on('save',() => {
+            // 무엇인가 Data가 바뀌어서 save가 일어난 것. (장비변환, 캐릭 경험치, 아이템, 레벨업, 파티 등등..)
+            console.log('save');
+        });
     }
 
     initPlayer() {
@@ -230,6 +234,7 @@ export default class Game extends EventEmitter {
 
     async start() {
         this.initPlayer();
+        Sound.playBGM('road_bgm.wav');
 
         // TODO : 마지막 플레이된 컷신을 찾아서 해당 컷신을 실행하도록 한다.
         if (this.storage.data.cutscene) {
