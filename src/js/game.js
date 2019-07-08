@@ -158,6 +158,9 @@ export default class Game extends EventEmitter {
         this.storage.on('save',() => {
             // 무엇인가 Data가 바뀌어서 save가 일어난 것. (장비변환, 캐릭 경험치, 아이템, 레벨업, 파티 등등..)
             console.log('save');
+            if(this.ui.player_profile) {
+                this.ui.updateProfile();
+            }
         });
     }
 

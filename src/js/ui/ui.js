@@ -87,7 +87,10 @@ export default class DomUI extends EventEmitter {
 
     showQuest() {
         // const questlist = new QuestList();
-        const questWrap = new MakeDom('div', 'questWrap', 'aaa');
+        const questWrap = new MakeDom('div', 'questWrap');
+        questWrap.addEventListener('click', ()=>{
+            questWrap.classList.toggle('open');
+        });
         this.displayLayer.appendChild(questWrap);
     }
 
@@ -147,10 +150,12 @@ export default class DomUI extends EventEmitter {
 
     showMinimap() {
         this.minimapDOM.style.display = 'block';
+        this.stageInfo.style.opacity = '1';
     }
 
     hideMinimap() {
         this.minimapDOM.style.display = 'none';
+        this.stageInfo.style.opacity = '0';
     }
     
     hasModal() {
