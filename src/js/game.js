@@ -139,6 +139,10 @@ export default class Game extends EventEmitter {
             this.setMainAvatar(id);
             this.ui.showProfile(this.player);
         });
+
+        // this.ui.on('quest', ()=>{
+        //     this.ui.showQuest(this.storage.data.quests);
+        // });
         // 게임 알림을 알려주는 notificatin 큐를 만든다
         this.notification = new Notification();
     }

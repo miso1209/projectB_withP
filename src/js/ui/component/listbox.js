@@ -1,5 +1,6 @@
 import Panel from "./panel";
 import ItemImage from './itemimage';
+import MakeDom from './makedom';
 
 class ListCell {
     constructor(cellData, cellType){
@@ -13,8 +14,10 @@ class ListCell {
         // 타입별로 리스트의 셀 스타일을 교체함.
         if ( cellType === 'recipe') {
             this.showRecipeCell();
-        } else {
+        } else if ( cellType === 'character') {
             this.showCharacterCell();
+        } else {
+            console.log('리스트 박스 셀은 각각 데이터별로 만들어야할 듯... ');
         }
     }
   

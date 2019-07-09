@@ -1,5 +1,6 @@
 import Panel from './component/panel';
 import MakeDom from './component/makedom';
+import Button from './component/button';
 
 export default class Profile extends Panel {
     constructor(player, callback){
@@ -9,15 +10,14 @@ export default class Profile extends Panel {
     this.player = player;
     const profileWrap = new MakeDom('div', 'profileWrap');
     const imageWrap = new MakeDom('div', 'imageWrap');
-    const button = new MakeDom('div', 'btn_change', '아바타 변경'); // 버튼 혹은 이벤트 엘리먼트로 변경하자
-
-    button.addEventListener('click', ()=> {
+    const button = new Button('아바타 변경', 'textButton');
+    button.dom.addEventListener('click', ()=> {
       callback();
     });
 
     this.profileImg = new MakeDom('img', 'profile_img');
     imageWrap.appendChild(this.profileImg);
-    imageWrap.appendChild(button);
+    imageWrap.appendChild(button.dom);
 
     const infoWrap = new MakeDom('div', 'infoWrap');
     this.avatar_dps = new MakeDom('div', 'statBox', 0);

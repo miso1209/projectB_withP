@@ -49,19 +49,11 @@ export default class DomUI extends EventEmitter {
         this.minimapDOM = document.createElement('canvas');
         this.minimapDOM.classList.add('minimap');
         this.minimapDOM.style.width = '165px';
-<<<<<<< HEAD
         this.minimapDOM.style.height = '106px';
         this.minimapDOM.style.display = 'none';
         
         this.displayLayer.appendChild(this.minimapDOM);
         this.minimap = new Minimap(165, 106, this.minimapDOM);
-=======
-        this.minimapDOM.style.height = '107px';
-        this.minimapDOM.style.display = 'none';
-        
-        this.displayLayer.appendChild(this.minimapDOM);
-        this.minimap = new Minimap(165, 107, this.minimapDOM);
->>>>>>> 버튼 스타일 정리, 퀘스트리스트 슬레이드판 컴포넌트로 작업중
         const menuData = [
             {name:'캐릭터', event: "characterselect"},
             {name:'보관함', event: "inventory"},
@@ -85,24 +77,36 @@ export default class DomUI extends EventEmitter {
         // 스테이지 정보
         this.stageInfo = new MakeDom('div', 'stageInfo');
         this.displayLayer.appendChild(this.stageInfo);
+
+        // game data
         this.player = null;
         this.character = null;
         this.playerInvenData = null;
         this.characters = null;
     }
 
-
     showQuest() {
-        // inputs --- quest data... questid, description, -
-        const questWrap = new QuestList();
-        // const questWrap = new MakeDom('div', 'questWrap');
+        // console.log(this.player.quests);
+        let questlist = [];
+
+        for (const qid in this.player.quests) {
+            questlist.push(this.player.quests[qid]);
+        }
+
+        const questWrap = new QuestList(questlist, (result)=>{
+
+            console.log(result);
+
+            if(result === 'showQuestModal') {
+            } else {
+                // quest..
+            }
+        });
+
         questWrap.dom.addEventListener('click', ()=>{
             questWrap.dom.classList.toggle('open');
         });
-
-        if (!this.displayLayer.querySelector('.questWrap')) {
-            this.displayLayer.appendChild(questWrap.dom);
-        }
+        this.displayLayer.appendChild(questWrap.dom);
     }
     
     hideQuest(){

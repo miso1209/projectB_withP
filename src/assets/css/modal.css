@@ -200,13 +200,13 @@
   height:0;
 }	
 .scrollbox::-webkit-scrollbar-thumb {
-  background: #ffd800;
-  border-radius:4px;
+  background: #c17e3b;
+  /* border-radius:3px; */
 }
 .scrollbox::-webkit-scrollbar-track {
   /* background-color:transparent; */
-  width:6px;
-  background-color: #1f130a;
+  width:5px;
+  background-color: #4e4a47;
 }
 
 /* 인벤토리처럼 슬롯박스형 스크롤 */
