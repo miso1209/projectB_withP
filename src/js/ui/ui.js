@@ -66,7 +66,6 @@ export default class DomUI extends EventEmitter {
             let btn = new Button(menu.name, 'nav');
             gnb.appendChild(btn.dom);
             btn.dom.addEventListener('click', () => {
-                Sound.playSound('click_menu.mp3');
                 this.emit(menu.event);
             });
         });

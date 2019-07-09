@@ -6,7 +6,7 @@
 */
 export default class Sound {
     constructor() {
-        this.BGM = null;
+        this._soundTypesMap = {};
     }
 
     init() {
@@ -21,32 +21,43 @@ export default class Sound {
         this.pixiSound.volumeAll = volume;
     }
 
-    _addSound(fileName) {
+    _addSound(fileName, options) {
         const filePath = require('assets/sounds/' + fileName);
-        this.pixiSound.add(fileName, this.pixiSound.Sound.from(filePath));
+
+        this.pixiSound.add(fileName, {
+            url: filePath,
+            preload: true,
+            loaded: (err, sound, soundInstance) => {
+                this.playSound(fileName, options);
+            }
+        });
     }
 
     _removeSound(fileName) {
-        this.pixiSound.remove(fileName);
+        this.pixiSound.remove(deleteFileName);
+    }
+
+    // 비교하고 다르면 제거하는 함수.
+    _compareAndRemoveSound(deleteFileName, compareFileName) {
+        if (deleteFileName && deleteFileName !== compareFileName) {
+            this._removeSound(deleteFileName);
+        }
     }
 
     playSound(fileName, options) {
-        // 사운드 등록이 안되어 있다면 등록.
+        // BGM 같은 것은 중복되어 실행되면 안된다. => 따라서 type을 두고
+        // 해당 타입으로 다른 이름의 sound가 들어오면 이전의 sound를 제거한다.
+        if (options && options.type) {
+            const prevFileName = this._soundTypesMap[options.type];
+
+            this._compareAndRemoveSound(prevFileName, fileName);
+            this._soundTypesMap[options.type] = fileName;
+        }
+
         if (!this.pixiSound.find(fileName)) {
-            this._addSound(fileName);
+            this._addSound(fileName, options);
+        } else if (!this.pixiSound.find(fileName).isPlaying) {
+            this.pixiSound.play(fileName, options);
         }
-
-        // 재생한다.
-        this.pixiSound.play(fileName, options);
-    }
-
-    playBGM(fileName, options) {
-        // 같은 BGM을 틀려는 경우만 아니라면, 이전의 BGM은 제거한다.
-        if (this.pixiSound.find(this.BGM) && this.BGM !== fileName) {
-            this._removeSound(this.BGM)
-        }
-        
-        this.playSound(fileName, options);
-        this.BGM = fileName;
     }
 }

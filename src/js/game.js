@@ -475,7 +475,7 @@ export default class Game extends EventEmitter {
         // this.stage.enter();
 
         // BGM 읽어오기, Scale(Zoom) 읽어오기 추가해야할 것.
-        Sound.playBGM('road_bgm.wav', { loop: true });
+        Sound.playSound('road_bgm.wav', { loop: true, type: 'BGM' });
     }
 
     // [정리] 인스턴트 던전 => 스테이지 객체를 모두 만들어서 들고있는 던전에 입장할때만 사용하는 EnterStage..
@@ -508,7 +508,7 @@ export default class Game extends EventEmitter {
         stage.enter();
 
         // BGM 읽어오기, Scale(Zoom) 읽어오기 추가해야할 것.
-        Sound.playBGM('road_bgm.wav', { loop: true });
+        Sound.playSound('road_bgm.wav', { loop: true, type: 'BGM' });
     }
 
     async $leaveStage(eventName) {
@@ -614,7 +614,7 @@ export default class Game extends EventEmitter {
             await this.$fadeIn(0.5);
 
             // BGM 읽어오기, Scale(Zoom) 읽어오기 추가해야할 것.
-            Sound.playBGM('road_bgm.wav', { loop: true });
+            Sound.playSound('road_bgm.wav', { loop: true, type: 'BGM' });
         }
     }
 
