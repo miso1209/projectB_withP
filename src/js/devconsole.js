@@ -50,10 +50,7 @@ export default class DevConsole {
 
     printQuest() {
         // 현재 퀘스트 상태를 출력한다
-        for (const questId in this.game.player.quests) {
-            const quest = this.game.player.quests[questId];
-            console.log(quest);
-        }
+        return this.game.player.getAllQuests();
     }
 
     setMainAvatar(...args) {

@@ -7,7 +7,6 @@ export default class Quest extends EventEmitter {
 
         this.questid = questid;
         this.origin = quests[questid];
-        this.data = {};
         this.objectiveEventsList = [];
 
         // 이벤트가 일어날 시 Quest가 가지고있는 Objective랑 비교하는 것 인데..
@@ -15,8 +14,7 @@ export default class Quest extends EventEmitter {
         // 수정해보자.
         for(let i = 0; i < this.origin.objectives.length; ++i) {
             const objective = this.origin.objectives[i];
-            const handler = (...args) => {
-                console.log('handler');
+            const handler = () => {
                 this.emit('checkQuestCondition', objective, objective.conditionScript);
             };
 
@@ -27,16 +25,18 @@ export default class Quest extends EventEmitter {
         }
     }
 
-    load() {
-        for(let i = 0; i < this.origin.objectives.length; ++i) {
-            const objective = this.origin.objectives[i];
-            // Load시 모든 컨디션 한번 체크.
-            this.emit('checkQuestCondition', objective, objective.conditionScript);
+    setObjective(objective, conditionResult) {
+        for (let key in conditionResult) {
+            objective[key] = conditionResult[key];
         }
     }
 
-    refresh(data) {
-        this.data = data;
+    load() {
+        // Load시 모든 컨디션 한번 체크.
+        for(let i = 0; i < this.origin.objectives.length; ++i) {
+            const objective = this.origin.objectives[i];
+            this.emit('checkQuestCondition', objective, objective.conditionScript);
+        }
     }
 
     foreEachEvent(callback) {
@@ -51,10 +51,6 @@ export default class Quest extends EventEmitter {
         let completed = true;
 
         for(let i = 0; i < this.origin.objectives.length; ++i) {
-            // const objective = this.origin.objectives[i];
-            // const count = this.data[i] || 0;
-            // const maxcount = objective.count || 1;
-
             completed &= this.origin.objectives[i].success;
         }
 
@@ -77,14 +73,12 @@ export default class Quest extends EventEmitter {
         const result = [];
         for(let i = 0; i < this.origin.objectives.length; ++i) {
             const objective = this.origin.objectives[i];
-            const count = this.data[i] || 0;
-            // 횟수가 없는 것은  1회성 이벤트인것으로 인식한다
-            const maxcount = objective.count || 1;
 
             result.push({
                 text: objective.text,
-                count: Math.min(count, maxcount), 
-                maxcount: maxcount,
+                count: objective.count,
+                maxCount: objective.maxCount,
+                success: objective.success
             });
         }
         return result;

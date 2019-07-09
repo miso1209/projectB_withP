@@ -756,21 +756,29 @@ export default class Game extends EventEmitter {
         return func.bind(this)(...parsed.args);
     }
 
-    checkTag(...args) {
+    checkTag(...tags) {
         let result = true;
 
-        args.forEach((tag) => {
+        tags.forEach((tag) => {
             result &= this.player.hasTag(tag);
         });
 
-        return result;
+        return {
+            success: result,
+            count: result?1:0,
+            maxCount: 1
+        };
     }
 
-    checkItem(item, operator,count) {
+    checkItem(item, operator, count) {
         const itemCount = this.player.inventory.getCount(item);
         const result = eval(`${itemCount} ${operator} ${count}`);
 
-        return result;
+        return {
+            success: result,
+            count: itemCount,
+            maxCount: count
+        };
     }
 
     hasTag(tag) {
@@ -866,12 +874,8 @@ export default class Game extends EventEmitter {
         quest.foreEachEvent(this.on.bind(this));
         quest.on('checkQuestCondition', (objective, script) => {
             // success판정 해야할듯. => 이펙트라던가..? 이 때 완료된다.
-            const result = this.runScript(script);
-            objective.success = result;
-
-            if(result) {
-                console.log(quest);
-            }
+            const conditionResult = this.runScript(script);
+            quest.setObjective(objective, conditionResult);
         });
 
         quest.load();

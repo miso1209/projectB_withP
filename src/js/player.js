@@ -27,6 +27,23 @@ export default class Player {
         this.characters[id] = new Character(id);
     }
 
+    getAllQuests() {
+        const quests = [];
+
+        for (let key in this.quests) {
+            const quest = this.quests[key];
+            quests.push({
+                title: quest.title,
+                description: quest.description,
+                objectives: quest.objectives,
+                rewards: quest.rewards,
+                success: quest.isAllObjectivesCompleted()
+            });
+        }
+
+        return quests;
+    }
+
     addTag(tag) {
         if (this.tags.indexOf(tag) < 0) {
             this.tags.push(tag);

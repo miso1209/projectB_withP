@@ -26,6 +26,7 @@ export default class Storage extends EventEmitter {
         this.data.gold = 0;
         this.data.tags = [];
         this.data.quests = [];
+        this.data.completedQuest = [];
     }
 
     convertVersion(src) {
