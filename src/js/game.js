@@ -139,10 +139,6 @@ export default class Game extends EventEmitter {
             this.setMainAvatar(id);
             this.ui.showProfile(this.player);
         });
-
-        // this.ui.on('quest', ()=>{
-        //     this.ui.showQuest(this.storage.data.quests);
-        // });
         // 게임 알림을 알려주는 notificatin 큐를 만든다
         this.notification = new Notification();
     }
@@ -226,9 +222,9 @@ export default class Game extends EventEmitter {
         });
 
         // 퀘스트 정보를 등록한다
-        this.storage.data.quests.forEach((questId) => {
-            this.setQuest(questId);
-        });
+        for (let questId in this.storage.data.quests) {
+            this.setQuest(questId, this.storage.data.quests[questId]);
+        }
         
         this.ui.player = this.player;
         this.ui.characters = Characters;
@@ -591,13 +587,14 @@ export default class Game extends EventEmitter {
                 this.currentMode.battleResult = 'lose';
                 this.stage.pathFinder.setDynamicCell(this.stage.player.gridX, this.stage.player.gridY, false);
                 this.stage.leave();
-                await this.$leaveBattle();
+                await this.$leaveBattle('lose');
                 this.allRecoveryParty();
                 this._playCutscene(4);
             });
+            // 승리했을때만이 close Battle로 들어온다 => 버튼을 눌러서 battle을 퇴장하기 때문.
             this.currentMode.on('closeBattle', async () => {
-                await this.$leaveBattle();
-                if (this.stage.battleResult === 'win') {
+                await this.$leaveBattle('win');
+                if (this.stage.battleResult === 'win' && monsterObj.die) {
                     monsterObj.die(this);
                 }
                 this.stage.enter();
@@ -618,7 +615,7 @@ export default class Game extends EventEmitter {
         }
     }
 
-    async $leaveBattle() {
+    async $leaveBattle(result) {
         if (this.currentMode instanceof Battle) {
             await this.$fadeOut(0.5);
             // 기존 스테이지를 보이지 않게 한다 (스테이지를 떠날 필요는없다)
@@ -632,6 +629,7 @@ export default class Game extends EventEmitter {
 
             await this.$fadeIn(0.5);
             this.exploreMode.setInteractive(true);
+            this.emit(result);
         }
     }
 
@@ -748,7 +746,6 @@ export default class Game extends EventEmitter {
         return result;
     }
     
-    // Quest
     runScript(script) {
         const parsed = new ScriptParser(script);
         const func = this[parsed.name];
@@ -758,31 +755,6 @@ export default class Game extends EventEmitter {
         }
 
         return func.bind(this)(...parsed.args);
-    }
-
-    checkTag(...tags) {
-        let result = true;
-
-        tags.forEach((tag) => {
-            result &= this.player.hasTag(tag);
-        });
-
-        return {
-            success: result,
-            count: result?1:0,
-            maxCount: 1
-        };
-    }
-
-    checkItem(item, operator, count) {
-        const itemCount = this.player.inventory.getCount(item);
-        const result = eval(`${itemCount} ${operator} ${count}`);
-
-        return {
-            success: result,
-            count: itemCount,
-            maxCount: count
-        };
     }
 
     hasTag(tag) {
@@ -865,24 +837,95 @@ export default class Game extends EventEmitter {
 
     addQuest(questId) {
         if (!this.storage.data.quests[questId]) {
-            this.storage.setQuest(questId);
-            this.setQuest(questId);
+            this.storage.setQuest(questId, {});
+            this.setQuest(questId, {});
         }
     }
 
-    setQuest(questId) {
+    setQuest(questId, data) {
         const quest = new Quest(questId);
+        quest.data = data;
         this.player.quests[questId] = quest;
 
-        // 퀘스트를 활성화시킨다
         quest.foreEachEvent(this.on.bind(this));
         quest.on('checkQuestCondition', (objective, script) => {
-            // success판정 해야할듯. => 이펙트라던가..? 이 때 완료된다.
-            const conditionResult = this.runScript(script);
-            quest.setObjective(objective, conditionResult);
+            const conditionResult = this.runQuestScript(quest, script);
+            const isChanged = quest.setObjective(objective, conditionResult);
+            this.storage.setQuest(questId, quest.data);
+
+            // 여기서 UI Refresh 하시면 될 것 같습니다. => Success 판정또한 가능
+
+            // 퀘스트 Condition이 변경되었을 경우.
+            if (isChanged) {
+                // 퀘스트를 깬경우
+                if (quest.success) {
+
+                } else { // 퀘스트를 깨지는 않았지만, 내용이 변경된 경우
+
+                }
+            }
         });
 
         quest.load();
+    }
+    
+    // Quest
+    runQuestScript(quest, script) {
+        const parsed = new ScriptParser(script);
+        const func = this[parsed.name];
+
+        if (typeof(func) !== "function") {
+            throw Error("invalid command : " + parsed.name);
+        }
+
+        return func.bind(this)(quest, ...parsed.args);
+    }
+
+    checkCount(quest, key, operator, count) {
+        // 초기 로드시는 증가시키지 않는다.
+        if (!quest.isInitData[key]) {
+            quest.isInitData[key] = true;
+            if (quest.data[key] === undefined) {
+                quest.data[key] = { count: 0 };
+            }
+        } else if (quest.data[key] !== undefined) {
+            quest.data[key].count++;
+        } else {
+            quest.data[key] = { count: 0 };
+        }
+
+        const result = eval(`${quest.data[key].count} ${operator} ${count}`);
+
+        return {
+            success: result,
+            count: quest.data[key].count,
+            maxCount: count
+        };
+    }
+    
+    checkTag(quest, ...tags) {
+        let result = true;
+
+        tags.forEach((tag) => {
+            result &= this.player.hasTag(tag);
+        });
+
+        return {
+            success: result,
+            count: result?1:0,
+            maxCount: 1
+        };
+    }
+
+    checkItem(quest, item, operator, count) {
+        const itemCount = this.player.inventory.getCount(item);
+        const result = eval(`${itemCount} ${operator} ${count}`);
+
+        return {
+            success: result,
+            count: itemCount,
+            maxCount: count
+        };
     }
 
     completeQuest(id) {

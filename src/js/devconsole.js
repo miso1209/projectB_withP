@@ -53,6 +53,10 @@ export default class DevConsole {
         return this.game.player.getAllQuests();
     }
 
+    devEmit(string) {
+        this.game.emit(string);
+    }
+
     setMainAvatar(...args) {
         // 현재 퀘스트 상태를 출력한다
         this.game.setMainAvatar(...args);

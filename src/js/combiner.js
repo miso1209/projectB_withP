@@ -89,8 +89,6 @@ export default class Combiner {
             return 1;
         });
 
-        console.log(result);
-
         return result;
     }
 

@@ -25,8 +25,8 @@ export default class Storage extends EventEmitter {
         this.data.inventory = {};
         this.data.gold = 0;
         this.data.tags = [];
-        this.data.quests = [];
-        this.data.completedQuest = [];
+        this.data.quests = {};
+        this.data.completedQuests = {};
     }
 
     convertVersion(src) {
@@ -81,17 +81,20 @@ export default class Storage extends EventEmitter {
         this.save();
     }
 
-    setQuest(questId) {
-        if (this.data.quests.indexOf(questId) < 0) {
-            this.data.quests.push(questId);
+    setQuest(questId, data) {
+        if (!this.data.quests[questId]) {
+            this.data.quests[questId] = data;
+            this.save();
+        } else {
+            this.data.quests[questId] = Object.assign(this.data.quests[questId],data);
             this.save();
         }
     }
 
     completeQuest(questId) {
-        const index = this.data.quests.indexOf(questId);
-        if(index >= 0) {
-            this.data.quests.splice(index, 1);
+        if (this.data.quests[questId]) {
+            this.data.completedQuests[questId] = Object.assign({}, this.data.quests[questId]);
+            delete this.data.quests[questId];
             this.save();
         }
     }
