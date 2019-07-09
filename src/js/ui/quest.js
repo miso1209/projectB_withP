@@ -4,22 +4,42 @@ import Button from './component/button';
 
 
 export default class QuestList extends Panel {
-  constructor(){
+  constructor(inputs){
     super();
 
+    this.inputs = inputs;
+
     const questWrap = new MakeDom('div', 'questWrap');
-    // const wrap = new MakeDom('div');
-    // const title = new MakeDom('p', '__title', '퀘스트 목록');
-    // const button = new Button('더보기', 'buttonMore');
+    const frag = document.createDocumentFragment();
+    const title = new MakeDom('p', 'title', '퀘스트 목록');
+    const button = new Button('더보기', 'textButton');
 
-    // wrap.appendChild(button.dom);
-    // wrap.appendChild(title);
+    this.contents = new MakeDom('ul', 'contents-list');
 
-    // this.dom.appendChild(wrap);
+    frag.appendChild(title);
+    frag.appendChild(this.contents);
+    title.appendChild(button.dom);
+
+    questWrap.appendChild(frag);
     this.dom = questWrap;
+
+    this.update();
   }
 
   update(){
+    this.contents.innerHTML = '';
 
+    if (this.inputs) {
+      this.inputs.forEach(quest => {
+        let lidom = new MakeDom('li');
+        let quest_name = new MakeDom('p', 'quest_name');
+        let quest_desc = new MakeDom('p', 'quest_desc');
+  
+        lidom.appendChild(quest_name);
+        lidom.appendChild(quest_desc);
+  
+        this.contents.appendChild(lidom);
+      });
+    }
   }
 }

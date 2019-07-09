@@ -131,15 +131,6 @@
   transition: all 0.8s;
 } 
 
-/* 배틀모드 */
-/* body.battle .gnbContainer {
-  display: none;
-}
-
-body.battle .gnbContainer.battleMode {
-  display: block;
-} */
-
 .gnbContainer::after{
   display: block;
   clear: both;
@@ -148,6 +139,8 @@ body.battle .gnbContainer.battleMode {
   content: '';
 }
 
+
+/* gnb 프로필  */
 .gnb-profile {
   float: left;
   width: 216px;
@@ -182,7 +175,6 @@ body.battle .gnbContainer.battleMode {
   width: 64px;
   height: 64px;
 }
-
 .profileWrap .btn_change{
   position: absolute;
   bottom: 0;
@@ -203,7 +195,6 @@ body.battle .gnbContainer.battleMode {
   border: 1px solid #4e4a47;
   box-sizing: border-box;
 }
-
 .profileWrap .infoWrap div {
   position: relative;
   display: block;
@@ -239,7 +230,10 @@ body.battle .gnbContainer.battleMode {
 .profileWrap .infoWrap .statBox:not(:first-child) {
   margin-top: 4px;
 }
+/*. gnb 프로필  */
 
+
+/* gnb - 네비게이션 */
 .gnb-navi {
   float: left;
   margin: 47px 0 0 0;
@@ -254,7 +248,6 @@ body.battle .gnbContainer.battleMode {
   overflow: hidden;
 }
 
-/* display용 레이어 - 스테이지타이틀, 미니맵 좌표, 테두리 보더 */
 .container::after{
   content: '';
   display: block;
@@ -295,7 +288,6 @@ body.battle .gnbContainer.battleMode {
 #theater.show {
   opacity: 1;
 }
-
 #theater::before{
   content: '';
   display: block;
@@ -326,14 +318,13 @@ body.battle .gnbContainer.battleMode {
   z-index: 111;
   background-color: rgba(0,0,0,1);
 }
-
 .minimap {
   position: absolute;
   top: 40px;
   right: 0;
   margin: 0 10px 10px 0;
   background: url(~assets/ui/mapBg.png) no-repeat;
-  background-size: contain;
+  background-size: cover;
   opacity: 0.6;
   overflow: hidden;
 }
@@ -364,13 +355,63 @@ body.battle .gnbContainer.battleMode {
   transition: right 0.3s;
   pointer-events: auto;
 }
-/* .questWrap:hover{
-  box-shadow: inset 0 0 2px 2px rgba(0, 0, 0, 0.7);
-} */
+
 .questWrap.open {
   right: 15px;
 }
-/* .gnb */
+
+.questWrap .title{
+  top: 0;
+  left: auto;
+  right: 0;
+  
+  width: 134px;
+  height: 24px;
+  font-size: 13px;
+  text-align: left;
+  padding: 3px 5px;
+  background-color: rgba(19,19,18,0.5);
+}
+.questWrap .textButton {
+  right: 7px;
+  top: 8px;
+  width: 42px;
+  height: 14px;
+  font-size: 10px;
+  border: 1px solid #fff;
+}
+.questWrap .contents-list {
+  background-color: rgba(150,141,133,0.6);
+}
+
+.questWrap .contents-list li {
+  display: block;
+  width: 100%;
+}
+.questWrap .contents-list .quest_name {
+  width: 100%;
+  height: 20px;
+
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.questWrap .contents-list .quest_desc {
+  font-size: 12px;
+  line-height: 1.6;
+  color: #dad0c7;
+  
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+} 
+.questWrap .contents-list .quest_desc em {
+  color: #8fc13b;
+}
+
+/*.gnb */
+
 
 /* icons */
 .iconBtn {
@@ -382,18 +423,17 @@ body.battle .gnbContainer.battleMode {
   border-radius: 5px;
   transition: all 0.3s;
 }
-
-.iconBtn:hover, .iconBtn:active, .iconBtn.active{
-  border: 1px solid red;
+.iconBtn:hover, 
+.iconBtn:active, 
+.iconBtn.active{
+  border: 1px solid #dad0c7;
 }
-
 .ico-avatar{
   background: url('~assets/items/items.png') no-repeat -576px -96px;
 }
 .ico-life {
   background: url('~assets/items/items.png') no-repeat -576px -96px;
 }
-
 .ico-life.half {
   background: url('~assets/items/items.png') no-repeat -608px -96px;
   -webkit-animation: rubberBand; 
@@ -423,10 +463,16 @@ body.battle .gnbContainer.battleMode {
   -webkit-animation-iteration-count: infinite;
   animation-iteration-count: infinite;
 }
+
+.ico-life:hover {
+  border-color: transparent;
+}
+
 *.disabled {
   opacity: 0.7;
 }
 
+/* 버튼 스타일 */
 button, .button{
   position: absolute;
   width:118px;
@@ -436,9 +482,14 @@ button, .button{
   background: url(~assets/ui/button2.png) no-repeat;
 }
 
+.button:hover, .button:active {
+  color: #fff;
+  background: url(~assets/ui/button_submit.png) no-repeat;
+}
+
 .modal .buttonWrap {
   position: absolute;
-  bottom: 20px;
+  bottom: 25px;
   left: 0;
   right: 0;
   width: 100%;
@@ -449,39 +500,37 @@ button, .button{
 .modal .buttonWrap button:nth-child(2) {
   margin-left: 10px;
 }
-
-.buttonWrap button, 
-.buttonWrap .button, 
-.buttonWrap .submit {
+.modal .buttonWrap button, 
+.modal .buttonWrap .button, 
+.modal .buttonWrap .submit {
+  position: static !important;
   width: 118px;
   height: 44px;
   background-size: cover;
 }
-
 .submit {
   width: 118px;
   height: 44px;
   color: #fff;
   background: url(~assets/ui/button_submit.png) no-repeat;
 }
-
 .button_small {
   width: 75px;
   height: 35px;
-  background: url(~assets/ui/btn_1.png) no-repeat;
+  background: url(~assets/ui/button_small.png) no-repeat;
   background-size: contain;
   font-size: 14px;
 }
-
-.button:hover, .button:active {
-  color: #fff;
-  background: url(~assets/ui/button_submit.png) no-repeat;
+.textButton {
+  color: #dad0c7;
+  font-size: 10px;
+  background: none;
+  background-color: rgba(19,19,18,0.5);
+  box-sizing: border-box;
 }
 
-/* .button_small:hover, .button_small:active {
-  border-radius: 8px;
-  box-shadow: 1px 1px 6px rgba(0,0,0,0.5);
-} */
+
+
 
 .paging {
   background: url(~assets/ui/paging.png) no-repeat 0 0;
@@ -565,14 +614,9 @@ button, .button{
   height:30px;
   font-size: 16px;
   color: #2a0a0f;
-  text-shadow: 0 0 0 transparent;
-  /* border: 1px solid #4e4a47;
-  box-shadow: inset 0 0 5px 0 rgba(0, 0, 0, 0.7); */
+  /* text-shadow: 0 0 0 transparent; */
   background: url(~assets/ui/button.png) no-repeat #b2a9a0;
-  /* background-color: #b2a9a0; */
   background-size: cover;
-
-  transition: all 0.3s;
   pointer-events: auto;
 }
 
@@ -586,18 +630,15 @@ button, .button{
   height:30px;
   color: #dad0c7;
   background: url(~assets/ui/button_active.png) no-repeat #2a0a0f;
-  background-color: #2a0a0f;
-  border: 1px solid #4e4a47;
 }
 
-
-.zoomBtn {
+/* .zoomBtn {
   position: static !important;
   text-align: center;
   opacity: 0;
   margin: 20px 0 0 20px;
   transition: opacity 0.3s;
-}
+} */
 
 .categoryWarp{
   position: absolute;
@@ -612,11 +653,9 @@ button, .button{
   top: 20px;
   left: 50px;
   right: 50px;
-
   font-size: 20px;
   line-height: 1.2;
   text-align: center;
-
   color: #dad0c7;
   overflow: hidden;
   /* background-color: #741b28; */

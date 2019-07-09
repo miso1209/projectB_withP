@@ -32,8 +32,6 @@ export default class Profile extends Panel {
   }
 
   updateAvatar(cid, player){
-    console.log('updateProfile');
-    
     const avatar = player.characters[cid];
 
     this.profileImg.src = `/src/assets/${avatar.data.portrait}`;

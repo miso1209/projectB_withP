@@ -49,11 +49,19 @@ export default class DomUI extends EventEmitter {
         this.minimapDOM = document.createElement('canvas');
         this.minimapDOM.classList.add('minimap');
         this.minimapDOM.style.width = '165px';
+<<<<<<< HEAD
         this.minimapDOM.style.height = '106px';
         this.minimapDOM.style.display = 'none';
         
         this.displayLayer.appendChild(this.minimapDOM);
         this.minimap = new Minimap(165, 106, this.minimapDOM);
+=======
+        this.minimapDOM.style.height = '107px';
+        this.minimapDOM.style.display = 'none';
+        
+        this.displayLayer.appendChild(this.minimapDOM);
+        this.minimap = new Minimap(165, 107, this.minimapDOM);
+>>>>>>> 버튼 스타일 정리, 퀘스트리스트 슬레이드판 컴포넌트로 작업중
         const menuData = [
             {name:'캐릭터', event: "characterselect"},
             {name:'보관함', event: "inventory"},
@@ -85,16 +93,15 @@ export default class DomUI extends EventEmitter {
 
 
     showQuest() {
-        // const questlist = new QuestList();
-        const questWrap = new MakeDom('div', 'questWrap');
-        questWrap.addEventListener('click', ()=>{
-            questWrap.classList.toggle('open');
+        // inputs --- quest data... questid, description, -
+        const questWrap = new QuestList();
+        // const questWrap = new MakeDom('div', 'questWrap');
+        questWrap.dom.addEventListener('click', ()=>{
+            questWrap.dom.classList.toggle('open');
         });
 
-        if(this.displayLayer.querySelector('.questWrap')) {
-            console.log('aa');
-        } else {
-            this.displayLayer.appendChild(questWrap);
+        if (!this.displayLayer.querySelector('.questWrap')) {
+            this.displayLayer.appendChild(questWrap.dom);
         }
     }
     
@@ -106,10 +113,6 @@ export default class DomUI extends EventEmitter {
     }
 
     showProfile(player){
-        console.log(player);
-
-        console.log('showProfile');
-
         if (this.player_profile)  {
             this.updateProfile();
             return;
