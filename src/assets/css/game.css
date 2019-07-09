@@ -251,6 +251,7 @@
   overflow: hidden;
 }
 
+
 .container::after{
   content: '';
   display: block;
@@ -331,6 +332,7 @@
   opacity: 0.6;
   overflow: hidden;
 }
+
 .stageInfo {
   opacity: 0;
   position: absolute;
@@ -346,6 +348,30 @@
   color: #fff;
   box-sizing: border-box;
   background: url(~assets/ui/mapInfoBg.png) no-repeat;
+}
+
+.questStatus {
+  opacity: 0;
+  position: absolute;
+  width: 165px;
+  padding: 0 10px;
+  left: 10px;
+  top: 15px;
+
+  height: 26px;
+  text-align: center;
+  font-size: 12px;
+  line-height: 26px;
+  color: #fff;
+  box-sizing: border-box;
+  background: url(~assets/ui/mapInfoBg.png) no-repeat;
+}
+
+.questStatus p {
+  display: inline-block;
+  margin-right: 5px;
+  font-size: 13px;
+  color: #fff;
 }
 
 .questWrap {
@@ -379,11 +405,10 @@
 .questWrap .title{
   top: 0;
   right: 0;
-  left: auto;
+  left: 0;
   
-  width: 100%;
   height: 24px;
-  font-size: 14px;
+  font-size: 12px;
   text-align: left;
   padding: 5px 8px 0;
   background-color: rgba(19,19,18,0.5);

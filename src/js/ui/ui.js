@@ -78,31 +78,55 @@ export default class DomUI extends EventEmitter {
         this.stageInfo = new MakeDom('div', 'stageInfo');
         this.displayLayer.appendChild(this.stageInfo);
 
+        this.questStatus = new MakeDom('div', 'questStatus');
+        this.displayLayer.appendChild(this.questStatus);
+
+
         // game data
         this.player = null;
         this.character = null;
         this.playerInvenData = null;
         this.characters = null;
+        this.currentQuest = null;
     }
 
-    showQuest() {
-        // console.log(this.player.quests);
-        let questlist = [];
+    showQuestStatus() {
+        this.questStatus.innerHTML = '';
+        // this.currentQuest = this.player.quests[qid];
+        
+        const frag = document.createDocumentFragment();
+        const title = new MakeDom('p', 'quest_name');
+        const status = new MakeDom('p', 'quest_status');
 
+        frag.appendChild(title);
+        frag.appendChild(status);
+
+        if (this.currentQuest) {
+            this.questStatus.style.opacity = '1';
+            title.innerText = this.currentQuest.origin.title;
+            status.innerText = `${this.currentQuest.objectives[0].count} / ${this.currentQuest.objectives[0].maxCount}`;
+        }
+
+        this.questStatus.appendChild(frag);
+    }
+
+    hideQuestStatus() {
+        this.questStatus.style.opacity = '0';
+    }
+    
+    showQuest() {
+        let questlist = [];
         for (const qid in this.player.quests) {
             questlist.push(this.player.quests[qid]);
         }
-
+        
         const questWrap = new QuestList(questlist, (result)=>{
-
-            console.log(result);
-
             if(result === 'showQuestModal') {
             } else {
-                // quest..
+                this.currentQuest = result;
+                this.showQuestStatus();
             }
         });
-
         questWrap.dom.addEventListener('click', ()=>{
             questWrap.dom.classList.toggle('open');
         });
@@ -153,6 +177,7 @@ export default class DomUI extends EventEmitter {
         this.gnbContainer.style.opacity = '1';
         this.gnbContainer.style.display = 'block';
 
+        // 퀘스트목록, 퀘스트진행창 보여줌 - 나중에 디자인 교체
         this.showQuest();
     }
 
@@ -160,8 +185,10 @@ export default class DomUI extends EventEmitter {
         // 기본 ui 를 가린다
         this.gnbContainer.style.opacity = '0';
         this.gnbContainer.style.display = 'none';
+        
         // 임시
         this.hideQuest();
+        this.hideQuestStatus();
     }
 
     showTheaterUI(){
