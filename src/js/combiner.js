@@ -115,6 +115,7 @@ export default class Combiner {
 
         // 새로운 아이넴을 추가한다
         inventory.addItem(recipe.item);
+        return true;
     }
 
     isAvailable(id, inventory, level) {

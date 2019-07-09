@@ -2,24 +2,24 @@
     "1": {
         "id": 1,
         "title": "새로운 시작",
-        "description" : "주인없는 집에서의 새로운 시작! 장소는 해결되었으니 이제 본격적으로 일을 해보자.",
+        "description" : "주인없는 집에서의 새로운 시작! 장소는 해결되었으니 <b>빈 탁자<b>에 <b>작업용 테이블<b>을 만들어보자!.",
         "objectives": [
-            { "text": "작업용 테이블 찾기", "event": "addtag", "args":["worktable"] }
+            { "text": "작업용 테이블 제작", "event": ["addtag","removetag"], "conditionScript": "checkTag(worktable)" }
         ],
         "rewards": [
-            { "text": "약초 x 10",  "script": "addItem(4001, 1)" },
+            { "text": "약초 x 10",  "script": "addItem(4001, 10)" },
             { "script": "_playCutscene(2)" }
         ]
     },
     "2": {
         "id": 2,
         "title": "포션제작",
-        "description" : "쓰러져 있는 모험가들을 구출하기 위해 체력포션(소)을 제작하자!.",
+        "description" : "쓰러져 있는 모험가들을 구출하기 위해 <b>체력포션(소)<b>을 제작하자!.",
         "objectives": [
-            { "text": "체력포션(소) 만들기 ", "event": "additem", "args":[3001, 1] }
+            { "text": "체력포션(소) 제작", "event": ["additem", "useitem", "additems"], "conditionScript": "checkItem(3001, >=, 1)" }
         ],
         "rewards": [
-            { "text": "체력포션(소) x 5",  "script": "addItem(3001, 5)" }
+            { "text": "부활포션 x 5",  "script": "addItem(3004, 5)" }
         ]
     }
 }

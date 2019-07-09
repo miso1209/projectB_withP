@@ -37,6 +37,10 @@ export default class Player {
         this.controlCharacter = id;
     }
 
+    hasQuest(questId) {
+        return this.quests[questId] !== undefined;
+    }
+
     hasTag(tag) {
         return this.tags.indexOf(tag) >= 0;
     }

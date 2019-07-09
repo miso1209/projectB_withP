@@ -1,11 +1,14 @@
 import quests from "./quests";
+import { EventEmitter } from "events";
 
-export default class Quest {
+export default class Quest extends EventEmitter {
     constructor(questid) {
+        super();
+
         this.questid = questid;
         this.origin = quests[questid];
         this.data = {};
-        this.events = [];
+        this.objectiveEventsList = [];
 
         // 이벤트가 일어날 시 Quest가 가지고있는 Objective랑 비교하는 것 인데..
         // 그렇다면 Objective에 존재하는 이벤트가 이미 발생하고 -> 껏다 켰을 경우 퀘스트 클리어 처리는 어떻게 하는가?.. 못할 것 같은데?
@@ -13,23 +16,22 @@ export default class Quest {
         for(let i = 0; i < this.origin.objectives.length; ++i) {
             const objective = this.origin.objectives[i];
             const handler = (...args) => {
-                console.log(args);
-                // 인자가 일치하면 카운트를 올린다
-                const srcArgs = objective.args || [];
-                let success = true;
-                for(let k = 0; k < srcArgs.length; ++k) {
-                    success &= (srcArgs[k] === args[k]);
-                }
-
-                // 미션이 성공하면 데이터를 업데이트하고 저장을 하자
-                if (success) {
-                    this.data[i] = (this.data[i] || 0) + 1;
-                }
+                console.log('handler');
+                this.emit('checkQuestCondition', objective, objective.conditionScript);
             };
-            this.events.push({
-                event: objective.event,
+
+            this.objectiveEventsList.push({
+                events: objective.event,
                 handler: handler,
             });
+        }
+    }
+
+    load() {
+        for(let i = 0; i < this.origin.objectives.length; ++i) {
+            const objective = this.origin.objectives[i];
+            // Load시 모든 컨디션 한번 체크.
+            this.emit('checkQuestCondition', objective, objective.conditionScript);
         }
     }
 
@@ -38,20 +40,24 @@ export default class Quest {
     }
 
     foreEachEvent(callback) {
-        for(const event of this.events) {
-            callback(event.event, event.handler);
+        for(const objectiveEvent of this.objectiveEventsList) {
+            for (const eventName of objectiveEvent.events) {
+                callback(eventName, objectiveEvent.handler);
+            }
         }
     }
 
     isAllObjectivesCompleted() {
         let completed = true;
-        for(let i = 0; i < this.origin.objectives.length; ++i) {
-            const objective = this.origin.objectives[i];
-            const count = this.data[i] || 0;
-            const maxcount = objective.count || 1;
 
-            completed &= (maxcount <= count);
+        for(let i = 0; i < this.origin.objectives.length; ++i) {
+            // const objective = this.origin.objectives[i];
+            // const count = this.data[i] || 0;
+            // const maxcount = objective.count || 1;
+
+            completed &= this.origin.objectives[i].success;
         }
+
         return completed;
     }
 

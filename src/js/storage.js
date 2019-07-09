@@ -25,7 +25,7 @@ export default class Storage extends EventEmitter {
         this.data.inventory = {};
         this.data.gold = 0;
         this.data.tags = [];
-        this.data.quests = {};
+        this.data.quests = [];
     }
 
     convertVersion(src) {
@@ -80,14 +80,19 @@ export default class Storage extends EventEmitter {
         this.save();
     }
 
-    setQuest(questId, questData) {
-        this.data.quests[questId] = questData;
-        this.save();
+    setQuest(questId) {
+        if (this.data.quests.indexOf(questId) < 0) {
+            this.data.quests.push(questId);
+            this.save();
+        }
     }
 
     completeQuest(questId) {
-        delete this.data.quests[questId];
-        this.save();
+        const index = this.data.quests.indexOf(questId);
+        if(index >= 0) {
+            this.data.quests.splice(index, 1);
+            this.save();
+        }
     }
 
     updateInventory(data) {

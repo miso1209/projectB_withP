@@ -155,9 +155,8 @@ export default class Game extends EventEmitter {
 
     setStorage(storage) {
         this.storage = storage;
+
         this.storage.on('save',() => {
-            // 무엇인가 Data가 바뀌어서 save가 일어난 것. (장비변환, 캐릭 경험치, 아이템, 레벨업, 파티 등등..)
-            console.log('save');
             if(this.ui.player_profile) {
                 this.ui.updateProfile();
             }
@@ -184,7 +183,7 @@ export default class Game extends EventEmitter {
             this.storage.data.location = {};
             this.storage.data.gold = 10;
 
-            this.storage.data.inventory = { 5001: 1, 5004: 1, 4001: 10 };
+            this.storage.data.inventory = { 5001: 1, 5004: 1 };
 
             // 필드에 보이는 캐릭터
             this.storage.data.controlCharacter = 1;
@@ -223,12 +222,9 @@ export default class Game extends EventEmitter {
         });
 
         // 퀘스트 정보를 등록한다
-        for (const questId in this.storage.data.quests) {
-            const quest = new Quest(questId);
-            quest.refresh(this.storage.data.quests[questId]);
-            quest.foreEachEvent(this.on.bind(this));
-            this.player.quests[questId] = quest;
-        }
+        this.storage.data.quests.forEach((questId) => {
+            this.setQuest(questId);
+        });
         
         this.ui.player = this.player;
         this.ui.characters = Characters;
@@ -677,7 +673,10 @@ export default class Game extends EventEmitter {
     }
 
     combine(id) {
-        this.combiner.combine(id, this.player.inventory);
+        const result = this.combiner.combine(id, this.player.inventory);
+        if (result) {
+            this.emit('additem', id, 1);
+        }
         return true;
     }
 
@@ -715,17 +714,7 @@ export default class Game extends EventEmitter {
         }
         return result;
     }
-    showStageTitle(text){
-        this.emit('stageTitle', text);
-    }
-    /*
-    filterOption = {
-        category: string | null,
-        class: string | null
-    }
-
-    ex) getFilteredInventoryData({ class: 'warrior' })
-    */
+    
     getFiteredInventoryData(filterOption) {
         const items = [];
         this.player.inventory.forEach((item) => {
@@ -755,6 +744,7 @@ export default class Game extends EventEmitter {
         return result;
     }
     
+    // Quest
     runScript(script) {
         const parsed = new ScriptParser(script);
         const func = this[parsed.name];
@@ -763,7 +753,24 @@ export default class Game extends EventEmitter {
             throw Error("invalid command : " + parsed.name);
         }
 
-        func.bind(this)(...parsed.args);
+        return func.bind(this)(...parsed.args);
+    }
+
+    checkTag(...args) {
+        let result = true;
+
+        args.forEach((tag) => {
+            result &= this.player.hasTag(tag);
+        });
+
+        return result;
+    }
+
+    checkItem(item, operator,count) {
+        const itemCount = this.player.inventory.getCount(item);
+        const result = eval(`${itemCount} ${operator} ${count}`);
+
+        return result;
     }
 
     hasTag(tag) {
@@ -845,24 +852,33 @@ export default class Game extends EventEmitter {
     }
 
     addQuest(questId) {
-
         if (!this.storage.data.quests[questId]) {
-            console.log('addQuest');
-            // 퀘스트를 가지고 있지 않다면 퀘스트를 추가한다
-            // 가지고 있다면 추가하지 않는다.
-            const quest = new Quest(questId);
-            this.storage.setQuest(questId, quest.data);
-            this.player.quests[questId] = quest;
-
-            // 퀘스트를 활성화시킨다
-            quest.foreEachEvent(this.on.bind(this));
+            this.storage.setQuest(questId);
+            this.setQuest(questId);
         }
     }
 
+    setQuest(questId) {
+        const quest = new Quest(questId);
+        this.player.quests[questId] = quest;
+
+        // 퀘스트를 활성화시킨다
+        quest.foreEachEvent(this.on.bind(this));
+        quest.on('checkQuestCondition', (objective, script) => {
+            // success판정 해야할듯. => 이펙트라던가..? 이 때 완료된다.
+            const result = this.runScript(script);
+            objective.success = result;
+
+            if(result) {
+                console.log(quest);
+            }
+        });
+
+        quest.load();
+    }
+
     completeQuest(id) {
-        console.log('complete Quest');
         const quest = this.player.quests[id];
-        console.log(quest);
         if (quest && quest.isAllObjectivesCompleted()){
             // 이벤트 연결을 끊어놓는다
             quest.foreEachEvent(this.removeListener.bind(this));

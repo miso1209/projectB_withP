@@ -7,6 +7,15 @@ export default class WorkTable extends PropBase {
 
         this.isInteractive = true;
         this.upgraded = false;
+        this.nameTagOffset = {
+            x: -30,
+            y: 0
+        };
+        this.name = "빈 탁자";
+    }
+
+    getName() {
+        return this.name;
     }
 
     applyTag(tag) {
@@ -18,6 +27,8 @@ export default class WorkTable extends PropBase {
     upgrade() {
         // 업그레이드를 한다
         this.tileTexture.texture = PIXI.Texture.fromFrame("house-worktable-upgrade.png");
+        this.name = "작업용 테이블";
+        this.hideName();
         this.upgraded = true;
     }
 

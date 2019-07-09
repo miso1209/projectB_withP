@@ -52,7 +52,7 @@ export default class DevConsole {
         // 현재 퀘스트 상태를 출력한다
         for (const questId in this.game.player.quests) {
             const quest = this.game.player.quests[questId];
-            console.log(quest.title, quest.description, quest.objectives, quest.rewards, quest.isAllObjectivesCompleted());
+            console.log(quest);
         }
     }
 
@@ -63,18 +63,6 @@ export default class DevConsole {
 
     addQuest(id) {
         this.game.addQuest(id);
-    }
-
-    hello() {
-        return this.game.ui.minimap;
-    }
-
-    // Test
-    useItem(){
-        for (const cid in this.game.player.characters) {
-            const c = this.game.player.characters[cid];
-            this.game.useItem(1003,1,c);
-        }
     }
 
     completeQuest() {
@@ -108,11 +96,5 @@ export default class DevConsole {
 
     setVolume(...args) {
         Sound.setVolume(...args);
-    }
-
-    test1() {
-        // 디버깅용
-        console.log(this.game.player.characters[0].equip);
-        this.game.player.characters[0].equip("weapon", 1);
     }
 }

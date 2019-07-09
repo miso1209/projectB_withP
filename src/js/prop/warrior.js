@@ -74,7 +74,7 @@ export default class Warrior extends PropBase {
                 });
             }
 
-            if (potionCount < 1 && !this.healed) {
+            if (!game.player.hasQuest(2) && !this.healed) {
                 game.exploreMode.interactive = false;
                 game.ui.hideMenu();
 
@@ -90,12 +90,13 @@ export default class Warrior extends PropBase {
                 });
             } else if(this.healed) {
                 healedDialog();
-            } else {
+            } else if(potionCount >= 1) {
                 const t = async () => {
                     game.exploreMode.interactive = false;
                     game.ui.hideMenu();
                     await game.$fadeOut(1);
 
+                    game.completeQuest(2);
                     game.player.inventory.deleteItem(3001, 1);
                     game.addTag("healWarrior");
                     this.healed = true;
@@ -116,6 +117,8 @@ export default class Warrior extends PropBase {
                         t();
                     }
                 });
+            } else {
+
             }
         }
     }
