@@ -49,6 +49,8 @@
 
     ["assets/sprite/elid/elid_atk_nw.json"],
     ["assets/sprite/elid/elid_atk_sw.json"],
+    ["assets/sprite/elid/elid_walk_sw.json"],
+    ["assets/sprite/elid/elid_walk_nw.json"],
     ["assets/sprite/elid/elid_idle_nw.json"],
     ["assets/sprite/elid/elid_idle_sw.json"],
 

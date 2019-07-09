@@ -37,7 +37,7 @@ export default class MapGenerator {
         // 한 층의 룸의 갯수는 기본적으로 6개이고 5개 층마다 1개씩 늘어난다. ==> 100층은 26개 + a의 룸. (boss룸은 추가로 붙는다.)
         // 6 + Math.floor(this.currentFloor / 5)
         const roomCount = 6 + Math.floor(this.currentFloor / 5);
-        let bossFloor = (this.currentFloor % 2 === 0)?true : false;
+        let bossFloor = (this.currentFloor % 10 === 0)?true : false;
         let width = 500;
         let height = 500;
         const map = [];
@@ -225,12 +225,12 @@ export default class MapGenerator {
                 const neighbor = this.getNeighbor(x,y);
                 
                 if (this.map[y][x] === MAP_DATA.BOSS) {
-                    const stageName = path.basename(`assets/mapdata/${this.currentFloor===2?lastBoss:middleBoss}.json`, ".json");
+                    const stageName = path.basename(`assets/mapdata/${this.currentFloor===100?lastBoss:middleBoss}.json`, ".json");
                     const stage = new Stage(neighbor);
                     await stage.$load(stageName);
                     stage.setTags(this.tags);
 
-                    if (this.currentFloor === 2) {
+                    if (this.currentFloor === 100) {
                         const monster = this.propGenerator.createStoryMonster('dragon');
                         stage.addMonster(monster, {
                             type: "dragon",

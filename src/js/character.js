@@ -180,7 +180,7 @@ export default class Character {
 
     get armor() {
         const armor = this.simulatedArmor?this.simulatedArmor:this.plusArmor;
-        return Math.floor(this.stamina * this.armorPotential) + (armor);
+        return Math.floor(this.stamina * this.armorPotential * 2) + (armor);
     }
 
     get speed() {
