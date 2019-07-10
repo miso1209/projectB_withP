@@ -839,29 +839,32 @@ export default class Game extends EventEmitter {
         if (!this.storage.data.quests[questId]) {
             this.storage.setQuest(questId, {});
             this.setQuest(questId, {});
+
+            // add quest
+            console.log('add quest : ', this.player.quests[questId]);
         }
     }
 
     setQuest(questId, data) {
+        // 퀘스트 등록
         const quest = new Quest(questId);
         quest.data = data;
         this.player.quests[questId] = quest;
-
         quest.foreEachEvent(this.on.bind(this));
-        quest.on('checkQuestCondition', (objective, script) => {
+
+        // 퀘스트 조건 판정.
+        quest.on('checkQuestCondition', (objective, script, showFlag) => {
             const conditionResult = this.runQuestScript(quest, script);
             const isChanged = quest.setObjective(objective, conditionResult);
             this.storage.setQuest(questId, quest.data);
 
-            // 여기서 UI Refresh 하시면 될 것 같습니다. => Success 판정또한 가능
-
-            // 퀘스트 Condition이 변경되었을 경우.
-            if (isChanged) {
-                // 퀘스트를 깬경우
+            if (isChanged && showFlag) {
                 if (quest.success) {
-
-                } else { // 퀘스트를 깨지는 않았지만, 내용이 변경된 경우
-
+                    // success quest
+                    console.log('success quest : ', this.player.quests[questId]);
+                } else {
+                    // change condition
+                    console.log('change condition : ', this.player.quests[questId]);
                 }
             }
         });

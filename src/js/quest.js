@@ -17,7 +17,7 @@ export default class Quest extends EventEmitter {
         for(let i = 0; i < this.origin.objectives.length; ++i) {
             const objective = this.origin.objectives[i];
             const handler = () => {
-                this.emit('checkQuestCondition', objective, objective.conditionScript);
+                this.emit('checkQuestCondition', objective, objective.conditionScript, true);
             };
 
             this.objectiveEventsList.push({
@@ -41,7 +41,7 @@ export default class Quest extends EventEmitter {
         // Load시 모든 컨디션 한번 체크.
         for(let i = 0; i < this.origin.objectives.length; ++i) {
             const objective = this.origin.objectives[i];
-            this.emit('checkQuestCondition', objective, objective.conditionScript);
+            this.emit('checkQuestCondition', objective, objective.conditionScript, false);
         }
     }
 
