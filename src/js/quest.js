@@ -75,6 +75,10 @@ export default class Quest extends EventEmitter {
         return this.origin.id;
     }
 
+    get success() {
+        return this.isAllObjectivesCompleted();
+    }
+
     get objectives() {
         const result = [];
         for(let i = 0; i < this.origin.objectives.length; ++i) {

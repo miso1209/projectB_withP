@@ -277,6 +277,7 @@ export default class Game extends EventEmitter {
 
         this.ui.showTheaterUI(0.5);
         this.ui.hideMenu();
+        this.ui.hideMinimap();
         this.exploreMode.setInteractive(false);
         if (this.stage) { this.stage.showPathHighlight = false; }
 
@@ -316,6 +317,7 @@ export default class Game extends EventEmitter {
                 } else if (func.command === "battle") {
                     this.ui.hideTheaterUI();
                     this.ui.showMenu();
+                    this.ui.showMinimap();
                     this.exploreMode.interactive = true;
                     if (this.stage) { this.stage.showPathHighlight = true; }
                     this.onNotification = false;
@@ -420,6 +422,7 @@ export default class Game extends EventEmitter {
         this.stage.interactTarget = null;
         this.ui.showTheaterUI(0.5);
         this.ui.hideMenu();
+        this.ui.hideMinimap();
         
         this.exploreMode.setInteractive(false);
     }
