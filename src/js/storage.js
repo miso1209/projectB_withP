@@ -53,11 +53,14 @@ export default class Storage extends EventEmitter {
     }
 
     setControlCharacter(id) {
-        this.data.controlCharacter = id;
+        this.data.controlCharacter = Number(id);
         this.save();
     }
 
     saveParty(party) {
+        party = party.map((character) => {
+            return Number(character)
+        });
         this.data.party = party;
         this.save();
     }

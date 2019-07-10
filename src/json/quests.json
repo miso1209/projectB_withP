@@ -1,47 +1,59 @@
 {
     "1": {
         "id": 1,
+        "isIterable": false,
+        "levelBound": { "min": 0, "max": 0 },
         "title": "새로운 시작",
-        "description" : "주인없는 집에서의 새로운 시작! 장소는 해결되었으니 <em>빈 탁자</em>에 <em>작업용 테이블</em>을 만들어보자!.",
+        "description" : "주인없는 집에서의 새로운 시작! 장소는 해결되었으니 <em>빈 탁자</em>에 <em>작업용 테이블</em>을 만들어보자",
         "objectives": [
             { "text": "작업용 테이블 제작", "event": ["addtag","removetag"], "conditionScript": "checkTag(worktable)" }
         ],
         "rewards": [
             { "text": "약초 x 10",  "script": "addItem(4001, 10)" },
+            { "text": "10 Gold",  "script": "addGold(10)" },
             { "script": "_playCutscene(2)" }
         ]
     },
     "2": {
         "id": 2,
+        "isIterable": false,
+        "levelBound": { "min": 0, "max": 0 },
         "title": "포션제작",
-        "description" : "쓰러져 있는 모험가들을 구출하기 위해 <em>체력포션(소)</em>을 제작하자!.",
+        "description" : "쓰러져 있는 모험가들을 구출하기 위해 <em>체력포션(소)</em>을 1개 제작하자",
         "objectives": [
             { "text": "체력포션(소) 제작", "event": ["additem", "useitem", "additems"], "conditionScript": "checkItem(3001, >=, 1)" }
         ],
         "rewards": [
-            { "text": "부활포션 x 5",  "script": "addItem(3004, 5)" }
+            { "text": "부활포션 x 5",  "script": "addItem(3004, 5)" },
+            { "text": "10 Gold",  "script": "addGold(10)" }
         ]
     },
     "3": {
         "id": 3,
+        "isIterable": true,
+        "levelBound": { "min": 0, "max": 0 },
         "title": "기초 전투훈련",
-        "description" : "던전의 <em>몬스터</em>와 싸워서 승리하자",
+        "description" : "어둠의 성에 돌아다니는 <em>몬스터</em>들과 싸워서 승리하자",
         "objectives": [
-            { "text": "전투승리", "event": ["win"], "conditionScript": "checkCount(win, >=, 3)"}
+            { "text": "전투 승리", "event": ["win"], "conditionScript": "checkCount(win, >=, 3)"}
         ],
         "rewards": [
-            { "text": "체력포션(소) x 5",  "script": "addItem(3001, 5)" }
+            { "text": "체력포션(중) x 3",  "script": "addItem(3002, 3)" },
+            { "text": "20 Gold",  "script": "addGold(20)" }
         ]
     },
     "4": {
         "id": 4,
-        "title": "던전 탐험",
-        "description" : "<em>던전의 1층</em>에 있는 <em>밀루다</em>를 찾으러 가자.",
+        "isIterable": false,
+        "levelBound": { "min": 0, "max": 0 },
+        "title": "밀루다 찾기",
+        "description" : "<em>어둠의 성 1층</em>에서 사라진 <em>밀루다</em>를 찾으러 가자",
         "objectives": [
-            { "text": "밀루다", "event": ["addtag"], "conditionScript": "checkTag(hasarcher)"}
+            { "text": "밀루다와 대화", "event": ["addtag"], "conditionScript": "checkTag(hasarcher)"}
         ],
         "rewards": [
-            { "text": "체력포션(소) x 2",  "script": "addItem(3001, 2)" }
+            { "text": "체력포션(소) x 2",  "script": "addItem(3001, 2)" },
+            { "text": "10 Gold",  "script": "addGold(10)" }
         ]
     }
 }

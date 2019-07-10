@@ -8,11 +8,11 @@ export default class Inventory {
     }
 
     get gold() {
-        return this._gold;
+        return Number(this._gold);
     }
 
     set gold(value) {
-        this._gold = value;
+        this._gold = Number(value);
         this.makeDirty();
     }
 

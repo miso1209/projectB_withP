@@ -181,7 +181,7 @@ export default class Game extends EventEmitter {
             this.storage.data.cutscene = 1;
 
             this.storage.data.location = {};
-            this.storage.data.gold = 10;
+            this.storage.data.gold = 0;
 
             this.storage.data.inventory = { 5001: 1, 5004: 1 };
 
@@ -414,7 +414,9 @@ export default class Game extends EventEmitter {
         }
 
         await this.$enterStageIns(hall, hallKey);
-        this.ui.showStageTitle(`- 어둠의 성탑 ${this.currentFloor}층 -`);
+        this.ui.showStageTitle(`- 어둠의 성 ${this.currentFloor}층 -`);
+        
+        this.emit('nextfloor', this.currentFloor);
     }
 
     async $battleCutscene() {
@@ -802,6 +804,10 @@ export default class Game extends EventEmitter {
         if (unequipItem) {
             this.player.inventory.addItem(unequipItem.id, 1);
         }
+    }
+
+    addGold(gold) {
+        this.player.inventory.gold += gold;
     }
 
     addItem(itemId, count) {
