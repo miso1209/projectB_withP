@@ -14,10 +14,15 @@
   b2a9a0
 */
 
-
+.quest_desc em {
+  color: #8fc13b;
+}
 .avatar_health{
   color: #fd6240;
 }
+
+
+
 /* Intro */
 .project_header {
   height: 200px;
@@ -383,7 +388,6 @@
   z-index: 10;
   transition: right 0.3s;
   pointer-events: auto;
-  border: 1px solid #fff;
   background-color: rgba(19,19,18,0.5);
 }
 .questWrap::before{
@@ -408,7 +412,7 @@
   
   height: 24px;
   font-size: 12px;
-  text-align: left;
+  /* text-align: left; */
   padding: 5px 8px 0;
   background-color: rgba(19,19,18,0.5);
 }
@@ -423,6 +427,9 @@
 .questWrap .scrollView {
   margin: 0;
 }
+.questWrap .scrollBlind{
+  width: calc(100% - 10px);
+}
 .questWrap .list-box {
   height: 137px;
   overflow-x: hidden;
@@ -431,12 +438,16 @@
   padding: 0 5px;
   background-color: rgba(150,141,133,0.6);
 }
-
 .questWrap .list-box li {
   display: block;
   text-align: left;
   padding: 5px 3px 0;
   width: 100%;
+  margin-bottom: 10px;
+}
+.questWrap .list-box li:not(:first-child) {
+  border-top: 1px dotted #dad0c7;
+  padding-top: 5px;
 }
 
 .questWrap .list-box li .quest_name {
@@ -455,24 +466,37 @@
   width: 15px;
   padding: 0;
   margin-left: 5px;
-  
   color: #fff;
   text-align: center;
   line-height: 15px;
   background-color: #fd6240;
   border-radius: 50%;
 }
-
 .questWrap .list-box li .quest_desc {
   font-size: 12px;
-  line-height: 1.6;
+  line-height: 1.4;
   color: #dad0c7;
+  /* 
   overflow:hidden;
   text-overflow:ellipsis;
-  white-space:nowrap;
-} 
-.questWrap .list-box li .quest_desc em {
-  color: #8fc13b;
+  white-space:nowrap; 
+  */
+}
+
+.questWrap .list-box li .completeText{
+  display: none;
+
+  font-size: 12px;
+  line-height: 24px;
+  color: #2a0a0f;
+}
+
+/* 완료된 퀘스트 && 리워드 수령 전 */
+.questWrap .list-box li.success .completeText {
+  display: block;
+}
+.questWrap .list-box li.success .quest_desc{
+  display: none;
 }
 
 /*.gnb */
@@ -542,7 +566,7 @@ button, .button{
   position: absolute;
   width:118px;
   height:44px;
-  font-size: 16px;
+  font-size: 14px;
   color: #2a0a0f;
   background: url(~assets/ui/button2.png) no-repeat;
 }
@@ -579,6 +603,12 @@ button, .button{
   color: #fff;
   background: url(~assets/ui/button_submit.png) no-repeat;
 }
+
+.submit:hover, .submit.active {
+  background-color: #fff;
+  background-blend-mode: darken;
+}
+
 .button_small {
   width: 75px;
   height: 35px;
@@ -740,7 +770,7 @@ button, .button{
 }
 
 
-.stageTitle {
+.stageTitle, .notificationText {
   display: inline-block;
   margin:15% auto;
 
@@ -761,10 +791,9 @@ button, .button{
   animation: titleShow 2.5s both;
 }
 
-.stageTitle.animate {
-  opacity:1;
-  transform: scaleX(1);
-  transition: all 0.3s;
+.notificationText {
+  font-size: 20px;
+  line-height: 30px;
 }
 
 .mainMenu {
@@ -978,6 +1007,91 @@ button, .button{
   margin-left: 5px;
 }
 
+/* 퀘스트 모달 */
+.modal.quest .questList {
+  width: 250px;
+  padding: 10px 20px 10px 0;
+  background-color: #281b10;
+  border-radius: 10px;
+}
+
+.modal.quest .questInfo {
+  position: relative;
+  width: calc(100% - 270px);
+  height: 350px;
+
+  padding: 20px 20px;
+  text-align: left;
+  background-color: #281b10;
+  overflow: hidden;
+}
+
+.modal.quest .quest_title {
+  display: block;
+  line-height: 2;
+  font-size: 16px;
+}
+.modal.quest .quest_desc {
+  font-size: 14px;
+} 
+.modal.quest .quest_reward {
+  position: absolute;
+  bottom:100px;
+  right: 0;
+
+  width: inherit;
+  overflow: hidden;
+}
+.modal.quest .quest_reward .item {
+  display: block;
+  float: left;
+}
+.modal.quest .quest_reward .item:not(:first-child) {
+  margin-left: 20px;
+}
+.modal.quest .quest_reward .item .count {
+  color: #ffd800;
+}
+.modal.quest .quest_reward::after{
+  clear: both;
+  display: block;
+  width: 100%;
+}
+
+
+.modal.quest .questInfo .quest_status {
+  margin: 20px 0 0;
+}
+
+.modal.quest .questList li {
+  display: block;
+  text-align: left;
+  height: auto;
+  padding: 5px;
+  border: 1px solid transparent;
+}
+
+.modal.quest .quest_status {
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.modal.quest .questList li:hover, 
+.modal.quest .questList li:active, 
+.modal.quest .questList li.active {
+  border: 1px dotted #dad0c7;
+}
+
+.modal.quest li .rewardBtn{
+  display: none;
+  position: static;
+  margin-top: 10px;
+}
+
+.modal.quest li.success .rewardBtn {
+  display: block;
+}
+/* .퀘스트 모달 */
 
 
 /* 골드 wrapper */

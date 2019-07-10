@@ -16,6 +16,7 @@ import PartyUI from "./partyui";
 import ItemAcquire from "./itemAcquire";
 import Profile from "./profile";
 import QuestList from "./quest";
+import QuestModal from "./questModal";
 
 
 export default class DomUI extends EventEmitter {
@@ -86,11 +87,18 @@ export default class DomUI extends EventEmitter {
         this.character = null;
         this.playerInvenData = null;
         this.characters = null;
-        this.currentQuest = null;
     }
 
-    showQuestStatus() {
+    showQuestStatus(currentQuest) {
         this.questStatus.innerHTML = '';
+
+        if (currentQuest.success) {
+            console.log('완료된 보상압니다. 퀘스트상세창에서 보상을 확인하세요. ');
+            this.emit('quest');
+            return;
+        }
+
+
         const frag = document.createDocumentFragment();
         const title = new MakeDom('p', 'quest_name');
         const status = new MakeDom('p', 'quest_status');
@@ -98,10 +106,10 @@ export default class DomUI extends EventEmitter {
         frag.appendChild(title);
         frag.appendChild(status);
 
-        if (this.currentQuest) {
+        if (currentQuest && !currentQuest.success) {
             this.questStatus.style.opacity = '1';
-            title.innerText = this.currentQuest.origin.title;
-            status.innerText = `${this.currentQuest.objectives[0].count} / ${this.currentQuest.objectives[0].maxCount}`;
+            title.innerText = currentQuest.origin.title;
+            status.innerText = `${currentQuest.objectives[0].count} / ${currentQuest.objectives[0].maxCount}`;
         }
         this.questStatus.appendChild(frag);
     }
@@ -110,24 +118,34 @@ export default class DomUI extends EventEmitter {
         this.questStatus.style.opacity = '0';
     }
 
-    showQuestModal(){
-        console.log('quest modal');
+    showQuestComplete(quest){
+        const comment = new MakeDom('h3', 'notificationText');
+        
+        let tt = this.displayLayer.querySelector('.notificationText');
+        let text = `${quest.origin.title} 퀘스트가 완료되었습니다.`;
+
+        if(this.displayLayer.querySelector('.notificationText')) {
+            comment.innerText = text; 
+            this.displayLayer.removeChild(tt);
+            this.displayLayer.appendChild(comment);   
+        } else {
+            this.displayLayer.appendChild(comment);   
+            comment.innerText = text; 
+        }
     }
-    
+
     showQuest() {
         let questlist = [];
+        
         for (const qid in this.player.quests) {
             questlist.push(this.player.quests[qid]);
         }
         const questWrap = new QuestList(questlist, (result)=>{
-            console.log(result);
             if(result === 'showQuestModal') {
             } else {
-                this.currentQuest = result;
-                this.showQuestStatus();
+                this.showQuestStatus(result);
             }
-
-            this.showQuestModal();
+            this.emit('quest');
         });
 
         questWrap.dom.addEventListener('click', ()=>{
@@ -346,6 +364,14 @@ export default class DomUI extends EventEmitter {
             if (result) {
                 result();
             }
+        });
+    }
+    
+    // 퀘스트 모달
+    showQuestModal(inputs){
+        const pane = this.createContainer();
+        const questModal = new QuestModal(pane, inputs, (result) => {
+            console.log(result);
         });
     }
 

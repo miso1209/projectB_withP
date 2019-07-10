@@ -132,12 +132,17 @@ export default class Game extends EventEmitter {
         });
 
         this.ui.on('quest', () => {
-            this.ui.showQuestModal();
+            let inputs = [];
+            for(const qid in this.player.quests) {
+                inputs.push(this.player.quests[qid]);
+            }
+            this.ui.showQuestModal(inputs);
         });
 
-        this.ui.on('stageTitle', (text) => {
-            this.ui.showStageTitle(text);
-        });
+        // this.ui.on('stageTitle', (text) => {
+        //     console.log('??');
+        //     this.ui.showStageTitle(text);
+        // });
         
         this.ui.on('setMainAvatar', (id) => {
             this.setMainAvatar(id);
@@ -419,7 +424,6 @@ export default class Game extends EventEmitter {
 
         await this.$enterStageIns(hall, hallKey);
         this.ui.showStageTitle(`- 어둠의 성 ${this.currentFloor}층 -`);
-        
         this.emit('nextfloor', this.currentFloor);
     }
 
@@ -875,9 +879,11 @@ export default class Game extends EventEmitter {
                 if (quest.success) {
                     // success quest
                     console.log('success quest : ', this.player.quests[questId]);
+                    this.ui.showQuestComplete(this.player.quests[questId]);
                 } else {
                     // change condition
                     console.log('change condition : ', this.player.quests[questId]);
+                    this.ui.showQuestStatus(this.player.quests[questId]);
                 }
             }
         });

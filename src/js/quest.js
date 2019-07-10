@@ -1,5 +1,8 @@
 import quests from "./quests";
+import Items from "./items";
 import { EventEmitter } from "events";
+import ScriptParser from "./scriptparser";
+import { isRegExp } from "util";
 
 export default class Quest extends EventEmitter {
     constructor(questid) {
@@ -97,11 +100,26 @@ export default class Quest extends EventEmitter {
     get rewards() {
         const result = [];
         for(const reward of this.origin.rewards) {
+            const parser = new ScriptParser(reward.script);
+            let item = null;
+            let count = 0;
+
+            if(parser.name === "addItem") {
+                const itemId = parser.args[0];
+                count = parser.args[1];
+                item = Object.assign({}, Items[itemId]);
+            }
+
             result.push({
                 text: reward.text,
-                script: reward.script
+                script: reward.script,
+                itemData : {
+                    item: item,
+                    count: count
+                }
             });
         }
+
         return result;
     }
 }

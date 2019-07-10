@@ -21,7 +21,6 @@ export default class PartyUI extends Panel {
     this.selected = null; // 리스트에서 선택된 캐릭터
 
     this.members = []; 
-  
 
     const modal = new Modal(pane, 800, 460, null);
     this.dom = modal.dom;

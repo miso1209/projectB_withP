@@ -190,8 +190,9 @@
   overflow: hidden;
 }
 .scrollBlind {
-  width: calc(100% - 15px);
-  max-height: 320px;
+  /* width: calc(100% - 15px); */
+  width: calc(100% - 10px);
+  /* max-height: 320px; */
   height: inherit;
   padding: 0;
 }
