@@ -58,8 +58,8 @@ export default class DomUI extends EventEmitter {
             {name:'캐릭터', event: "characterselect"},
             {name:'보관함', event: "inventory"},
             {name:'파티', event: "party"},
-            // {name:'퀘스트', event: "quest"},
-            {name:'설정', event: "options"}
+            {name:'퀘스트', event: "quest"}
+            // {name:'설정', event: "options"}
         ];
         
         menuData.forEach(menu => {
@@ -81,7 +81,6 @@ export default class DomUI extends EventEmitter {
         this.questStatus = new MakeDom('div', 'questStatus');
         this.displayLayer.appendChild(this.questStatus);
 
-
         // game data
         this.player = null;
         this.character = null;
@@ -92,8 +91,6 @@ export default class DomUI extends EventEmitter {
 
     showQuestStatus() {
         this.questStatus.innerHTML = '';
-        // this.currentQuest = this.player.quests[qid];
-        
         const frag = document.createDocumentFragment();
         const title = new MakeDom('p', 'quest_name');
         const status = new MakeDom('p', 'quest_status');
@@ -106,12 +103,15 @@ export default class DomUI extends EventEmitter {
             title.innerText = this.currentQuest.origin.title;
             status.innerText = `${this.currentQuest.objectives[0].count} / ${this.currentQuest.objectives[0].maxCount}`;
         }
-
         this.questStatus.appendChild(frag);
     }
 
     hideQuestStatus() {
         this.questStatus.style.opacity = '0';
+    }
+
+    showQuestModal(){
+        console.log('quest modal');
     }
     
     showQuest() {
@@ -119,14 +119,17 @@ export default class DomUI extends EventEmitter {
         for (const qid in this.player.quests) {
             questlist.push(this.player.quests[qid]);
         }
-        
         const questWrap = new QuestList(questlist, (result)=>{
+            console.log(result);
             if(result === 'showQuestModal') {
             } else {
                 this.currentQuest = result;
                 this.showQuestStatus();
             }
+
+            this.showQuestModal();
         });
+
         questWrap.dom.addEventListener('click', ()=>{
             questWrap.dom.classList.toggle('open');
         });

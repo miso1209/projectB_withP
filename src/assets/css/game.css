@@ -379,9 +379,8 @@
   width: 151px;
   height: 164px;
   top: 165px;
-  right: -134px;
+  right: -138px;
   z-index: 10;
-  /* background: url(~assets/ui/quest.png) no-repeat; */
   transition: right 0.3s;
   pointer-events: auto;
   border: 1px solid #fff;
@@ -440,7 +439,7 @@
   width: 100%;
 }
 
-.questWrap .list-box .quest_name {
+.questWrap .list-box li .quest_name {
   width: 100%;
   height: 20px;
   font-size: 12px;
@@ -449,7 +448,22 @@
   white-space:nowrap;
 }
 
-.questWrap .list-box .quest_desc {
+.questWrap .list-box li.new .quest_name::after {
+  content: 'N';
+  display: inline-block;
+  height: 15px;
+  width: 15px;
+  padding: 0;
+  margin-left: 5px;
+  
+  color: #fff;
+  text-align: center;
+  line-height: 15px;
+  background-color: #fd6240;
+  border-radius: 50%;
+}
+
+.questWrap .list-box li .quest_desc {
   font-size: 12px;
   line-height: 1.6;
   color: #dad0c7;
@@ -457,7 +471,7 @@
   text-overflow:ellipsis;
   white-space:nowrap;
 } 
-.questWrap .list-box .quest_desc em {
+.questWrap .list-box li .quest_desc em {
   color: #8fc13b;
 }
 
@@ -1068,7 +1082,7 @@ button.disabled span {
 /* 레시피 리스트 */
 .recipeList.scrollView{
   position: absolute;
-  left: 20px;
+  left: 10px;
 }
 
 /* 

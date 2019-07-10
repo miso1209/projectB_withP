@@ -21,7 +21,7 @@ export default class QuestList extends Panel {
     // IE 스크롤바 이슈 대응
     const scrollView = document.createElement('div');
     scrollView.classList.add('scrollView');
-    scrollView.style.width = '150px';
+    scrollView.style.width = '100%';
     
     const scrollBlind = document.createElement('div');
     scrollBlind.className = 'scrollBlind';
@@ -40,13 +40,14 @@ export default class QuestList extends Panel {
 
     questWrap.appendChild(frag);
     this.dom = questWrap;
+
     this.update();
   }
 
   update(){
     this.list.innerHTML = '';
 
-    if (this.inputs) {
+    if (this.inputs.length > 0) {
       this.inputs.forEach(quest => {
         let listCell = new MakeDom('li');
         let quest_name = new MakeDom('p', 'quest_name', quest.origin.title);
@@ -59,6 +60,10 @@ export default class QuestList extends Panel {
         this.list.appendChild(listCell);
         listCell.addEventListener('click', this.select.bind(this, quest));
       });
+    } else {
+      const comment = new MakeDom('li', 'comment');
+      comment.innerHTML = '새로운 퀘스트가<br>없습니다';
+      this.list.appendChild(comment);
     }
   }
 }

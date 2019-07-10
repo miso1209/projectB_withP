@@ -79,19 +79,17 @@ export default class Inventory extends Panel {
         const scrollBlind = document.createElement('div');
         scrollBlind.className = 'scrollBlind';
     
-        const storageContent = document.createElement('ul');
-        storageContent.classList.add('slot-list-box');
-        storageContent.classList.add('scrollbox');
-        storageContent.style.height = scrollHeight;
+        this.storageContent = document.createElement('ul');
+        this.storageContent.classList.add('slot-list-box');
+        this.storageContent.classList.add('scrollbox');
+        this.storageContent.style.height = scrollHeight;
 
         // 스크롤 이벤트 추가
         // storageContent.addEventListener('scroll', this.scrolled.bind(this, storageContent));
-
-        this.storageContent = storageContent;
         this.slotSize = 24;
 
         scrollView.appendChild(scrollBlind);
-        scrollBlind.appendChild(storageContent);
+        scrollBlind.appendChild(this.storageContent);
         wrapper.appendChild(scrollView);
         inventory.dom.appendChild(wrapper);
     }
@@ -106,7 +104,6 @@ export default class Inventory extends Panel {
     onTabSelected(category) {
         // 탭정보를 모두 지운다
         while (this.storageContent.firstChild) {
-            this.storagePane = [];
             this.selectedItemDetail(null);
             this.storageContent.removeChild(this.storageContent.firstChild);   
         }

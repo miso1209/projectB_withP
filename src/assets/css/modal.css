@@ -214,11 +214,6 @@
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-  /* position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 111; */
   overflow: hidden;
 }
 .slot-list-box li.slot {

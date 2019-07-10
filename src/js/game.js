@@ -131,6 +131,10 @@ export default class Game extends EventEmitter {
             this.ui.playerInvenData = this.getFiteredInventoryData({category: option.category, class: option.class});
         });
 
+        this.ui.on('quest', () => {
+            this.ui.showQuestModal();
+        });
+
         this.ui.on('stageTitle', (text) => {
             this.ui.showStageTitle(text);
         });
