@@ -116,7 +116,6 @@
   top: 70px;
   left: 20px;
   right: 20px;
-  bottom: 20px;
   z-index: 1;
   
   padding: 0 20px;
@@ -128,10 +127,10 @@
   color: #fff;
 }
 
-/* .contents p {
+.contents p {
   font-size: 14px;
   line-height: 1.2;
-} */
+}
 
 .flexWrap {
   display: block;

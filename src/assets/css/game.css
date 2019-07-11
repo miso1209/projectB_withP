@@ -1194,12 +1194,8 @@ button.disabled {
 
 .paging.disabled {
   background-color: transparent;
-  opacity: 0.5;
 }
 
-button.disabled span {
-  pointer-events: none;
-}
 
 /* 레시피 리스트 */
 .recipeList.scrollView{
