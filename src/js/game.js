@@ -12,6 +12,7 @@ import Combiner from './combiner';
 import Character from './character';
 import Characters from './characters';
 import Quest from './quest';
+import Quests from './quests';
 
 import ScriptParser from './scriptparser';
 import Cutscene from './cutscene';
@@ -924,6 +925,7 @@ export default class Game extends EventEmitter {
     }
 
     checkCount(quest, key, operator, count) {
+        console.log(quest,key,operator,count);
         // 초기 로드시는 증가시키지 않는다.
         if (!quest.isInitData[key]) {
             quest.isInitData[key] = true;
@@ -943,6 +945,75 @@ export default class Game extends EventEmitter {
             count: quest.data[key].count,
             maxCount: count
         };
+    }
+
+    getAllQuests() {
+        return this.getAcceptableQuests().concat(this.getAcceptedQuests());
+    }
+
+    getAcceptableQuests() {
+        const acceptableQuests = [];
+
+        for (let ID in Quests) {
+            const newQuest = new Quest(ID);
+            let success = !Quests[ID].isStoryQuest;
+
+            // 이미 Accept한 Quest제거.
+            for (let acceptedID in this.player.quests) {
+                success &= (acceptedID !== ID);
+            }
+
+            // 이미 완료한 퀘스트는 Iterable, Time 체크해서 success판정.
+            for (let completedID in this.player.completedQuests) {
+                const quest = this.player.completedQuests[completedID];
+                const endDate = quest.data.clearDate;
+
+                if (completedID === ID && Quests[ID].isIterable) {
+                    const diff = (new Date() - new Date(endDate)) / 1000;
+                    success &= diff > Quests[ID].secForNextIterable;
+                } else if(completedID === ID) {
+                    success &= false;
+                }
+            }
+
+            if (success) {
+                newQuest.copy.forEach((objective) => {
+                    const conditionResult = this.runQuestScript(newQuest, objective.conditionScript);
+                    const isChanged = newQuest.setObjective(objective, conditionResult);
+                });
+
+                acceptableQuests.push({
+                    id: ID,
+                    title: newQuest.title,
+                    type: 'Acceptable',
+                    description: newQuest.description,
+                    objectives: newQuest.objectives,
+                    rewards: newQuest.rewards,
+                    success: newQuest.isAllObjectivesCompleted()
+                });
+            }
+        }
+
+        return acceptableQuests;
+    }
+
+    getAcceptedQuests() {
+        const accpetedQuests = [];
+        
+        for (let ID in this.player.quests) {
+            const quest = this.player.quests[ID];
+            accpetedQuests.push({
+                id: ID,
+                title: quest.title,
+                type: 'Accepted',
+                description: quest.description,
+                objectives: quest.objectives,
+                rewards: quest.rewards,
+                success: quest.isAllObjectivesCompleted()
+            });
+        }
+
+        return accpetedQuests;
     }
     
     checkTag(quest, ...tags) {

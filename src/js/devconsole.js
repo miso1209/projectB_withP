@@ -50,7 +50,7 @@ export default class DevConsole {
 
     printQuest() {
         // 현재 퀘스트 상태를 출력한다
-        return this.game.player.getAllQuests();
+        return this.game.getAllQuests();
     }
 
     devEmit(string) {
