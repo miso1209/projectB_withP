@@ -9,7 +9,6 @@ export default class Button extends Panel {
         
         if (type !== undefined) {
             button.classList.add(`${type}`);
-            
         } else {
             button.classList.add('button');
         }
@@ -19,6 +18,10 @@ export default class Button extends Panel {
         this.dom.addEventListener('click', ()=>{
             Sound.playSound('click_menu.mp3');
         });
+    }
+
+    setNewItem() {
+        this.dom.classList.add('new');
     }
 }
 

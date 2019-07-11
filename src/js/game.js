@@ -803,6 +803,7 @@ export default class Game extends EventEmitter {
 
         const party = this.player.party.getPartyIndex();
         this.storage.saveParty(party);
+        // UI Flag
 
         this.emit('addcharacter', id, character);
     }
@@ -835,6 +836,7 @@ export default class Game extends EventEmitter {
         this.onNotify({ type:"item", item:itemId, count:count } );
 
         // 퀘스트를 위한 이벤트 처리
+        // UI Flag
         this.emit('additem', itemId, count);
     }
 
@@ -845,6 +847,7 @@ export default class Game extends EventEmitter {
         this.onNotify({ type:"items", items:items } );
 
         // 퀘스트를 위한 이벤트 처리
+        // UI Flag
         this.emit('additems', items);
     }
 
@@ -871,6 +874,8 @@ export default class Game extends EventEmitter {
 
             // add quest
             console.log('add quest : ', this.player.quests[questId]);
+            // UI Flag
+            
         }
     }
 
@@ -891,6 +896,7 @@ export default class Game extends EventEmitter {
                 if (quest.success) {
                     // success quest
                     console.log('success quest : ', this.player.quests[questId]);
+                    // UI Flag
                     this.ui.showQuestComplete(this.player.quests[questId]);
                 } else {
                     // change condition

@@ -5,12 +5,12 @@ import Button from './component/button';
 import ItemImage from './component/itemimage';
 
 export default class QuestModal extends Panel {
-    constructor(pane, inputs, qid, result){
+    constructor(pane, inputs, currentQuest, result){
       super();
 
       pane.classList.add('screen');
       this.pane = pane;
-      this.qid = qid;
+      this.currentQuest = currentQuest;
       this.inputs = inputs; // 현재 진행중인 퀘스트 데이터
       this.result = result;
     
@@ -67,7 +67,7 @@ export default class QuestModal extends Panel {
         if (quest.type === 'Acceptable') {
           status.innerText = '미진행 퀘스트';
         } else {
-          status.innerText = (quest.success)?'퀘스트완료':'퀘스트진행중';
+          status.innerText = (quest.success)?'완료된 퀘스트':'진행중인 퀘스트';
         }
 
         if (quest.success) {
@@ -85,8 +85,8 @@ export default class QuestModal extends Panel {
           this.listcallback(quest);
         }
 
-        if (this.qid !== undefined) {
-          if(`${index+1}` === this.qid.questid) {
+        if (this.currentQuest !== undefined) {
+          if(`${index+1}` === this.currentQuest.id) {
             selectedCell.classList.remove('active');
 
             cell.classList.add('active');
@@ -134,7 +134,7 @@ export default class QuestModal extends Panel {
         } else {
           button.dom.style.display = 'none';
         }
-        status.innerHTML = (quest.success)?'퀘스트 완료':'퀘스트 진행중';
+        status.innerHTML = (quest.success)?'완료된 퀘스트':'진행중인 퀘스트';
       }
 
       button.dom.addEventListener('click', ()=>{

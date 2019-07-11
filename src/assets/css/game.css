@@ -248,7 +248,6 @@
 
 .gnb-navi * {
   box-sizing: border-box;
-  overflow: hidden;
 }
 
 
@@ -455,16 +454,13 @@
 }
 
 .questWrap .list-box li.new .quest_name::after {
-  content: 'N';
+  content: '';
   display: inline-block;
   height: 15px;
   width: 15px;
   padding: 0;
   margin-left: 5px;
-  color: #fff;
-  text-align: center;
-  line-height: 15px;
-  background-color: #fd6240;
+  background: url(~assets/ui/new_icon.svg) no-repeat;
   border-radius: 50%;
 }
 .questWrap .list-box li .quest_desc {
@@ -702,16 +698,27 @@ button, .button{
 
 
 .gnb-navi .nav {
-  position: static !important;
+  position: relative !important;
   text-align: center;
   width:140px;
   height:30px;
   font-size: 16px;
   color: #2a0a0f;
-  /* text-shadow: 0 0 0 transparent; */
   background: url(~assets/ui/button.png) no-repeat #b2a9a0;
   background-size: cover;
   pointer-events: auto;
+}
+
+.gnb-navi .nav.new::before{
+  content:'';
+  display: block;
+  position: absolute;
+  top:-5px;
+  left:-5px;
+  z-index: 111;
+  height: 15px;
+  width: 15px;
+  background: url(~assets/ui/new_icon.svg) no-repeat;
 }
 
 .gnb-navi .nav:not(:first-child) {
@@ -1098,7 +1105,9 @@ button, .button{
   position: static;
   margin-top: 10px;
 }
-
+.modal.quest li.success {
+  color: #8fc13b;
+}
 .modal.quest li.success .rewardBtn {
   display: block;
 }

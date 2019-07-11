@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>Group 44</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="3" y="3" width="34" height="34"></rect>
+        <filter x="-7.4%" y="-7.4%" width="114.7%" height="114.7%" filterUnits="objectBoundingBox" id="filter-2">
+            <feGaussianBlur stdDeviation="2.5" in="SourceAlpha" result="shadowBlurInner1"></feGaussianBlur>
+            <feOffset dx="0" dy="0" in="shadowBlurInner1" result="shadowOffsetInner1"></feOffset>
+            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowInnerInner1"></feColorMatrix>
+        </filter>
+        <filter x="-43.8%" y="-43.8%" width="187.5%" height="187.5%" filterUnits="objectBoundingBox" id="filter-3">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard" transform="translate(-913.000000, -449.000000)">
+            <g id="Group-34" transform="translate(81.000000, 24.000000)">
+                <g id="Group-44" transform="translate(832.000000, 425.000000)">
+                    <g id="Group-47">
+                        <g id="Group-39">
+                            <rect id="Rectangle" stroke="#4E4A47" fill="#968D85" x="1.5" y="1.5" width="37" height="37"></rect>
+                            <g id="Rectangle">
+                                <use fill="#4E4A47" fill-rule="evenodd" xlink:href="#path-1"></use>
+                                <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                                <rect stroke="#4E4A47" stroke-width="1" stroke-linejoin="square" x="3.5" y="3.5" width="33" height="33"></rect>
+                            </g>
+                            <g id="Group-22" transform="translate(7.500000, 8.000000) rotate(-270.000000) translate(-7.500000, -8.000000) translate(-0.500000, 0.500000)" fill="#DAD0C7" stroke="#4E4A47">
+                                <path d="M0.5,0.5 L0.5,14.5 L15.5,14.5 L15.5,11.4854059 L3.51109729,11.4854059 L3.51109729,0.5 L0.5,0.5 Z" id="Path-5"></path>
+                            </g>
+                            <g id="Group-22" transform="translate(32.500000, 32.000000) scale(-1, -1) rotate(-270.000000) translate(-32.500000, -32.000000) translate(24.500000, 24.500000)" fill="#DAD0C7" stroke="#4E4A47">
+                                <path d="M0.5,0.5 L0.5,14.5 L15.5,14.5 L15.5,11.4854059 L3.51109729,11.4854059 L3.51109729,0.5 L0.5,0.5 Z" id="Path-5"></path>
+                            </g>
+                        </g>
+                        <g id="Group-43" filter="url(#filter-3)" transform="translate(8.000000, 8.000000)" stroke="#DAD0C7">
+                            <path d="M0.5,11.5 L0.5,12.5 L2.5,12.5 L2.5,15.9350288 L4.75103875,18.1860676 L3.52289278,19.4142136 L4.22999956,20.1213203 L5.45814553,18.8931744 L8.06497116,21.5 L10.995786,21.5 L11.495786,21.5 L11.495786,23.1484271 L12.495786,23.1484271 L12.495786,21.5 L15.9350288,21.5 L18.526854,18.9081748 L19.7599996,20.1413203 L20.4671063,19.4342136 L19.2339608,18.201068 L21.5,15.9350288 L21.5,12.5 L23.5,12.5 L23.5,11.5 L21.5,11.5 L21.5,8.06497116 L19.0602814,5.62525253 L20.4713203,4.21421356 L19.7642136,3.50710678 L18.3531746,4.91814575 L15.9350288,2.5 L12.5,2.5 L12.5,0.5 L11.5,0.5 L11.5,2.5 L8.06497116,2.5 L5.63603897,4.92893219 L4.23421356,3.52710678 L3.52710678,4.23421356 L4.92893219,5.63603897 L2.5,8.06497116 L2.5,11.5 L0.5,11.5 Z" id="Combined-Shape"></path>
+                            <path d="M14.6923882,5.5 L9.30761184,5.5 L5.5,9.30761184 L5.5,14.6923882 L9.30761184,18.5 L14.6923882,18.5 L18.5,14.6923882 L18.5,9.30761184 L14.6923882,5.5 Z" id="Polygon"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
