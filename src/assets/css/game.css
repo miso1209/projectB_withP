@@ -1033,6 +1033,7 @@ button, .button{
 }
 .modal.quest .quest_desc {
   font-size: 14px;
+  line-height: 1.6;
 } 
 .modal.quest .quest_reward {
   position: absolute;
@@ -1124,7 +1125,6 @@ button, .button{
   overflow: hidden;
   transition: color 0.3s;
 }
-
 
 /* 아이템 조합창 */
 .combineItemInfo {
@@ -1322,10 +1322,7 @@ button.disabled span {
   position: absolute;
   left: 25px;
   bottom: 20px;
-
   width: inherit;
-
-  
 }
 
 .inventory-detail .img {
@@ -1737,26 +1734,6 @@ button.disabled span {
   overflow: hidden;
 }
 
-/* 
-.equipItems .itemCategory {
-  display: block;
-  opacity: 0.2;
-}
-
-.equipItems li {
-  width: 32%;
-  min-height: 50px;
-  position: relative;
-  display: inline-block;
-  margin: 10px 0 0;
-  border: 1px solid transparent;
-  border-radius: 5px;
-}
-
-.equipItems li:not(:first-child){
-  margin-left: 3px;
-} */
-
 .skillItems .img, .equipItems .img {
   margin: 0 auto;
   display: block;
@@ -1915,7 +1892,6 @@ button.disabled span {
   text-align: center;
   font-size: 16px;
   line-height: 24px;
-  /* color: #ffd800; */
   color: #fff;
   text-shadow: 2px 0px 0px #333; 
 }

@@ -91,10 +91,12 @@ export default class DomUI extends EventEmitter {
 
     showQuestStatus(currentQuest) {
         this.questStatus.innerHTML = '';
+        
+        console.log(currentQuest);
 
         if (currentQuest.success) {
             console.log('완료된 보상압니다. 퀘스트상세창에서 보상을 확인하세요. ');
-            this.emit('quest');
+            
             return;
         }
 
@@ -136,7 +138,6 @@ export default class DomUI extends EventEmitter {
 
     showQuest() {
         let questlist = [];
-        
         for (const qid in this.player.quests) {
             questlist.push(this.player.quests[qid]);
         }
@@ -145,9 +146,8 @@ export default class DomUI extends EventEmitter {
             } else {
                 this.showQuestStatus(result);
             }
-            this.emit('quest');
+            this.emit('quest', result);
         });
-
         questWrap.dom.addEventListener('click', ()=>{
             questWrap.dom.classList.toggle('open');
         });
@@ -368,10 +368,16 @@ export default class DomUI extends EventEmitter {
     }
     
     // 퀘스트 모달
-    showQuestModal(inputs){
+    showQuestModal(inputs, qid){
+        // console.log();
+        if(inputs.length === 0) {
+            // 진행할 수 있는 퀘스트가 없고, 신규로 받을 수 있는 퀘스트도 없는 상태.. 
+            this.showConfirmModal('현재 새로운 퀘스트가 없습니다.', false, ()=>{});
+            return;
+        }
         const pane = this.createContainer();
-        const questModal = new QuestModal(pane, inputs, (result) => {
-            console.log(result);
+        const questModal = new QuestModal(pane, inputs, qid, (result) => {
+            console.log(result); // TODO : 퀘스트 완료 보상받고 complete quest.. 
         });
     }
 

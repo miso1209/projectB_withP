@@ -5,11 +5,12 @@ import Button from './component/button';
 import ItemImage from './component/itemimage';
 
 export default class QuestModal extends Panel {
-    constructor(pane, inputs, result){
+    constructor(pane, inputs, qid, result){
       super();
 
       pane.classList.add('screen');
       this.pane = pane;
+      this.qid = qid;
       this.inputs = inputs; // 현재 진행중인 퀘스트 데이터
       this.result = result;
     
@@ -30,7 +31,6 @@ export default class QuestModal extends Panel {
       this.questInfo = new MakeDom('div', 'flex-right');
       this.questInfo.classList.add('questInfo');
       
-
       // IE 스크롤바 이슈 대응
       const scrollView = document.createElement('div');
       scrollView.classList.add('scrollView');
@@ -56,7 +56,7 @@ export default class QuestModal extends Panel {
     updateList() {
       let selectedCell = null;
       let index = -1;
-
+      
       this.inputs.forEach(quest => {
         ++index;
 
@@ -80,6 +80,16 @@ export default class QuestModal extends Panel {
           this.listcallback(quest);
         }
 
+        if (this.qid !== undefined) {
+          if(`${index+1}` === this.qid.questid) {
+            selectedCell.classList.remove('active');
+
+            cell.classList.add('active');
+            selectedCell = cell;
+            this.listcallback(quest);
+          }
+        } 
+        
         cell.addEventListener('click', ()=> {
           if (selectedCell) {
               selectedCell.classList.remove('active');
