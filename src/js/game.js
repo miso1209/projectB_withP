@@ -143,11 +143,6 @@ export default class Game extends EventEmitter {
         this.ui.on('completeQuest', (id) =>  {
             this.completeQuest(id);
         });
-
-        // this.ui.on('stageTitle', (text) => {
-        //     console.log('??');
-        //     this.ui.showStageTitle(text);
-        // });
         
         this.ui.on('setMainAvatar', (id) => {
             this.setMainAvatar(id);
@@ -903,7 +898,6 @@ export default class Game extends EventEmitter {
         const quest = new Quest(questId);
         quest.data = data;
         this.player.completedQuests[questId] = quest;
-        console.log(this.player);
     }
     
     // Quest

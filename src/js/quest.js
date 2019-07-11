@@ -2,14 +2,14 @@ import quests from "./quests";
 import Items from "./items";
 import { EventEmitter } from "events";
 import ScriptParser from "./scriptparser";
-import { isRegExp } from "util";
 
 export default class Quest extends EventEmitter {
     constructor(questid) {
         super();
 
         this.questid = questid;
-        this.origin = quests[questid];
+        this.origin = Object.assign({}, quests[questid]);
+        this.copy = this.origin.objectives.map((objective) => { return Object.assign({}, objective)});
         this.objectiveEventsList = [];
         this.data = {};
         this.isInitData = {};
@@ -17,8 +17,8 @@ export default class Quest extends EventEmitter {
         // 이벤트가 일어날 시 Quest가 가지고있는 Objective랑 비교하는 것 인데..
         // 그렇다면 Objective에 존재하는 이벤트가 이미 발생하고 -> 껏다 켰을 경우 퀘스트 클리어 처리는 어떻게 하는가?.. 못할 것 같은데?
         // 수정해보자.
-        for(let i = 0; i < this.origin.objectives.length; ++i) {
-            const objective = this.origin.objectives[i];
+        for(let i = 0; i < this.copy.length; ++i) {
+            const objective = this.copy[i];
             const handler = () => {
                 this.emit('checkQuestCondition', objective, objective.conditionScript, true);
             };
@@ -42,8 +42,8 @@ export default class Quest extends EventEmitter {
 
     load() {
         // Load시 모든 컨디션 한번 체크.
-        for(let i = 0; i < this.origin.objectives.length; ++i) {
-            const objective = this.origin.objectives[i];
+        for(let i = 0; i < this.copy.length; ++i) {
+            const objective = this.copy[i];
             this.emit('checkQuestCondition', objective, objective.conditionScript, false);
         }
     }
@@ -59,8 +59,8 @@ export default class Quest extends EventEmitter {
     isAllObjectivesCompleted() {
         let completed = true;
 
-        for(let i = 0; i < this.origin.objectives.length; ++i) {
-            completed &= this.origin.objectives[i].success;
+        for(let i = 0; i < this.copy.length; ++i) {
+            completed &= this.copy[i].success;
         }
 
         return completed;
@@ -84,8 +84,8 @@ export default class Quest extends EventEmitter {
 
     get objectives() {
         const result = [];
-        for(let i = 0; i < this.origin.objectives.length; ++i) {
-            const objective = this.origin.objectives[i];
+        for(let i = 0; i < this.copy.length; ++i) {
+            const objective = this.copy[i];
 
             result.push({
                 text: objective.text,

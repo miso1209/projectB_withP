@@ -1,10 +1,9 @@
 {
     "1": {
         "id": 1,
+        "isStoryQuest": true,
         "isIterable": false,
-        "iterableTerm": {
-
-        },
+        "secForNextIterable": 0,
         "levelBound": { "min": 0, "max": 0 },
         "title": "새로운 시작",
         "description" : "주인없는 집에서의 새로운 시작! 장소는 해결되었으니 <em>빈 탁자</em>에 <em>작업용 테이블</em>을 만들어보자",
@@ -19,7 +18,9 @@
     },
     "2": {
         "id": 2,
+        "isStoryQuest": true,
         "isIterable": false,
+        "secForNextIterable": 0,
         "levelBound": { "min": 0, "max": 0 },
         "title": "포션제작",
         "description" : "쓰러져 있는 모험가들을 구출하기 위해 <em>체력포션(소)</em>을 1개 제작하자",
@@ -33,7 +34,9 @@
     },
     "3": {
         "id": 3,
+        "isStoryQuest": false,
         "isIterable": true,
+        "secForNextIterable": 0,
         "levelBound": { "min": 0, "max": 0 },
         "title": "기초 전투훈련",
         "description" : "어둠의 성에 돌아다니는 <em>몬스터</em>들과 싸워서 승리하자",
@@ -47,7 +50,9 @@
     },
     "4": {
         "id": 4,
+        "isStoryQuest": false,
         "isIterable": false,
+        "secForNextIterable": 0,
         "levelBound": { "min": 0, "max": 0 },
         "title": "밀루다 찾기",
         "description" : "<em>어둠의 성 1층</em>에서 사라진 <em>밀루다</em>를 찾으러 가자",
@@ -61,7 +66,9 @@
     },
     "5": {
         "id": 5,
+        "isStoryQuest": true,
         "isIterable": false,
+        "secForNextIterable": 0,
         "levelBound": { "min": 0, "max": 0 },
         "title": "다친 모험가를 회복시키자",
         "description" : "<em>다친 모험가</em>를 회복시키고 <em>파티로 초대</em>시켜보자",
