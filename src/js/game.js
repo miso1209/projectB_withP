@@ -143,6 +143,11 @@ export default class Game extends EventEmitter {
         this.ui.on('completeQuest', (id) =>  {
             this.completeQuest(id);
         });
+
+        // 퀘스트 보상 ( 퀘스트 완료요청 Emit )
+        this.ui.on('addQuest', (id) =>  {
+            this.addQuest(id);
+        });
         
         this.ui.on('setMainAvatar', (id) => {
             this.setMainAvatar(id);
