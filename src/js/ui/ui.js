@@ -136,7 +136,7 @@ export default class DomUI extends EventEmitter {
         }
     }
 
-    showQuest() {
+    showQuest(inputs) {
         let questlist = [];
         for (const qid in this.player.quests) {
             questlist.push(this.player.quests[qid]);
@@ -413,8 +413,6 @@ export default class DomUI extends EventEmitter {
             } else if(result === 'setMainAvatar'){
                 this.emit('setMainAvatar', option);
                 characterSelect.avatar = this.player.controlCharacter;
-
-                
             }
         });
         

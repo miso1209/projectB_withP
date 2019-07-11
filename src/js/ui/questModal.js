@@ -109,7 +109,10 @@ export default class QuestModal extends Panel {
       const frag = document.createDocumentFragment();
       const title = new MakeDom('p', 'quest_title', quest.origin.title);
       const description = new MakeDom('p', 'quest_desc');
+      const mission = new MakeDom('p', 'quest_mission');
+
       description.innerHTML = quest.origin.description;
+      mission.innerHTML = `${quest.objectives[0].count} / ${quest.objectives[0].maxCount}`
 
       const status = new MakeDom('p', 'quest_status', (quest.success)?'퀘스트완료':'퀘스트진행중');
       const button = new Button('완료 보상');
@@ -157,6 +160,7 @@ export default class QuestModal extends Panel {
       
       frag.appendChild(title);
       frag.appendChild(description);
+      frag.appendChild(mission);
       frag.appendChild(status);
       frag.appendChild(rewards);
 

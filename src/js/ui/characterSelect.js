@@ -24,7 +24,7 @@ export default class CharacterSelect extends Panel {
 
     // 모달
     const modal = new Modal(pane, 800, 460, null);
-    modal.addTitle('캐릭터 선택창');
+    modal.addTitle('캐릭터');
     modal.addCloseButton();
     modal.dom.classList.add('characterSelect');
 

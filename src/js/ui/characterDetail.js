@@ -38,7 +38,6 @@ export default class CharacterDetail extends Panel {
 
     rightBox.classList.add('flex-right');
     rightBox.classList.add('characterStat');
-    rightBox.classList.add('contents-box');
 
     leftBox.style.width = '50%';
     rightBox.style.width = '50%';

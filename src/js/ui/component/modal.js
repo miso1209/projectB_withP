@@ -14,13 +14,18 @@ export default class Modal extends Panel {
         this.dom.style.top = '50%';
         this.dom.style.marginTop = height * -0.5 + 'px';
         
-        this.confirm_callback = callback;
-
+        const modal_contents = document.createElement('div');
+        modal_contents.classList.add('modal-contents');
+        
         const closeBtn = new Button('', 'closeBtn');
         this.closeBtn = closeBtn.dom;
+        this.closeBtn.classList.add('modal-closeBtn');
         this.closeBtn.style.display = 'none';
         this.closeBtn.addEventListener('click', this.closeModal.bind(this));
         
+        this.confirm_callback = callback;
+
+        this.dom.appendChild(modal_contents);
         this.dom.appendChild(this.closeBtn);
     }
     
@@ -31,6 +36,7 @@ export default class Modal extends Panel {
     addConfirmButton(text) {
         const confirmBtn = new Button(text, 'submit');
         this.dom.appendChild(confirmBtn.dom);
+        
         this.confirmBtn = confirmBtn;
         confirmBtn.moveToCenter(0);
         confirmBtn.moveToBottom(20);
@@ -45,7 +51,9 @@ export default class Modal extends Panel {
     
     addTitle(text) {
         const title = document.createElement('h1');
-        title.className = 'title';
+        // title.classList.add('modal-title');
+        title.classList.add('title');
+
         title.innerText = text;
         this.dom.appendChild(title);
     

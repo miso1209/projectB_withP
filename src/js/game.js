@@ -132,11 +132,16 @@ export default class Game extends EventEmitter {
         });
 
         this.ui.on('quest', (quest) => {
+            const inputs = this.player.getAllQuests();
+            this.ui.showQuestModal(inputs, quest);
+        });
+
+        this.ui.on('questList', ()=>{
             let inputs = [];
             for(const qid in this.player.quests) {
                 inputs.push(this.player.quests[qid]);
             }
-            this.ui.showQuestModal(inputs, quest);
+            this.ui.showQuest(inputs);
         });
 
         // 퀘스트 보상 ( 퀘스트 완료요청 Emit )
