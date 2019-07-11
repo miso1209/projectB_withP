@@ -51,6 +51,10 @@ export class Portal5 {
         this.from = src.name;
         this.to = src.target;
         this.forceStop = true;
+
+        if (src.questcondition) {
+            this.questcondition = src.questcondition.split(',').map(Number);
+        }
     }
 
     touch(game) {
@@ -75,7 +79,23 @@ export class Portal5 {
             game.stage.enter();
         };
 
-        $t();
+        let success = true;
+        let failQuest = null;
+        if (this.questcondition) {
+            this.questcondition.forEach((questId) => {
+                success &= (game.player.isCompletedQuest(questId) !== undefined);
+                if (!success) {
+                    failQuest = questId;
+                }
+            })
+        }
+
+        if (success) {
+            $t();
+        } else {
+            game.ui.showConfirmModal(`"${game.player.quests[failQuest].title}" 퀘스트를 완료 해야 합니다.`, false, (result) => {
+            });
+        }
     }
 }
 
@@ -92,25 +112,7 @@ export class Portal3 {
         this.to = src.target;
         this.forceStop = true;
     }
-    /*
-            game.ui.showConfirmModal("Lv.1 마법사를 파티로 영입 하시겠습니까?", true, (confirmed) => {
-                if (confirmed === "ok") {
-                    const t = async () => {
-                        game.addCharacter(5, { level: 1, exp: 0, equips: {}});
-                        game.addTag("haswizard");
-                        game.exploreMode.interactive = false;
-                        game.ui.hideMenu();
-                        await game.$fadeOut(1);
-                        this.delete();
-                        await game.$fadeIn(1);
-                        game.ui.showMenu();
-                        game.exploreMode.interactive = true;
-                    };
 
-                    t();
-                }
-            });
-    */
     onEvent(game) {
         // 월드 진입컷신을 만들어서 넣어준다.
         game.stage.stopObject(game.stage.player);

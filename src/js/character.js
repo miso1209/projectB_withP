@@ -170,7 +170,7 @@ export default class Character {
 
     get attack() {
         const attack = this.simulatedAttack?this.simulatedAttack:this.plusAttack;
-        return Math.floor(this.strength * this.attackPotential * 10) + Math.floor(this.agility * this.attackPotential * 2) + (attack);
+        return Math.floor(this.strength * this.attackPotential * 10) + Math.floor(this.agility * this.attackPotential * 5) + (attack);
     }
 
     get magic() {
@@ -180,7 +180,7 @@ export default class Character {
 
     get armor() {
         const armor = this.simulatedArmor?this.simulatedArmor:this.plusArmor;
-        return Math.floor(this.stamina * this.armorPotential * 2) + (armor);
+        return Math.floor(this.stamina * this.armorPotential * 5) + (armor);
     }
 
     get speed() {

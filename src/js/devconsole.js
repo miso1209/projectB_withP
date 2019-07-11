@@ -66,10 +66,10 @@ export default class DevConsole {
         this.game.addQuest(id);
     }
 
-    completeQuest() {
-        for (const questId in this.game.player.quests) {
-            this.game.completeQuest(questId);
-        }
+    completeQuest(Id) {
+        // for (const questId in this.game.player.quests) {
+            this.game.completeQuest(Id);
+        // }
 
         return this.game.player.quests;
     }

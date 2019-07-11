@@ -81,7 +81,7 @@
  "nextobjectid":1,
  "orientation":"isometric",
  "renderorder":"right-down",
- "tiledversion":"1.2.2",
+ "tiledversion":"1.2.4",
  "tileheight":16,
  "tilesets":[
         {
@@ -195,6 +195,11 @@
                          "name":"name",
                          "type":"string",
                          "value":"room-gate"
+                        }, 
+                        {
+                         "name":"questcondition",
+                         "type":"string",
+                         "value":"1"
                         }, 
                         {
                          "name":"target",

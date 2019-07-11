@@ -86,7 +86,9 @@ export default class Storage extends EventEmitter {
 
     setQuest(questId, data) {
         if (!this.data.quests[questId]) {
-            this.data.quests[questId] = data;
+            this.data.quests[questId] = Object.assign({
+                beginDate : new Date().toString()
+            }, data);
             this.save();
         } else {
             this.data.quests[questId] = Object.assign(this.data.quests[questId],data);
@@ -96,9 +98,13 @@ export default class Storage extends EventEmitter {
 
     completeQuest(questId) {
         if (this.data.quests[questId]) {
-            this.data.completedQuests[questId] = Object.assign({}, this.data.quests[questId]);
+            this.data.completedQuests[questId] = Object.assign({
+                clearDate : new Date().toString()
+            }, this.data.quests[questId]);
             delete this.data.quests[questId];
             this.save();
+
+            return this.data.completedQuests[questId];
         }
     }
 

@@ -74,7 +74,7 @@ export default class Warrior extends PropBase {
                 });
             }
 
-            if (!game.player.hasQuest(2) && !this.healed) {
+            if (!game.player.hasQuest(5) && !this.healed) {
                 game.exploreMode.interactive = false;
                 game.ui.hideMenu();
 
@@ -85,6 +85,7 @@ export default class Warrior extends PropBase {
                     { speaker: 1, text: "집으로 돌아가서 포션을 만들자!." }
                 ], () => {
                     game.addQuest(2);
+                    game.addQuest(5);
                     game.ui.showMenu();
                     game.exploreMode.interactive = true;
                 });
@@ -96,8 +97,6 @@ export default class Warrior extends PropBase {
                     game.ui.hideMenu();
                     await game.$fadeOut(1);
 
-                    game.completeQuest(2);
-                    game.player.inventory.deleteItem(3001, 1);
                     game.addTag("healWarrior");
                     this.healed = true;
                     this.tileTexture.texture = PIXI.Texture.fromFrame("healer_warrior_alive.png");

@@ -15,6 +15,8 @@ export default class Player {
         this.party = new Party();         
         
         this.quests = {};
+        this.completedQuests = {};
+
         // 대표 캐릭터 자신이 가지고 있는 캐릭터 중에 하나를 골라서 필드 캐리터로 사용한다
         this.controlCharacter = null;
         
@@ -42,6 +44,10 @@ export default class Player {
         }
 
         return quests;
+    }
+
+    isCompletedQuest(id) {
+        return this.completedQuests[id];
     }
 
     addTag(tag) {

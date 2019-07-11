@@ -129,7 +129,7 @@
  "nextobjectid":1,
  "orientation":"isometric",
  "renderorder":"right-down",
- "tiledversion":"1.2.3",
+ "tiledversion":"1.2.4",
  "tileheight":16,
  "tilesets":[
         {
@@ -917,6 +917,11 @@
                          "name":"name",
                          "type":"string",
                          "value":"road1-to-road2"
+                        }, 
+                        {
+                         "name":"questcondition",
+                         "type":"string",
+                         "value":"5"
                         }, 
                         {
                          "name":"target",

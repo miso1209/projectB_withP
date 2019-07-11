@@ -60,7 +60,6 @@ export default class WorkTable extends PropBase {
                         this.upgrade();
                         await game.$fadeIn(1);
                         game.exploreMode.interactive = true;
-                        game.completeQuest(1);
                     };
 
                     t();

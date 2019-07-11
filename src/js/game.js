@@ -139,6 +139,11 @@ export default class Game extends EventEmitter {
             this.ui.showQuestModal(inputs, quest);
         });
 
+        // 퀘스트 보상 ( 퀘스트 완료요청 Emit )
+        this.ui.on('completeQuest', (id) =>  {
+            this.completeQuest(id);
+        });
+
         // this.ui.on('stageTitle', (text) => {
         //     console.log('??');
         //     this.ui.showStageTitle(text);
@@ -233,6 +238,10 @@ export default class Game extends EventEmitter {
         // 퀘스트 정보를 등록한다
         for (let questId in this.storage.data.quests) {
             this.setQuest(questId, this.storage.data.quests[questId]);
+        }
+
+        for (let questId in this.storage.data.completedQuests) {
+            this.setCompletedQuest(questId, this.storage.data.completedQuests[questId]);
         }
         
         this.ui.player = this.player;
@@ -815,7 +824,7 @@ export default class Game extends EventEmitter {
     }
 
     addGold(gold) {
-        this.player.inventory.gold += gold;
+        this.player.inventory.gold += Number(gold);
     }
 
     addItem(itemId, count) {
@@ -890,6 +899,12 @@ export default class Game extends EventEmitter {
 
         quest.load();
     }
+    setCompletedQuest(questId, data) {
+        const quest = new Quest(questId);
+        quest.data = data;
+        this.player.completedQuests[questId] = quest;
+        console.log(this.player);
+    }
     
     // Quest
     runQuestScript(quest, script) {
@@ -962,7 +977,9 @@ export default class Game extends EventEmitter {
             
             // 가지고 있는 퀘스트에서 제거한다. 
             // TODO : 어딘가에 보관해야 할 것 같은데?
-            this.storage.completeQuest(id);
+            const completedQuest = new Quest(id);
+            completedQuest.data = this.storage.completeQuest(id);
+            this.player.completedQuests[id] = completedQuest;
             delete this.player.quests[id];
         }
     }
