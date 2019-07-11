@@ -60,8 +60,10 @@ export default class QuestModal extends Panel {
       this.inputs.forEach(quest => {
         ++index;
 
+        console.log(quest);
+
         const cell = new MakeDom('li', 'cell');
-        const title = new MakeDom('p', 'quest_title', quest.origin.title);
+        const title = new MakeDom('p', 'quest_title', quest.title);
         const status = new MakeDom('p', 'quest_status', (quest.success)?'퀘스트완료':'퀘스트진행중');
         
         if (quest.success) {
@@ -107,11 +109,11 @@ export default class QuestModal extends Panel {
       this.questInfo.innerHTML = '';
       
       const frag = document.createDocumentFragment();
-      const title = new MakeDom('p', 'quest_title', quest.origin.title);
+      const title = new MakeDom('p', 'quest_title', quest.title);
       const description = new MakeDom('p', 'quest_desc');
       const mission = new MakeDom('p', 'quest_mission');
 
-      description.innerHTML = quest.origin.description;
+      description.innerHTML = quest.description;
       mission.innerHTML = `${quest.objectives[0].count} / ${quest.objectives[0].maxCount}`
 
       const status = new MakeDom('p', 'quest_status', (quest.success)?'퀘스트완료':'퀘스트진행중');

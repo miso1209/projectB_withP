@@ -137,10 +137,11 @@ export default class Game extends EventEmitter {
         });
 
         this.ui.on('questList', ()=>{
-            let inputs = [];
-            for(const qid in this.player.quests) {
-                inputs.push(this.player.quests[qid]);
-            }
+            // let inputs = [];
+            const inputs = this.player.getAllQuests();
+            // for(const qid in this.player.quests) {
+            //     inputs.push(this.player.quests[qid]);
+            // }
             this.ui.showQuest(inputs);
         });
 

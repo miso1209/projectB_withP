@@ -40,6 +40,7 @@ export default class Player {
 
         for (let ID in Quests) {
             const newQuest = new Quest(ID);
+            newQuest.load();
             let success = !Quests[ID].isStoryQuest;
 
             // 이미 Accept한 Quest제거.

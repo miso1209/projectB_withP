@@ -51,7 +51,7 @@ export default class QuestList extends Panel {
       this.inputs.forEach(quest => {
         ++index;
         
-        // console.log(quest);
+        console.log(quest);
 
         let listCell = new MakeDom('li');
         let quest_name = new MakeDom('p', 'quest_name', quest.origin.title);
