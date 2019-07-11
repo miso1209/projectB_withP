@@ -377,8 +377,11 @@ export default class DomUI extends EventEmitter {
         }
         const pane = this.createContainer();
         const questModal = new QuestModal(pane, inputs, qid, (result) => {
-            this.emit('completeQuest', result.id);
-            console.log(result); // TODO : 퀘스트 완료 보상받고 complete quest.. 
+            if(result.type === 'Acceptable') {
+                this.emit('addQuest', result.id);
+            } else {
+                this.emit('completeQuest', result.id);
+            }
         });
     }
 

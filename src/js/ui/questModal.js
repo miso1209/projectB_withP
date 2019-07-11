@@ -60,15 +60,18 @@ export default class QuestModal extends Panel {
       this.inputs.forEach(quest => {
         ++index;
 
-        console.log(quest);
-
         const cell = new MakeDom('li', 'cell');
         const title = new MakeDom('p', 'quest_title', quest.title);
-        const status = new MakeDom('p', 'quest_status', (quest.success)?'퀘스트완료':'퀘스트진행중');
-        
+        const status = new MakeDom('p', 'quest_status');
+
+        if (quest.type === 'Acceptable') {
+          status.innerText = '미진행 퀘스트';
+        } else {
+          status.innerText = (quest.success)?'퀘스트완료':'퀘스트진행중';
+        }
+
         if (quest.success) {
           cell.classList.add('success');
-          
         } else {
           cell.classList.remove('success');
         }
@@ -112,26 +115,34 @@ export default class QuestModal extends Panel {
       const title = new MakeDom('p', 'quest_title', quest.title);
       const description = new MakeDom('p', 'quest_desc');
       const mission = new MakeDom('p', 'quest_mission');
+      const status = new MakeDom('p', 'quest_status');
 
       description.innerHTML = quest.description;
-      mission.innerHTML = `${quest.objectives[0].count} / ${quest.objectives[0].maxCount}`
-
-      const status = new MakeDom('p', 'quest_status', (quest.success)?'퀘스트완료':'퀘스트진행중');
+      mission.innerHTML = `${quest.objectives[0].text} ${quest.objectives[0].count} / ${quest.objectives[0].maxCount}`
+      
       const button = new Button('완료 보상');
       button.dom.classList.add('rewardBtn');
       button.moveToCenter(0);
       button.moveToBottom(20);
 
-      if(quest.success) {
+      if (quest.type === 'Acceptable') {
         button.dom.style.display = 'block';
-        button.dom.addEventListener('click', ()=>{
-          this.pane.parentNode.removeChild(this.pane);
-          return this.result(quest)
-        });
+        button.dom.innerText = '퀘스트 받기';
       } else {
-        button.dom.style.display = 'none';
+        if (quest.success) {
+          button.dom.style.display = 'block';
+        } else {
+          button.dom.style.display = 'none';
+        }
+        status.innerHTML = (quest.success)?'퀘스트 완료':'퀘스트 진행중';
       }
 
+      button.dom.addEventListener('click', ()=>{
+        this.pane.parentNode.removeChild(this.pane);
+        return this.result(quest)
+      });
+
+      // 퀘스트 보상
       const rewards = new MakeDom('div', 'quest_reward');
       let data = [];
 
@@ -154,7 +165,6 @@ export default class QuestModal extends Panel {
             count.innerText = ` x ${rewardText}`;;
           }
           item.appendChild(count);
-
           data.push(rewardText);
           rewards.appendChild(item);
         }
@@ -165,7 +175,6 @@ export default class QuestModal extends Panel {
       frag.appendChild(mission);
       frag.appendChild(status);
       frag.appendChild(rewards);
-
       frag.appendChild(button.dom);
 
       this.questInfo.appendChild(frag);
