@@ -1,6 +1,6 @@
 import { getDirectionFromName } from "../utils";
 import { DIRECTIONS } from "../define";
-import Explore from "../explore";
+import quests from "../quests";
 
 // 포탈 이벤트
 export class Portal2 {
@@ -93,7 +93,8 @@ export class Portal5 {
         if (success) {
             $t();
         } else {
-            game.ui.showConfirmModal(`"${game.player.quests[failQuest].title}" 퀘스트를 완료 해야 합니다.`, false, (result) => {
+            const title = quests[failQuest].title;
+            game.ui.showConfirmModal(`"${title}" 퀘스트를 완료 해야 합니다.`, false, (result) => {
             });
         }
     }

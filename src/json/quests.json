@@ -64,7 +64,7 @@
         "isIterable": false,
         "levelBound": { "min": 0, "max": 0 },
         "title": "다친 모험가를 회복시키자",
-        "description" : "<em다친 모험가</em>를 회복시키고 <em>파티로 초대</em>시켜보자",
+        "description" : "<em>다친 모험가</em>를 회복시키고 <em>파티로 초대</em>시켜보자",
         "objectives": [
             { "text": "동료획득", "event": ["addtag","removetag"], "conditionScript": "checkTag(haswarrior)" }
         ],
