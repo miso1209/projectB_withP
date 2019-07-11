@@ -950,6 +950,12 @@ export default class Game extends EventEmitter {
     getAcceptableQuests() {
         const acceptableQuests = [];
 
+        let level = 0;
+        for (let key in this.player.characters) {
+            const character = this.player.characters[key];
+            level = level<=character.level?character.level:level;
+        }
+
         for (let ID in Quests) {
             const newQuest = new Quest(ID);
             let success = !Quests[ID].isStoryQuest;
@@ -972,16 +978,20 @@ export default class Game extends EventEmitter {
                 }
             }
 
+            // level 체크.
+            success &= (level <= Quests[ID].levelBound.max && level >= Quests[ID].levelBound.min);
+
             if (success) {
                 newQuest.copy.forEach((objective) => {
                     const conditionResult = this.runQuestScript(newQuest, objective.conditionScript);
-                    const isChanged = newQuest.setObjective(objective, conditionResult);
+                    newQuest.setObjective(objective, conditionResult);
                 });
 
                 acceptableQuests.push({
                     id: ID,
                     title: newQuest.title,
                     type: 'Acceptable',
+                    boundedLevel: Quests[ID].levelBound,
                     description: newQuest.description,
                     objectives: newQuest.objectives,
                     rewards: newQuest.rewards,
@@ -1002,6 +1012,7 @@ export default class Game extends EventEmitter {
                 id: ID,
                 title: quest.title,
                 type: 'Accepted',
+                boundedLevel: Quests[ID].levelBound,
                 description: quest.description,
                 objectives: quest.objectives,
                 rewards: quest.rewards,
