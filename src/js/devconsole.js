@@ -91,7 +91,7 @@ export default class DevConsole {
     getItem() {
         for (let key in items) {
             const item = items[key];
-            this.game.addItem(item.id, 1);
+            this.game.addItem(item.id, 20);
         }
     }
 
