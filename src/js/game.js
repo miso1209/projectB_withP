@@ -138,7 +138,7 @@ export default class Game extends EventEmitter {
         });
 
         this.ui.on('questList', ()=>{
-            const inputs = this.getAllQuests();
+            const inputs = this.getAcceptedQuests();
             this.ui.showQuest(inputs);
         });
 
@@ -362,6 +362,7 @@ export default class Game extends EventEmitter {
                     
                     this.ui.showMenu();
                     this.ui.showProfile(this.player);
+                    
                     this.exploreMode.interactive = true;
                     if (this.stage) { this.stage.showPathHighlight = true; }
 
@@ -804,6 +805,9 @@ export default class Game extends EventEmitter {
         const party = this.player.party.getPartyIndex();
         this.storage.saveParty(party);
         // UI Flag
+        this.ui.flagArray[0] = 'true';
+        this.ui.flagArray[2] = 'true';
+        this.ui.checkFlag();
 
         this.emit('addcharacter', id, character);
     }
@@ -837,6 +841,9 @@ export default class Game extends EventEmitter {
 
         // 퀘스트를 위한 이벤트 처리
         // UI Flag
+        this.ui.flagArray[1] = 'true';
+        this.ui.checkFlag();
+
         this.emit('additem', itemId, count);
     }
 
@@ -848,6 +855,9 @@ export default class Game extends EventEmitter {
 
         // 퀘스트를 위한 이벤트 처리
         // UI Flag
+        this.ui.flagArray[1] = 'true';
+        this.ui.checkFlag();
+
         this.emit('additems', items);
     }
 
@@ -875,7 +885,8 @@ export default class Game extends EventEmitter {
             // add quest
             console.log('add quest : ', this.player.quests[questId]);
             // UI Flag
-            
+            this.ui.flagArray[3] = 'true';
+            this.ui.checkFlag();
         }
     }
 
@@ -897,6 +908,9 @@ export default class Game extends EventEmitter {
                     // success quest
                     console.log('success quest : ', this.player.quests[questId]);
                     // UI Flag
+                    this.ui.flagArray[3] = 'true';
+                    this.ui.checkFlag();
+                    
                     this.ui.showQuestComplete(this.player.quests[questId]);
                 } else {
                     // change condition

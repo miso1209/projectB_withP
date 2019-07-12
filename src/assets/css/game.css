@@ -21,6 +21,11 @@
   color: #fd6240;
 }
 
+.active{
+  box-shadow: inset 0 0 10px 0 #d2a026;
+  border: solid 1px #d2a026;
+}
+
 /* Intro */
 .project_header {
   height: 200px;
@@ -382,7 +387,7 @@
   z-index: 10;
   transition: right 0.3s;
   pointer-events: auto;
-  background-color: rgba(19,19,18,0.5);
+  /* background-color: rgba(19,19,18,0.5); */
 }
 .questWrap::before{
   content: '';
@@ -400,14 +405,13 @@
 }
 
 .questWrap .title{
-  top: 0;
+  top: 2px;
   right: 0;
-  left: 0;
-  
+  left: 2px;
   height: 24px;
-  font-size: 12px;
-  /* text-align: left; */
   padding: 5px 8px 0;
+
+  font-size: 12px;
   background-color: rgba(19,19,18,0.5);
 }
 .questWrap .textButton {
@@ -446,34 +450,32 @@
 
 .questWrap .list-box li .quest_name {
   width: 100%;
-  height: 20px;
+  min-height: 20px;
   font-size: 12px;
-  overflow:hidden;
+  word-break: break-all;
+  /* overflow:hidden;
   text-overflow:ellipsis;
-  white-space:nowrap;
+  white-space:nowrap; */
+  vertical-align: top;
 }
 
 .questWrap .list-box li.new .quest_name::after {
   content: '';
-  display: inline-block;
   height: 15px;
   width: 15px;
   padding: 0;
   margin-left: 5px;
+  vertical-align: bottom;
   background: url(~assets/ui/new_icon.svg) no-repeat;
-  border-radius: 50%;
 }
 .questWrap .list-box li .quest_desc {
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.4;
   color: #dad0c7;
-  /* 
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap; 
-  */
 }
+
 .questWrap .list-box li .quest_mission {
+  display: inline-block;
   font-size: 14px;
   line-height: 1.6;
   color: #dad0c7;
@@ -508,11 +510,11 @@
   border-radius: 5px;
   transition: all 0.3s;
 }
-.iconBtn:hover, 
+/* .iconBtn:hover, 
 .iconBtn:active, 
 .iconBtn.active{
   border: 1px solid #dad0c7;
-}
+} */
 .ico-avatar{
   background: url('~assets/items/items.png') no-repeat -576px -96px;
 }
@@ -682,6 +684,9 @@ button, .button{
 
 .tabPane .tabBtn:hover, 
 .tabPane .tabBtn.active {
+  box-shadow: none;
+  border: none;
+  
   background: url(~assets/ui/tabBtn_active.png) no-repeat;
   margin-left: 45px;
 }
@@ -1076,7 +1081,6 @@ button, .button{
   width: 100%;
 }
 
-
 .modal.quest .questInfo .quest_status {
   margin: 20px 0 0;
 }
@@ -1112,6 +1116,8 @@ button, .button{
   display: block;
 }
 /* .퀘스트 모달 */
+
+
 
 
 /* 골드 wrapper */
@@ -1215,6 +1221,26 @@ button.disabled {
   position: absolute;
   left: 10px;
 }
+.recipeList li {
+  width: 100%;
+}
+.recipeList li p {
+  width: 5%;
+  text-align: right;
+  overflow: hidden;
+}
+.recipeList li .recipe_owned {
+  width: 10%;
+}
+.recipeList li .recipe_name {
+  width: 48%;
+  font-size: 14px;
+  text-align: left;
+}
+.recipeList li .recipe_level{
+  width: 15%;
+}
+
 
 /* 아이템 조합 */
 .combineItem {
@@ -1562,7 +1588,7 @@ button.disabled {
   height: 140px;
   margin: 10px 5px;
   border: 2px solid transparent;
-  border-radius: 10px;
+  /* border-radius: 10px; */
   transition: border 0.3s;
 }
 
@@ -1571,9 +1597,8 @@ button.disabled {
 }
 
 .avatar:hover, .avatar.active {
-  border: 2px solid #ffd800;
-  box-shadow: 2px 2px 2px rgba(0,0,0,0.7);
-  border-radius: 10px;
+  box-shadow: inset 0 0 20px 0 #d2a026;
+  border: solid 2px #d2a026;
 }
 
 .avatar .tilebg {
@@ -1695,7 +1720,6 @@ button.disabled {
   background: url(~assets/ui/slotBg.png) 0 0 no-repeat;
   background-size: cover;
 
-  border-radius: 8px;
   border: 1px solid transparent;
 }
 
@@ -1706,8 +1730,8 @@ button.disabled {
 .invenItems li:hover, 
 .invenItems li:active,
 .invenItems li.active {
-  border-radius: 8px;
   border: 1px solid #ffd800;
+  box-shadow: inset 0 0 10px 0 #d2a026;
 }
 
 .invenItems li.empty{

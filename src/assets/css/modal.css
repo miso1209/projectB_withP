@@ -241,7 +241,8 @@
   height: 42px;
   padding: 5px;
   line-height: 32px;
-  border: none;
+  
+  border: 1px solid transparent;
   box-sizing: border-box;
 }
 .list-cell::after{
@@ -254,9 +255,11 @@
 .list-cell.active {
   border: 1px solid #ffd800;
 }
-.list-cell *:first-child {
-  margin-right: 15px;
+
+.list-cell .img {
+  margin-right: 10px;
 }
+
 .list-cell img, .list-cell .img {
   width: 32px;
   height: 32px;
@@ -272,6 +275,7 @@
 
 /* 조합가능 표시 */
 .list-cell .availableIcon {
+  display: none;
   width: 32px;
   height: 32px;
   background: url('~assets/ui/icons.png') -96px 0 no-repeat ;
@@ -281,6 +285,7 @@
   margin-right: 10px;
 }
 .list-cell.disabled .availableIcon {
+  display: none;
   opacity: 0;
 }
 .list-cell.isAvailable .availableIcon {

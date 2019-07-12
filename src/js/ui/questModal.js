@@ -86,9 +86,8 @@ export default class QuestModal extends Panel {
         }
 
         if (this.currentQuest !== undefined) {
-          if(`${index+1}` === this.currentQuest.id) {
+          if (quest.id === this.currentQuest.id) {
             selectedCell.classList.remove('active');
-
             cell.classList.add('active');
             selectedCell = cell;
             this.listcallback(quest);

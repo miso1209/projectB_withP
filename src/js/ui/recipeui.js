@@ -131,7 +131,6 @@ class CombinerUI extends Panel {
                 if (mat.owned - mat.count < 0) {
                     material3.style.color = '#fd6240';
                 }
-                
                 material2.innerText = `${mat.data.name}`;
                 material3.innerText = `${mat.owned} / ${mat.count}`;
         
@@ -158,6 +157,7 @@ export default class RecipeUI extends Panel {
         super();
     
         this.recipeModal = new Modal(pane, width, height);
+        this.recipeModal.dom.classList.add('recipe');
         this.recipeModal.addCloseButton();
         this.recipeModal.addTitle('아이템 레시피');
         this.combinerUI = null;
@@ -169,7 +169,7 @@ export default class RecipeUI extends Panel {
         this.recipes = null;
         this.tabs = [];
     
-        this.list = new ListBox(320, 320, this.updateCombiner.bind(this));
+        this.list = new ListBox((width - 40), 320, this.updateCombiner.bind(this));
         this.list.dom.classList.add('recipeList');
         this.list.dom.style.top = '100px';
         this.dom.appendChild(this.list.dom);
@@ -193,7 +193,7 @@ export default class RecipeUI extends Panel {
         if(this.recipes.length > 0) {
             // 아이템 조합창
             this.combinerUI = new CombinerUI(this.pane, 360, 460, this.onCombine.bind(this));
-            this.combinerUI.moveToRight(100);
+            this.combinerUI.moveToRight(80);
             
             // 최초실행 시 제일 처음 레시피 데이터로 업데이트
             this.updateCombiner(this.recipes[0]);

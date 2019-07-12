@@ -42,10 +42,11 @@ export default class DomUI extends EventEmitter {
         // 스테이지타이틀, 튜토리얼 툴팁용 레이어
         this.displayLayer = new MakeDom('div', 'container');
         this.displayLayer.style.top = this.gamePane.offsetTop + 'px';
+        this.questWrap = null;
 
         this.profile = new MakeDom('div', 'gnb-profile');
         this.gnbContainer.appendChild(this.profile);
-
+        
         const gnb = new MakeDom('div', 'gnb-navi');
         gnb.id = 'Navigation';
         this.gnbContainer.appendChild(gnb);
@@ -59,10 +60,10 @@ export default class DomUI extends EventEmitter {
         this.displayLayer.appendChild(this.minimapDOM);
         this.minimap = new Minimap(165, 106, this.minimapDOM);
         const menuData = [
-            {name:'캐릭터', event: "characterselect"},
-            {name:'보관함', event: "inventory"},
-            {name:'파티', event: "party"},
-            {name:'퀘스트', event: "quest"}
+            {index:0, name:'캐릭터', event: "characterselect"},
+            {index:1, name:'보관함', event: "inventory"},
+            {index:2, name:'파티', event: "party"},
+            {index:3, name:'퀘스트', event: "quest"}
             // {name:'설정', event: "options"}
         ];
         
@@ -70,7 +71,7 @@ export default class DomUI extends EventEmitter {
             let btn = new Button(menu.name, 'nav');
             gnb.appendChild(btn.dom);
             btn.dom.addEventListener('click', () => {
-                this.removeNewIcons();
+                this.clearFlag(menu.index);
                 this.emit(menu.event);
             });
         });
@@ -93,40 +94,36 @@ export default class DomUI extends EventEmitter {
         this.characters = null;
     }
 
+    clearFlag(index) {
+        this.flagArray[index] = false;
+        this.checkFlag();
+    }
+
     checkFlag() {
-        for (let index = 0; index < this.flagArray.length; index++) {
-            const flag = this.flagArray[index];
+        console.log(this.flagArray);
+
+        const gnb = document.getElementById('Navigation');
+
+        for (const fid in this.flagArray) {
+            let flag = this.flagArray[fid]
             if (flag) {
-                flag.classList.add('new');
+                gnb.childNodes[fid].classList.add('new');
             } else {
-                flag.classList.remove('new');
+                gnb.childNodes[fid].classList.remove('new');
             }
         }
     }
 
-    setNewIcon(index){
-        const gnb = document.getElementById('Navigation');
-        gnb.childNodes[index].classList.add('new');
-    }
-    
-    removeNewIcons(){
-        const gnb = document.getElementById('Navigation');
-        gnb.childNodes.forEach(nav => {
-            nav.classList.remove('new');
-        });
-    }
 
     showQuestStatus(currentQuest) {
         this.questStatus.innerHTML = '';
-        
+
         console.log(currentQuest);
 
         if (currentQuest.success) {
             console.log('완료된 보상압니다. 퀘스트상세창에서 보상을 확인하세요. ');
-            
             return;
         }
-
 
         const frag = document.createDocumentFragment();
         const title = new MakeDom('p', 'quest_name');
@@ -137,7 +134,7 @@ export default class DomUI extends EventEmitter {
 
         if (currentQuest && !currentQuest.success) {
             this.questStatus.style.opacity = '1';
-            title.innerText = currentQuest.origin.title;
+            title.innerText = currentQuest.title;
             status.innerText = `${currentQuest.objectives[0].count} / ${currentQuest.objectives[0].maxCount}`;
         }
         this.questStatus.appendChild(frag);
@@ -163,28 +160,44 @@ export default class DomUI extends EventEmitter {
         }
     }
 
-    showQuest(inputs) {
-        let questlist = [];
-        for (const qid in this.player.quests) {
-            questlist.push(this.player.quests[qid]);
+    showQuest(questlist) {
+        console.log('showQuest');
+        
+        if (this.questWrap !== null) {
+            this.questWrap.inputs = questlist;
+            this.questWrap.update();
+            return;
+        } else {
+            console.log('questlist');
+
+            this.questWrap = new QuestList(questlist, (result)=>{
+                if(result !== 'showQuestModal') {
+                    this.showQuestStatus(result);
+                }
+                this.emit('quest', result);
+            });
+            this.questWrap.dom.addEventListener('click', ()=>{
+                this.questWrap.dom.classList.toggle('open');
+    
+                if(this.questWrap.dom.classList.contains('open')) {
+                    this.emit('questList');
+                }
+            });
+            this.displayLayer.appendChild(this.questWrap.dom);
         }
-        const questWrap = new QuestList(questlist, (result)=>{
-            if(result === 'showQuestModal') {
-            } else {
-                this.showQuestStatus(result);
-            }
-            this.emit('quest', result);
-        });
-        questWrap.dom.addEventListener('click', ()=>{
-            questWrap.dom.classList.toggle('open');
-        });
-        this.displayLayer.appendChild(questWrap.dom);
     }
     
-    hideQuest(){
-        const quest = this.displayLayer.querySelector('.questWrap');
-        if(quest) {
-            this.displayLayer.removeChild(quest);
+    hideQuest(close) {
+        if(close) {
+            if(this.questWrap.dom.classList.contains('open'))
+            this.questWrap.dom.classList.remove('open');
+            return;
+        } else {
+            const quest = this.displayLayer.querySelector('.questWrap');
+            if(quest) {
+                this.displayLayer.removeChild(quest);
+                this.questWrap = null;
+            }
         }
     }
 
@@ -224,9 +237,7 @@ export default class DomUI extends EventEmitter {
         // 기본 ui 를 보여준다
         this.gnbContainer.style.opacity = '1';
         this.gnbContainer.style.display = 'block';
-
-        // 퀘스트목록, 퀘스트진행창 보여줌 - TODO : game에서 띄워....리프레쉬..
-        this.showQuest();
+        this.emit('questList');
     }
 
     hideMenu() {
@@ -234,10 +245,7 @@ export default class DomUI extends EventEmitter {
         this.gnbContainer.style.opacity = '0';
         this.gnbContainer.style.display = 'none';
         
-        // 임시
-        // TODO : game에서 띄워....리프레쉬..
         this.hideQuest();
-        this.hideQuestStatus();
     }
 
     showTheaterUI(){
@@ -331,8 +339,7 @@ export default class DomUI extends EventEmitter {
     showCombineItemList(inputs, callback) { // 제작하기 버튼 콜백
         const pane = this.createContainer();
         pane.classList.add('screen');
-    
-        this.recipeUI = new RecipeUI(pane, 360, 460, callback);
+        this.recipeUI = new RecipeUI(pane, 420, 460, callback);
         
         for (const input of inputs) {
             this.recipeUI.tabs.push({category: input.category});
@@ -342,7 +349,7 @@ export default class DomUI extends EventEmitter {
         if (inputs.length > 0) {
             this.recipeUI.select(inputs[0].category);
         }
-        this.recipeUI.moveToLeft(150);
+        this.recipeUI.moveToLeft(110);
     }
 
     showCraftUI(itemId, result) {
@@ -396,7 +403,7 @@ export default class DomUI extends EventEmitter {
     }
     
     // 퀘스트 모달
-    showQuestModal(inputs, qid){
+    showQuestModal(inputs, quest){
         // console.log();
         if(inputs.length === 0) {
             // 진행할 수 있는 퀘스트가 없고, 신규로 받을 수 있는 퀘스트도 없는 상태.. 
@@ -404,13 +411,15 @@ export default class DomUI extends EventEmitter {
             return;
         }
         const pane = this.createContainer();
-        const questModal = new QuestModal(pane, inputs, qid, (result) => {
+        const questModal = new QuestModal(pane, inputs, quest, (result) => {
             if(result.type === 'Acceptable') {
                 this.emit('addQuest', result.id);
             } else {
                 this.emit('completeQuest', result.id);
             }
         });
+
+        this.hideQuest(close);
     }
 
     showInventory(inputs, inven_gold) {

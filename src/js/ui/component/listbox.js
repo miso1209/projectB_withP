@@ -22,25 +22,34 @@ class ListCell {
     }
   
     showRecipeCell() {
+        
+        console.log(this.cellData);
+
         if (this.cellData.available === 1) {
             this.cell.classList.remove('disabled');
             this.cell.classList.add('isAvailable');
         }
+
         const imgData = this.cellData.data.image;
         this.cellImg = new ItemImage(imgData.texture, imgData.x, imgData.y);
         
-        this.cellData1 = document.createElement('p');
-        this.cellData2 = document.createElement('p');
-        this.cellData3 = document.createElement('p');
+        this.cellData1 = new MakeDom('p', 'recipe_name');
+        this.cellData2 = new MakeDom('p', 'recipe_rank');
+        this.cellData3 = new MakeDom('p', 'recipe_owned');
+        this.cellData4 = new MakeDom('p', 'recipe_level');
+        this.cellData5 = new MakeDom('p', 'availableIcon');
     
         this.cellData1.innerText = this.cellData.data.name;
-        this.cellData2.innerText = this.cellData.owned;
-        this.cellData3.className = 'availableIcon';
-    
+        this.cellData2.innerText = this.cellData.data.rank;
+        this.cellData3.innerText = `${this.cellData.owned}`;
+        this.cellData4.innerText = `Lv.${this.cellData.level}`;
+
         this.cell.appendChild(this.cellImg.dom);
         this.cell.appendChild(this.cellData1);
         this.cell.appendChild(this.cellData2);
         this.cell.appendChild(this.cellData3);
+        this.cell.appendChild(this.cellData4);
+        // this.cell.appendChild(this.cellData5);
     }
 
     showCharacterCell(){
