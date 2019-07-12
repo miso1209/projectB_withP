@@ -38,7 +38,6 @@
   }
 }
 
-
 .titleShow {
   -webkit-animation-name: titleShow;
   animation-name: titleShow;
@@ -46,6 +45,40 @@
   transform-origin: center bottom;
 }
 
+@-webkit-keyframes slideDownUp {
+  from,
+  to {
+    -webkit-transform: translate3d(0, -120%, 0);
+    transform: translate3d(0, -120%, 0);
+  }
+  35%,
+  65%{
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    visibility: visible;
+  }
+}
+
+@keyframes slideDownUp {
+  from,
+  to {
+    -webkit-transform: translate3d(0, -120%, 0);
+    transform: translate3d(0, -120%, 0);
+  }
+  35%,
+  65%{
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    visibility: visible;
+  }
+}
+
+.slideDownUp {
+  -webkit-animation-name: slideDownUp;
+  animation-name: slideDownUp;
+  -webkit-transform-origin: center bottom;
+  transform-origin: center bottom;
+}
 
 /*!
  * animate.css -http://daneden.me/animate

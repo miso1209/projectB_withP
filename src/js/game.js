@@ -892,6 +892,8 @@ export default class Game extends EventEmitter {
     }
 
     setQuest(questId, data) {
+        this.ui.resetQuestStatus();
+
         // 퀘스트 등록
         const quest = new Quest(questId);
         quest.data = data;
@@ -912,11 +914,10 @@ export default class Game extends EventEmitter {
                     this.ui.flagArray[3] = 'true';
                     this.ui.checkFlag();
                     
-                    this.ui.showQuestComplete(this.player.quests[questId]);
+                    this.ui.showCompleteQuest(this.player.quests[questId]);
                 } else {
                     // change condition
                     console.log('change condition : ', this.player.quests[questId]);
-                    this.ui.showQuestStatus(this.player.quests[questId]);
                 }
             }
         });

@@ -354,29 +354,63 @@
   background: url(~assets/ui/mapInfoBg.png) no-repeat;
 }
 
-.questStatus {
+/* 퀘스트 상태창 */
+.questStatusBar {
   opacity: 0;
+
   position: absolute;
-  width: 165px;
-  padding: 0 10px;
-  left: 10px;
+  min-width: 165px;
+  max-width: 200px;
+  
+  left: 65px;
   top: 15px;
 
-  height: 26px;
-  text-align: center;
+  height: 50px;
+  padding: 5px 10px;
+  text-align: left;
   font-size: 12px;
-  line-height: 26px;
-  color: #fff;
+  line-height: 1.5;
+  
+  background-color: rgba(0,0,0,0.8);
+  border: 1px solid #dad0c7;
+
   box-sizing: border-box;
-  background: url(~assets/ui/mapInfoBg.png) no-repeat;
 }
 
-.questStatus p {
-  display: inline-block;
-  margin-right: 5px;
-  font-size: 13px;
-  color: #fff;
+.questStatusBar.show {
+  opacity: 1;
+  -webkit-animation: slideDownUp 3.5s both;
+  animation: slideDownUp 3.5s both;
 }
+
+.questStatusBar::before{
+  content: '';
+  position: absolute;
+  left: -50px;
+  top: -1px;
+
+  display: block;
+  height: inherit;
+  width: 50px;
+  line-height: 50px;
+  
+  border: 1px solid #dad0c7;
+  box-sizing: border-box;
+  background: url(~assets/ui/ico_quest.png) 50% 50% rgba(0,0,0,0.8) no-repeat; 
+}
+
+.questStatusBar .quest_name {
+  color: #fff;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.questStatusBar .quest_desc {
+  color: #8fc13b;
+}
+/*. 퀘스트 상태창 */
+
 
 .questWrap {
   position: absolute;
@@ -453,14 +487,12 @@
   min-height: 20px;
   font-size: 12px;
   word-break: break-all;
-  /* overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap; */
   vertical-align: top;
 }
 
 .questWrap .list-box li.new .quest_name::after {
   content: '';
+  display: inline-block;
   height: 15px;
   width: 15px;
   padding: 0;
@@ -476,9 +508,9 @@
 
 .questWrap .list-box li .quest_mission {
   display: inline-block;
-  font-size: 14px;
-  line-height: 1.6;
   color: #dad0c7;
+  padding-top: 5px;
+  word-break: keep-all;
 }
 
 .questWrap .list-box li .completeText{

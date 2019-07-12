@@ -38,22 +38,20 @@ export default class QuestList extends Panel {
   }
 
   update(){
-    // console.log('update');
     this.list.innerHTML = '';
     let index = 0;
     
     if (this.inputs.length > 0) {
       this.inputs.forEach(quest => {
         ++index;
+        
         let listCell = new MakeDom('li');
         let quest_name = new MakeDom('p', 'quest_name', quest.title);
-        // let quest_desc = new MakeDom('p', 'quest_desc');
         let quest_mission = new MakeDom('p', 'quest_mission');
         let quest_complete = new MakeDom('p', 'completeText', '퀘스트완료');
-
-        // quest_desc.innerHTML = quest.description;
+        
         quest_mission.innerHTML = `${quest.objectives[0].text} ${quest.objectives[0].count} / ${quest.objectives[0].maxCount}`
-
+        
         if (this.inputs.length === index) {
           listCell.classList.add('new');
         }
@@ -63,14 +61,12 @@ export default class QuestList extends Panel {
         }
 
         listCell.appendChild(quest_name);
-        // listCell.appendChild(quest_desc);
         listCell.appendChild(quest_mission);
         listCell.appendChild(quest_complete);
 
         listCell.addEventListener('click', ()=>{
           listCell.classList.remove('new');
         });
-
 
         listCell.addEventListener('click', this.select.bind(this, quest));
         this.list.appendChild(listCell);

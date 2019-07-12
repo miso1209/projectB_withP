@@ -84,7 +84,7 @@ export default class DomUI extends EventEmitter {
         this.stageInfo = new MakeDom('div', 'stageInfo');
         this.displayLayer.appendChild(this.stageInfo);
 
-        this.questStatus = new MakeDom('div', 'questStatus');
+        this.questStatus = new MakeDom('div', 'questStatusBar');
         this.displayLayer.appendChild(this.questStatus);
 
         // game data
@@ -100,8 +100,6 @@ export default class DomUI extends EventEmitter {
     }
 
     checkFlag() {
-        console.log(this.flagArray);
-
         const gnb = document.getElementById('Navigation');
 
         for (const fid in this.flagArray) {
@@ -114,66 +112,38 @@ export default class DomUI extends EventEmitter {
         }
     }
 
-
-    showQuestStatus(currentQuest) {
-        this.questStatus.innerHTML = '';
-
+    showCompleteQuest(currentQuest) {
+        console.log('showCompleteQuest');
         console.log(currentQuest);
 
-        if (currentQuest.success) {
-            console.log('완료된 보상압니다. 퀘스트상세창에서 보상을 확인하세요. ');
-            return;
-        }
+        this.questStatus.innerHTML = '';
 
         const frag = document.createDocumentFragment();
-        const title = new MakeDom('p', 'quest_name');
-        const status = new MakeDom('p', 'quest_status');
+        const title = new MakeDom('p', 'quest_name', currentQuest.title);
+        const desc = new MakeDom('p', 'quest_desc', `퀘스트가 완료되었습니다.`);
+        title.innerText = currentQuest.title;
+        desc.innerText = `퀘스트가 완료되었습니다.`;
 
         frag.appendChild(title);
-        frag.appendChild(status);
+        frag.appendChild(desc);
 
-        if (currentQuest && !currentQuest.success) {
-            this.questStatus.style.opacity = '1';
-            title.innerText = currentQuest.title;
-            status.innerText = `${currentQuest.objectives[0].count} / ${currentQuest.objectives[0].maxCount}`;
-        }
+        if (currentQuest.success) {
+            this.questStatus.classList.add('show');
+        } 
         this.questStatus.appendChild(frag);
     }
 
-    hideQuestStatus() {
-        this.questStatus.style.opacity = '0';
-    }
-
-    showQuestComplete(quest){
-        const comment = new MakeDom('h3', 'notificationText');
-        
-        let tt = this.displayLayer.querySelector('.notificationText');
-        let text = `${quest.origin.title} 퀘스트가 완료되었습니다.`;
-
-        if(this.displayLayer.querySelector('.notificationText')) {
-            comment.innerText = text; 
-            this.displayLayer.removeChild(tt);
-            this.displayLayer.appendChild(comment);   
-        } else {
-            this.displayLayer.appendChild(comment);   
-            comment.innerText = text; 
-        }
+    resetQuestStatus() {
+        this.questStatus.classList.remove('show');
     }
 
     showQuest(questlist) {
-        console.log('showQuest');
-        
         if (this.questWrap !== null) {
             this.questWrap.inputs = questlist;
             this.questWrap.update();
             return;
         } else {
-            console.log('questlist');
-
             this.questWrap = new QuestList(questlist, (result)=>{
-                if(result !== 'showQuestModal') {
-                    this.showQuestStatus(result);
-                }
                 this.emit('quest', result);
             });
             this.questWrap.dom.addEventListener('click', ()=>{
@@ -416,6 +386,7 @@ export default class DomUI extends EventEmitter {
                 this.emit('addQuest', result.id);
             } else {
                 this.emit('completeQuest', result.id);
+                this.resetQuestStatus();
             }
         });
 
