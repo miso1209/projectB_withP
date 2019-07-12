@@ -193,26 +193,29 @@ export default class PropGenerator {
 
     getRarityItem(list) {
         let rarity = 0;
+        const copyList = [];
         list.forEach((item) => {
             rarity += item.rarity;
+            copyList.push(Object.assign({}, item));
         });
 
         // 레어리티는 높을수록 잘 안나오는 것 이기 때문에 역수로 계산하며, 누적하면서 자신의 랜덤 인덱스를 구한다.
         let totalRarity = 0;
-        list.forEach((item) => {
+        copyList.forEach((item) => {
             totalRarity += rarity / item.rarity;
             item.rarity = totalRarity;
         });
 
         let selectedItem = null;
         const randomIndex = Math.random() * totalRarity;
-        for (let item of list) {
+        for (let item of copyList) {
             // 당첨 된 레시피를 최종 레시피로 선정한다.
             if (randomIndex <= item.rarity) {
                 selectedItem = item;
                 break;
             }
         }
+        console.log('list : ', list, 'item: ', selectedItem);
 
         return selectedItem;
     }
