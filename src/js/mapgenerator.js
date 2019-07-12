@@ -172,6 +172,11 @@ export default class MapGenerator {
         // 층 정보를 담는다.
         this.currentFloor = currentFloor;
     }
+
+    setInventory(inventory) {
+        // 층 정보를 담는다.
+        this.inventory = inventory;
+    }
     
     setPortal() {
         for (let y = 0; y < this.map.length; y++) {
@@ -277,7 +282,7 @@ export default class MapGenerator {
                     stage.setTags(this.tags);
 
                     if (Math.random() <= FloorRecipes[this.currentFloor].probability) {
-                        let recipe = this.propGenerator.createRecipe(this.currentFloor);
+                        let recipe = this.propGenerator.createRecipe(this.currentFloor, this.inventory);
                         stage.addProp(recipe);
                     }
                     if (Math.random() <= FloorChests[this.currentFloor].probability) {
@@ -300,7 +305,7 @@ export default class MapGenerator {
                     stage.setTags(this.tags);
 
                     if (Math.random() <= FloorRecipes[this.currentFloor].probability) {
-                        let recipe = this.propGenerator.createRecipe(this.currentFloor);
+                        let recipe = this.propGenerator.createRecipe(this.currentFloor, this.inventory);
                         stage.addProp(recipe);
                     }
                     if (Math.random() <= FloorChests[this.currentFloor].probability) {
@@ -317,7 +322,7 @@ export default class MapGenerator {
                     stage.setTags(this.tags);
 
                     if (Math.random() <= FloorRecipes[this.currentFloor].probability) {
-                        let recipe = this.propGenerator.createRecipe(this.currentFloor);
+                        let recipe = this.propGenerator.createRecipe(this.currentFloor, this.inventory);
                         stage.addProp(recipe);
                     }
                     if (Math.random() <= FloorChests[this.currentFloor].probability) {

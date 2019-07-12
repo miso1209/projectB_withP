@@ -414,6 +414,7 @@ export default class Game extends EventEmitter {
         const mapGenerator = new MapGenerator();
         mapGenerator.setTags(this.player.tags);
         mapGenerator.setFloor(this.currentFloor);
+        mapGenerator.setInventory(this.player.inventory);
         const maps = await mapGenerator.createMap(dir);
         const hall = mapGenerator.getHall();
         let hallKey = (dir === 'left'? 'right':'down');

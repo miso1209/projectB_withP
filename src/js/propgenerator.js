@@ -6,7 +6,7 @@ import Character from "./character";
 
 import Items from "./items";
 import FloorRecipes from "./floorrecipes";
-import FloorChests from "./floormonsters";
+import FloorChests from "./floorchest";
 
 const RANK_TO_NUM = {
     C: 0,
@@ -29,7 +29,7 @@ export default class PropGenerator {
         for (let i=0; i<itemCount; i++) {
             const items = [];
             for (let key in Items) {
-                if (Items[key].category === 'material' || Items[key].category === 'consumables') {
+                if (Items[key].category === 'material') {
                     const item = Object.assign({}, Items[key]);
                     items.push(item);
                 }
@@ -63,16 +63,31 @@ export default class PropGenerator {
         return chest;
     }
 
-    createRecipe(floor) {
+    createRecipe(floor, inventory) {
         const floorData = FloorRecipes[floor];
         const recipes = [];
+        const playerRecipes = [];
+        
+        for (let key in inventory.items) {
+            const item = inventory.items[key];
+            if (item.data.category === 'recipes') {
+                playerRecipes.push(item.id);
+            }
+        }
+
         for (let key in Items) {
             const item = Object.assign({}, Items[key]);
-            if(item.category === 'recipes') {
+            if((item.category === 'recipes' || item.category === 'consumables') && playerRecipes.indexOf(Items[key]) < 0) {
                 recipes.push(item);
             }
         }
-        const selectedItem = this.getRarityItem(this.getFilteredItems(recipes, floorData));
+
+        let selectedItem = this.getRarityItem(this.getFilteredItems(recipes, floorData));
+        // 이미 레시피를 다 먹은경우 뭘 줘야 하는가?
+        if (!selectedItem) {
+            // 우선 소형포션 제작서를 넣어두자..
+            selectedItem = Items[5001];
+        }
         
         return {
             type: "recipe",
