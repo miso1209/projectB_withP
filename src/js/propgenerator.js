@@ -20,7 +20,7 @@ export default class PropGenerator {
     constructor() {
     }
     createChest(floor) {
-        const itemCount = 1 + Math.round(Math.random() * 5);
+        const itemCount = 3 + Math.round(Math.random() * 3);
         const floorData = FloorChests[floor];
         const rewards = [];
         // 추후 해당 아이템들의 Rarity의 총합으로 어떤 상자인지 판정해야겟다. => 나올 수 있는 아이템 중 최고의 아이템 상위 n% 는 랭크가 높다 이런식으로 판별하자.
@@ -77,7 +77,7 @@ export default class PropGenerator {
 
         for (let key in Items) {
             const item = Object.assign({}, Items[key]);
-            if((item.category === 'recipes' || item.category === 'consumables') && playerRecipes.indexOf(Items[key]) < 0) {
+            if((item.category === 'recipes') && playerRecipes.indexOf(key) < 0) {
                 recipes.push(item);
             }
         }
@@ -86,7 +86,7 @@ export default class PropGenerator {
         // 이미 레시피를 다 먹은경우 뭘 줘야 하는가?
         if (!selectedItem) {
             // 우선 소형포션 제작서를 넣어두자..
-            selectedItem = Items[5001];
+            selectedItem = {id:5001};
         }
         
         return {
