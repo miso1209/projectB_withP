@@ -94,6 +94,9 @@ export default class DevConsole {
             this.game.addItem(item.id, 20);
         }
     }
+    addCharacter(id) {
+        this.game.game.addCharacter(id, { level: 1, exp: 0, equips: {}});
+    }
 
     setVolume(...args) {
         Sound.setVolume(...args);
