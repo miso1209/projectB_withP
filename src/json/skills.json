@@ -1,11 +1,10 @@
 {
     "crouch": {
         "name": "웅크리기",
-        "description": "웅크려 앉아 맞는다. 방어력이 30% 증가한다.",
+        "description": "웅크려 앉아 맞는다. 방어력이 20% 증가한다.",
         "skillExpressions": [
             [
-                "armorCoefficient(0.3)",
-                "armor(10)"
+                "armorCoefficient(0.2)"
             ]
         ]
     },
@@ -58,15 +57,13 @@
         "maxCoolTime": 8,
         "skillExpressions": [
             [
-                "attackCoefficient(0.8)",
-                "attack(5)"
+                "attackCoefficient(0.7)"
             ],
             [
-                "attackCoefficient(1.0)",
-                "attack(10)"
+                "attackCoefficient(0.8)"
             ],
             [
-                "armor(10)"
+                "armorCoefficient(0.1)"
             ]
         ]
     },
@@ -83,22 +80,22 @@
     },
     "antipower": {
         "name": "안티파워",
-        "description": "적의 공격력을 20만큼 낮춘다.",
+        "description": "적의 공격력을 10만큼 낮춘다.",
         "skillExpressions": [
             [
-                "magic(20)"
+                "magic(10)"
             ]
         ]
     },
     
     "heal": {
         "name": "힐",
-        "description": "아군의 체력을 30%만큼 회복한다.",
+        "description": "아군의 체력을 20%만큼 회복한다.",
         "coolTime": 10,
         "maxCoolTime": 10,
         "skillExpressions": [
             [
-                "maxHealthCoefficient(0.3)"
+                "maxHealthCoefficient(0.2)"
             ]
         ]
     },
@@ -118,8 +115,7 @@
         "description": "단검으로 치명적인 일격을 가한다.",
         "skillExpressions": [
             [
-                "attackCoefficient(1)",
-                "attack(10)"
+                "attackCoefficient(1.15)"
             ]
         ]
     },
@@ -131,8 +127,7 @@
         "maxCoolTime": 6,
         "skillExpressions": [
             [
-                "attackCoefficient(1.4)",
-                "attack(10)"
+                "attackCoefficient(1.4)"
             ]
         ]
     },
@@ -152,8 +147,7 @@
         "description": "화염망토를 둘러 방어력을 증가시킨다.",
         "skillExpressions": [
             [
-                "armorCoefficient(0.2)",
-                "armor(10)"
+                "armorCoefficient(0.2)"
             ]
         ]
     },
@@ -165,8 +159,7 @@
         "maxCoolTime": 14,
         "skillExpressions": [
             [
-                "magicCoefficient(0.5)",
-                "magic(10)"
+                "magicCoefficient(0.6)"
             ]
         ]
     },
