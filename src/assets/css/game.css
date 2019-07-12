@@ -1169,10 +1169,12 @@ button, .button{
 .combineItemInfo .comment {
   display: none;
   position: absolute;
-  top: 170px;
-  z-index: 111;
+  top: 110px;
+  z-index: 222;
   width: 100%;
+  line-height: 90px;
   color: #fd6240;
+  background-color: rgba(0,0,0,0.85);
 }
 
 .combineItemInfo .costswrap {
@@ -1214,14 +1216,12 @@ button.disabled {
   left: 10px;
 }
 
-/* 
-  아이템 조합 
-*/
+/* 아이템 조합 */
 .combineItem {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
-  margin: 15px 0 20px;
+  margin: 15px 0;
 }
 
 .combineItem::after{
@@ -1287,7 +1287,7 @@ button.disabled {
   width: 100%;
   min-height: 116px;
   margin: 10px auto 0;
-  padding: 10px 15px;
+  padding: 10px;
   background-color: #1f130a;
   border-radius: 10px;
 
@@ -1298,8 +1298,10 @@ button.disabled {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-
   height: 32px;
+}
+
+.materialInfo li:not(:last-child) {
   margin-bottom: 5px;
 }
 
@@ -1312,8 +1314,6 @@ button.disabled {
 
 .materialInfo p {
   max-height: 34px;
-  min-width: 30%;
-  
   font-size: 15px;
   font-weight: normal;
   line-height: 32px;;
@@ -1322,7 +1322,14 @@ button.disabled {
   overflow: hidden;
 }
 
+.materialInfo p.mat_name {
+  width: 60%;
+  font-size: 13px;
 
+}
+.materialInfo p.mat_count {
+  width: 15%;
+}
 
 /* inventory  */
 .inventory-detail {

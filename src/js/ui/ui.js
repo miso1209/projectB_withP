@@ -22,7 +22,9 @@ import QuestModal from "./questModal";
 export default class DomUI extends EventEmitter {
     constructor() {
         super();
-        
+
+        this.flagArray = [false, false, false, false];
+
         this.gamePane = document.getElementById('canvas');
         this.screenWidth = this.gamePane.screenWidth;
         this.screenHeight = this.gamePane.screenHeight;
@@ -45,6 +47,7 @@ export default class DomUI extends EventEmitter {
         this.gnbContainer.appendChild(this.profile);
 
         const gnb = new MakeDom('div', 'gnb-navi');
+        gnb.id = 'Navigation';
         this.gnbContainer.appendChild(gnb);
 
         this.minimapDOM = document.createElement('canvas');
@@ -67,6 +70,7 @@ export default class DomUI extends EventEmitter {
             let btn = new Button(menu.name, 'nav');
             gnb.appendChild(btn.dom);
             btn.dom.addEventListener('click', () => {
+                this.removeNewIcons();
                 this.emit(menu.event);
             });
         });
@@ -87,6 +91,29 @@ export default class DomUI extends EventEmitter {
         this.character = null;
         this.playerInvenData = null;
         this.characters = null;
+    }
+
+    checkFlag() {
+        for (let index = 0; index < this.flagArray.length; index++) {
+            const flag = this.flagArray[index];
+            if (flag) {
+                flag.classList.add('new');
+            } else {
+                flag.classList.remove('new');
+            }
+        }
+    }
+
+    setNewIcon(index){
+        const gnb = document.getElementById('Navigation');
+        gnb.childNodes[index].classList.add('new');
+    }
+    
+    removeNewIcons(){
+        const gnb = document.getElementById('Navigation');
+        gnb.childNodes.forEach(nav => {
+            nav.classList.remove('new');
+        });
     }
 
     showQuestStatus(currentQuest) {
@@ -198,7 +225,7 @@ export default class DomUI extends EventEmitter {
         this.gnbContainer.style.opacity = '1';
         this.gnbContainer.style.display = 'block';
 
-        // 퀘스트목록, 퀘스트진행창 보여줌 - 나중에 디자인 교체
+        // 퀘스트목록, 퀘스트진행창 보여줌 - TODO : game에서 띄워....리프레쉬..
         this.showQuest();
     }
 
@@ -208,6 +235,7 @@ export default class DomUI extends EventEmitter {
         this.gnbContainer.style.display = 'none';
         
         // 임시
+        // TODO : game에서 띄워....리프레쉬..
         this.hideQuest();
         this.hideQuestStatus();
     }
