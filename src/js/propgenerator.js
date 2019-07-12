@@ -19,25 +19,32 @@ const RANK_TO_NUM = {
 export default class PropGenerator {
     constructor() {
     }
+
+    getMaterials() {
+        const items = [];
+        for (let key in Items) {
+            if (Items[key].category === 'material') {
+                const item = Object.assign({}, Items[key]);
+                items.push(item);
+            }
+        }
+
+        return items;
+    }
     createChest(floor) {
-        const itemCount = 3 + Math.round(Math.random() * 3);
+        const itemCount = 3 + Math.round(Math.random() * 2);
         const floorData = FloorChests[floor];
         const rewards = [];
         // 추후 해당 아이템들의 Rarity의 총합으로 어떤 상자인지 판정해야겟다. => 나올 수 있는 아이템 중 최고의 아이템 상위 n% 는 랭크가 높다 이런식으로 판별하자.
         const rewardsRank = 0;
-
+        let items = [];
         for (let i=0; i<itemCount; i++) {
-            const items = [];
-            for (let key in Items) {
-                if (Items[key].category === 'material') {
-                    const item = Object.assign({}, Items[key]);
-                    items.push(item);
-                }
+            if (items.length <= 0) {
+                items = this.getMaterials();
             }
-
-            // Leader Extract, push monster to party
             const itemData = this.getRarityItem(this.getFilteredItems(items, floorData));
-            rewards.push({ id: itemData.id, owned: 1});
+            items.splice(items.indexOf(itemData), 1);
+            rewards.push({ id: itemData.id, owned: 1 + Math.round(Math.random() * 2)});
         }
 
         let chest = {
@@ -86,7 +93,7 @@ export default class PropGenerator {
         // 이미 레시피를 다 먹은경우 뭘 줘야 하는가?
         if (!selectedItem) {
             // 우선 소형포션 제작서를 넣어두자..
-            selectedItem = {id:5001};
+            selectedItem = {id:4041, rank: 'C'};
         }
         
         return {
@@ -215,7 +222,6 @@ export default class PropGenerator {
                 break;
             }
         }
-        console.log('list : ', list, 'item: ', selectedItem);
 
         return selectedItem;
     }

@@ -22,6 +22,9 @@ export default class Recipe extends PropBase {
 
     touch(game) {
         if (!this.isOpened) {
+            if (game.player.inventory.items[this.recipe]) {
+                this.recipe = 4041;
+            }
             game.addItem(this.recipe, 1);
             this.tileTexture.gotoAndStop(this.animationIndex + 1);
             this.isOpened = true;
