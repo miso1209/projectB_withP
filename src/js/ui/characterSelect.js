@@ -23,7 +23,7 @@ export default class CharacterSelect extends Panel {
     this.consumablesData = null;
 
     // 모달
-    const modal = new Modal(pane, 800, 460, null);
+    const modal = new Modal(pane, 800, 440, null);
     modal.addTitle('캐릭터');
     modal.addCloseButton();
     modal.dom.classList.add('characterSelect');

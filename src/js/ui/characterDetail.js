@@ -18,7 +18,7 @@ export default class CharacterDetail extends Panel {
     this.tempEquipData = null;
     
     // 모달
-    const modal = new Modal(pane, 800, 460);
+    const modal = new Modal(pane, 800, 440);
     modal.dom.classList.add('characterDetail');
     modal.addTitle('캐릭터 정보');
     modal.addCloseButton();

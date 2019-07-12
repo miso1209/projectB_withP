@@ -309,7 +309,7 @@ export default class DomUI extends EventEmitter {
     showCombineItemList(inputs, callback) { // 제작하기 버튼 콜백
         const pane = this.createContainer();
         pane.classList.add('screen');
-        this.recipeUI = new RecipeUI(pane, 420, 460, callback);
+        this.recipeUI = new RecipeUI(pane, 420, 440, callback);
         
         for (const input of inputs) {
             this.recipeUI.tabs.push({category: input.category});

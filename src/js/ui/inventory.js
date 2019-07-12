@@ -10,7 +10,7 @@ export default class Inventory extends Panel {
 
         this.inputs = inputs;
 
-        const inventory = new Modal(pane, 800, 460);
+        const inventory = new Modal(pane, 800, 440);
         this.dom = inventory.dom;
         this.dom.classList.add('inventory');
 

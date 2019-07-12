@@ -22,7 +22,7 @@ export default class PartyUI extends Panel {
 
     this.members = []; 
 
-    const modal = new Modal(pane, 800, 460, null);
+    const modal = new Modal(pane, 800, 440, null);
     this.dom = modal.dom;
     this.dom.classList.add('party');
     

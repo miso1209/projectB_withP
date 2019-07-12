@@ -396,7 +396,7 @@
   
   border: 1px solid #dad0c7;
   box-sizing: border-box;
-  background: url(~assets/ui/ico_quest.png) 50% 50% rgba(0,0,0,0.8) no-repeat; 
+  background: url(~assets/ui/ico_quest.png) 50% 50% #000 no-repeat; 
 }
 
 .questStatusBar .quest_name {
@@ -421,7 +421,6 @@
   z-index: 10;
   transition: right 0.3s;
   pointer-events: auto;
-  /* background-color: rgba(19,19,18,0.5); */
 }
 .questWrap::before{
   content: '';
@@ -446,7 +445,7 @@
   padding: 5px 8px 0;
 
   font-size: 12px;
-  background-color: rgba(19,19,18,0.5);
+  background-color: rgba(19,19,18,0.8);
 }
 .questWrap .textButton {
   right: 7px;
@@ -468,7 +467,7 @@
   overflow-y: scroll;
   margin: 26px 0 0;
   padding: 0 5px;
-  background-color: rgba(150,141,133,0.6);
+  background-color: rgba(0,0,0,0.6);
 }
 .questWrap .list-box li {
   display: block;
@@ -786,17 +785,23 @@ button, .button{
   text-align: center;
 }
 
-.title {
+.modal .title {
   position: absolute;
-  top: 20px;
-  left: 50px;
-  right: 50px;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  width: 318px;
+  height: 32px;
+  
+  margin: 0 auto;
+
   font-size: 20px;
-  line-height: 1.2;
+  line-height: 32px;
   text-align: center;
   color: #dad0c7;
-  overflow: hidden;
-  /* background-color: #741b28; */
+
+  background: url(~assets/ui/title_bg.png) no-repeat;
 }
 
 .sub-title {
@@ -997,8 +1002,8 @@ button, .button{
 .contents-option p {
   font-size: 13px;
   overflow:hidden;
-  /* text-overflow:ellipsis;
-  white-space:nowrap;	 */
+  text-overflow:ellipsis;
+  white-space:nowrap;	
 }
 
 /* 아이템 획득창 */
@@ -1006,7 +1011,7 @@ button, .button{
   left: 0;
   right: 0;
   top: 40px;
-  padding: 10px 20px;
+  padding: 10px 10px;
   margin: 0 auto;
 }
 
@@ -1506,11 +1511,10 @@ button.disabled {
 
 .characterDesc {
   position: relative !important;
-  
-  min-width: 260px;
+  width: 250px;
   min-height: 330px;
   border-radius: 15px;
-  background-color: #1f130a;
+  background-color: #b2a9a0;
   padding: 10px 20px;
 }
 

@@ -14,7 +14,7 @@ export default class QuestModal extends Panel {
       this.inputs = inputs; // 현재 진행중인 퀘스트 데이터
       this.result = result;
     
-      const modal = new Modal(pane, 800, 460, null);
+      const modal = new Modal(pane, 800, 440, null);
       modal.addTitle('퀘스트');
       modal.addCloseButton();
       this.dom = modal.dom;
