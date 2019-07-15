@@ -1,5 +1,4 @@
 import MakeDom from "./makedom";
-import items from "../../items";
 
 export default class Avatar {
   constructor(input){ 
@@ -8,7 +7,7 @@ export default class Avatar {
     
     this.profile = null;
     this.avatar = null;
-
+    
     if (input === null) {
       avatar.classList.add('empty');
     } else {
@@ -18,27 +17,33 @@ export default class Avatar {
       this.path = `${this.path}${input.data.name}/${input.data.name}_idle_sw.png`;
       
       const infoWrap = new MakeDom('div', 'infoWrap');
+      const level = new MakeDom('p', 'level', `LV.${input.level}`);
       const name = new MakeDom('p', 'name', input.data.displayname);
-      const stat = new MakeDom('p', 'stat', input.totalPowerFigure);
-      const stat2 = new MakeDom('p', 'avatar_health', `${input.health}`);
+      const statBox = new MakeDom('div', 'statBox');
+      this.dps = new MakeDom('p', 'stat', input.totalPowerFigure);
+      this.health = new MakeDom('p', 'health', `${input.health}`);
       
       const imgWrap = new MakeDom('p', 'imgWrap');
       const profileimg = new MakeDom('img', 'profileImg');
 
       profileimg.src = this.path;
-      imgWrap.style.width = '64px';
-      imgWrap.style.height = '96px';
 
-      this.stage = new MakeDom('p', 'tilebg');
+      imgWrap.style.width = '48px';
+      imgWrap.style.height = '72px';
+
+      const stage = new MakeDom('p', 'stage');
       imgWrap.appendChild(profileimg);
 
       this.profile = imgWrap;
 
       // equipments
-      avatar.appendChild(this.stage);
+      avatar.appendChild(stage);
+      infoWrap.appendChild(level);
       infoWrap.appendChild(name);
-      infoWrap.appendChild(stat);
-      infoWrap.appendChild(stat2);
+      infoWrap.appendChild(statBox);
+      statBox.appendChild(this.dps);
+      infoWrap.appendChild(this.health);
+      
 
       avatar.appendChild(imgWrap);
       avatar.appendChild(infoWrap);

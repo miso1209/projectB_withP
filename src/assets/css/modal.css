@@ -12,11 +12,16 @@
   transition: all 0.3s;
 }
 
-/* .closeBtn::after{
+.btnFrame {
+  position: absolute;
+  z-index: 10;
+  right: 0;
+  top: 0;
   display: block;
   width: 40px;
   height: 40px;
-} */
+  background: url('~assets/ui/closebtn_bg.png') no-repeat;
+}
 
 .modal {
   position: relative;
@@ -119,24 +124,18 @@
 
 .contents {
   position: absolute;
-  top: 70px;
+  top: 60px;
   left: 20px;
   right: 20px;
   z-index: 1;
-  
-  padding: 0 20px;
   margin: 0 auto;
-  
-  /* 삭제하자 */
-  font-size: 15px;
-  line-height: 1.5;
   color: #fff;
 }
 
 /* 양쪽 박스 레이아웃 */
 .flexWrap {
   display: block;
-  min-height: calc(100% - 90px);
+  /* min-height: calc(100% - 90px); */
   left: 0;
   right: 0;
 }
@@ -149,11 +148,19 @@
 .flexWrap .flex-left {
   float: left;
   height: 100%;
+  box-sizing: border-box;
+}
+.flexWrap .flex-center {
+  float: left;
+  height: 100%;
+  box-sizing: border-box;
+  border: 1px solid red;
 }
 .flexWrap .flex-right {
   float: right;
   height: 100%;
-  padding: 0 10px 10px;
+  box-sizing: border-box;
+  /* padding: 0 10px 10px; */
 }
 
 

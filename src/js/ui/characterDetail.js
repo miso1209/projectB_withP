@@ -28,21 +28,21 @@ export default class CharacterDetail extends Panel {
     // 모달 내부 컨텐츠 영역
     const contentsWrap = new MakeDom('div', 'contents');
     contentsWrap.classList.add('flexWrap');
-    contentsWrap.style.top = '80px';
 
-    const leftBox = new MakeDom('div');
-    const rightBox = new MakeDom('div');
+    const leftBox = new MakeDom('div', 'flex-left');
+    leftBox.classList.add('characterStat');
+    leftBox.classList.add('list-detail');
 
-    leftBox.classList.add('flex-left');
-    leftBox.classList.add('characterDesc');
+    // const characterStat = new MakeDom('div', 'characterStat')
+    // characterStat.classList.add('list-detail');
+    // leftBox.appendChild(characterStat);
 
-    rightBox.classList.add('flex-right');
-    rightBox.classList.add('characterStat');
+    const rightBox = new MakeDom('div', 'flex-right');
+    rightBox.classList.add('characterDesc');
 
-    leftBox.style.width = '50%';
-    rightBox.style.width = '50%';
-    rightBox.style.height = '340px';
-    
+    contentsWrap.appendChild(leftBox);
+    contentsWrap.appendChild(rightBox);
+
     const titleWrap = new MakeDom('div', 'titleWrap');
     const infoWrap = new MakeDom('div', 'infoWrap');
 
@@ -62,13 +62,9 @@ export default class CharacterDetail extends Panel {
 
     titleWrap.appendChild(this.level);
     titleWrap.appendChild(this.descName);
-    infoWrap.appendChild(this.portrait);
     infoWrap.appendChild(this.class);
     infoWrap.appendChild(this.dps);
 
-    // 캐릭터 정보
-    const profile = new MakeDom('img', 'profile');
-    profile.src = 'src/assets/' + this.selected.data.portrait;
 
     // 장비
     this.equipItems = document.createElement('ul');
@@ -123,7 +119,6 @@ export default class CharacterDetail extends Panel {
     
     // 스크롤영역 사이즈
     let scrollHeight = '200px';
-    let scrollWidth = '330px';
 
     const scrollView = document.createElement('div');
     scrollView.classList.add('scrollView');
@@ -145,18 +140,18 @@ export default class CharacterDetail extends Panel {
     mainStats.appendChild(this.statDps);
     mainStats.appendChild(this.statArmor);
 
-    leftBox.appendChild(descBox);
+    rightBox.appendChild(descBox);
     leftBox.appendChild(titleWrap);
     leftBox.appendChild(infoWrap);
-    leftBox.appendChild(this.equipItems);
-    leftBox.appendChild(this.skillItems);
 
-    rightBox.appendChild(mainStats);
-    rightBox.appendChild(this.statWrap);
+    rightBox.appendChild(this.equipItems);
+    rightBox.appendChild(this.skillItems);
 
-    contentsWrap.appendChild(leftBox);
-    contentsWrap.appendChild(rightBox);
-    contentsWrap.appendChild(this.equipInven);
+    // TODO :  stat 바뀌는건 가운데 영역으로 
+    // rightBox.appendChild(mainStats);
+    // rightBox.appendChild(this.statWrap);
+
+    rightBox.appendChild(this.equipInven);
 
     this.dom.appendChild(contentsWrap);
     this.init();
@@ -181,6 +176,8 @@ export default class CharacterDetail extends Panel {
     this.dps.innerText = `총 전투력 : ${this.selected.totalPowerFigure}`;
     this.statDps.innerText = `공격력 : ${this.selected.strongFigure}`;
     this.statArmor.innerText = `방어력 : ${this.selected.armorFigure}`;
+    
+    // console.log(this.selected.data);
 
     for (let base in this.selected.data.base) {
       if ( base !== 'regist') {

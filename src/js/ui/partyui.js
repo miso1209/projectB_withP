@@ -4,8 +4,6 @@ import MakeDom from "./component/makedom";
 import Button from "./component/button";
 import Avatar from "./component/avatar";
 import ListBox from "./component/listbox";
-import SystemModal from "./systemmodal";
-
 
 const PARTY_SIZE = 6;
 
@@ -33,19 +31,16 @@ export default class PartyUI extends Panel {
     const wrapper = document.createElement('div');
     wrapper.classList.add('contents');
     wrapper.classList.add('flexWrap');
-    wrapper.style.top = '70px';
     
-    // todo 변수명을 바꿔야할듯.
-    // 캐릭터 리스트 wrap
-    this.ownedCharacters = new MakeDom('div', 'ownedCharacters');
-    this.ownedCharacters.classList.add('flex-right');
-    this.ownedCharacters.style.height = '340px';
-    this.ownedCharacters.style.position = 'relative';
+    this.ownedCharacters = new MakeDom('div', 'flex-right');
+    this.ownedCharacters.classList.add('list-detail');
+    this.ownedCharacters.classList.add('ownedCharacters');
 
     this.totaldps = new MakeDom('p', 'totaldps');
     
     // 확인 버튼 콜백
     const submitButton = new Button('파티구성', 'submit');
+    submitButton.dom.classList.add('wide');
     submitButton.moveToCenter(15);
     submitButton.moveToBottom(15);
 
@@ -61,12 +56,10 @@ export default class PartyUI extends Panel {
 
     // 파티 리스트
     // characterList
-    const characterListWrap = new MakeDom('div', 'characterListWrap');
-    characterListWrap.classList.add('flex-left');
-
+    const characterListWrap = new MakeDom('div', 'flex-left');
+    characterListWrap.classList.add('list-wrap');
     this.characterList = new MakeDom('div', 'characterList');
     this.characterList.classList.add('party');
-    this.characterList.style.width = '410px';
 
     characterListWrap.appendChild(this.characterList);
     
@@ -88,7 +81,7 @@ export default class PartyUI extends Panel {
 
   initList(){
     // 캐릭터 리스트 
-    this.list = new ListBox(270, 200, this.select.bind(this));
+    this.list = new ListBox(230, 200, this.select.bind(this));
     this.list.dom.style.top = '100px';
     this.ownedCharacters.appendChild(this.list.dom);
     this.list.update(this.inputs, 'character');

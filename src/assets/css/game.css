@@ -4,27 +4,40 @@
 
 /* 
   # key colors
+
   c_yellow : #ffd800;
   c_brown : #1f130a
   c_red : #fd6240
-
   light-peach: #dad0c7;
   greyish-brown: #4e4a47;
   eggplant : #2a0a0f
   b2a9a0
 */
-
 .quest_desc em {
   color: #8fc13b;
 }
 .avatar_health{
   color: #fd6240;
 }
-
 .active{
   box-shadow: inset 0 0 10px 0 #d2a026;
   border: solid 1px #d2a026;
 }
+
+.statText strong {
+  font-size: 12px;
+  line-height: 1;
+}
+.statText span {
+  display: block;
+  font-size: 12px;
+  line-height: 1;
+  opacity: 0.5;
+}
+.statText.vertical span {
+  display: inline-block;
+}
+
 
 /* Intro */
 .project_header {
@@ -32,14 +45,12 @@
   padding: 80px 0;
   box-sizing: border-box;
 }
-
 .project_header h1 {
   font-size: 40px;
   line-height: 1;
   text-align: center;
   color: #fff;
 }
-
 #Game, #canvas, canvas {
   position: relative;
   display: block;
@@ -114,7 +125,6 @@
 
   text-align: center;
   overflow: hidden;
-  
   /* 클릭이벤트 막기. */
   pointer-events: none;
   background:none;
@@ -203,7 +213,8 @@
   border: 1px solid #4e4a47;
   box-sizing: border-box;
 }
-.profileWrap .infoWrap div {
+
+.infoWrap .statBox {
   position: relative;
   display: block;
   width: 108px;
@@ -213,8 +224,7 @@
   border: 1px solid #4e4a47;
   background-color: #dad0c7;
 }
-
-.profileWrap .infoWrap .statBox::before{
+.infoWrap .statBox::before{
   position: absolute;
   left: 0;
   top: 0;
@@ -225,7 +235,7 @@
   border-right: 1px solid #4e4a47;
   background: url(~assets/ui/icon_dps.png) no-repeat 50% 50% #741b28;
 }
-.profileWrap .infoWrap .statBox{
+.infoWrap .statBox{
   padding: 0 6px 0 35px;
   text-align: right;
   font-weight: normal;
@@ -243,6 +253,7 @@
 
 /* gnb - 네비게이션 */
 .gnb-navi {
+  position: relative;
   float: left;
   margin: 47px 0 0 0;
   padding: 3px;
@@ -250,28 +261,22 @@
   border: 1px solid #4e4a47;
   pointer-events: none;
 }
-
 .gnb-navi * {
   box-sizing: border-box;
 }
-
-
 .container::after{
   content: '';
   display: block;
-
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   z-index: inherit;
-
   width: 980px;
   height: 500px;
   background: url(~assets/border.png) no-repeat;
   pointer-events: none;
 }
-
 .uiContainer * {
   pointer-events: auto;
 }
@@ -354,7 +359,7 @@
   background: url(~assets/ui/mapInfoBg.png) no-repeat;
 }
 
-/* 퀘스트 상태창 */
+/* 퀘스트 완료 알림창 */
 .questStatusBar {
   opacity: 0;
 
@@ -376,13 +381,11 @@
 
   box-sizing: border-box;
 }
-
 .questStatusBar.show {
   opacity: 1;
   -webkit-animation: slideDownUp 3.5s both;
   animation: slideDownUp 3.5s both;
 }
-
 .questStatusBar::before{
   content: '';
   position: absolute;
@@ -409,32 +412,34 @@
 .questStatusBar .quest_desc {
   color: #8fc13b;
 }
-/*. 퀘스트 상태창 */
+/*. 퀘스트 완료알림창 */
 
-
+/* 오른쪽 숨김메뉴 - 퀘스트리스트 */
 .questWrap {
   position: absolute;
   width: 151px;
   height: 164px;
   top: 165px;
-  right: -138px;
+  right: -141px;
   z-index: 10;
+  text-align: left;
   transition: right 0.3s;
   pointer-events: auto;
 }
 .questWrap::before{
   content: '';
   position: absolute;
-  left: -15px;
-  top: 0;
+  left: -18px;
+  top: -2px;
   display: block;
   z-index: 11;
   width: 30px;
   height: 164px;
+  
   background: url(~assets/ui/questBtn.png) no-repeat;
 }
 .questWrap.open {
-  right: 15px;
+  right: 11px;
 }
 
 .questWrap .title{
@@ -443,7 +448,7 @@
   left: 2px;
   height: 24px;
   padding: 5px 8px 0;
-
+  color: #fff;
   font-size: 12px;
   background-color: rgba(19,19,18,0.8);
 }
@@ -465,9 +470,8 @@
   height: 137px;
   overflow-x: hidden;
   overflow-y: scroll;
-  margin: 26px 0 0;
   padding: 0 5px;
-  background-color: rgba(0,0,0,0.6);
+  background-color: rgba(78,74,71,0.8);
 }
 .questWrap .list-box li {
   display: block;
@@ -530,7 +534,6 @@
 
 /*.gnb */
 
-
 /* icons */
 .iconBtn {
   width: 32px;
@@ -541,15 +544,10 @@
   border-radius: 5px;
   transition: all 0.3s;
 }
-/* .iconBtn:hover, 
-.iconBtn:active, 
-.iconBtn.active{
-  border: 1px solid #dad0c7;
-} */
 .ico-avatar{
   background: url('~assets/items/items.png') no-repeat -576px -96px;
 }
-.ico-life {
+/* .ico-life {
   background: url('~assets/items/items.png') no-repeat -576px -96px;
 }
 .ico-life.half {
@@ -580,7 +578,7 @@
   animation-fill-mode: both;
   -webkit-animation-iteration-count: infinite;
   animation-iteration-count: infinite;
-}
+} */
 
 .ico-life:hover {
   border-color: transparent;
@@ -622,9 +620,6 @@ button, .button{
 .modal .buttonWrap .button, 
 .modal .buttonWrap .submit {
   position: static !important;
-  width: 118px;
-  height: 44px;
-  background-size: cover;
 }
 
 .submit {
@@ -632,6 +627,13 @@ button, .button{
   height: 44px;
   color: #fff;
   background: url(~assets/ui/button_submit.png) no-repeat;
+}
+
+.submit.wide {
+  width: 224px;
+  height: 38px;
+  color: #fff;
+  background: url(~assets/ui/button_submit_wide.png) no-repeat;
 }
 
 .submit:hover, .submit.active {
@@ -769,13 +771,20 @@ button, .button{
   background: url(~assets/ui/button_active.png) no-repeat #2a0a0f;
 }
 
-/* .zoomBtn {
-  position: static !important;
-  text-align: center;
-  opacity: 0;
-  margin: 20px 0 0 20px;
-  transition: opacity 0.3s;
-} */
+.gnb-navi .setting {
+  right: -55px;
+  top: -24px;
+
+  width:40px;
+  height: 40px;
+  background: url(~assets/ui/button_setting.png) no-repeat #2a0a0f;
+  pointer-events: auto;
+  opacity:1;
+}
+
+.gnb-navi .setting:hover{
+  opacity: 0.7;
+}
 
 .categoryWarp{
   position: absolute;
@@ -1058,16 +1067,18 @@ button, .button{
 }
 
 /* 퀘스트 모달 */
+.modal.quest .contents {
+  margin: 0 25px;
+}
 .modal.quest .questList {
   width: 250px;
   padding: 10px 20px 10px 0;
   background-color: #281b10;
-  border-radius: 10px;
 }
 
 .modal.quest .questInfo {
   position: relative;
-  width: calc(100% - 270px);
+  width: calc(100% - 260px);
   height: 350px;
 
   padding: 20px 20px;
@@ -1502,130 +1513,147 @@ button.disabled {
   z-index: 111;
 }
 
-/* 캐릭터 선택창 */
-.characterSelect > .contents {
-  padding: 10px 0;
-  left: 45px;
-  right: 25px;
-}
-
-.characterDesc {
-  position: relative !important;
-  width: 250px;
-  min-height: 330px;
-  border-radius: 15px;
+/* 캐릭터 선택창, 상세창 */
+.character > .contents, 
+.characterDetail > .contents {
+  margin: 0 25px;
   background-color: #b2a9a0;
-  padding: 10px 20px;
 }
 
-.flex-left.characterDesc {
-  background-color: transparent;
+.flex-left.list-wrap,
+.characterDetail .flex-right {
+  position: relative;
+  width: calc(100% - 250px);
+  height: 352px;
+  margin: 1px;
+  background-color: #5d5550;
+  box-shadow: inset 0 0 10px 0 rgba(0, 0, 0, 0.5);
+  border: 1px solid #4e4a47;
 }
 
-.characterDesc .description {
-  padding: 15px 20px;
-
-  font-size: 15px;
-  text-align: left;
-  line-height: 1.5;
-  color: #fff;
-}
-
-.description .desc-text {
-  font-size: 13px;
-  line-height: 1.5;
-  padding-top: 5px;
-}
-
-.characterDesc .titleWrap {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: -20px;
-  
-  width: 180px;
-
-  margin: 0 auto;
-  padding: 10px 0;
-  background: url(~assets/ui/titleBg.png) no-repeat;
-  background-size: cover;
-}
-
-.characterDesc .titleWrap span {
-  color: #333;
-  font-weight: 500;
-}
-
-.statWrap {
-  width: 100%;
-  padding: 0 15px;
-}
-
-.characterListWrap{
-  position: relative !important;
-  width: 430px;
-}
-
-.characterListWrap::before{
-  content: '';
-  display: block;
-
-  position: absolute;
-  top: 8px;
-  left: 8px;
-  right: 0;
-  bottom: 0;
-  width: 415px;
-  height: 320px;
-  opacity: 0.7;
-  background: url(~assets/ui/bg.png) #887d6b no-repeat;
-  border-radius: 5px;
-  background-size: cover;
-}
-
-.characterListWrap::after{
-  content: '';
-  display: block;
-
-  position: absolute;
-  z-index: -1;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 430px;
-  height: 340px;
-  background: url(~assets/ui/bg_frame.png) no-repeat;
-  background-size: contain;
-}
-
-.characterList {
-  min-height: 320px;
-  margin: 0 auto;
-  padding: 10px 15px;
-  z-index: 2;
+.flex-left.list-wrap .characterList {
+  position: relative;
   display: flex;
+  margin: 0 auto;
+  padding: 8px;
   flex-wrap: wrap;
   flex-direction: row;
   justify-content: space-evenly;
   justify-items: start;
   opacity: 1;
   transition: all 0.3s linear;
+  overflow: hidden;
 }
 
-.characterList.next {
-    transform: translate(-175px, 200px);
-    opacity: 0.3;
+.flex-left.list-wrap .characterList::after{
+  position: absolute;
+  width: 480px;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  display: block;
+  content: '';
+  background: url(~assets/ui/bg.png) no-repeat;
 }
 
+.list-detail {
+  position: relative !important;
+  z-index: 1;
+  width: 236px;
+  min-height: 342px;
+  margin: 6px;
+  background-color: #b2a9a0;
+  border: 1px solid #4e4a47;
+  border-top: none;
+}
+.list-detail .infoWrap {
+  height: 108px;
+  margin: 0 -1px;
+  text-align: center;
+  background: url(~assets/ui/character_info_bg.png) no-repeat;
+}
+
+.list-detail .infoWrap .portraitWrap {
+  width: 64px;
+  height: 96px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+.list-detail .infoWrap .portraitWrap img {
+  height: 100%;
+}
+.list-detail .titleWrap {
+  position: relative;
+  width: 236px;
+  height: 44px;
+  margin: 0 -1px;
+  padding: 10px 0;
+  background-color: #281b10;
+  background: url(~assets/ui/info_titleBg.png) no-repeat;
+}
+.list-detail .titleWrap::after{
+  content: '';
+  position: absolute;
+  left: 0;
+  right:0;
+  bottom:-16px;
+
+  width: 206px;
+  height: 21px;
+  margin: 0 auto;
+  background: url(~assets/ui/info_titleDeco.png) no-repeat;
+}
+.list-detail .titleWrap span {
+  color: #fff;
+}
+.list-detail .statWrap {
+  /* height: 78px; */
+  padding: 11px 5px;
+  margin: 1px 1px 0;
+  background-color: #281b10;
+}
+
+.list-detail .buttonWrap {
+  width: auto;
+  left: 1px;
+  right: 1px;
+  bottom: 1px;
+  height: 46px;
+  padding: 5px 0;
+  background-color: #281b10;
+}
+
+/* 캐릭터 선택창 - 포션 박스 */
+.character .invenItems {
+  margin: 1px 1px;
+  padding: 4px 0;
+  background-color: #281b10;
+}
+.character .invenItems li {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 52px;
+  padding: 4px 0 0;
+  box-shadow: inset 0 0 10px 0 rgba(0, 0, 0, 0.61);
+  border: solid 1px #000000;
+  background-color: #22150a;
+}
+.character .invenItems li:not(:first-child) {
+  margin-left: 8px;
+}
+
+
+/* 아바타  */
 .avatar {
   position: relative;
-  min-width: 25%;
-  height: 140px;
+  width: 130px;
+  height: 144px;
   margin: 10px 5px;
-  border: 2px solid transparent;
-  /* border-radius: 10px; */
-  transition: border 0.3s;
+
+  border: solid 2px transparent;
+  box-sizing: border-box;
 }
 
 .party .avatar {
@@ -1637,31 +1665,29 @@ button.disabled {
   border: solid 2px #d2a026;
 }
 
-.avatar .tilebg {
+.avatar .stage {
   position: absolute;
-  bottom: 0;
+  top: 0;
   left: 0;
   right: 0;
-  
-  /* width: 70px;
-  height: 65px;
   margin: 0 auto;
-  background: url(~assets/ui/characterbg@2.png) no-repeat 0 0;
-  opacity: 0; */
+  width: 100px;
+  height: 107px;
+  background: url(~assets/ui/character_bg.png) no-repeat 0 0;
+  background-size: contain;
 }
 
 .avatar .imgWrap {
   position: absolute;
   left: 0;
   right: 0;
-  top: 0;
+  top: 7px;
   z-index: 11;
-  width: 32px;
-  height: 48px;
+  width: inherit;
+  height: inherit;
   margin: 0 auto;
   overflow: hidden;
 }
-
 .avatar .profileImg {
   width: auto;
   height: inherit;
@@ -1673,38 +1699,42 @@ button.disabled {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 0;
+  top: 0;
   padding: 0;
   z-index: 111;
 }
-
 .avatar .infoWrap * {
-  font-size: 15px;
+  color: #fff;
+  font-size: 13px;
   padding-bottom: 3px;
-  text-shadow: 1px 1px 1px rgba(0,0,0,0.7);
 }
-
-.avatar .imgWrap::after{
-  content: '';
-  display: inline-block;
-  position: absolute;
-  bottom: 0;
-  z-index: -11;
-  left: 0;
-  right: 0;
-  width: 54px;
-  height: 15px;
+.avatar .infoWrap .name{
+  padding-top: 68px;
+}
+.avatar .statBox {
+  width: 100px;
   margin: 0 auto;
-  border-radius: 70%;
-  background-color: rgba(0,0,0,0.2);
-  z-index: 1111;
+}
+.avatar .statBox p {
+  font-size: 15px;
+  color: #000;
+}
+.avatar .statBox::before{
+  display: block;
+  width: 26px;
+  height: 26px;
 }
 
-.avatar:hover .imgWrap, .avatar.active .imgWrap {
-  width: 64px;
-  height: 96px;
-  transition: all 0.5s linear;
-} 
+
+/* 파티 */
+.modal.party .contents {
+  margin: 10px 25px;
+}
+.modal.party .flex-left.list-wrap {
+  width: calc(100% - 250px);
+  display: flex;
+  flex-wrap: wrap;
+}
 
 .party .avatar.isCrew::after {
   content: '-';
@@ -1731,36 +1761,14 @@ button.disabled {
 }
 
 /* 파티 캐릭터 리스트 */
-.party .ownedCharacters {
+.modal.party .ownedCharacters {
   padding: 20px 0 0;
 }
-.party .ownedCharacters .totaldps {
+.modal.party .ownedCharacters .totaldps {
   font-size: 20px;
   margin: 0 10px;
   background-color: #000;
   border-radius: 5px;
-}
-
-
-/* 캐릭터 상세창 */
-.characterSelect .invenItems {
-  margin: 20px auto;
-}
-
-.characterSelect .invenItems li {
-  position: relative;
-  display: inline-block;
-  width: 54px;
-  height: 54px;
-  padding: 4px 0 0;
-  background: url(~assets/ui/slotBg.png) 0 0 no-repeat;
-  background-size: cover;
-
-  border: 1px solid transparent;
-}
-
-.characterSelect .invenItems li:not(:first-child) {
-  margin-left: 5px;
 }
 
 .invenItems li:hover, 
@@ -1799,31 +1807,30 @@ button.disabled {
   /* 부활 */
   background-position: -608px 0;
 }
-
 .invenItems li.empty:hover {
   border: 1px solid transparent;
 }
-
 .invenItems li .img {
   display: inline-block;
 }
-
 .invenItems li .itemCount{
   position: absolute;
   right: 5px;
   bottom: 0;
   max-width: 45px;
+  line-height: 1;
   overflow: hidden;
 }
-
 .skillItems .img, .equipItems .img {
   margin: 0 auto;
   display: block;
   overflow: visible;
 }
 
+
+
 /* 캐릭터 선택창 - dps */
-.characterSelect .info-dps{
+.character .info-dps{
   position: absolute;
   left: 0;
   right: 0;
@@ -1832,16 +1839,34 @@ button.disabled {
   top: 100px;
   font-size: 20px;
 }
-.characterDetail .characterStat {
-  padding: 10px 20px;
-  margin: 0 auto;
+
+/* 캐릭터상세창 */
+.characterDetail .flex-left{
+  position: relative;
+  min-height: 350px;
+  width: 372px;
+}
+
+.characterDetail .flex-right {
+  width: calc(100% - 390px);
+}
+
+.characterDesc .description {
+  padding: 15px 20px;
 
   font-size: 15px;
+  text-align: left;
   line-height: 1.5;
   color: #fff;
-  background-color: #1f130a;
-  border-radius: 10px;
 }
+
+.description .desc-text {
+  font-size: 13px;
+  line-height: 1.5;
+  padding-top: 5px;
+}
+
+
 .characterDetail .skillItems, 
 .characterDetail .equipItems {
   position: absolute;
@@ -1877,7 +1902,7 @@ button.disabled {
   margin-top: 10px;
 }
 
-.characterSelect .equipItems li:not(:first-child) {
+.character .equipItems li:not(:first-child) {
   margin-left: 10px;
 }
 
@@ -1957,9 +1982,29 @@ button.disabled {
 }
 
 /* loading - progress bar */
+.progressWrap {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+.progressWrap + .progressWrap {
+  margin-top: 15px;
+}
+
+.progressWrap .progressName {
+  width: 45px;
+  display: block;
+  margin-top: -5px;
+  font-size: 12px;
+  height: 26px;
+  text-align: left;
+  overflow: hidden;
+}
+
 .progressHolder {
   position: relative;
-  width: 273px;
+  width: 176px;
+  /* width: 273px; */
   height: 44px;
   padding: 10px;
   text-align: left; 
@@ -1987,17 +2032,18 @@ button.disabled {
   text-shadow: 2px 0px 0px #333; 
 }
 
-
 /* statusbar */
 .progressHolder.status {
   position: relative;
-  width: 100%;
   height: 20px;
-  margin: 0 auto;
-  padding: 5px;
+  /* margin: 0 auto; */
+  padding: 0;
   text-align: left; 
-  background: url(~assets/ui/progressHolder2.png) no-repeat;
-  background-size: contain;
+  background: none;
+  background-color: #4e4a47;
+  border: 1px solid #968d85;
+  /* background: url(~assets/ui/progressHolder2.png) no-repeat;
+  background-size: contain; */
 } 
 
 .progressHolder.status + .progressHolder.status {
@@ -2006,18 +2052,17 @@ button.disabled {
 
 .progressHolder.status .progressbar { 
   width: 100%; 
-  height: 8px; 
-  background: url(~assets/ui/progressbar2.png) no-repeat;
+  height: 100%; 
+  background: none;
+  /* background: url(~assets/ui/progressbar2.png) no-repeat; */
+  background-color: #af2a3f;
   background-size: cover;
   transition: all 0.3s linear;
 } 
-
 .progressHolder.status .progressbar.exp {
-  background-color: rgba(255, 214, 6, 0.8);
-  background-blend-mode: color-dodge;
+  background: none;
+  background-color: #afa52a;
 }
-
-
 .progressHolder.status .progressRate{
   top: 3px;
   font-size: 14px;
@@ -2027,11 +2072,15 @@ button.disabled {
 .equipInven {
   position: absolute;
   z-index: 10;
-  top: -10px;
-  left: 40px;
-  height: 230px;
+  top: 0;
+  left: 0;
+  right: 0;
+  
   width: 340px;
+  height: 230px;
+  margin: 0 auto;
   padding: 15px 0;
+
   border: 1px solid #ffd800;
   border-radius: 8px;
   background-color: rgba(65,41,23,0.95);

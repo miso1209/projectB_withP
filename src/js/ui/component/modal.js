@@ -2,6 +2,7 @@ import Panel from "./panel";
 import NineBox from "./ninebox";
 import Button from "./button";
 import Tab from './tab';
+import MakeDom from "./makedom";
 
 
 export default class Modal extends Panel {
@@ -19,17 +20,20 @@ export default class Modal extends Panel {
         const modal_contents = document.createElement('div');
         modal_contents.classList.add('modal-contents');
         
+        
         const closeBtn = new Button('', 'closeBtn');
         this.closeBtn = closeBtn.dom;
         this.closeBtn.classList.add('modal-closeBtn');
         this.closeBtn.style.display = 'none';
         this.closeBtn.addEventListener('click', this.closeModal.bind(this));
-
-        this.dom.appendChild(modal_contents);
+        
         this.dom.appendChild(this.closeBtn);
+        this.dom.appendChild(modal_contents);
     }
     
     addCloseButton() {
+        const btnFrame = new MakeDom('div', 'btnFrame');
+        this.dom.appendChild(btnFrame);
         this.closeBtn.style.display = 'block';
     }
     

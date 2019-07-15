@@ -23,7 +23,6 @@ export default class QuestModal extends Panel {
       // 전체 컨텐츠 wrapper
       const wrapper = new MakeDom('div', 'flexWrap');
       wrapper.classList.add('contents');
-      wrapper.style.top = '70px';
       
       const questList = new MakeDom('div', 'flex-left');
       questList.classList.add('questList');

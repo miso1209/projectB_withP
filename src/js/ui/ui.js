@@ -76,6 +76,13 @@ export default class DomUI extends EventEmitter {
             });
         });
 
+        // 설정버튼
+        this.setting = new Button('', 'setting');
+        gnb.appendChild(this.setting.dom);
+        this.setting.dom.addEventListener('click', ()=>{
+            this.emit('options');
+        });
+
         document.body.appendChild(this.gnbContainer);
         document.body.appendChild(this.displayLayer);
         document.body.appendChild(this.theaterUI);
@@ -419,6 +426,7 @@ export default class DomUI extends EventEmitter {
     showCharacterSelect(inputs) {
         const avatar = this.player.controlCharacter;
         const pane = this.createContainer();
+        pane.classList.add('screen');
         const characterSelect = new CharacterSelect(pane, inputs, avatar, (result, option) => {
             if(result === 'characterDetail') {
                 this.showCharacterDatail(option);
