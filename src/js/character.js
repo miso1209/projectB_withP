@@ -103,11 +103,11 @@ export default class Character {
     }
 
     get baseSpeed() {
-        return Math.round(Number(this.getParam('speed', this.level).toFixed(4)));
+        return Number(this.getParam('speed', this.level).toFixed(4));
     }
     
     get baseCritical() {
-        return Math.round(Number(this.getParam('critical', this.level).toFixed(4)));
+        return Number(this.getParam('critical', this.level).toFixed(4));
     }
 
     get maxHealth() {
