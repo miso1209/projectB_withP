@@ -36,6 +36,7 @@
 }
 .statText.vertical span {
   display: inline-block;
+  padding-left: 5px;
 }
 
 
@@ -383,8 +384,8 @@
 }
 .questStatusBar.show {
   opacity: 1;
-  -webkit-animation: slideDownUp 3.5s both;
-  animation: slideDownUp 3.5s both;
+  -webkit-animation: slideDownUp 4s both;
+  animation: slideDownUp 4s both;
 }
 .questStatusBar::before{
   content: '';
@@ -640,11 +641,24 @@ button, .button{
   background-color: #fff;
   background-blend-mode: darken;
 }
-
 .button_small {
-  width: 75px;
-  height: 35px;
+  width: 54px;
+  height: 30px;
   background: url(~assets/ui/button_small.png) no-repeat;
+  background-size: contain;
+  color: #fff;
+  font-size: 14px;
+}
+.button_medium.submit {
+  width: 87px;
+  height: 30px;
+  background: url(~assets/ui/button_medium_submit.png) no-repeat;
+  background-size: contain;
+  color: #fff;
+  font-size: 14px;
+}
+.button_small.submit {
+  background: url(~assets/ui/button_small_submit.png) no-repeat;
   background-size: contain;
   font-size: 14px;
 }
@@ -655,6 +669,23 @@ button, .button{
   background-color: rgba(19,19,18,0.5);
   box-sizing: border-box;
 }
+
+/* checkbox */
+.checkbox {
+  width: 93px;
+  height: 14px;
+  color: #fff;
+  text-align: left;
+  background: url(~assets/ui/checkbox.png) 100% 100% no-repeat;
+}
+.checkbox:hover, .checkbox:active, .checkbox.active{
+  border: none;
+  box-shadow: none;
+}
+.checkbox.active{
+  background: url(~assets/ui/checkbox_checked.png) 100% 100% no-repeat;
+}
+/*./버튼스타일  */
 
 
 .paging {
@@ -1643,7 +1674,9 @@ button.disabled {
 .character .invenItems li:not(:first-child) {
   margin-left: 8px;
 }
-
+.character .infoWrap {
+  position: relative;
+}
 
 /* 아바타  */
 .avatar {
@@ -1818,6 +1851,8 @@ button.disabled {
   right: 5px;
   bottom: 0;
   max-width: 45px;
+  
+  font-size: 13px;
   line-height: 1;
   overflow: hidden;
 }
@@ -1841,14 +1876,32 @@ button.disabled {
 }
 
 /* 캐릭터상세창 */
-.characterDetail .flex-left{
+.characterDetail .flex-left {
   position: relative;
   min-height: 350px;
-  width: 372px;
+  width: 396px;
+  padding: 6px;
+
+  display: flex;
+  flex-wrap: wrap;
+}
+.characterDetail .flex-left .list-detail {
+  margin: 0 2px 0 0;
+  border: 1px solid #281b10;
+}
+.characterDetail .flex-left .list-detail .infoWrap {
+  background: url(~assets/ui/character_stat_bg.png) no-repeat;
+  height: 137px;
+}
+.characterDetail .flex-left .characterStat {
+  width: 146px;
+  padding: 15px;
+  background-color: #281b10;
+  border: 1px solid #281b10;
 }
 
 .characterDetail .flex-right {
-  width: calc(100% - 390px);
+  width: calc(100% - 398px);
 }
 
 .characterDesc .description {
@@ -1948,7 +2001,15 @@ button.disabled {
 .characterDetail .statWrap {
   width: auto;
   text-align: left;
-  margin: 10px ;
+}
+.characterDetail .statWrap p {
+  line-height: 1.5;
+}
+
+.characterDetail .statWrap .plusStat {
+  color: #8fc13b;
+  padding-left: 5px;
+  font-size: 14px;
 }
 
 .characterDetail .mainStat {
@@ -1962,8 +2023,8 @@ button.disabled {
   padding-left: 30px;
 }
 
-.characterDetail .statWrap li{
-  margin-bottom: 10px;
+.characterDetail .statWrap li:not(:first-child) {
+  margin-top: 5px;
 }
 
 .characterDetail .descBox {

@@ -185,7 +185,6 @@
 }	
 .scrollbox::-webkit-scrollbar-thumb {
   background: #c17e3b;
-  /* border-radius:3px; */
 }
 .scrollbox::-webkit-scrollbar-track {
   /* background-color:transparent; */
@@ -213,7 +212,6 @@
 }
 .slot-list-box li.active {
   border: 2px solid #ffd800;
-  border-radius: 8px;
 }
 
 .flexWrap .flex-right .slot-list-box, 

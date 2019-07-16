@@ -1,5 +1,5 @@
 import MakeDom from './makedom';
-import MultiLang from './multilang';
+import StatText from './statText';
 
 
 export default class StatusBar{
@@ -39,7 +39,7 @@ export default class StatusBar{
 
   setBar(_type) {
     this.progressBar.classList.add(_type);
-    const text = new MultiLang(_type);
+    const text = new StatText(_type);
     this.barName.appendChild(text);
   }
 }

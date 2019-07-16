@@ -1,6 +1,6 @@
 import MakeDom from './makedom';
 
-export default class MultiLang {
+export default class StatText {
   constructor(_input, _align) {
     this.input = _input;
 
@@ -16,36 +16,47 @@ export default class MultiLang {
     textWrap.appendChild(this.text_en);
 
     this.textData = [{
+      key: 'health',
       en: 'hp',
       ko: '체력'
     }, {
+      key: 'exp',
       en: 'exp',
       ko: '경험치'
     }, {
+      key: 'attack',
       en: 'atk',
       ko: '공격력'
     }, {
+      key: 'deffence',
       en: 'def',
       ko: '방어력'
     }, {
+      key: 'strength',
       en: 'str',
       ko: '힘'
     }, {
+      key: 'agility',
       en: 'agi',
       ko: '민첩'
     }, {
+      key: 'intellect',
       en: 'int',
       ko: '지력'
     }, {
+      key: 'stamina',
       en: 'sta',
       ko: '내구력'
     }, {
+      key: 'speed',
       en: 'spd',
       ko: '속도'
     }, {
+      key: 'critical',
       en: 'cric',
       ko: '치명타 확률'
     }, {
+      key: 'critical',
       en: 'crid',
       ko: '치명타 피해'
     }];
@@ -56,7 +67,7 @@ export default class MultiLang {
 
   update() {
     this.textData.forEach(base => {
-      if (base.en === this.input) {
+      if (base.key === this.input) {
         this.text_ko.innerText = `${base.ko}`;
         this.text_en.innerText = `${base.en.toUpperCase()}`;
       }

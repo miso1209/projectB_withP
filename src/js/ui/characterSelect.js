@@ -49,10 +49,9 @@ export default class CharacterSelect extends Panel {
 
     this.portrait = document.createElement('img');
 
-    this.changeAvatarBtn = new Button('', 'iconBtn');
-    this.changeAvatarBtn.dom.classList.add('ico-avatar');
-    this.changeAvatarBtn.dom.style.top = '60px';
-    this.changeAvatarBtn.moveToLeft(40);
+    this.changeAvatarBtn = new Button('아바타 설정', 'checkbox');
+    this.changeAvatarBtn.dom.style.bottom = '10px';
+    this.changeAvatarBtn.moveToRight(10);
 
     this.changeAvatarBtn.dom.addEventListener('click', (ok) => {
       this.setMainAvatar();
@@ -68,7 +67,7 @@ export default class CharacterSelect extends Panel {
     const statWrap = new MakeDom('div', 'statWrap');
     this.hp = new StatusBar(0, 10);
     this.hp.name = '체력';
-    this.hp.setBar('hp');
+    this.hp.setBar('health');
     
     this.exp = new StatusBar(0, 10);
     this.exp.name = '경험치';

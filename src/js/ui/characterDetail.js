@@ -3,6 +3,9 @@ import Modal from "./component/modal";
 import ItemImage from "./component/itemimage";
 import MakeDom from "./component/makedom";
 import Button from "./component/button";
+import StatText from "./component/statText";
+
+
 
 export default class CharacterDetail extends Panel {
   constructor(pane, input, result) {
@@ -28,14 +31,11 @@ export default class CharacterDetail extends Panel {
     // 모달 내부 컨텐츠 영역
     const contentsWrap = new MakeDom('div', 'contents');
     contentsWrap.classList.add('flexWrap');
-
     const leftBox = new MakeDom('div', 'flex-left');
-    leftBox.classList.add('characterStat');
-    leftBox.classList.add('list-detail');
-
-    // const characterStat = new MakeDom('div', 'characterStat')
-    // characterStat.classList.add('list-detail');
-    // leftBox.appendChild(characterStat);
+    const characterBox = new MakeDom('div', 'list-detail')
+    leftBox.appendChild(characterBox);
+    const characterStat = new MakeDom('div', 'characterStat')
+    leftBox.appendChild(characterStat);
 
     const rightBox = new MakeDom('div', 'flex-right');
     rightBox.classList.add('characterDesc');
@@ -62,7 +62,7 @@ export default class CharacterDetail extends Panel {
 
     titleWrap.appendChild(this.level);
     titleWrap.appendChild(this.descName);
-    infoWrap.appendChild(this.class);
+    // infoWrap.appendChild(this.class);
     infoWrap.appendChild(this.dps);
 
 
@@ -78,14 +78,15 @@ export default class CharacterDetail extends Panel {
     this.description = new MakeDom('p', 'description');
 
     const buttonWrap = new MakeDom('div');
-    this.equipBtn = new Button('장비장착', 'button_small');
+    this.equipBtn = new Button('장비장착', 'button_medium');
+    this.equipBtn.dom.classList.add('submit');
     this.equipBtn.dom.style.display = 'none';
     this.equipBtn.moveToRight(10);
     this.equipBtn.moveToBottom(10);
 
     this.cancelBtn = new Button('취소', 'button_small');
     this.cancelBtn.dom.style.display = 'none';
-    this.cancelBtn.moveToRight(90);
+    this.cancelBtn.moveToRight(70);
     this.cancelBtn.moveToBottom(10);
 
     if (this.equipBtn.dom) {
@@ -141,15 +142,15 @@ export default class CharacterDetail extends Panel {
     mainStats.appendChild(this.statArmor);
 
     rightBox.appendChild(descBox);
-    leftBox.appendChild(titleWrap);
-    leftBox.appendChild(infoWrap);
+    characterBox.appendChild(titleWrap);
+    characterBox.appendChild(infoWrap);
 
     rightBox.appendChild(this.equipItems);
     rightBox.appendChild(this.skillItems);
 
     // TODO :  stat 바뀌는건 가운데 영역으로 
-    // rightBox.appendChild(mainStats);
-    // rightBox.appendChild(this.statWrap);
+    // characterStat.appendChild(mainStats);
+    characterStat.appendChild(this.statWrap);
 
     rightBox.appendChild(this.equipInven);
 
@@ -177,13 +178,12 @@ export default class CharacterDetail extends Panel {
     this.statDps.innerText = `공격력 : ${this.selected.strongFigure}`;
     this.statArmor.innerText = `방어력 : ${this.selected.armorFigure}`;
     
-    // console.log(this.selected.data);
-
     for (let base in this.selected.data.base) {
       if ( base !== 'regist') {
         let baseStat = document.createElement('li');
-        let plusStat = document.createElement('span');
-
+        
+        let plusStat = new MakeDom('span', 'plusStat');
+        
         let text = base.charAt(0).toUpperCase() + base.slice(1);
         let baseStatText = 'base' + text;
         let plusStatText = 'simulated' + text; //simulated
@@ -192,11 +192,15 @@ export default class CharacterDetail extends Panel {
           baseStatText = 'baseMax' + text;
           plusStatText = 'simulatedMax' + text;
         }
-        baseStat.innerText = `${base} : ${this.selected[baseStatText]}`;
-        plusStat.innerText = `( + ${this.selected[plusStatText]} )`;
-        plusStat.style.paddingLeft = '10px';
-        plusStat.style.color = '#ffd800';
-        baseStat.appendChild(plusStat);
+
+        let stText = new StatText(base, 'vertical');
+        baseStat.appendChild(stText);
+
+        let baseValue = new MakeDom('p', 'statvalue', `${this.selected[baseStatText]}`);
+        baseStat.appendChild(baseValue);
+
+        plusStat.innerText = `(+${this.selected[plusStatText]})`;
+        baseValue.appendChild(plusStat);
         this.statWrap.appendChild(baseStat);
       }
     }
@@ -331,6 +335,8 @@ export default class CharacterDetail extends Panel {
       this.equipBtn.dom.style.display = 'block';
       this.cancelBtn.dom.style.display = 'none';
       this.equipBtn.dom.innerText = '장비장착';
+      this.equipBtn.dom.classList.remove('button_small');
+      this.equipBtn.dom.classList.add('button_medium');
       this.equipBtn.dom.setAttribute('value', 'simulationEquip');
 
     } else if(_status === 'unEquip') {
@@ -341,7 +347,9 @@ export default class CharacterDetail extends Panel {
     } else if(_status === 'tempEquip') {
       this.equipBtn.dom.style.display = 'block';
       this.cancelBtn.dom.style.display = 'block';
-      this.equipBtn.dom.innerText = '확인';
+      this.equipBtn.dom.innerText = '장착';
+      this.equipBtn.dom.classList.remove('button_medium');
+      this.equipBtn.dom.classList.add('button_small');
       this.equipBtn.dom.setAttribute('value', 'equip');
       this.cancelBtn.dom.setAttribute('value', 'cancel');
     } 
