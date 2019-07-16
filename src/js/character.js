@@ -15,6 +15,9 @@ export default class Character {
         
         const data = characters[id];
         this.data = data;
+        
+        // 임시로 criticalPotentail처리.
+        this.data.base.criticalPotential = 1.2;
 
         this.plusMaxHealth = 0;
         this.plusStrength = 0;
@@ -80,31 +83,31 @@ export default class Character {
     }
 
     get baseMaxHealth() {
-        return this.getParam('health', this.level);
+        return Math.round(this.getParam('health', this.level));
     }
     
     get baseStrength() {
-        return this.getParam('strength', this.level);
+        return Math.round(this.getParam('strength', this.level));
     }
     
     get baseIntellect() {
-        return this.getParam('intellect', this.level);
+        return Math.round(this.getParam('intellect', this.level));
     }
     
     get baseAgility() {
-        return this.getParam('agility', this.level);
+        return Math.round(this.getParam('agility', this.level));
     }
 
     get baseStamina() {
-        return this.getParam('stamina', this.level);
+        return Math.round(this.getParam('stamina', this.level));
     }
 
     get baseSpeed() {
-        return this.getParam('speed', this.level);
+        return Math.round(Number(this.getParam('speed', this.level).toFixed(4)));
     }
     
     get baseCritical() {
-        return this.getParam('critical', this.level);
+        return Math.round(Number(this.getParam('critical', this.level).toFixed(4)));
     }
 
     get maxHealth() {
@@ -115,33 +118,47 @@ export default class Character {
 
     get strength() {
         const strength = this.simulatedStrength?this.simulatedStrength:this.plusStrength;
-        return this.baseStrength + strength;
+        return Math.round(this.baseStrength + strength);
     }
 
     // 민첩은 크리티컬 데미지에 사용한다. 100 Agility에 100% 추가데미지.
     get agility() {
         const agility = this.simulatedAgility?this.simulatedAgility:this.plusAgility;
-        return this.baseAgility + agility;
+        return Math.round(this.baseAgility + agility);
     }
 
     get intellect() {
         const intellect = this.simulatedIntellect?this.simulatedIntellect:this.plusIntellect;
-        return this.baseIntellect + intellect;
+        return Math.round(this.baseIntellect + intellect);
     }
 
     get stamina() {
         const stamina = this.simulatedStamina?this.simulatedStamina:this.plusStamina;
-        return this.baseStamina + stamina;
+        return Math.round(this.baseStamina + stamina);
     }
 
     get critical() {
         const critical = this.simulatedCritical?this.simulatedCritical:this.plusCritical;
-        return (this.baseCritical + critical)>=1?1:(this.baseCritical + critical);
+        return Number((this.baseCritical + critical)>=1?1:(this.baseCritical + critical).toFixed(4));
     }
 
     // 기본적인 크리티컬 데미지는 1.2배로 한다.
+    get baseCriticalPotential() {
+        return Number((1.2).toFixed(4));
+    }
+
     get criticalPotential() {
-        return 1.2 + (this.agility / 100)
+        return Number((this.baseCriticalPotential + this.plusCriticalPotential).toFixed(4));
+    }
+
+    // 기본적인 크리티컬 데미지는 1.2배로 한다.
+    get simulatedCriticalPotential() {
+        return Number((this.agility / 100).toFixed(4));
+    }
+
+    // 기본적인 크리티컬 데미지는 1.2배로 한다.
+    get plusCriticalPotential() {
+        return Number((this.agility / 100).toFixed(4));
     }
 
     // 총체적 공격력을 구해보자.. 공식에 신빙성이 있어야 하는데.. 체력과 공격력에 비례한 어떠한 수치 이지만, 완벽한 강함의 척도는 아니다.
@@ -185,7 +202,7 @@ export default class Character {
 
     get speed() {
         const speed = this.simulatedSpeed?this.simulatedSpeed:this.plusSpeed;
-        return this.baseSpeed + speed;
+        return Number((this.baseSpeed + speed).toFixed(4));
     }
 
     get class() {

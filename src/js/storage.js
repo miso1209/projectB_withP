@@ -84,6 +84,11 @@ export default class Storage extends EventEmitter {
         this.save();
     }
 
+    changeFloor(floor) {
+        this.data.currentFloor = floor;
+        this.save();
+    }
+
     setQuest(questId, data) {
         if (!this.data.quests[questId]) {
             this.data.quests[questId] = Object.assign({

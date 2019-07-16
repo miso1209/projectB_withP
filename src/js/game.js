@@ -194,6 +194,9 @@ export default class Game extends EventEmitter {
             this.storage.data.party[3] = 0;
             this.storage.data.party[4] = 0;
 
+            // 마지막 던전 층 초기화
+            this.storage.data.currentFloor = 0;
+
             // 현지 진행해야하는 컷신 아이디를 적는다
             this.storage.data.cutscene = 1;
 
@@ -246,6 +249,8 @@ export default class Game extends EventEmitter {
         for (let questId in this.storage.data.completedQuests) {
             this.setCompletedQuest(questId, this.storage.data.completedQuests[questId]);
         }
+
+        this.currentFloor = this.storage.data.currentFloor;
         
         this.ui.player = this.player;
         this.ui.characters = Characters;
@@ -287,6 +292,8 @@ export default class Game extends EventEmitter {
         for (let key in this.player.characters) {
             this.player.characters[key].applyOption('recovery()');
         }
+        this.currentFloor = 0;
+        this.storage.changeFloor(this.currentFloor);
     }
 
     _playCutscene(script, callback) {
@@ -406,7 +413,8 @@ export default class Game extends EventEmitter {
     // [정리] 기존처럼 Map을 바로 생성하는 것 이 아니라, 미치 다 생성해서 들고있어서, Stage객체를 가지고 있다.
     // 던전에서는 어떤 방향으로 입장하는지 모르기 때문에 입장 방향도 dir 이라는 파라메타로 넘겨준다.
     async $nextFloor(from, dir) {
-        this.currentFloor ++;
+        this.storage.changeFloor(this.currentFloor);
+        this.currentFloor++;
         this.ui.showTheaterUI(0.5);
         this.ui.hideMenu();
         await this.$leaveStage(from);
@@ -467,7 +475,6 @@ export default class Game extends EventEmitter {
         stage.on('seePlayer', async (...args) => { await this.$battleCutscene(...args); });
         stage.on('battle', async (...args) => { await this.$objBattle(...args); });
 
-        this.currentFloor = 0;
         await stage.$load(stageName);
         for(const tag of this.player.tags) {
             stage.applyTag(tag);
@@ -883,8 +890,6 @@ export default class Game extends EventEmitter {
             this.storage.setQuest(questId, {});
             this.setQuest(questId, {});
 
-            // add quest
-            console.log('add quest : ', this.player.quests[questId]);
             // UI Flag
             this.ui.flagArray[3] = 'true';
             this.ui.checkFlag();
@@ -909,7 +914,7 @@ export default class Game extends EventEmitter {
             if (isChanged && showFlag) {
                 if (quest.success) {
                     // success quest
-                    console.log('success quest : ', this.player.quests[questId]);
+
                     // UI Flag
                     this.ui.flagArray[3] = 'true';
                     this.ui.checkFlag();
@@ -917,7 +922,6 @@ export default class Game extends EventEmitter {
                     this.ui.showCompleteQuest(this.player.quests[questId]);
                 } else {
                     // change condition
-                    console.log('change condition : ', this.player.quests[questId]);
                 }
             }
         });
@@ -943,7 +947,6 @@ export default class Game extends EventEmitter {
     }
 
     checkCount(quest, key, operator, count) {
-        console.log(quest,key,operator,count);
         // 초기 로드시는 증가시키지 않는다.
         if (!quest.isInitData[key]) {
             quest.isInitData[key] = true;

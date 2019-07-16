@@ -98,7 +98,6 @@ export class Battle extends EventEmitter {
         this.exp = options.exp;
         this.gold = options.gold;
 
-        console.log(options);
         this.setScale(options.scale?options.scale:2);
         this.focusCenter();
     }
@@ -334,7 +333,7 @@ export class Battle extends EventEmitter {
             return null;
         }
 
-        const skill = Math.random()<0.5?Skill.New(character.skills.a):Skill.New(character.skills.b);
+        const skill = Math.random()<0.7?Skill.New(character.skills.a):Skill.New(character.skills.b);
 
         const allies = (character.camp === CHARACTER_CAMP.ALLY) ? this.allies : this.enemies;
         const enemies = (character.camp === CHARACTER_CAMP.ALLY) ? this.enemies : this.allies;

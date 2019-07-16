@@ -2,14 +2,14 @@ const TILE_WIDTH = 32;
 const TILE_HEIGHT = 16;
 const MAP_DATA = {
     '   ': null,
-    ' ▨ ': 'event_02.png',
-    ' # ': 'event_02.png',
-    ' B ': 'event_02.png',
-    ' P ': 'event_02.png',
-    ' H ': 'event_02.png',
+    ' ▨ ': 'minimap_tile.png',
+    ' # ': 'minimap_tile.png',
+    ' B ': 'minimap_tile.png',
+    ' P ': 'minimap_tile.png',
+    ' H ': 'minimap_tile.png',
     ' ● ': null,
     ' ◎ ': null,
-    ' N ': 'event_02.png',
+    ' N ': 'minimap_tile.png',
 };
 
 export default class Minimap extends PIXI.Application {
@@ -67,6 +67,7 @@ export default class Minimap extends PIXI.Application {
                     this.mapContainer.position.x = (this.screenWidth / 2) - ((x * TILE_WIDTH / 2) - (y * TILE_WIDTH / 2) + TILE_WIDTH / 2);
                     this.mapContainer.position.y = (this.screenHeight / 2) - ((x * TILE_HEIGHT / 2) + (y * TILE_HEIGHT / 2) + TILE_HEIGHT / 2);
                     this.mapTile[Math.round(x + y * this.mapLength)].show();
+                    this.mapTile[Math.round(x + y * this.mapLength)].changeTint('0xFFFFFF');
                     
                     if (stage.neighbor.up) {
                         this.mapTile[(x) + (y-1) * this.mapLength].show();
@@ -89,9 +90,15 @@ export default class Minimap extends PIXI.Application {
 class MiniMapTile extends PIXI.Container {
     constructor(textureName) {
         super();
-        const spirte = new PIXI.Sprite(PIXI.Texture.fromFrame(textureName));
-        this.addChild(spirte);
+        const sprite = new PIXI.Sprite(PIXI.Texture.fromFrame(textureName));
+        this.addChild(sprite);
+        this.sprite = sprite;
         this.visible = false;
+        this.sprite.tint = '0xFFAAAA';
+    }
+
+    changeTint(tint) {
+        this.sprite.tint = tint;
     }
 
     show() {

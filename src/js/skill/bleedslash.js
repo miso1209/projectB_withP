@@ -15,6 +15,7 @@ export default class BleedSlash extends SkillBase {
         // 프레임별로 실행해야 할 내용을 여기에 기록
         switch(frame) {
             case 1: {
+                this.setCoolTime();
                 const vector = (this.owner.camp === CHARACTER_CAMP.ALLY)?  1 : - 1;
                 const toX = this.owner.position.x + 16 * vector;
                 const toY = this.owner.position.y - 8 * vector;

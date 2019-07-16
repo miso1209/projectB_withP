@@ -159,6 +159,12 @@
                 4,
                 { "level": 1, "exp": 0, "equips": {}}
             ]
+        }, {
+            "command": "addcharacter",
+            "arguments": [
+                6,
+                { "level": 1, "exp": 0, "equips": {}}
+            ]
         }
     ],
     "8": [{

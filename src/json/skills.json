@@ -12,8 +12,8 @@
     "runaway": {
         "name": "도주",
         "description": "전투에서 빠져나와 몸을 숨긴다.",
-        "coolTime": 10,
-        "maxCoolTime": 10,
+        "coolTime": 15,
+        "maxCoolTime": 15,
         "skillExpressions": []
     },
 
@@ -30,12 +30,14 @@
     "bleedslash": {
         "name": "출혈베기",
         "description": "깊게 베어 출혈을 유도한다.",
+        "coolTime": 12,
+        "maxCoolTime": 12,
         "skillExpressions": [
             [
-                "attackCoefficient(0.7)"
+                "attackCoefficient(0.8)"
             ],
             [
-                "attackCoefficient(0.2)"
+                "attackCoefficient(0.3)"
             ]
         ]
     },
@@ -53,8 +55,8 @@
     "doubleattack": {
         "name": "연속공격",
         "description": "방패와 검으로 연속 공격한다.",
-        "coolTime": 8,
-        "maxCoolTime": 8,
+        "coolTime": 13,
+        "maxCoolTime": 13,
         "skillExpressions": [
             [
                 "attackCoefficient(0.7)"
@@ -91,8 +93,8 @@
     "heal": {
         "name": "힐",
         "description": "아군의 체력을 20%만큼 회복한다.",
-        "coolTime": 10,
-        "maxCoolTime": 10,
+        "coolTime": 15,
+        "maxCoolTime": 15,
         "skillExpressions": [
             [
                 "maxHealthCoefficient(0.2)"
@@ -123,8 +125,8 @@
     "arrowoftracker": {
         "name": "추적화살",
         "description": "활을 높게 쏘아올려 제일 체력이 약한적을 공격한다.",
-        "coolTime": 6,
-        "maxCoolTime": 6,
+        "coolTime": 12,
+        "maxCoolTime": 12,
         "skillExpressions": [
             [
                 "attackCoefficient(1.4)"
@@ -155,11 +157,11 @@
     "firerain": {
         "name": "화염의 비",
         "description": "모든 적에게 화염구체를 떨어뜨려 공격한다.",
-        "coolTime": 14,
-        "maxCoolTime": 14,
+        "coolTime": 12,
+        "maxCoolTime": 12,
         "skillExpressions": [
             [
-                "magicCoefficient(0.6)"
+                "magicCoefficient(0.8)"
             ]
         ]
     },

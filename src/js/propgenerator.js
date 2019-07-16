@@ -31,20 +31,37 @@ export default class PropGenerator {
 
         return items;
     }
+
+    getIndex(items, item, conditionChecker) {
+        let resultIndex = -1;
+
+        items.forEach((compareItem, index) => {
+            let success = false;
+            success = conditionChecker(compareItem, item);
+            if (success) {
+                resultIndex = index;
+                return true;
+            }
+        });
+
+        return resultIndex;
+    }
+
     createChest(floor) {
         const itemCount = 3 + Math.round(Math.random() * 2);
         const floorData = FloorChests[floor];
         const rewards = [];
         // 추후 해당 아이템들의 Rarity의 총합으로 어떤 상자인지 판정해야겟다. => 나올 수 있는 아이템 중 최고의 아이템 상위 n% 는 랭크가 높다 이런식으로 판별하자.
-        const rewardsRank = 0;
+        const rewardsRank = 0 + Math.round(Math.random()) + Math.round(Math.random());
         let items = [];
         for (let i=0; i<itemCount; i++) {
             if (items.length <= 0) {
                 items = this.getMaterials();
             }
             const itemData = this.getRarityItem(this.getFilteredItems(items, floorData));
-            items.splice(items.indexOf(itemData), 1);
-            rewards.push({ id: itemData.id, owned: 1 + Math.round(Math.random() * 2)});
+            const removeIndex = this.getIndex(items ,itemData, (a, b) => { return a.id === b.id });
+            items.splice(removeIndex, 1);
+            rewards.push({ id: itemData.id, owned: 1 + Math.round(Math.random() * (rewardsRank + 1))});
         }
 
         let chest = {
@@ -90,9 +107,9 @@ export default class PropGenerator {
         }
 
         let selectedItem = this.getRarityItem(this.getFilteredItems(recipes, floorData));
-        // 이미 레시피를 다 먹은경우 뭘 줘야 하는가?
+
+        // 레시피를 모두 수집한 경우, 이미 있는 레시피를 넣어두면, 레시피 프랍에서 알아서 종이로 바꿔준다.
         if (!selectedItem) {
-            // 우선 소형포션 제작서를 넣어두자..
             selectedItem = {id:4041, rank: 'C'};
         }
         
