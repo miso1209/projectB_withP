@@ -22,6 +22,7 @@ export default class Profile extends Panel {
     const infoWrap = new MakeDom('div', 'infoWrap');
     this.avatar_dps = new MakeDom('div', 'statBox', 0);
     this.avatar_gold = new MakeDom('div', 'statBox', 0);
+    
     infoWrap.appendChild(this.avatar_dps);
     infoWrap.appendChild(this.avatar_gold);
 

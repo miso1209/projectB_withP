@@ -64,7 +64,7 @@ export default class CharacterSelect extends Panel {
     this.level.style.paddingRight = '10px';
 
     // hp, exp 상태바
-    const statWrap = new MakeDom('div', 'statWrap');
+    const statWrap = new MakeDom('div', 'baseStats');
     this.hp = new StatusBar(0, 10);
     this.hp.name = '체력';
     this.hp.setBar('health');

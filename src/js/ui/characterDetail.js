@@ -4,6 +4,7 @@ import ItemImage from "./component/itemimage";
 import MakeDom from "./component/makedom";
 import Button from "./component/button";
 import StatText from "./component/statText";
+import StatusBar from "./component/statusbar";
 
 
 
@@ -45,15 +46,16 @@ export default class CharacterDetail extends Panel {
 
     const titleWrap = new MakeDom('div', 'titleWrap');
     const infoWrap = new MakeDom('div', 'infoWrap');
+    const dpsIcon = new MakeDom('div', 'dpsIcon');
+    const dpsStatText = new StatText('dps', 'inline');
+    dpsIcon.appendChild(dpsStatText);
 
-    this.descName = new MakeDom('span', 'stat_name');
+    this.name = new MakeDom('span', 'stat_name');
     this.level = new MakeDom('span', 'stat_level');
     this.level.style.paddingRight = '10px';
 
     this.class = new MakeDom('p', 'stat_class');
     this.dps = new MakeDom('p', 'stat_dps');
-    this.dps.style.paddingTop = '10px';
-    this.dps.style.fontSize = '18px';
     
     // 캐릭터 정보
     this.portrait = new MakeDom('img', 'profile');
@@ -61,10 +63,11 @@ export default class CharacterDetail extends Panel {
     this.portrait.style.margin = '30px auto 10px';
 
     titleWrap.appendChild(this.level);
-    titleWrap.appendChild(this.descName);
-    // infoWrap.appendChild(this.class);
+    titleWrap.appendChild(this.name);
+    infoWrap.appendChild(dpsIcon);
     infoWrap.appendChild(this.dps);
 
+    const gearBox = new MakeDom('div', 'gearBox');
 
     // 장비
     this.equipItems = document.createElement('ul');
@@ -106,14 +109,49 @@ export default class CharacterDetail extends Panel {
 
     descBox.appendChild(buttonWrap);
     descBox.appendChild(this.description);
+
+    // hp, exp 상태바
+    const baseStats = new MakeDom('div', 'baseStats');
+    this.hp = new StatusBar(0, 10);
+    this.hp.name = '체력';
+    this.hp.setBar('health');
+
+    this.exp = new StatusBar(0, 10);
+    this.exp.name = '경험치';
+    this.exp.setBar('exp');
+
+    baseStats.appendChild(this.hp.dom);
+    baseStats.appendChild(this.exp.dom);
+
+    const mainStats = new MakeDom('div', 'mainStats');
+
+    const dpsFrag = new MakeDom('section', 'frag');
+    const dpsText = new StatText('attack');
+    this.statDps = new MakeDom('div', 'statBox', `${this.selected.strongFigure}`);
+    this.statDps.classList.add('_atk');
+    
+    const dpsFrag2 = new MakeDom('section', 'frag');
+    const dpsText2 = new StatText('deffence');
+    this.statArmor = new MakeDom('div', 'statBox', `${this.selected.armorFigure}`);
+    this.statArmor.classList.add('_def');
+
+    dpsFrag.appendChild(dpsText);
+    dpsFrag.appendChild(this.statDps);
+
+    dpsFrag2.appendChild(dpsText2);
+    dpsFrag2.appendChild(this.statArmor);
+
+    mainStats.appendChild(dpsFrag);
+    mainStats.appendChild(dpsFrag2);
+
+    characterBox.appendChild(titleWrap);
+    characterBox.appendChild(infoWrap);
+    characterBox.appendChild(mainStats);
+    characterBox.appendChild(baseStats);
+
     //.left
 
     this.statWrap = new MakeDom('ul', 'statWrap');
-    const mainStats = new MakeDom('div', 'mainStat');
-
-    this.statDps = new MakeDom('span', 'stat', `공격력 : ${this.selected.strongFigure}`);
-    this.statArmor = new MakeDom('span', 'stat', `방어력 : ${this.selected.armorFigure}`);
-
     // 장착가능 아이템 슬롯 
     this.equipInven = new MakeDom('div', 'equipInven');
     this.equipInven.style.display = 'none';
@@ -137,32 +175,24 @@ export default class CharacterDetail extends Panel {
     scrollView.appendChild(scrollBlind);
     scrollBlind.appendChild(this.storageContent);
     this.equipInven.appendChild(scrollView);
-    
-    mainStats.appendChild(this.statDps);
-    mainStats.appendChild(this.statArmor);
 
-    rightBox.appendChild(descBox);
-    characterBox.appendChild(titleWrap);
-    characterBox.appendChild(infoWrap);
 
-    rightBox.appendChild(this.equipItems);
-    rightBox.appendChild(this.skillItems);
-
-    // TODO :  stat 바뀌는건 가운데 영역으로 
-    // characterStat.appendChild(mainStats);
     characterStat.appendChild(this.statWrap);
 
+    gearBox.appendChild(this.equipItems);
+    gearBox.appendChild(this.skillItems);
+    
+    rightBox.appendChild(gearBox);
+    rightBox.appendChild(descBox);
     rightBox.appendChild(this.equipInven);
-
     this.dom.appendChild(contentsWrap);
     this.init();
   }
 
   init() {
     const path = '/src/assets/';
-
     this.class.innerText = this.selected.class;
-    this.descName.innerText = this.selected.displayName;
+    this.name.innerText = this.selected.displayName;
     this.portrait.src = path + this.selected.data.portrait;
     this.level.innerText = 'Lv.' + this.selected.level;
 
@@ -170,20 +200,26 @@ export default class CharacterDetail extends Panel {
     this.updateEquip();
     this.updateSkill();
     this.updateStat();
+    this.updateStatus(this.selected);
+  }
+
+  updateStatus(current) {
+    this.hp.update(current.health, current.maxHealth);
+    this.exp.update(current.exp, current.maxexp);
   }
 
   updateStat() {
     this.statWrap.innerHTML = '';
-    this.dps.innerText = `총 전투력 : ${this.selected.totalPowerFigure}`;
-    this.statDps.innerText = `공격력 : ${this.selected.strongFigure}`;
-    this.statArmor.innerText = `방어력 : ${this.selected.armorFigure}`;
+    this.dps.innerText = `${this.selected.totalPowerFigure}`;
+    this.statDps.innerText = `${this.selected.strongFigure}`;
+    this.statArmor.innerText = `${this.selected.armorFigure}`;
     
+    console.log(this.selected);
+
     for (let base in this.selected.data.base) {
       if ( base !== 'regist') {
         let baseStat = document.createElement('li');
-        
         let plusStat = new MakeDom('span', 'plusStat');
-        
         let text = base.charAt(0).toUpperCase() + base.slice(1);
         let baseStatText = 'base' + text;
         let plusStatText = 'simulated' + text; //simulated
@@ -193,9 +229,9 @@ export default class CharacterDetail extends Panel {
           plusStatText = 'simulatedMax' + text;
         }
 
-        let stText = new StatText(base, 'vertical');
+        let stText = new StatText(base, 'inline');
         baseStat.appendChild(stText);
-
+        
         let baseValue = new MakeDom('p', 'statvalue', `${this.selected[baseStatText]}`);
         baseStat.appendChild(baseValue);
 
@@ -229,11 +265,11 @@ export default class CharacterDetail extends Panel {
         let item = d.data.data;
         let itemIcon = new ItemImage(item.image.texture, item.image.x, item.image.y);
         itemIcon.dom.style.display = 'inline-block';
-        descText.innerText = d.displayName;
+        // descText.innerText = d.displayName;
         liWrap.appendChild(itemIcon.dom);
       } else {
         liWrap.classList.add('empty');
-        descText.innerText = d.displayName;
+        // descText.innerText = d.displayName;
       }
 
       this.equipItems.appendChild(liWrap);
@@ -318,7 +354,14 @@ export default class CharacterDetail extends Panel {
         status = 'unEquip';
       }
       this.description.innerText = this.statItem.data.name; 
-      desctext.innerText = this.statItem.data.description;
+      let desc = new MakeDom('p', 'desc', `${this.statItem.data.description}`);
+      
+      this.statItem.data.options.forEach(option => {
+        let optionText = new MakeDom('em', 'option', `${option}`);
+        desctext.appendChild(optionText);
+      });
+
+      desctext.appendChild(desc);
     } else {
       desctext.innerText = '장착된 장비 정보가 없습니다.';
       status = 'simulationEquip';
@@ -358,7 +401,7 @@ export default class CharacterDetail extends Panel {
   showEquipInven() {
     this.storageContent.innerHTML = '';
     this.equipInven.style.display = 'block';
-    this.slotSize = 14;
+    this.slotSize = 15;
 
     let isActive = null;
     let index = -1;
@@ -367,8 +410,8 @@ export default class CharacterDetail extends Panel {
       ++index;
 
       let liWrap = new MakeDom('li', 'slot');
-      liWrap.style.width = '55px';
-      liWrap.style.height = '55px';
+      liWrap.style.width = '50px';
+      liWrap.style.height = '50px';
 
       let itemIcon = new ItemImage(item.data.image.texture, item.data.image.x, item.data.image.y);
       itemIcon.dom.style.display = 'inline-block';
@@ -421,5 +464,3 @@ export default class CharacterDetail extends Panel {
     this.callback(this.statItem, 'close');
   }
 }
-
-

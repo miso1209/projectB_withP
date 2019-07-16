@@ -27,24 +27,15 @@ export default class SystemModal extends Panel {
 
         okButton.dom.style.position = 'static';
         cancelButton.dom.style.position = 'static';
-        buttonWrap.appendChild(okButton.dom);
-
         if(this.cancelable) {
-            
-            // okButton.moveToLeft(20);
-            // okButton.moveToBottom(20);
-
-            // cancelButton.moveToRight(20);
-            // cancelButton.moveToBottom(20);
-
             buttonWrap.appendChild(cancelButton.dom);
             cancelButton.dom.addEventListener('click', this.onCancel.bind(this));
         } else {
             okButton.moveToCenter(0);
             okButton.moveToBottom(20);
         }
+        buttonWrap.appendChild(okButton.dom);
         okButton.dom.addEventListener('click', this.onSubmit.bind(this));
-
         
         confirmModal.dom.appendChild(buttonWrap);
         this.dom = confirmModal.dom;

@@ -19,13 +19,14 @@ export default class Avatar {
       const infoWrap = new MakeDom('div', 'infoWrap');
       const level = new MakeDom('p', 'level', `LV.${input.level}`);
       const name = new MakeDom('p', 'name', input.data.displayname);
-      const statBox = new MakeDom('div', 'statBox');
+      const stats = new MakeDom('div', 'statBox');
+      stats.classList.add('_dps');
+
       this.dps = new MakeDom('p', 'stat', input.totalPowerFigure);
       this.health = new MakeDom('p', 'health', `${input.health}`);
       
       const imgWrap = new MakeDom('p', 'imgWrap');
       const profileimg = new MakeDom('img', 'profileImg');
-
       profileimg.src = this.path;
 
       imgWrap.style.width = '48px';
@@ -40,8 +41,8 @@ export default class Avatar {
       avatar.appendChild(stage);
       infoWrap.appendChild(level);
       infoWrap.appendChild(name);
-      infoWrap.appendChild(statBox);
-      statBox.appendChild(this.dps);
+      infoWrap.appendChild(stats);
+      stats.appendChild(this.dps);
       infoWrap.appendChild(this.health);
       
 

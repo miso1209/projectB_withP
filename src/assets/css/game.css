@@ -34,11 +34,58 @@
   line-height: 1;
   opacity: 0.5;
 }
-.statText.vertical span {
+.statText.inline span {
   display: inline-block;
   padding-left: 5px;
 }
 
+.statBox{
+  position: relative;
+  display: block;
+  width: inherit;
+  height: 26px;
+  line-height: 26px;
+  padding: 0 12px 0 35px;
+  color: #000;
+  text-align: right;
+  font-weight: normal;
+  overflow: hidden;
+  border: 1px solid #4e4a47;
+  background-color: #dad0c7;
+}
+
+.statBox::before{
+  content: '';
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  
+  width: 24px;
+  height: 24px;
+  border-right: 1px solid #4e4a47;
+}
+
+.statBox::after{
+  content: '';
+  display: block;
+  position: absolute;
+  right: -1px;
+  bottom: -1px;
+  width: 11px;
+  height: 11px;
+  background: url(~assets/ui/frame_edge.png) no-repeat 0% 0%;
+}
+
+.statBox._atk::before{
+  background: url(~assets/ui/icon_attack.png) no-repeat 50% 50% #391b5a;
+}
+.statBox._def::before{
+  background: url(~assets/ui/icon_deffence.png) no-repeat 50% 50% #1b7464;
+}
+
+
+/* ------------------------------------------------------------------------ */
 
 /* Intro */
 .project_header {
@@ -215,7 +262,7 @@
   box-sizing: border-box;
 }
 
-.infoWrap .statBox {
+.profileWrap .infoWrap .statBox {
   position: relative;
   display: block;
   width: 108px;
@@ -224,8 +271,13 @@
   overflow: hidden;
   border: 1px solid #4e4a47;
   background-color: #dad0c7;
+
+  padding: 0 6px 0 35px;
+  text-align: right;
+  font-weight: normal;
 }
-.infoWrap .statBox::before{
+
+.profileWrap .statBox::before, .statBox._dps::before{
   position: absolute;
   left: 0;
   top: 0;
@@ -233,15 +285,9 @@
   display: block;
   width: 24px;
   height: 24px;
-  border-right: 1px solid #4e4a47;
+  /* border-right: 1px solid #4e4a47; */
   background: url(~assets/ui/icon_dps.png) no-repeat 50% 50% #741b28;
 }
-.infoWrap .statBox{
-  padding: 0 6px 0 35px;
-  text-align: right;
-  font-weight: normal;
-}
-
 .profileWrap .infoWrap .statBox:not(:first-child):before {
   background: url(~assets/ui/icon_gold.png) no-repeat 50% 50% #7f742b;
 }
@@ -249,6 +295,8 @@
 .profileWrap .infoWrap .statBox:not(:first-child) {
   margin-top: 4px;
 }
+
+
 /*. gnb 프로필  */
 
 
@@ -976,7 +1024,7 @@ button, .button{
   padding: 0;
   font-size: 20px;
   letter-spacing: .12em;
-
+  line-height: 1.4;
   text-align: left;
   overflow: hidden;
   background-color: transparent;
@@ -1565,12 +1613,14 @@ button.disabled {
 .flex-left.list-wrap .characterList {
   position: relative;
   display: flex;
-  margin: 0 auto;
-  padding: 8px;
+  
   flex-wrap: wrap;
   flex-direction: row;
   justify-content: space-evenly;
   justify-items: start;
+  min-height: 350px;
+  margin: 0 auto;
+  padding: 8px;
   opacity: 1;
   transition: all 0.3s linear;
   overflow: hidden;
@@ -1629,7 +1679,7 @@ button.disabled {
   left: 0;
   right:0;
   bottom:-16px;
-
+  z-index: 11;
   width: 206px;
   height: 21px;
   margin: 0 auto;
@@ -1638,9 +1688,9 @@ button.disabled {
 .list-detail .titleWrap span {
   color: #fff;
 }
-.list-detail .statWrap {
-  /* height: 78px; */
-  padding: 11px 5px;
+
+.baseStats {
+  padding: 10px;
   margin: 1px 1px 0;
   background-color: #281b10;
 }
@@ -1876,6 +1926,7 @@ button.disabled {
 }
 
 /* 캐릭터상세창 */
+/* 캐릭터 상세-왼쪽박스 */
 .characterDetail .flex-left {
   position: relative;
   min-height: 350px;
@@ -1890,47 +1941,108 @@ button.disabled {
   border: 1px solid #281b10;
 }
 .characterDetail .flex-left .list-detail .infoWrap {
+  position: relative;
   background: url(~assets/ui/character_stat_bg.png) no-repeat;
   height: 137px;
+  padding: 30px;
 }
-.characterDetail .flex-left .characterStat {
+
+.characterDetail .flex-left .list-detail .infoWrap .stat_dps {
+  font-size: 30px;
+  line-height: 1.5;
+}
+.characterDetail .flex-left .list-detail .infoWrap .dpsIcon::before {
+  content: '';
+  display: inline-block;
+  width: 15px;
+  height: 16px;
+  padding-right: 10px;
+  background: url(~assets/ui/icon_dps.png) no-repeat;
+}
+
+.characterDetail .flex-left .list-detail .infoWrap .dpsIcon .statText {
+  display: inline-block;
+  height: 16px;
+  vertical-align: top;
+}
+
+.mainStats {
+  padding: 10px;
+  margin: 1px 1px 0;
+  text-align: left;
+  background-color: #281b10;
+}
+.mainStats section {
+  display: flex;
+  flex-wrap: wrap;
+}
+.mainStats section:not(:first-child) {
+  margin-top: 10px;
+}
+.mainStats .statText {
+  width: 50px;
+}
+.mainStats .statBox {
+  width: calc(100% - 50px);
+} 
+.mainStat p:not(:first-child) {
+  padding-top: 10px;
+}
+
+
+/* 스탯리스트 */
+.characterDetail .characterStat {
   width: 146px;
-  padding: 15px;
+  padding: 10px 15px;
   background-color: #281b10;
   border: 1px solid #281b10;
 }
-
-.characterDetail .flex-right {
-  width: calc(100% - 398px);
-}
-
-.characterDesc .description {
-  padding: 15px 20px;
-
-  font-size: 15px;
+.characterDetail .characterStat .statWrap {
+  width: auto;
   text-align: left;
-  line-height: 1.5;
-  color: #fff;
+}
+.characterDetail .characterStat .statWrap li:not(:first-child) {
+  margin-top: 5px;
+}
+.characterDetail .characterStat .statWrap p {
+  line-height: 1.3;
+}
+.characterDetail .characterStat .statWrap .plusStat {
+  color: #8fc13b;
+  padding-left: 5px;
+  font-size: 14px;
 }
 
-.description .desc-text {
-  font-size: 13px;
-  line-height: 1.5;
-  padding-top: 5px;
-}
 
+/* 캐릭터 상세-오른쪽박스 */
+.characterDetail .flex-right {
+  width: calc(100% - 396px);
+  height: auto;
+  margin: 0;
+  background: none;
+  box-shadow: none;
+  border: none;
+  border-left: 1px solid #281b10;
+}
+.characterDetail .gearBox {
+  height: 230px;
+  background: url(~assets/ui/bg.png) #5d5550 no-repeat;
+  background-size: cover;
+  box-shadow: inset 0 0 10px 0 rgba(0, 0, 0, 0.5);
+  margin: 6px;
+}
 
 .characterDetail .skillItems, 
 .characterDetail .equipItems {
   position: absolute;
-  top: -10px;
-  width: 60px;
+  top: 23px;
+  width: 50px;
 } 
 .characterDetail .equipItems {
-  left: 20px;
+  left: 32px;
 }
 .characterDetail .skillItems {
-  right: 20px;
+  right: 32px;
 }
 .characterDetail .equipItems li,
 .characterDetail .skillItems li {
@@ -1939,15 +2051,13 @@ button.disabled {
   width: 100%;
   margin: 0;
   padding: 7px 2px;
-  min-height: 60px;
-  background-color: rgba(1,1,1,.4);
+  height: 50px;
+  background-color: #22150a;
   border: 1px solid transparent;
-  border-radius: 5px;
 }
 
 .characterDetail .skillItems li{
-  min-height: 60px;
-  border-radius: 5px;
+  min-height: 50px;
 }
 
 .characterDetail .equipItems li:not(:first-child),
@@ -1964,83 +2074,58 @@ button.disabled {
 .equipItems li.active,
 .skillItems li:hover, 
 .skillItems li:active,
-.skillItems li.active,
-.equipItems li.empty:hover,
-.equipItems li.empty:active,
-.equipItems li.empty.active {
-  background-color: rgba(1,1,1,1);
-  border-radius: 8px;
+.skillItems li.active {
+  background-color: #22150a;
   border-color: #ffd800;
 }
 
-.equipItems li.empty, 
-.skillItems li.empty {
-  padding: 0;
-
-  width: 60px;
-  height: 60px;
-  background: url(~assets/ui/symbols.png) 0 -64px no-repeat;
-  background-color: rgba(1,1,1,.4);
-  border: 1px solid transparent;
-  border-radius: 5px;
+.equipItems li:nth-child(1).empty {
+  background: url(~assets/ui/equipBg1.png) 0 0 no-repeat;
+}
+.equipItems li:nth-child(2).empty {
+  background: url(~assets/ui/equipBg2.png) 0 0 no-repeat;
+}
+.equipItems li:nth-child(3).empty {
+  background: url(~assets/ui/equipBg3.png) 0 0 no-repeat;
 }
 
 .characterDetail li .img {
   z-index: 11;
 }
 .characterDetail li .descText {
-  font-size: 13px;
+  font-size: 11px;
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  opacity: 0.5;
   z-index: 1;
 }
 
-.characterDetail .statWrap {
-  width: auto;
-  text-align: left;
-}
-.characterDetail .statWrap p {
-  line-height: 1.5;
+.characterDetail .descBox {
+  height: 106px;
+  margin: 6px;
+  background-color: #272523;
 }
 
-.characterDetail .statWrap .plusStat {
-  color: #8fc13b;
-  padding-left: 5px;
+.characterDesc .description {
+  padding: 10px;
+  font-size: 16px;
+  text-align: left;
+  line-height: 1.5;
+  color: #fff;
+}
+
+.description .desc-text {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #968d85;
+}
+.description .desc-text em {
+  display: inline-block;
+  color: #d2a026;
   font-size: 14px;
 }
 
-.characterDetail .mainStat {
-  margin: 20px 10px;
-  padding: 10px 0;
-  background-color: #111;
-  border-radius: 8px;
-}
-
-.characterDetail .mainStat span:not(:first-child) {
-  padding-left: 30px;
-}
-
-.characterDetail .statWrap li:not(:first-child) {
-  margin-top: 5px;
-}
-
-.characterDetail .descBox {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -10px;
-
-  width: 340px;
-  height: 113px;
-  margin: 0 auto;
-
-  background: url(~assets/ui/descBox.png) no-repeat;
-  
-  background-size: contain;
-}
 
 /* loading - progress bar */
 .progressWrap {
@@ -2053,7 +2138,7 @@ button.disabled {
 }
 
 .progressWrap .progressName {
-  width: 45px;
+  width: 50px;
   display: block;
   margin-top: -5px;
   font-size: 12px;
@@ -2064,8 +2149,8 @@ button.disabled {
 
 .progressHolder {
   position: relative;
-  width: 176px;
-  /* width: 273px; */
+  
+  width: 273px;
   height: 44px;
   padding: 10px;
   text-align: left; 
@@ -2097,14 +2182,13 @@ button.disabled {
 .progressHolder.status {
   position: relative;
   height: 20px;
-  /* margin: 0 auto; */
+  width: 162px;
   padding: 0;
   text-align: left; 
   background: none;
   background-color: #4e4a47;
   border: 1px solid #968d85;
-  /* background: url(~assets/ui/progressHolder2.png) no-repeat;
-  background-size: contain; */
+  box-sizing: border-box;
 } 
 
 .progressHolder.status + .progressHolder.status {
@@ -2115,7 +2199,6 @@ button.disabled {
   width: 100%; 
   height: 100%; 
   background: none;
-  /* background: url(~assets/ui/progressbar2.png) no-repeat; */
   background-color: #af2a3f;
   background-size: cover;
   transition: all 0.3s linear;
@@ -2133,18 +2216,15 @@ button.disabled {
 .equipInven {
   position: absolute;
   z-index: 10;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: 6px;
+  left: 6px;
+  right: 6px;
   
-  width: 340px;
   height: 230px;
-  margin: 0 auto;
   padding: 15px 0;
 
   border: 1px solid #ffd800;
-  border-radius: 8px;
-  background-color: rgba(65,41,23,0.95);
+  background-color: rgba(40, 27, 16, 0.95);
 }
 
 .equipInven .scrollView {

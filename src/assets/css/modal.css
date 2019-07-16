@@ -124,6 +124,7 @@
 
 .contents {
   position: absolute;
+  max-height: 356px;
   top: 60px;
   left: 20px;
   right: 20px;
