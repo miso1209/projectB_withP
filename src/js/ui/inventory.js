@@ -43,7 +43,6 @@ export default class Inventory extends Panel {
         this.itemOptions = document.createElement('ul');
         
         this.rankbg = new MakeDom('div', 'rankBg');
-        
         this.itemRank = new ItemImage('icon_rank@2.png', "C", 0);
         this.itemRank.dom.classList.add('rank');
 

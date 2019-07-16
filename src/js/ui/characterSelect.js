@@ -46,7 +46,6 @@ export default class CharacterSelect extends Panel {
 
     const infoWrap = new MakeDom('div', 'infoWrap');
     const portraitWrap = new MakeDom('div', 'portraitWrap'); 
-
     this.portrait = document.createElement('img');
 
     this.changeAvatarBtn = new Button('아바타 설정', 'checkbox');

@@ -1485,6 +1485,10 @@ button.disabled {
 }
 
 /* inventory  */
+.inventory .contents {
+  margin: 0 25px;
+}
+
 .inventory-detail {
   padding: 20px 10px;
   text-align: center;
@@ -2026,10 +2030,26 @@ button.disabled {
 }
 .characterDetail .gearBox {
   height: 230px;
-  background: url(~assets/ui/bg.png) #5d5550 no-repeat;
-  background-size: cover;
-  box-shadow: inset 0 0 10px 0 rgba(0, 0, 0, 0.5);
   margin: 6px;
+
+  background: url(~assets/ui/character_info_frame.png) 50% 50% #5d5550 no-repeat;
+  box-shadow: inset 0 0 10px 0 rgba(0, 0, 0, 0.5);
+}
+
+.characterDetail .gearBox .portraitWrap {
+  position: absolute;
+  top: 73px;
+  left: 0;
+  right: 0;
+
+  width: 64px;
+  height: 96px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.characterDetail .gearBox .portraitWrap .profile {
+  height: 96px;
 }
 
 .characterDetail .skillItems, 
@@ -2213,7 +2233,7 @@ button.disabled {
   line-height: 1;
 }
 
-.equipInven {
+.characterDetail .equipInven {
   position: absolute;
   z-index: 10;
   top: 6px;
@@ -2227,27 +2247,27 @@ button.disabled {
   background-color: rgba(40, 27, 16, 0.95);
 }
 
-.equipInven .scrollView {
+.characterDetail .equipInven .scrollView {
   width: calc(100% - 20px);
   left: 20px;
 }
-.equipInven .slot-list-box {
+.characterDetail .equipInven .slot-list-box {
   display: block;
   text-align: left;
 }
-.equipInven .slot-list-box::after{
+.characterDetail .equipInven .slot-list-box::after{
   display: block;
   width: 100%;
   height: 0;
   content: '';
   overflow: hidden;
 }
-.equipInven .slot-list-box li {
+.characterDetail .equipInven .slot-list-box li {
   display: block;
   float: left;
   margin: 0 5px 5px 0;
 }
-.equipInven .slot-list-box li.slot:nth-child(5n) {
+.characterDetail .equipInven .slot-list-box li.slot:nth-child(5n) {
   margin: 0 0 5px 0;
 }
 

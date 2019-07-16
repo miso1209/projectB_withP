@@ -58,9 +58,9 @@ export default class CharacterDetail extends Panel {
     this.dps = new MakeDom('p', 'stat_dps');
     
     // 캐릭터 정보
+    const portraitWrap = new MakeDom('div', 'portraitWrap'); 
     this.portrait = new MakeDom('img', 'profile');
-    this.portrait.style.display = 'block';
-    this.portrait.style.margin = '30px auto 10px';
+    portraitWrap.appendChild(this.portrait);
 
     titleWrap.appendChild(this.level);
     titleWrap.appendChild(this.name);
@@ -179,6 +179,7 @@ export default class CharacterDetail extends Panel {
 
     characterStat.appendChild(this.statWrap);
 
+    gearBox.appendChild(portraitWrap);
     gearBox.appendChild(this.equipItems);
     gearBox.appendChild(this.skillItems);
     
@@ -193,7 +194,8 @@ export default class CharacterDetail extends Panel {
     const path = '/src/assets/';
     this.class.innerText = this.selected.class;
     this.name.innerText = this.selected.displayName;
-    this.portrait.src = path + this.selected.data.portrait;
+    // this.portrait.src = path + this.selected.data.portrait;
+    this.portrait.src = `${path}sprite/${this.selected.name}/${this.selected.name}_idle_sw.png`;
     this.level.innerText = 'Lv.' + this.selected.level;
 
     // 캐릭터 정보 업데이트
