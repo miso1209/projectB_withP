@@ -1249,25 +1249,25 @@ button, .button{
 
 /* 골드 wrapper */
 .costswrap {
-  position: relative;
+  clear: both;
   min-width: 200px;
   min-height: 30px;
   
-  padding: 5px 10px 5px 40px;
+  padding: 10px;
+  
   text-align: left;
-  background: #1f130a;
-  border-radius: 15px;
+  background: #272523;
+  border: 1px solid #4e4a47;
 }
 
 .costswrap::before {
   content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  display: inline-block;
-  width: 32px;
-  height: 32px;
-  background: url(~assets/ui/gold.png) no-repeat;
+  display: block;
+  float: left;
+  width: 16px;
+  height: 16px;
+  margin-right: 10px;
+  background: url(~assets/ui/icon_gold.png) no-repeat;
   background-size: contain;
 }
 
@@ -1487,72 +1487,102 @@ button.disabled {
 /* inventory  */
 .inventory .contents {
   margin: 0 25px;
+  height: 352px;
+  padding: 6px;
+  background: #b2a9a0;
 }
 
-.inventory-detail {
-  padding: 20px 10px;
-  text-align: center;
-
-  background: url(~assets/ui/frameRN.png) no-repeat 50% 0;
-  background-size: 130px auto;
-}
-
-.inventory-detail .costswrap {
-  position: absolute;
-  left: 25px;
-  bottom: 20px;
-  width: inherit;
-}
-
-.inventory-detail .img {
+.inventory .flex-left {
   position: relative;
-  margin: 15px auto 0;
+  width: 212px;
+  background: #b2a9a0;
 }
 
+.inventory .flex-right {
+  position: relative;
+  width: calc(100% - 218px);
+  height: calc(100% - 40px);
+  padding: 0 20px; 
+
+  border: 1px solid #b2a9a0;
+  background: #291d0f;
+  box-shadow: inset 0 0 20px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* inventory - left */
+.inventory .inventory-detail {
+  width: 210px;
+  height: 100%;
+  margin: 0 -1px;
+  background: url(~assets/ui/inventoryItemBg.png) 50% 0 #b2a9a0 no-repeat;
+  border: 1px solid #272523;
+  border-top: none;
+}
+.inventory-detail .img {
+  margin: 47px auto 0;
+}
 .inventory-detail .rankBg {
   display: none;
   position: absolute;
-  top: -35px;
-  left: 95px;
-  background: url(~assets/ui/flag.png) no-repeat;
-  width: 65px;
-  height: 75px;
-  background-size: cover;
+  top: -26px;
+  left: 50%;
+  width: 52px;
+  height: 52px;
+  margin-left: -26px;
+  background: url(~assets/ui/rankBg.png) no-repeat;
 }
-
 .inventory-detail .rankBg .icon {
-  position: absolute;
-  left: 0;
-  right: 0;
-  margin: 15px auto 0;
+  margin: 10px auto 0;
 }
 
-.inventory-detail .itemName {
-  max-height: 58px;
-  padding: 10px 0;
-  margin: 35px 0 20px;
+.inventory .statContent .itemInfoWrap {
+  position: absolute;
+  top: 160px;
+  left: 2px;
+  bottom: 2px;
 
-  font-size: 16px;
+  width: 204px;
+  padding: 10px;
+  text-align: left;
   line-height: 1.4;
-  word-break: keep-all;
   overflow: hidden;
+  background: #272523;
+}
+
+.inventory .statContent .itemInfoWrap .itemCategory {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 10px;
+  font-size: 10px;
+  color: #968d85;
+}
+
+.inventory .statContent .itemName {
+  width: 145px;
+  font-size: 16px;
+  word-break: keep-all;
   box-sizing: border-box;
 }
 
-.inventory-detail .itemDesc {
+.inventory .statContent .itemDesc {
   max-height: 58px;
-  font-size: 14px;
-  line-height: 1.4;
-  
-  overflow: hidden;
+  font-size: 13px;
+  color: #968d85;
 }
 
-.inventory-detail .itemOptions {
-  margin-top: 20px;
+.inventory .statContent .itemOptions {
+  margin: 10px 0;
 }
-.inventory-detail .itemOptions li {
-  line-height: 1.4;
-  text-align: center;
+.inventory .statContent .itemOptions li {
+  font-size: 14px;
+  color: #d2a026;
+}
+
+/* inventory - right */
+.inventory .flex-right .scrollView {
+  margin: 0;
+  
 }
 
 .inventory-itemCount {
@@ -1565,11 +1595,12 @@ button.disabled {
   color: #fff;
 }
 
-.inventory .flex-left {
-  width: 28%;
-}
-.inventory .flex-right {
-  width: 67%;
+.inventory .flex-right .costswrap {
+  position: absolute;
+  right: 0;
+  left: 0;
+  bottom: -40px;
+  border-top: 2px solid #b2a9a0;
 }
 
 .inventory .scrollbox {
@@ -1579,7 +1610,7 @@ button.disabled {
 
 /* 6 * 4 */
 .inventory .slot-list-box li.slot:nth-child(6n) {
-  margin: 0 0 10px 0;
+  margin: 0 0 5px 0;
 }
 .inventory li .icon {
   position: absolute;
@@ -1595,6 +1626,7 @@ button.disabled {
   position: relative;
   z-index: 111;
 }
+
 
 /* 캐릭터 선택창, 상세창 */
 .character > .contents, 
@@ -1812,6 +1844,10 @@ button.disabled {
   height: 26px;
 }
 
+/* 아이템조합 */
+.modal.combiner .title{
+  background: none;
+}
 
 /* 파티 */
 .modal.party .contents {
@@ -2017,7 +2053,6 @@ button.disabled {
   font-size: 14px;
 }
 
-
 /* 캐릭터 상세-오른쪽박스 */
 .characterDetail .flex-right {
   width: calc(100% - 396px);
@@ -2051,6 +2086,24 @@ button.disabled {
 .characterDetail .gearBox .portraitWrap .profile {
   height: 96px;
 }
+
+.characterDetail .gearBox .portraitWrap::before{
+  content: '';
+  display: block;
+
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  
+  width: 45px;
+  height: 20px;
+  margin: 0 auto;
+  border-radius: 60%;
+  background-color: rgba(0,0,0,0.3);
+}
+
+
 
 .characterDetail .skillItems, 
 .characterDetail .equipItems {

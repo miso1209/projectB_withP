@@ -9,6 +9,7 @@ export default class Inventory extends Panel {
         super();
 
         this.inputs = inputs;
+        this.selected = null;
 
         const inventory = new Modal(pane, 800, 440);
         this.dom = inventory.dom;
@@ -19,12 +20,12 @@ export default class Inventory extends Panel {
         pane.classList.add('screen');
     
         this.tabs = [
-            {category: 'weapon'},
-            {category: 'armor'},
-            {category: 'accessory'},
-            {category: 'material'},
-            {category: 'consumables'},
-            {category: 'recipes'}
+            {category: 'weapon', display: '무기'},
+            {category: 'armor', display: '갑옷'},
+            {category: 'accessory', display: '악세사리'},
+            {category: 'material', display: '재료'},
+            {category: 'consumables', display: '포션'},
+            {category: 'recipes', display: '레시피'}
         ];
         
         inventory.addTab(this.tabs, this.tabs[0].category, this.onTabSelected.bind(this));
@@ -33,46 +34,55 @@ export default class Inventory extends Panel {
         wrapper.classList.add('flexWrap');
         wrapper.classList.add('contents');
         
-        const statContent = document.createElement('div');
-        statContent.classList.add('flex-left');
-        statContent.classList.add('inventory-detail');
-    
+        const statContent = new MakeDom('div', 'flex-left');
+        statContent.classList.add('statContent');
+
+        const itemDetail = new MakeDom('div', 'inventory-detail');
         this.itemImg = new ItemImage('items@2.png', 0, 0);
-        this.itemName = document.createElement('p');
-        this.itemDesc = document.createElement('p');
-        this.itemOptions = document.createElement('ul');
-        
         this.rankbg = new MakeDom('div', 'rankBg');
         this.itemRank = new ItemImage('icon_rank@2.png', "C", 0);
         this.itemRank.dom.classList.add('rank');
 
+        itemDetail.appendChild(this.itemImg.dom);
+        this.rankbg.appendChild(this.itemRank.dom);
+        itemDetail.appendChild(this.rankbg);
+
+        const itemInfo = new MakeDom('div', 'itemInfoWrap');
+        this.itemCat = new MakeDom('p', 'itemCategory');
+        this.itemCat.innerText = `${this.tabs[0].category}`;
+
+        this.itemName = document.createElement('p');
+        this.itemDesc = document.createElement('p');
+        this.itemOptions = document.createElement('ul');
+        
         this.itemName.className = 'itemImg';
         this.itemName.className = 'itemName';
         this.itemDesc.className = 'itemDesc';
         this.itemOptions.className = 'itemOptions';
 
-        statContent.appendChild(this.itemImg.dom);
-        this.rankbg.appendChild(this.itemRank.dom);
-        statContent.appendChild(this.rankbg);
+        itemInfo.appendChild(this.itemName);
+        itemInfo.appendChild(this.itemCat);
 
-        statContent.appendChild(this.itemName);
-        statContent.appendChild(this.itemDesc);
-        statContent.appendChild(this.itemOptions);
+        itemInfo.appendChild(this.itemOptions);
+        itemInfo.appendChild(this.itemDesc);
+
+        statContent.appendChild(itemDetail);
+        statContent.appendChild(itemInfo);
 
         const costswrap = new MakeDom('div', 'costswrap');
         this.gold = new MakeDom('div', 'gold', 0);
         costswrap.appendChild(this.gold);
-        statContent.appendChild(costswrap);
 
         // # stat
-        wrapper.appendChild(statContent);
         
-        let scrollHeight = '320px';
+        const invenWrap = new MakeDom('div', 'flex-right');
+        
+        
+        let scrollHeight = '280px';
 
         // IE 스크롤바 이슈 대응
         const scrollView = document.createElement('div');
         scrollView.classList.add('scrollView');
-        scrollView.classList.add('flex-right');
         scrollView.style.top = statContent.clientHeight + 100 + 'px';
 
         const scrollBlind = document.createElement('div');
@@ -89,7 +99,13 @@ export default class Inventory extends Panel {
 
         scrollView.appendChild(scrollBlind);
         scrollBlind.appendChild(this.storageContent);
-        wrapper.appendChild(scrollView);
+
+        wrapper.appendChild(statContent);
+        wrapper.appendChild(invenWrap);
+
+        invenWrap.appendChild(scrollView);
+        invenWrap.appendChild(costswrap);
+        
         inventory.dom.appendChild(wrapper);
     }
 
@@ -101,6 +117,9 @@ export default class Inventory extends Panel {
     }
 
     onTabSelected(category) {
+        console.log(category);
+        this.itemCat.innerText = category;
+
         // 탭정보를 모두 지운다
         while (this.storageContent.firstChild) {
             this.selectedItemDetail(null);
@@ -111,8 +130,9 @@ export default class Inventory extends Panel {
             if (input.category === category) {
                 // 탭에 아이템이 있으면 최초 아이템 정보를 뿌려준다
                 this.selectedItemDetail(input.items[0]);
+                
 
-                let selected = null;
+                // let selected = null;
                 let index = -1;
 
                 // 여기서 아이템을 가져온다
@@ -135,16 +155,18 @@ export default class Inventory extends Panel {
 
                     if (index === 0) {
                         slot.classList.add('active');
-                        selected = slot;
+                        this.selected = slot;
                     }
+                    slot.addEventListener('click', function(){
+                        console.log('ccc');
 
-                    slot.addEventListener('click', function(e){
-                        if (selected) {
-                            selected.classList.remove('active');
+                        if (this.selected) {
+                            this.selected.classList.remove('active');
                         }
                         slot.classList.add('active');
-                        selected = slot;
+                        this.selected = slot;
                     });
+
                     slot.addEventListener('click', this.selectedItemDetail.bind(this, item));
                     this.storageContent.appendChild(slot);
                 }
@@ -196,10 +218,18 @@ export default class Inventory extends Panel {
     }
 
     addSlot(size) {
+        // let selected = null;
         for (let i = 0; i < size; i++) {
             let slot = document.createElement('li');
             slot.classList.add('slot');
             this.storageContent.appendChild(slot);
+            // slot.addEventListener('click', function(){
+            //     if (selected) {
+            //         selected.classList.remove('active');
+            //     }
+            //     slot.classList.add('active');
+            //     selected = slot;
+            // });
         }
 
     }

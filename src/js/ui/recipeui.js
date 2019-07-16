@@ -192,7 +192,8 @@ export default class RecipeUI extends Panel {
     
         if(this.recipes.length > 0) {
             // 아이템 조합창
-            this.combinerUI = new CombinerUI(this.pane, 360, 460, this.onCombine.bind(this));
+            this.combinerUI = new CombinerUI(this.pane, 360, 440, this.onCombine.bind(this));
+            this.combinerUI.dom.classList.add('combiner');
             this.combinerUI.moveToRight(80);
             
             // 최초실행 시 제일 처음 레시피 데이터로 업데이트
