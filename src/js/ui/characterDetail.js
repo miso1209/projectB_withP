@@ -230,14 +230,19 @@ export default class CharacterDetail extends Panel {
           baseStatText = 'baseMax' + text;
           plusStatText = 'simulatedMax' + text;
         }
-
         let stText = new StatText(base, 'inline');
         baseStat.appendChild(stText);
-        
         let baseValue = new MakeDom('p', 'statvalue', `${this.selected[baseStatText]}`);
         baseStat.appendChild(baseValue);
-
         plusStat.innerText = `(+${this.selected[plusStatText]})`;
+
+        if (base.includes('critical')) {
+          console.log(base);
+
+          baseValue.innerText = `${this.selected[baseStatText] * 100}%`;
+          plusStat.innerText = `(+${this.selected[plusStatText] * 100}%)`;
+        }
+
         baseValue.appendChild(plusStat);
         this.statWrap.appendChild(baseStat);
       }
