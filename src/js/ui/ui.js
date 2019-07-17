@@ -420,7 +420,10 @@ export default class DomUI extends EventEmitter {
         const pane = this.createContainer();
         const party = new PartyUI(pane, inputs, partyinputs, (id, result) => {
             if (id === 'buttoncallback') {
-                this.emit(result);
+                this.showConfirmModal('파티구성이 완료되었습니다.', false, ()=>{
+                    this.emit(result);    
+                    this.removeContainer(pane);
+                });
             } else {
                 this.emit('setParty', id, result);
             }
@@ -456,7 +459,6 @@ export default class DomUI extends EventEmitter {
                             characterSelect.updateStatus(characterSelect.selected);
                             this.emit('playerInvenData', {category:'consumables'});
                             characterSelect.consumablesData = this.playerInvenData;
-
                             characterSelect.createConsumablesItem(useItem);
                         }
                     } 
