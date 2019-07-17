@@ -66,11 +66,11 @@ export default class CharacterSelect extends Panel {
     // hp, exp 상태바
     const statWrap = new MakeDom('div', 'baseStats');
     this.hp = new StatusBar(0, 10);
-    this.hp.name = '체력';
+    // this.hp.name = '체력';
     this.hp.setBar('health');
     
     this.exp = new StatusBar(0, 10);
-    this.exp.name = '경험치';
+    // this.exp.name = '경험치';
     this.exp.setBar('exp');
     
     statWrap.appendChild(this.hp.dom);

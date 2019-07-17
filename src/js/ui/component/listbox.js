@@ -68,7 +68,7 @@ class ListCell {
         const datawrap = document.createElement('section');
         const statWrap = new MakeDom('div', 'statwrap');
         this.hp = new StatusBar(this.cellData.health, this.cellData.maxHealth);
-        // this.hp.update(this.cellData.health, this.cellData.maxHealth);
+        this.hp.dom.removeChild(this.hp.barName);
 
         statWrap.appendChild(this.hp.dom);
         datawrap.appendChild(this.cellData1);
