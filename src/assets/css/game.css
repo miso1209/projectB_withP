@@ -670,36 +670,32 @@ button, .button{
 .modal .buttonWrap .submit {
   position: static !important;
 }
-
 .submit {
   width: 118px;
   height: 44px;
   color: #fff;
   background: url(~assets/ui/button_submit.png) no-repeat;
 }
-
-.submit.wide {
+.button_large {
+  width: 224px;
+  height: 38px;
+  color: #fff;
+  background: url(~assets/ui/button_wide.png) no-repeat;
+}
+.submit.wide, .button_large.submit {
   width: 224px;
   height: 38px;
   color: #fff;
   background: url(~assets/ui/button_submit_wide.png) no-repeat;
 }
-
 .submit:hover, .submit.active {
   opacity: 0.6;
 }
+
 .button_small {
   width: 54px;
   height: 30px;
   background: url(~assets/ui/button_small.png) no-repeat;
-  background-size: contain;
-  color: #fff;
-  font-size: 14px;
-}
-.button_medium.submit {
-  width: 87px;
-  height: 30px;
-  background: url(~assets/ui/button_medium_submit.png) no-repeat;
   background-size: contain;
   color: #fff;
   font-size: 14px;
@@ -709,6 +705,18 @@ button, .button{
   background-size: contain;
   font-size: 14px;
 }
+.button_medium {
+  width: 87px;
+  height: 30px;
+  color: #fff;
+  background: url(~assets/ui/button_medium.png) no-repeat;
+}
+.button_medium.submit {
+  background: url(~assets/ui/button_medium_submit.png) no-repeat;
+  background-size: contain;
+  font-size: 14px;
+}
+
 .textButton {
   color: #dad0c7;
   font-size: 10px;
@@ -824,7 +832,7 @@ button, .button{
   height:30px;
   font-size: 16px;
   color: #2a0a0f;
-  background: url(~assets/ui/button.png) no-repeat #b2a9a0;
+  background: url(~assets/ui/button_nav.png) no-repeat #b2a9a0;
   background-size: cover;
   pointer-events: auto;
 }
@@ -850,7 +858,7 @@ button, .button{
   width:140px;
   height:30px;
   color: #dad0c7;
-  background: url(~assets/ui/button_active.png) no-repeat #2a0a0f;
+  background: url(~assets/ui/button_nav_active.png) no-repeat #2a0a0f;
 }
 
 .gnb-navi .setting {
@@ -1154,68 +1162,185 @@ button, .button{
 /* 퀘스트 모달 */
 .modal.quest .contents {
   margin: 0 25px;
+  background: #b2a9a0;
+  padding: 6px;
+  
 }
-.modal.quest .questList {
-  width: 250px;
-  padding: 10px 20px 10px 0;
-  background-color: #281b10;
+.modal.quest .flex-left.questList {
+  width: 236px;
+  padding: 2px;
+  height: 344px;
+  /* background-color: #281b10; */
+  border: 1px solid #281b10;
+}
+.modal.quest .questList .scrollView {
+  margin: 0;
+  /* padding: 10px 0; */
+  background-color: #272523;
 }
 
-.modal.quest .questInfo {
+.modal.quest .flex-right.questInfo {
   position: relative;
-  width: calc(100% - 260px);
-  height: 350px;
+  width: calc(100% - 244px);
+  height: 344px;
 
   padding: 20px 20px;
   text-align: left;
+  color: #dad0c7;
   background-color: #281b10;
   overflow: hidden;
 }
 
 .modal.quest .quest_title {
   display: block;
-  line-height: 2;
+  line-height: 1.4;
   font-size: 16px;
+  padding-bottom: 5px;
 }
+
+.modal.quest .flex-right.questInfo .quest_title {
+  font-size: 20px;
+}
+
 .modal.quest .quest_desc {
   font-size: 14px;
   line-height: 1.6;
 } 
 
 .modal.quest .quest_mission {
-  font-size: 16px;
-  line-height: 1.8;
-  color: #dad0c7;
-
-  padding: 15px 0 0;
+  padding-top: 15px;
+  font-size: 14px;
 }
 
 .modal.quest .quest_reward {
   position: absolute;
-  bottom:100px;
-  right: 0;
-
-  width: inherit;
-  overflow: hidden;
+  bottom: 80px;
+  left: 20px;
+  right: 20px;
+  padding: 10px;
+  background:#39281a;
 }
 .modal.quest .quest_reward .item {
+  position: relative;
   display: block;
   float: left;
+
+  width: 56px;
+  height: 56px;
+  padding: 10px;
+  background: url(~assets/ui/slotBg.png) no-repeat;
+  border: 1px solid transparent;
 }
+
+
+.modal.quest .quest_reward .rewardItem {
+  display: none;
+  position: absolute;
+  top: -5px;
+  left: 0;
+  z-index: 111;
+
+  width: 260px;
+  min-height: 140px;
+  max-height: 180px;
+  padding: 5px 20px 10px;
+  
+  line-height: 1.5;
+  
+  border: solid 1px #4e4a47;
+  background-color: rgba(0,0,0,0.9);
+}
+.modal.quest .quest_reward .rewardItem.show {
+  display: block;
+}
+
+.rewardItem .name {
+  font-size: 16px;
+  max-height: 22px;
+  margin-bottom: 5px;
+
+  color: #fff;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  overflow: hidden
+}
+.rewardItem .category {
+  font-size: 12px;
+  color: #968d85;
+}
+.rewardItem .options {
+  max-height: 50px;
+  overflow: hidden;
+}
+.rewardItem .options li {
+  font-size: 13px;
+  line-height: 1.2;
+  color: #d2a026;
+}
+
+.rewardItem .description {
+  max-height: 50px;
+  margin: 5px 0 0;
+  
+  font-size: 12px;
+  line-height: 1.4;
+  overflow: hidden;
+}
+
+
+
+
+
+.modal.quest .tooltipBtn:hover, .modal.quest .tooltipBtn.active {
+  border: 1px solid #ffd800;
+  box-shadow: inset 0 0 10px 0 #d2a026;
+}
+
 .modal.quest .quest_reward .item:not(:first-child) {
-  margin-left: 20px;
+  margin-left: 10px;
 }
 .modal.quest .quest_reward .item .count {
-  color: #ffd800;
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  font-size: 12px;
+  text-align: right;
+  color: #fff;
+  overflow: hidden;
+  /* color: #ffd800; */
 }
+.modal.quest .quest_reward .item_gold {
+  display: block;
+  width: 16px;
+  height: 16px;
+  margin: 8px;
+  background: url(~assets/ui/icon_gold.png);
+  border: none !important;
+}
+
 .modal.quest .quest_reward::after{
   clear: both;
   display: block;
   width: 100%;
 }
 
+.modal.quest .quest_status {
+  font-size: 12px;
+  line-height: 1.6;
+}
+.modal.quest .quest_status.ing {
+  color: #c17e3b;
+}
+.modal.quest .quest_status.done {
+  color: #8fc13b;
+}
+
 .modal.quest .questInfo .quest_status {
-  margin: 20px 0 0;
+  position: absolute;
+  right: 20px;
+  top: 15px;
+
+  font-size: 12px;
 }
 
 .modal.quest .questList li {
@@ -1226,18 +1351,13 @@ button, .button{
   border: 1px solid transparent;
 }
 
-.modal.quest .quest_status {
-  font-size: 12px;
-  line-height: 1.6;
-}
-
 .modal.quest .questList li:hover, 
 .modal.quest .questList li:active, 
 .modal.quest .questList li.active {
-  border: 1px dotted #dad0c7;
+  border: 1px solid #ffd800;
 }
 
-.modal.quest li .rewardBtn{
+.modal.quest li button.rewardBtn{
   display: none;
   position: static;
   margin-top: 10px;
@@ -1245,8 +1365,9 @@ button, .button{
 .modal.quest li.success {
   color: #8fc13b;
 }
-.modal.quest li.success .rewardBtn {
+.modal.quest li.success button.rewardBtn {
   display: block;
+  background: url(~assets/ui/button_wide.png) no-repeat;
 }
 /* .퀘스트 모달 */
 
@@ -1488,7 +1609,9 @@ button.disabled {
 .materialInfo p.mat_count {
   width: 15%;
 }
-
+.materialInfo p.unavailable {
+  color: #fd6240;
+}
 /* inventory  */
 .inventory .contents {
   margin: 0 25px;
@@ -1772,7 +1895,10 @@ button.disabled {
 .character .infoWrap {
   position: relative;
 }
-
+.character .infoWrap .checkbox {
+  bottom: 10px;
+  right: 10px;
+}
 .dpsIcon::before {
   content: '';
   display: inline-block;
@@ -1926,7 +2052,7 @@ button.disabled {
   margin: 1px 0;
 }
 .party .list-cell  {
-  height: 52px;
+  height: 54px;
   padding: 0 5px;
   text-align: left;
   line-height: 1;
@@ -2046,21 +2172,6 @@ button.disabled {
   font-size: 30px;
   line-height: 1.5;
 }
-
-/* .characterDetail .flex-left .list-detail .infoWrap .dpsIcon::before {
-  content: '';
-  display: inline-block;
-  width: 15px;
-  height: 16px;
-  padding-right: 10px;
-  background: url(~assets/ui/icon_dps.png) no-repeat;
-}
-
-.characterDetail .flex-left .list-detail .infoWrap .dpsIcon .statText {
-  display: inline-block;
-  height: 16px;
-  vertical-align: top;
-} */
 
 .mainStats {
   padding: 10px;
@@ -2378,6 +2489,8 @@ button.disabled {
 .characterDetail .equipInven .slot-list-box li {
   display: block;
   float: left;
+  width: 50px;
+  height: 50px;
   margin: 0 5px 5px 0;
 }
 .characterDetail .equipInven .slot-list-box li.slot:nth-child(5n) {

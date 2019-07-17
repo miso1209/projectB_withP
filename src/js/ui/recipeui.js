@@ -129,8 +129,10 @@ class CombinerUI extends Panel {
 
                 // 스타일이 적용되는 타겟이 각각 생성되므로, ui 단계에서 체크
                 if (mat.owned - mat.count < 0) {
-                    material3.style.color = '#fd6240';
+                    // material3.style.color = '#fd6240';
+                    material3.classList.add('unavailable')
                 }
+                
                 material2.innerText = `${mat.data.name}`;
                 material3.innerText = `${mat.owned} / ${mat.count}`;
         

@@ -31,16 +31,12 @@ export default class QuestModal extends Panel {
       this.questInfo.classList.add('questInfo');
       
       // IE 스크롤바 이슈 대응
-      const scrollView = document.createElement('div');
-      scrollView.classList.add('scrollView');
-      
-      const scrollBlind = document.createElement('div');
-      scrollBlind.className = 'scrollBlind';
-      scrollBlind.style.height = '330px';
+      const scrollView = new MakeDom('div', 'scrollView');
+      const scrollBlind = new MakeDom('div', 'scrollBlind');
+      scrollBlind.style.height = '318px';
 
-      this.list = document.createElement('ul');
+      this.list = new MakeDom('ul', 'scrollbox');
       this.list.classList.add('list-box');
-      this.list.classList.add('scrollbox');
 
       scrollView.appendChild(scrollBlind);
       scrollBlind.appendChild(this.list);
@@ -64,9 +60,9 @@ export default class QuestModal extends Panel {
         const status = new MakeDom('p', 'quest_status');
 
         if (quest.type === 'Acceptable') {
-          status.innerText = '미진행 퀘스트';
+          status.innerText = '미진행';
         } else {
-          status.innerText = (quest.success)?'완료된 퀘스트':'진행중인 퀘스트';
+          status.innerText = (quest.success)?'완료':'진행중';
         }
 
         if (quest.success) {
@@ -116,23 +112,26 @@ export default class QuestModal extends Panel {
       const status = new MakeDom('p', 'quest_status');
 
       description.innerHTML = quest.description;
-      mission.innerHTML = `${quest.objectives[0].text} ${quest.objectives[0].count} / ${quest.objectives[0].maxCount}`
+      mission.innerHTML = `- ${quest.objectives[0].text} ${quest.objectives[0].count} / ${quest.objectives[0].maxCount}`
       
-      const button = new Button('완료 보상');
-      button.dom.classList.add('rewardBtn');
+      const button = new Button('완료 보상', 'button_large');
+      button.dom.classList.add('submit');
       button.moveToCenter(0);
       button.moveToBottom(20);
 
       if (quest.type === 'Acceptable') {
         button.dom.style.display = 'block';
         button.dom.innerText = '퀘스트 받기';
+        button.dom.classList.remove('submit');
       } else {
         if (quest.success) {
           button.dom.style.display = 'block';
+          status.classList.add('done');
         } else {
           button.dom.style.display = 'none';
+          status.classList.add('ing');
         }
-        status.innerHTML = (quest.success)?'완료된 퀘스트':'진행중인 퀘스트';
+        status.innerHTML = (quest.success)?'완료':'진행중';
       }
 
       button.dom.addEventListener('click', ()=>{
@@ -143,6 +142,10 @@ export default class QuestModal extends Panel {
       // 퀘스트 보상
       const rewards = new MakeDom('div', 'quest_reward');
       let data = [];
+
+
+      this.rewardItem = new MakeDom('div', 'rewardItem');
+      rewards.appendChild(this.rewardItem);
 
       for(const r in quest.rewards) {
         const rewardText = quest.rewards[r].text;
@@ -155,19 +158,29 @@ export default class QuestModal extends Panel {
           if(itemData.item !== null) { 
             const img = new ItemImage(itemData.item.image.texture, itemData.item.image.x, itemData.item.image.y);
             item.appendChild(img.dom);
+            item.classList.add('tooltipBtn');
             count.innerText = ` x ${itemData.count}`;
-          } else { // gold???? 
-            const img = new MakeDom('img', 'img');
-            img.src = './src/assets/ui/gold.png';
+
+            item.addEventListener('click', () => {
+              item.classList.toggle('active');
+              
+              this.rewardItem.classList.toggle('show');
+              this.rewardItem.style.left = item.offsetLeft + 66 + 'px';
+
+              this.showRewardItem(itemData.item);
+            });
+
+          } else { 
+            const img = new MakeDom('span', 'item_gold');
+            let text = `${rewardText}`.substring(0, rewardText.length - 4);
+            count.innerText = ` x ${text}`;
             item.appendChild(img);
-            count.innerText = ` x ${rewardText}`;;
           }
           item.appendChild(count);
           data.push(rewardText);
           rewards.appendChild(item);
         }
       };
-      
       frag.appendChild(title);
       frag.appendChild(description);
       frag.appendChild(mission);
@@ -176,5 +189,25 @@ export default class QuestModal extends Panel {
       frag.appendChild(button.dom);
 
       this.questInfo.appendChild(frag);
+    }
+
+    showRewardItem(item) {
+      this.rewardItem.innerHTML = '';
+
+      const name = new MakeDom('p', 'name', item.name);
+      const category = new MakeDom('p', 'category', item.category);
+      const options = new MakeDom('ul', 'options');
+      const description = new MakeDom('p', 'description', item.description);
+
+      this.rewardItem.appendChild(category);
+      this.rewardItem.appendChild(name);
+      this.rewardItem.appendChild(options);
+      this.rewardItem.appendChild(description);
+
+      item.options.forEach(option => {
+        let optionText = document.createElement('li');
+        optionText.innerText = option;
+        options.appendChild(optionText);
+      });
     }
   }

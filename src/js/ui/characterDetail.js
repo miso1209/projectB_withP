@@ -52,7 +52,7 @@ export default class CharacterDetail extends Panel {
 
     this.name = new MakeDom('span', 'stat_name');
     this.level = new MakeDom('span', 'stat_level');
-    this.level.style.paddingRight = '10px';
+    // this.level.style.paddingRight = '10px';
 
     this.class = new MakeDom('p', 'stat_class');
     this.dps = new MakeDom('p', 'stat_dps');
@@ -384,13 +384,13 @@ export default class CharacterDetail extends Panel {
       this.equipBtn.dom.innerText = '장비장착';
       this.equipBtn.dom.classList.remove('button_small');
       this.equipBtn.dom.classList.add('button_medium');
+      this.equipBtn.dom.classList.add('submit');
       this.equipBtn.dom.setAttribute('value', 'simulationEquip');
-
     } else if(_status === 'unEquip') {
       this.equipBtn.dom.style.display = 'block';
       this.equipBtn.dom.innerText = '장비해제';
+      this.equipBtn.dom.classList.remove('submit');
       this.equipBtn.dom.setAttribute('value', 'unEquip');
-
     } else if(_status === 'tempEquip') {
       this.equipBtn.dom.style.display = 'block';
       this.cancelBtn.dom.style.display = 'block';
@@ -414,11 +414,9 @@ export default class CharacterDetail extends Panel {
       ++index;
 
       let liWrap = new MakeDom('li', 'slot');
-      liWrap.style.width = '50px';
-      liWrap.style.height = '50px';
-
       let itemIcon = new ItemImage(item.data.image.texture, item.data.image.x, item.data.image.y);
       itemIcon.dom.style.display = 'inline-block';
+
       liWrap.appendChild(itemIcon.dom);
       liWrap.addEventListener('click', ()=>{
         if(isActive) {

@@ -120,9 +120,8 @@ export default class DomUI extends EventEmitter {
     }
 
     showCompleteQuest(currentQuest) {
-        console.log('showCompleteQuest');
-        console.log(currentQuest);
-
+        // console.log('showCompleteQuest');
+        // console.log(currentQuest);
         this.questStatus.innerHTML = '';
 
         const frag = document.createDocumentFragment();
@@ -133,18 +132,10 @@ export default class DomUI extends EventEmitter {
 
         frag.appendChild(title);
         frag.appendChild(desc);
-        
-        console.log(currentQuest.success);
 
         if (currentQuest.success) {
-            console.log('22');
             this.questStatus.classList.add('show');
         }
-
-        // setTimeout(() => {
-        //     this.questStatus.classList.remove('show');
-        // }, 10);
-
         this.questStatus.appendChild(frag);
     }
 
@@ -230,6 +221,7 @@ export default class DomUI extends EventEmitter {
         this.gnbContainer.style.opacity = '0';
         this.gnbContainer.style.display = 'none';
         
+        this.resetQuestStatus();
         this.hideQuest();
     }
 
@@ -385,6 +377,8 @@ export default class DomUI extends EventEmitter {
     
     // 퀘스트 모달
     showQuestModal(inputs, quest){
+        
+
         // console.log();
         if(inputs.length === 0) {
             // 진행할 수 있는 퀘스트가 없고, 신규로 받을 수 있는 퀘스트도 없는 상태.. 
@@ -400,7 +394,7 @@ export default class DomUI extends EventEmitter {
             }
         });
 
-        this.resetQuestStatus();
+        
         this.hideQuest(close);
     }
 
@@ -420,10 +414,12 @@ export default class DomUI extends EventEmitter {
         const pane = this.createContainer();
         const party = new PartyUI(pane, inputs, partyinputs, (id, result) => {
             if (id === 'buttoncallback') {
-                this.showConfirmModal('파티구성이 완료되었습니다.', false, ()=>{
-                    this.emit(result);    
-                    this.removeContainer(pane);
-                });
+                if (result === 'partyConfirm') {
+                    this.showConfirmModal('파티구성이 완료되었습니다.', false, ()=>{
+                        this.emit(result);    
+                        this.removeContainer(pane);
+                    });
+                }
             } else {
                 this.emit('setParty', id, result);
             }

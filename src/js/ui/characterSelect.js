@@ -47,10 +47,7 @@ export default class CharacterSelect extends Panel {
     const infoWrap = new MakeDom('div', 'infoWrap');
     const portraitWrap = new MakeDom('div', 'portraitWrap'); 
     this.portrait = document.createElement('img');
-
     this.changeAvatarBtn = new Button('아바타 설정', 'checkbox');
-    this.changeAvatarBtn.dom.style.bottom = '10px';
-    this.changeAvatarBtn.moveToRight(10);
 
     this.changeAvatarBtn.dom.addEventListener('click', (ok) => {
       this.changeAvatarBtn.dom.classList.toggle('active');
@@ -66,11 +63,9 @@ export default class CharacterSelect extends Panel {
     // hp, exp 상태바
     const statWrap = new MakeDom('div', 'baseStats');
     this.hp = new StatusBar(0, 10);
-    // this.hp.name = '체력';
     this.hp.setBar('health');
     
     this.exp = new StatusBar(0, 10);
-    // this.exp.name = '경험치';
     this.exp.setBar('exp');
     
     statWrap.appendChild(this.hp.dom);
