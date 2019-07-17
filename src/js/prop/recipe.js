@@ -28,6 +28,7 @@ export default class Recipe extends PropBase {
             game.addItem(this.recipe, 1);
             this.tileTexture.gotoAndStop(this.animationIndex + 1);
             this.isOpened = true;
+            Sound.playSound('recipe_open_1.mp3', { singleInstance: true });
         } else {
             game.ui.showDialog([
                 { text: "이미 획득한 레시피다." }

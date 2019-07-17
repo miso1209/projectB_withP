@@ -32,6 +32,8 @@ export default class Tab {
     onclick(){
         if(this.callback !== null) {
             this.callback(this.category);
+            // Tab Change
+            Sound.playSound('tab_change_2.wav', { singleInstance: true });
         }
     }
 }

@@ -25,6 +25,7 @@ export default class Chest extends PropBase {
             game.addItems(this.rewards);
             this.tileTexture.gotoAndStop(this.animationIndex + 1);
             this.isOpened = true;
+            Sound.playSound('chest_open_1.wav', { singleInstance: true });
         } else {
             game.ui.showDialog([
                 { text: "상자는 비어있다." }

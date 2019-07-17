@@ -136,6 +136,7 @@ export default class PartyUI extends Panel {
                 return;
               } 
               totalhealth -= member.character.health;
+              Sound.playSound('delete_party_1.wav', { singleInstance: true });
             }
 
             avatar.dom.innerHTML = '';
@@ -169,6 +170,7 @@ export default class PartyUI extends Panel {
 
       const index = this.selected.y * 3 + this.selected.x;
 
+      Sound.playSound('insert_party_1.wav', { singleInstance: true });
       this.result(index, this.selected.character);
       this.updateMembers();
     }
@@ -181,6 +183,7 @@ export default class PartyUI extends Panel {
       const index = member.y * 3 + member.x;
       this.result(index, member.character);
       this.totaldps.innerText = `${this.party.totalPowerFigure}`;
+    } else {
     }
     this.selected = member;
   }

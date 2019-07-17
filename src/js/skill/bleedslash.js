@@ -45,7 +45,7 @@ export default class BleedSlash extends SkillBase {
                         y: -this.owner.animation.height + 10
                     },
                     turnAction: () => {
-                        let damage = this.calcSkillExpressions(this.owner, this.skillExpressions[1]);
+                        let damage = this.calcSkillExpressions(this.owner, this.skillExpressions[1]) + this.target.armor;
                         if (this.target.health > damage - this.target.armor) {
                             this.hit(damage, this.target, false);
                         } else {

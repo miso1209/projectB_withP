@@ -37,7 +37,7 @@
                 "attackCoefficient(0.8)"
             ],
             [
-                "attackCoefficient(0.3)"
+                "attackCoefficient(0.2)"
             ]
         ]
     },
@@ -107,7 +107,7 @@
         "description": "화살을 쏴 후방의 적을 공격한다.",
         "skillExpressions": [
             [
-                "attackCoefficient(1.2)"
+                "attackCoefficient(1.1)"
             ]
         ]
     },
@@ -117,7 +117,7 @@
         "description": "단검으로 치명적인 일격을 가한다.",
         "skillExpressions": [
             [
-                "attackCoefficient(1.15)"
+                "attackCoefficient(1.05)"
             ]
         ]
     },
@@ -129,7 +129,7 @@
         "maxCoolTime": 12,
         "skillExpressions": [
             [
-                "attackCoefficient(1.4)"
+                "attackCoefficient(1.2)"
             ]
         ]
     },

@@ -1126,6 +1126,7 @@ export default class Stage extends PIXI.Container {
                 this.player.position.y = this.getTilePosYFor(this.player.gridX, this.player.gridY);
 
                 this.emit('seePlayer');
+                Sound.playSound('alert_1.mp3', { singleInstance: true });
                 path = this.getPlayerPath(obj);
                 callback =  () => {
                     obj.currentDirection = getDirection(obj.gridX, obj.gridY, this.player.gridX, this.player.gridY);

@@ -16,7 +16,8 @@ export default class Button extends Panel {
         
         // ui에 button 클릭 사운드 이펙트 추가        
         this.dom.addEventListener('click', ()=>{
-            Sound.playSound('click_menu.mp3');
+            // 모든 버튼에 달리니까 조금 곤란하다.
+            // Sound.playSound('menu_click_1.wav', { singleInstance: true });
         });
     }
 

@@ -34,7 +34,7 @@ export default class Sound {
     }
 
     _removeSound(fileName) {
-        this.pixiSound.remove(deleteFileName);
+        this.pixiSound.remove(fileName);
     }
 
     // 비교하고 다르면 제거하는 함수.
@@ -57,6 +57,8 @@ export default class Sound {
         if (!this.pixiSound.find(fileName)) {
             this._addSound(fileName, options);
         } else if (!this.pixiSound.find(fileName).isPlaying) {
+            this.pixiSound.play(fileName, options);
+        } else if (options && options.singleInstance) {
             this.pixiSound.play(fileName, options);
         }
     }

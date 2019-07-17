@@ -108,6 +108,8 @@ export default class Game extends EventEmitter {
 
         this.ui.on('useItem', (itemId, count, target) => {
             this.useItem(itemId, count, target);
+            // 포션 사용.
+            Sound.playSound('drink_potion_2.wav', { singleInstance: true });
         });
         this.ui.on('equipItem', (itemCategory, itemId, cid) => {
             this.equipItem(itemCategory, itemId, cid);
@@ -483,8 +485,10 @@ export default class Game extends EventEmitter {
         // 집일경우 2배줌
         if (stageName === 'house') {
             stage.zoomTo(2, true);
+            Sound.playSound('house_bgm_1.wav', { loop: true, type: 'BGM' });
         } else {
             stage.zoomTo(1.5, true);
+            Sound.playSound('open_field_bgm_1.wav', { loop: true, type: 'BGM' });
         }
 
         this.stage = stage;
@@ -505,7 +509,6 @@ export default class Game extends EventEmitter {
         // this.stage.enter();
 
         // BGM 읽어오기, Scale(Zoom) 읽어오기 추가해야할 것.
-        Sound.playSound('road_bgm.wav', { loop: true, type: 'BGM' });
     }
 
     // [정리] 인스턴트 던전 => 스테이지 객체를 모두 만들어서 들고있는 던전에 입장할때만 사용하는 EnterStage..
@@ -538,7 +541,7 @@ export default class Game extends EventEmitter {
         stage.enter();
 
         // BGM 읽어오기, Scale(Zoom) 읽어오기 추가해야할 것.
-        Sound.playSound('road_bgm.wav', { loop: true, type: 'BGM' });
+        Sound.playSound('castle_bgm_1.wav', { loop: true, type: 'BGM' });
     }
 
     async $leaveStage(eventName) {
@@ -551,6 +554,7 @@ export default class Game extends EventEmitter {
         // 이벤트를 찾는다
         this.exploreMode.setInteractive(false);
         const cutscene = this.buildStageLeaveCutscene(eventName);
+        Sound.playSound('door_portal_1.wav', { singleInstance: true });
         
         await cutscene.$play();
         await this.$fadeOut(0.5);
@@ -602,6 +606,7 @@ export default class Game extends EventEmitter {
 
             // 보상을 여기서 추가해야 할 것 같다 battle에서 주는것은 아닐 것 같다.
             this.currentMode.on('win', () => {
+                Sound.playSound('victory_1.wav', { singleInstance: true });
                 this.stage.battleResult = 'win';
                 // 경험치 추가.
                 allies.forEach((ally) => {
@@ -618,6 +623,7 @@ export default class Game extends EventEmitter {
                 this.player.inventory.gold += monster.gold;
             });
             this.currentMode.on('lose', async () => {
+                Sound.playSound('defeat_1.wav', { singleInstance: true });
                 this.currentMode.battleResult = 'lose';
                 this.stage.pathFinder.setDynamicCell(this.stage.player.gridX, this.stage.player.gridY, false);
                 this.stage.leave();
@@ -645,7 +651,7 @@ export default class Game extends EventEmitter {
             await this.$fadeIn(0.5);
 
             // BGM 읽어오기, Scale(Zoom) 읽어오기 추가해야할 것.
-            Sound.playSound('road_bgm.wav', { loop: true, type: 'BGM' });
+            Sound.playSound('battle_bgm_1.wav', { loop: true, type: 'BGM' });
         }
     }
 
@@ -830,6 +836,7 @@ export default class Game extends EventEmitter {
         if (unequipItem) {
             this.player.inventory.addItem(unequipItem.id, 1);
         }
+        Sound.playSound('equipping.wav', { singleInstance: true });
     }
 
     unequipItem(itemCategory, cid) {
@@ -837,6 +844,7 @@ export default class Game extends EventEmitter {
         if (unequipItem) {
             this.player.inventory.addItem(unequipItem.id, 1);
         }
+        Sound.playSound('unequipping.wav', { singleInstance: true });
     }
 
     addGold(gold) {
@@ -893,6 +901,7 @@ export default class Game extends EventEmitter {
             // UI Flag
             this.ui.flagArray[3] = 'true';
             this.ui.checkFlag();
+            Sound.playSound('quest_accept_1.wav', { singleInstance: true });
         }
     }
 
@@ -920,6 +929,8 @@ export default class Game extends EventEmitter {
                     this.ui.checkFlag();
                     
                     this.ui.showCompleteQuest(this.player.quests[questId]);
+                    
+                    Sound.playSound('quest_done_1.wav', { singleInstance: true });
                 } else {
                     // change condition
                 }

@@ -16,6 +16,7 @@ export default class PortalStone extends PropBase {
     touch(game) {
         game.ui.showConfirmModal("집으로 귀환하시겠습니까?", true, (result) => {
             if (result === 'ok') {
+                Sound.playSound('portal_prop_1.wav', { singleInstance: true });
                 const effect = new PIXI.extras.AnimatedSprite(loadAniTexture('portaleffect', 30));
                 effect.animationSpeed = 0.3;
                 effect.loop = false;

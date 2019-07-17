@@ -274,6 +274,7 @@ export default class DomUI extends EventEmitter {
     showDialog(script, callback) {
         const pane = this.createContainer();
         const dialog = new Dialog(pane, 700, 140, script);
+        Sound.playSound('dialog_1.wav', { singleInstance: true });
     
         dialog.setText(script[0].text);
         
@@ -291,6 +292,7 @@ export default class DomUI extends EventEmitter {
         const confirmModal = new SystemModal(pane, 300, 200, text, cancelable, result);
         confirmModal.dom.style.top = '50%';
         confirmModal.dom.style.marginTop = 200 * -0.5 + 'px';
+        Sound.playSound('modal_1.wav', { singleInstance: true });
     }
 
     showUseItemModal(text, items, result) {
@@ -342,6 +344,7 @@ export default class DomUI extends EventEmitter {
         itemText.style.top = '60px';
 
         const interval = 4;
+        Sound.playSound('anvil_1.wav', { singleInstance: true });
         const loading = new ProgressUI(modal.dom, interval, (onComplete)=>{
             itemText.innerText = "아이템 조합 성공!"
             this.removeContainer(pane);
@@ -373,6 +376,7 @@ export default class DomUI extends EventEmitter {
                 result();
             }
         });
+        Sound.playSound('modal_1.wav', { singleInstance: true });
     }
     
     // 퀘스트 모달

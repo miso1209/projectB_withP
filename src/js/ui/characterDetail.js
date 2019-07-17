@@ -238,8 +238,8 @@ export default class CharacterDetail extends Panel {
 
         if (base.includes('critical')) {
           // console.log(base);
-          baseValue.innerText = `${this.selected[baseStatText] * 100}%`;
-          plusStat.innerText = `(+${this.selected[plusStatText] * 100}%)`;
+          baseValue.innerText = `${(this.selected[baseStatText] * 100).toFixed(2)}%`;
+          plusStat.innerText = `(+${(this.selected[plusStatText] * 100).toFixed(2)}%)`;
         }
 
         baseValue.appendChild(plusStat);
