@@ -485,10 +485,10 @@ export default class Game extends EventEmitter {
         // 집일경우 2배줌
         if (stageName === 'house') {
             stage.zoomTo(2, true);
-            Sound.playSound('house_bgm_1.wav', { loop: true, type: 'BGM' });
+            Sound.playSound('house_bgm_1.wav', { loop: true, type: 'BGM', volume: 0.17 });
         } else {
             stage.zoomTo(1.5, true);
-            Sound.playSound('open_field_bgm_1.wav', { loop: true, type: 'BGM' });
+            Sound.playSound('open_field_bgm_1.wav', { loop: true, type: 'BGM', volume: 0.17 });
         }
 
         this.stage = stage;
@@ -541,7 +541,7 @@ export default class Game extends EventEmitter {
         stage.enter();
 
         // BGM 읽어오기, Scale(Zoom) 읽어오기 추가해야할 것.
-        Sound.playSound('castle_bgm_1.wav', { loop: true, type: 'BGM' });
+        Sound.playSound('castle_bgm_1.wav', { loop: true, type: 'BGM', volume: 0.17 });
     }
 
     async $leaveStage(eventName) {
@@ -623,7 +623,7 @@ export default class Game extends EventEmitter {
                 this.player.inventory.gold += monster.gold;
             });
             this.currentMode.on('lose', async () => {
-                Sound.playSound('defeat_1.wav', { singleInstance: true });
+                Sound.playSound('castle_bgm_1.wav', { singleInstance: true });
                 this.currentMode.battleResult = 'lose';
                 this.stage.pathFinder.setDynamicCell(this.stage.player.gridX, this.stage.player.gridY, false);
                 this.stage.leave();
@@ -651,7 +651,7 @@ export default class Game extends EventEmitter {
             await this.$fadeIn(0.5);
 
             // BGM 읽어오기, Scale(Zoom) 읽어오기 추가해야할 것.
-            Sound.playSound('battle_bgm_1.wav', { loop: true, type: 'BGM' });
+            Sound.playSound('battle_bgm_1.wav', { loop: true, type: 'BGM', volume: 0.17 });
         }
     }
 
