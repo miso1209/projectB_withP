@@ -139,10 +139,11 @@ export default class QuestModal extends Panel {
         return this.result(quest)
       });
 
+      const rewardTitle = new MakeDom('p', 'reward_title', '완료보상');
       // 퀘스트 보상
       const rewards = new MakeDom('div', 'quest_reward');
       let data = [];
-
+      rewards.appendChild(rewardTitle);
 
       this.rewardItem = new MakeDom('div', 'rewardItem');
       rewards.appendChild(this.rewardItem);
@@ -159,11 +160,11 @@ export default class QuestModal extends Panel {
             const img = new ItemImage(itemData.item.image.texture, itemData.item.image.x, itemData.item.image.y);
             item.appendChild(img.dom);
             item.classList.add('tooltipBtn');
-            count.innerText = ` x ${itemData.count}`;
+            count.innerText = `x${itemData.count}`;
 
             item.addEventListener('click', () => {
               item.classList.toggle('active');
-              
+
               this.rewardItem.classList.toggle('show');
               this.rewardItem.style.left = item.offsetLeft + 66 + 'px';
 
@@ -173,7 +174,7 @@ export default class QuestModal extends Panel {
           } else { 
             const img = new MakeDom('span', 'item_gold');
             let text = `${rewardText}`.substring(0, rewardText.length - 4);
-            count.innerText = ` x ${text}`;
+            count.innerText = `x${text}`;
             item.appendChild(img);
           }
           item.appendChild(count);

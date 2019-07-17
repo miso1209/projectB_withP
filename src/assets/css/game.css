@@ -1220,18 +1220,6 @@ button, .button{
   padding: 10px;
   background:#39281a;
 }
-.modal.quest .quest_reward .item {
-  position: relative;
-  display: block;
-  float: left;
-
-  width: 56px;
-  height: 56px;
-  padding: 10px;
-  background: url(~assets/ui/slotBg.png) no-repeat;
-  border: 1px solid transparent;
-}
-
 
 .modal.quest .quest_reward .rewardItem {
   display: none;
@@ -1254,54 +1242,32 @@ button, .button{
   display: block;
 }
 
-.rewardItem .name {
+.modal.quest .quest_reward .reward_title {
+  position: absolute;
+  top: -25px;
+  left: 0;
   font-size: 16px;
-  max-height: 22px;
-  margin-bottom: 5px;
-
   color: #fff;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-  overflow: hidden
-}
-.rewardItem .category {
-  font-size: 12px;
-  color: #968d85;
-}
-.rewardItem .options {
-  max-height: 50px;
-  overflow: hidden;
-}
-.rewardItem .options li {
-  font-size: 13px;
-  line-height: 1.2;
-  color: #d2a026;
-}
-
-.rewardItem .description {
-  max-height: 50px;
-  margin: 5px 0 0;
-  
-  font-size: 12px;
-  line-height: 1.4;
-  overflow: hidden;
 }
 
 
-
-
-
-.modal.quest .tooltipBtn:hover, .modal.quest .tooltipBtn.active {
-  border: 1px solid #ffd800;
-  box-shadow: inset 0 0 10px 0 #d2a026;
+.modal.quest .quest_reward .item {
+  position: relative;
+  display: block;
+  float: left;
+  width: 56px;
+  height: 56px;
+  padding: 5px;
+  text-align: center;
+  background: url(~assets/ui/slotBg.png) no-repeat;
+  border: 1px solid transparent;
 }
-
 .modal.quest .quest_reward .item:not(:first-child) {
   margin-left: 10px;
 }
 .modal.quest .quest_reward .item .count {
   position: absolute;
-  bottom: 5px;
+  bottom: 0;
   right: 5px;
   font-size: 12px;
   text-align: right;
@@ -1311,13 +1277,17 @@ button, .button{
 }
 .modal.quest .quest_reward .item_gold {
   display: block;
-  width: 16px;
-  height: 16px;
-  margin: 8px;
+  width: 20px;
+  height: 20px;
+  margin: 6px auto;
   background: url(~assets/ui/icon_gold.png);
+  background-size: cover;
   border: none !important;
 }
-
+.modal.quest .tooltipBtn:hover, .modal.quest .tooltipBtn.active {
+  border: 1px solid #ffd800;
+  box-shadow: inset 0 0 10px 0 #d2a026;
+}
 .modal.quest .quest_reward::after{
   clear: both;
   display: block;
@@ -1368,6 +1338,38 @@ button, .button{
 .modal.quest li.success button.rewardBtn {
   display: block;
   background: url(~assets/ui/button_wide.png) no-repeat;
+}
+
+/* 보상 아이템 툴팁박스 */
+.rewardItem .name {
+  font-size: 16px;
+  max-height: 22px;
+  margin-bottom: 5px;
+
+  color: #fff;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  overflow: hidden
+}
+.rewardItem .category {
+  font-size: 12px;
+  color: #968d85;
+}
+.rewardItem .options {
+  max-height: 50px;
+  overflow: hidden;
+}
+.rewardItem .options li {
+  font-size: 13px;
+  line-height: 1.2;
+  color: #d2a026;
+}
+.rewardItem .description {
+  max-height: 50px;
+  margin: 5px 0 0;
+  font-size: 12px;
+  line-height: 1.4;
+  overflow: hidden;
 }
 /* .퀘스트 모달 */
 
@@ -2005,9 +2007,9 @@ button.disabled {
   flex-wrap: wrap;
 }
 .party .avatar {
-  border-color: rgba(255,255,255,.3);
+  border: solid 2px transparent;
 }
-.party .avatar.isCrew::after {
+.party .avatar.isCrew:hover::after {
   content: '-';
   display: block;
   position: absolute;
@@ -2016,7 +2018,15 @@ button.disabled {
   height: 100%;
   font-size: 100px;
   line-height: 130px;
-  color: rgba(255,214,6,.5)
+  color: #d2a026;
+}
+.party .avatar.isCrew:hover {
+  box-shadow: inset 0 0 10px 0 rgba(255, 255, 255, 0.5);
+  border: solid 2px rgba(210, 160, 38, 0.3);
+}
+.party .avatar.empty {
+  box-shadow: inset 0 0 10px 0 rgba(255, 255, 255, 0.5);
+  border: solid 2px rgba(157, 232, 31, 0.3);
 }
 .party .avatar.empty::after {
   content: '+';
@@ -2027,8 +2037,9 @@ button.disabled {
   height: 100%;
   font-size: 100px;
   line-height: 130px;
-  color: rgba(255,214,6,.5)
+  color: #98e21c;
 }
+
 /* 파티 캐릭터 리스트 */
 .party .ownedCharacters {
   padding: 0;
