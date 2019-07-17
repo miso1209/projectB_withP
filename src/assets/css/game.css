@@ -554,7 +554,7 @@
 }
 .questWrap .list-box li .quest_desc {
   font-size: 13px;
-  line-height: 1.4;
+  line-height: normal;
   color: #dad0c7;
 }
 
@@ -2022,12 +2022,16 @@ button.disabled {
 }
 .party .avatar.isCrew:hover {
   box-shadow: inset 0 0 10px 0 rgba(255, 255, 255, 0.5);
-  border: solid 2px rgba(210, 160, 38, 0.3);
+  border: solid 2px rgba(210, 160, 38, 1);
 }
 .party .avatar.empty {
   box-shadow: inset 0 0 10px 0 rgba(255, 255, 255, 0.5);
   border: solid 2px rgba(157, 232, 31, 0.3);
 }
+.party .avatar.empty:active, .party .avatar.empty.active, .party .avatar.empty:hover {
+  border: solid 2px rgba(157, 232, 31, 1);
+}
+
 .party .avatar.empty::after {
   content: '+';
   display: block;

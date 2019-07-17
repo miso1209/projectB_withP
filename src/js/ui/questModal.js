@@ -120,6 +120,8 @@ export default class QuestModal extends Panel {
       button.moveToBottom(20);
 
       if (quest.type === 'Acceptable') {
+        status.innerHTML = '미진행';
+
         button.dom.style.display = 'block';
         button.dom.innerText = '퀘스트 받기';
         button.dom.classList.remove('submit');
