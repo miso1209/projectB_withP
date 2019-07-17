@@ -9,7 +9,7 @@ export default class Inventory extends Panel {
         super();
 
         this.inputs = inputs;
-        this.selected = null;
+        
 
         const inventory = new Modal(pane, 800, 440);
         this.dom = inventory.dom;
@@ -74,9 +74,7 @@ export default class Inventory extends Panel {
         costswrap.appendChild(this.gold);
 
         // # stat
-        
         const invenWrap = new MakeDom('div', 'flex-right');
-        
         
         let scrollHeight = '280px';
 
@@ -117,7 +115,6 @@ export default class Inventory extends Panel {
     }
 
     onTabSelected(category) {
-        console.log(category);
         this.itemCat.innerText = category;
 
         // 탭정보를 모두 지운다
@@ -130,9 +127,8 @@ export default class Inventory extends Panel {
             if (input.category === category) {
                 // 탭에 아이템이 있으면 최초 아이템 정보를 뿌려준다
                 this.selectedItemDetail(input.items[0]);
-                
 
-                // let selected = null;
+                let selected = null;
                 let index = -1;
 
                 // 여기서 아이템을 가져온다
@@ -155,16 +151,14 @@ export default class Inventory extends Panel {
 
                     if (index === 0) {
                         slot.classList.add('active');
-                        this.selected = slot;
+                        selected = slot;
                     }
                     slot.addEventListener('click', function(){
-                        console.log('ccc');
-
-                        if (this.selected) {
-                            this.selected.classList.remove('active');
+                        if (selected ) {
+                            selected .classList.remove('active');
                         }
                         slot.classList.add('active');
-                        this.selected = slot;
+                        selected = slot;
                     });
 
                     slot.addEventListener('click', this.selectedItemDetail.bind(this, item));

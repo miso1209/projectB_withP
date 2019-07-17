@@ -133,10 +133,18 @@ export default class DomUI extends EventEmitter {
 
         frag.appendChild(title);
         frag.appendChild(desc);
+        
+        console.log(currentQuest.success);
 
         if (currentQuest.success) {
+            console.log('22');
             this.questStatus.classList.add('show');
-        } 
+        }
+
+        // setTimeout(() => {
+        //     this.questStatus.classList.remove('show');
+        // }, 10);
+
         this.questStatus.appendChild(frag);
     }
 
@@ -291,8 +299,6 @@ export default class DomUI extends EventEmitter {
         const confirmModal = new SystemModal(pane, 300, 200, text, cancelable, result);
         confirmModal.dom.style.top = '50%';
         confirmModal.dom.style.marginTop = 200 * -0.5 + 'px';
-        confirmModal.contents.style.margin = '10% auto';
-        confirmModal.contents.style.fontSize = '1.1rem';
     }
 
     showUseItemModal(text, items, result) {
@@ -301,8 +307,6 @@ export default class DomUI extends EventEmitter {
 
         confirmModal.dom.style.top = '50%';
         confirmModal.dom.style.marginTop = 240 * -0.5 + 'px';
-        confirmModal.contents.style.margin = '10% auto';
-        confirmModal.contents.style.fontSize = '1.1rem';
 
         const options = new MakeDom('div', 'contents-option');
         let option = new ItemImage(items.data.image.texture, items.data.image.x, items.data.image.y);
@@ -393,10 +397,10 @@ export default class DomUI extends EventEmitter {
                 this.emit('addQuest', result.id);
             } else {
                 this.emit('completeQuest', result.id);
-                this.resetQuestStatus();
             }
         });
 
+        this.resetQuestStatus();
         this.hideQuest(close);
     }
 

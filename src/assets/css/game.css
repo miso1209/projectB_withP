@@ -4,15 +4,15 @@
 
 /* 
   # key colors
-
-  c_yellow : #ffd800;
-  c_brown : #1f130a
-  c_red : #fd6240
+  yellow : #ffd800;
+  brown : #1f130a
+  red : #fd6240
   light-peach: #dad0c7;
   greyish-brown: #4e4a47;
   eggplant : #2a0a0f
-  b2a9a0
 */
+
+
 .quest_desc em {
   color: #8fc13b;
 }
@@ -686,8 +686,7 @@ button, .button{
 }
 
 .submit:hover, .submit.active {
-  background-color: #fff;
-  background-blend-mode: darken;
+  opacity: 0.6;
 }
 .button_small {
   width: 54px;
@@ -720,17 +719,21 @@ button, .button{
 
 /* checkbox */
 .checkbox {
+  z-index: 1111;
   width: 93px;
   height: 14px;
   color: #fff;
   text-align: left;
   background: url(~assets/ui/checkbox.png) 100% 100% no-repeat;
 }
-.checkbox:hover, .checkbox:active, .checkbox.active{
+.checkbox:hover, 
+.checkbox:active, 
+.checkbox.active{
   border: none;
   box-shadow: none;
 }
-.checkbox.active{
+
+.checkbox.active {
   background: url(~assets/ui/checkbox_checked.png) 100% 100% no-repeat;
 }
 /*./버튼스타일  */
@@ -1070,7 +1073,10 @@ button, .button{
 
 #SYSTEM .contents{
   top: 0;
-  padding: 0 0;
+  margin: 40px auto 0;
+  font-size: 16px;
+  line-height: 1.5;
+  word-break: keep-all;
   background-color: transparent;
 }
 
@@ -1399,13 +1405,12 @@ button.disabled {
   width: 65%;
   height: 64px;
   
-  font-size: 14px;
+  font-size: 13px;
+  line-height: 1.4;
   text-align: left;
   word-break: keep-all;
   overflow: hidden;
 
-  display: table-cell;
-  vertical-align: middle;
   padding: 10px 0 0;
 }
 
@@ -1494,8 +1499,9 @@ button.disabled {
 
 .inventory .flex-left {
   position: relative;
-  width: 212px;
+  width: 210px;
   background: #b2a9a0;
+  box-sizing: border-box;
 }
 
 .inventory .flex-right {
@@ -1537,11 +1543,11 @@ button.disabled {
 
 .inventory .statContent .itemInfoWrap {
   position: absolute;
-  top: 160px;
-  left: 2px;
+  top: 159px;
+  left: 1px;
   bottom: 2px;
 
-  width: 204px;
+  width: 206px;
   padding: 10px;
   text-align: left;
   line-height: 1.4;
@@ -1600,6 +1606,8 @@ button.disabled {
   right: 0;
   left: 0;
   bottom: -40px;
+
+  border: none;
   border-top: 2px solid #b2a9a0;
 }
 
@@ -1652,11 +1660,12 @@ button.disabled {
   
   flex-wrap: wrap;
   flex-direction: row;
-  justify-content: space-evenly;
+  justify-content: space-between;
   justify-items: start;
+  
   min-height: 350px;
   margin: 0 auto;
-  padding: 8px;
+  padding: 8px 20px;
   opacity: 1;
   transition: all 0.3s linear;
   overflow: hidden;
@@ -1764,6 +1773,21 @@ button.disabled {
   position: relative;
 }
 
+.dpsIcon::before {
+  content: '';
+  display: inline-block;
+  width: 15px;
+  height: 16px;
+  padding-right: 10px;
+  background: url(~assets/ui/icon_dps.png) no-repeat;
+}
+
+.dpsIcon .statText {
+  display: inline-block;
+  height: 16px;
+  vertical-align: top;
+}
+
 /* 아바타  */
 .avatar {
   position: relative;
@@ -1774,16 +1798,10 @@ button.disabled {
   border: solid 2px transparent;
   box-sizing: border-box;
 }
-
-.party .avatar {
-  border-color: rgba(255,255,255,.3);
-}
-
 .avatar:hover, .avatar.active {
   box-shadow: inset 0 0 20px 0 #d2a026;
   border: solid 2px #d2a026;
 }
-
 .avatar .stage {
   position: absolute;
   top: 0;
@@ -1795,7 +1813,6 @@ button.disabled {
   background: url(~assets/ui/character_bg.png) no-repeat 0 0;
   background-size: contain;
 }
-
 .avatar .imgWrap {
   position: absolute;
   left: 0;
@@ -1813,7 +1830,6 @@ button.disabled {
   vertical-align: bottom;
   margin: 0 auto;
 }
-
 .avatar .infoWrap {
   position: absolute;
   left: 0;
@@ -1844,21 +1860,27 @@ button.disabled {
   height: 26px;
 }
 
+
 /* 아이템조합 */
 .modal.combiner .title{
   background: none;
 }
 
+
+
 /* 파티 */
-.modal.party .contents {
-  margin: 10px 25px;
+.party .contents {
+  margin: 0 25px;
+  background: #b2a9a0;
 }
-.modal.party .flex-left.list-wrap {
+.party .flex-left.list-wrap {
   width: calc(100% - 250px);
   display: flex;
   flex-wrap: wrap;
 }
-
+.party .avatar {
+  border-color: rgba(255,255,255,.3);
+}
 .party .avatar.isCrew::after {
   content: '-';
   display: block;
@@ -1870,7 +1892,6 @@ button.disabled {
   line-height: 130px;
   color: rgba(255,214,6,.5)
 }
-
 .party .avatar.empty::after {
   content: '+';
   display: block;
@@ -1882,18 +1903,57 @@ button.disabled {
   line-height: 130px;
   color: rgba(255,214,6,.5)
 }
-
 /* 파티 캐릭터 리스트 */
-.modal.party .ownedCharacters {
-  padding: 20px 0 0;
+.party .ownedCharacters {
+  padding: 0;
 }
-.modal.party .ownedCharacters .totaldps {
-  font-size: 20px;
-  margin: 0 10px;
-  background-color: #000;
-  border-radius: 5px;
+.party .list-detail .infoWrap {
+  width: 236px;
+  height: 86px;
+  margin: 0 -1px;
+  padding: 15px;
+  background: url(~assets/ui/party_info_bg.png) no-repeat;
+}
+.party .list-detail .infoWrap .totaldps {
+  font-size: 30px;
+  line-height: 1.4;
+}
+.party .scrollView{
+  margin: 2px;
+  background: #281b10;
+}
+.party .scrollbox {
+  margin: 1px 0;
+}
+.party .list-cell  {
+  height: 52px;
+  padding: 0 5px;
+  text-align: left;
+  line-height: 1;
+}
+.party .list-cell img {
+  margin: 5px 0;
+}
+.party .list-cell img + section {
+  width: calc(100% - 37px);
+  height: inherit;
+}
+.party .list-cell section p {
+ display: inline-block;
+ font-size: 14px;
+ line-height: 24px;
+}
+.party .list-cell section p:not(:first-child){
+  padding-left: 10px;
+}
+.party .buttonWrap{
+  position: absolute;
+  bottom: 0;
+  margin: 0 1px 1px;
 }
 
+
+/* 캐릭터선택창 포션리스트 */
 .invenItems li:hover, 
 .invenItems li:active,
 .invenItems li.active {
@@ -1946,11 +2006,6 @@ button.disabled {
   line-height: 1;
   overflow: hidden;
 }
-.skillItems .img, .equipItems .img {
-  margin: 0 auto;
-  display: block;
-  overflow: visible;
-}
 
 
 
@@ -1984,14 +2039,15 @@ button.disabled {
   position: relative;
   background: url(~assets/ui/character_stat_bg.png) no-repeat;
   height: 137px;
-  padding: 30px;
+  padding: 40px;
 }
 
 .characterDetail .flex-left .list-detail .infoWrap .stat_dps {
   font-size: 30px;
   line-height: 1.5;
 }
-.characterDetail .flex-left .list-detail .infoWrap .dpsIcon::before {
+
+/* .characterDetail .flex-left .list-detail .infoWrap .dpsIcon::before {
   content: '';
   display: inline-block;
   width: 15px;
@@ -2004,7 +2060,7 @@ button.disabled {
   display: inline-block;
   height: 16px;
   vertical-align: top;
-}
+} */
 
 .mainStats {
   padding: 10px;
@@ -2103,8 +2159,12 @@ button.disabled {
   background-color: rgba(0,0,0,0.3);
 }
 
-
-
+.skillItems .img, 
+.equipItems .img {
+  margin: 0 auto;
+  display: block;
+  overflow: visible;
+}
 .characterDetail .skillItems, 
 .characterDetail .equipItems {
   position: absolute;

@@ -53,6 +53,7 @@ export default class CharacterSelect extends Panel {
     this.changeAvatarBtn.moveToRight(10);
 
     this.changeAvatarBtn.dom.addEventListener('click', (ok) => {
+      this.changeAvatarBtn.dom.classList.toggle('active');
       this.setMainAvatar();
     });
 
@@ -151,21 +152,6 @@ export default class CharacterSelect extends Panel {
 
     this.updateStatus(current);
   }
-
-  // updateHealth() {
-  //   if (this.selected.health === 0) {
-  //     this.recoveryBtn.dom.classList.remove('half');
-  //     this.recoveryBtn.dom.classList.add('empty');
-  //   } else if (this.selected.health < this.selected.maxHealth) {
-  //     this.recoveryBtn.dom.classList.remove('empty');
-  //     this.recoveryBtn.dom.classList.add('half');
-  //   } else {
-  //     this.recoveryBtn.dom.classList.remove('empty');
-  //     this.recoveryBtn.dom.classList.remove('half');
-  //     this.recoveryBtn.dom.disabled = 'disabled';
-  //   }
-  // }
-
   updateStatus(current) {
     this.hp.update(current.health, current.maxHealth);
     this.exp.update(current.exp, current.maxexp);

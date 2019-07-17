@@ -216,8 +216,7 @@ export default class CharacterDetail extends Panel {
     this.statDps.innerText = `${this.selected.strongFigure}`;
     this.statArmor.innerText = `${this.selected.armorFigure}`;
     
-    console.log(this.selected);
-
+    // console.log(this.selected);
     for (let base in this.selected.data.base) {
       if ( base !== 'regist') {
         let baseStat = document.createElement('li');
@@ -230,6 +229,7 @@ export default class CharacterDetail extends Panel {
           baseStatText = 'baseMax' + text;
           plusStatText = 'simulatedMax' + text;
         }
+
         let stText = new StatText(base, 'inline');
         baseStat.appendChild(stText);
         let baseValue = new MakeDom('p', 'statvalue', `${this.selected[baseStatText]}`);
@@ -237,8 +237,7 @@ export default class CharacterDetail extends Panel {
         plusStat.innerText = `(+${this.selected[plusStatText]})`;
 
         if (base.includes('critical')) {
-          console.log(base);
-
+          // console.log(base);
           baseValue.innerText = `${this.selected[baseStatText] * 100}%`;
           plusStat.innerText = `(+${this.selected[plusStatText] * 100}%)`;
         }
@@ -272,11 +271,9 @@ export default class CharacterDetail extends Panel {
         let item = d.data.data;
         let itemIcon = new ItemImage(item.image.texture, item.image.x, item.image.y);
         itemIcon.dom.style.display = 'inline-block';
-        // descText.innerText = d.displayName;
         liWrap.appendChild(itemIcon.dom);
       } else {
         liWrap.classList.add('empty');
-        // descText.innerText = d.displayName;
       }
 
       this.equipItems.appendChild(liWrap);

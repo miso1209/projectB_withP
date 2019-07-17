@@ -4,6 +4,7 @@ import MakeDom from "./component/makedom";
 import Button from "./component/button";
 import Avatar from "./component/avatar";
 import ListBox from "./component/listbox";
+import StatText from "./component/statText";
 
 const PARTY_SIZE = 6;
 
@@ -32,39 +33,49 @@ export default class PartyUI extends Panel {
     wrapper.classList.add('contents');
     wrapper.classList.add('flexWrap');
     
-    this.ownedCharacters = new MakeDom('div', 'flex-right');
-    this.ownedCharacters.classList.add('list-detail');
-    this.ownedCharacters.classList.add('ownedCharacters');
+    const rightBox = new MakeDom('div', 'flex-right');
+    rightBox.classList.add('list-detail');
+    this.ownedCharacters = new MakeDom('div', 'ownedCharacters');
 
-    this.totaldps = new MakeDom('p', 'totaldps');
+
+    // 총전투력
+    const infoWrap = new MakeDom('div', 'infoWrap');
+    const dpsIcon = new MakeDom('div', 'dpsIcon');
+    const dpsStatText = new StatText('dps', 'inline');
+    this.totaldps = new MakeDom('div', 'totaldps');
+
+    dpsIcon.appendChild(dpsStatText);
+    infoWrap.appendChild(dpsIcon);
+    infoWrap.appendChild(this.totaldps);
+    
     
     // 확인 버튼 콜백
+    const buttonWrap = new MakeDom('div', 'buttonWrap');
     const submitButton = new Button('파티구성', 'submit');
     submitButton.dom.classList.add('wide');
-    submitButton.moveToCenter(15);
-    submitButton.moveToBottom(15);
 
     submitButton.dom.addEventListener('click', (ok)=> {
-      pane.parentNode.removeChild(pane);
+      // pane.parentNode.removeChild(pane);
       return this.result('buttoncallback', 'partyConfirm');
     });
 
     modal.closeBtn.addEventListener('click', this.closeModal.bind(this, 'partyCancel'));
-
-    this.ownedCharacters.appendChild(submitButton.dom);
-    this.ownedCharacters.appendChild(this.totaldps);
+    buttonWrap.appendChild(submitButton.dom);
+    rightBox.appendChild(infoWrap);
+    rightBox.appendChild(this.ownedCharacters);
+    this.ownedCharacters.appendChild(buttonWrap);
 
     // 파티 리스트
     // characterList
-    const characterListWrap = new MakeDom('div', 'flex-left');
-    characterListWrap.classList.add('list-wrap');
+    const leftBox = new MakeDom('div', 'flex-left');
+    leftBox.classList.add('list-wrap');
     this.characterList = new MakeDom('div', 'characterList');
     this.characterList.classList.add('party');
 
-    characterListWrap.appendChild(this.characterList);
+    leftBox.appendChild(this.characterList);
     
-    wrapper.appendChild(characterListWrap);
-    wrapper.appendChild(this.ownedCharacters);
+    wrapper.appendChild(leftBox);
+    wrapper.appendChild(rightBox);
     this.dom.appendChild(wrapper);
 
     pane.appendChild(this.dom);
@@ -81,8 +92,7 @@ export default class PartyUI extends Panel {
 
   initList(){
     // 캐릭터 리스트 
-    this.list = new ListBox(230, 200, this.select.bind(this));
-    this.list.dom.style.top = '100px';
+    this.list = new ListBox(230, 204, this.select.bind(this));
     this.ownedCharacters.appendChild(this.list.dom);
     this.list.update(this.inputs, 'character');
   }
@@ -120,7 +130,6 @@ export default class PartyUI extends Panel {
           selectedavatar.classList.remove('active');
 
           if (selectedavatar.classList.contains('isCrew')) {
-            
             // 파티멤버 뺄 때-hp 체크
             if(member.character) {
               if ((totalhealth - member.character.health) < 1) {
@@ -142,7 +151,6 @@ export default class PartyUI extends Panel {
 
       avatar.dom.addEventListener('click', this.compose.bind(this, member));
     });
-    // console.log('totalhealth '+ totalhealth);
   }
 
   select(data) {

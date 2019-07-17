@@ -17,10 +17,6 @@ export default class Modal extends Panel {
 
         this.confirm_callback = callback;
         
-        const modal_contents = document.createElement('div');
-        modal_contents.classList.add('modal-contents');
-        
-        
         const closeBtn = new Button('', 'closeBtn');
         this.closeBtn = closeBtn.dom;
         this.closeBtn.classList.add('modal-closeBtn');
@@ -28,7 +24,6 @@ export default class Modal extends Panel {
         this.closeBtn.addEventListener('click', this.closeModal.bind(this));
         
         this.dom.appendChild(this.closeBtn);
-        this.dom.appendChild(modal_contents);
     }
     
     addCloseButton() {

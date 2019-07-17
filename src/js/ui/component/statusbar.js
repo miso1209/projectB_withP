@@ -10,7 +10,8 @@ export default class StatusBar{
     this.progressHolder.classList.add('progressHolder');
     this.progressHolder.classList.add('status');
     this.barName = new MakeDom('p', 'progressName');
-    wrap.appendChild(this.barName);
+    this.name = null;
+    // wrap.appendChild(this.barName);
     
     
     this.progressBar = document.createElement('div');
@@ -38,6 +39,7 @@ export default class StatusBar{
   }
 
   setBar(_type) {
+    this.dom.appendChild(this.barName);
     this.progressBar.classList.add(_type);
     const text = new StatText(_type);
     this.barName.appendChild(text);

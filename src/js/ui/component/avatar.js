@@ -43,9 +43,8 @@ export default class Avatar {
       infoWrap.appendChild(name);
       infoWrap.appendChild(stats);
       stats.appendChild(this.dps);
-      infoWrap.appendChild(this.health);
+      // infoWrap.appendChild(this.health);
       
-
       avatar.appendChild(imgWrap);
       avatar.appendChild(infoWrap);
     }

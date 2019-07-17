@@ -54,11 +54,11 @@ export default class StatText {
     }, {
       key: 'criticalPotential',
       en: 'cric',
-      ko: '치명타 피해'
+      ko: '치명타 확률'
     }, {
       key: 'critical',
       en: 'crid',
-      ko: '치명타 확률'
+      ko: '치명타 피해'
     }, {
       key: 'dps',
       en: 'dps',

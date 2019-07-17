@@ -1,6 +1,8 @@
 import Panel from "./panel";
 import ItemImage from './itemimage';
 import MakeDom from './makedom';
+import StatusBar from './statusbar'
+
 
 class ListCell {
     constructor(cellData, cellType){
@@ -22,7 +24,6 @@ class ListCell {
     }
   
     showRecipeCell() {
-        
         console.log(this.cellData);
 
         if (this.cellData.available === 1) {
@@ -59,16 +60,23 @@ class ListCell {
         this.cellImg.src = `/src/assets/${this.cellData.data.portrait}`;
         this.cellData1 = document.createElement('p');
         this.cellData2 = document.createElement('p');
-        this.cellData3 = document.createElement('p');
+        this.cellData3 = document.createElement('div');
     
         this.cellData1.innerText = this.cellData.data.displayname;
-        this.cellData2.innerText = this.cellData.data.class;
-        this.cellData3.innerText = `DPS : ${this.cellData.totalPowerFigure}`;
-    
+        this.cellData2.innerText = `DPS : ${this.cellData.totalPowerFigure}`;
+
+        const datawrap = document.createElement('section');
+        const statWrap = new MakeDom('div', 'statwrap');
+        this.hp = new StatusBar(this.cellData.health, this.cellData.maxHealth);
+        // this.hp.update(this.cellData.health, this.cellData.maxHealth);
+
+        statWrap.appendChild(this.hp.dom);
+        datawrap.appendChild(this.cellData1);
+        datawrap.appendChild(this.cellData2);
+        datawrap.appendChild(statWrap);
+
         this.cell.appendChild(this.cellImg);
-        this.cell.appendChild(this.cellData1);
-        this.cell.appendChild(this.cellData2);
-        this.cell.appendChild(this.cellData3);
+        this.cell.appendChild(datawrap);
     }
 }
   
@@ -91,7 +99,6 @@ export default class ListBox extends Panel {
       this.list = document.createElement('ul');
       this.list.classList.add('list-box');
       this.list.classList.add('scrollbox');
-      this.list.style.margin = '10px 0';
       this.list.style.width = viewWidth;
   
       scrollView.appendChild(scrollBlind);

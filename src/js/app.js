@@ -55,8 +55,6 @@ export default class App {
         const confirmModal = new SystemModal(container, 300, 200, text, true, result);
         confirmModal.dom.style.top = '50%';
         confirmModal.dom.style.marginTop = 200 * -0.5 + 'px';
-        confirmModal.contents.style.margin = '10% auto';
-        confirmModal.contents.style.fontSize = '1.1rem';
     }
 
 
