@@ -25,6 +25,19 @@ export default class Storage extends EventEmitter {
         this.data.inventory = {};
         this.data.gold = 0;
         this.data.tags = [];
+        this.data.location = {};
+        this.data.settings = {
+            sound: {
+                volume: {
+                    Master: 1,
+                    BGM: 1,
+                    Default: 1
+                }
+            }
+        };
+        this.data.currentFloor = 0;
+        this.data.cutsene = null;
+        this.data.created = new Date();
         this.data.quests = {};
         this.data.completedQuests = {};
     }
@@ -43,6 +56,10 @@ export default class Storage extends EventEmitter {
     clear() {
         localStorage.data = "";
         this.resetData();
+    }
+    setVolume(type, volume) {
+        this.data.settings.sound.volume[type] = volume;
+        this.save();
     }
 
     addTag(tag) {

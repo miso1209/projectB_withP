@@ -7,6 +7,10 @@
 export default class Sound {
     constructor() {
         this._soundTypesMap = {};
+        this.options = {
+            masterVolume: 1,
+            default: 1
+        };
     }
 
     init() {
@@ -17,8 +21,23 @@ export default class Sound {
         this.pixiSound.speedAll = speed;
     }
 
-    setVolume(volume) {
-        this.pixiSound.volumeAll = volume;
+    setVolume(type, volume) {
+        this.options[type] = volume;
+        const fileName = this._soundTypesMap[type];
+        const sound = this.pixiSound.find(fileName);
+
+        if (sound) {
+            sound.volume = this.options[type];
+        }
+    }
+
+    setDefaultVolume(volume) {
+        this.options['default'] = volume;
+    }
+
+    setMasterVolume(volume) {
+        this.options.masterVolume = volume;
+        this.pixiSound.volumeAll = this.options.masterVolume;
     }
 
     _addSound(fileName, options) {
@@ -52,6 +71,12 @@ export default class Sound {
 
             this._compareAndRemoveSound(prevFileName, fileName);
             this._soundTypesMap[options.type] = fileName;
+
+            if (this.options[options.type] !== undefined) {
+                options = Object.assign(options, { volume: this.options[options.type] });
+            } else {
+                options = Object.assign(options, { volume: this.options['default'] });
+            }
         }
 
         if (!this.pixiSound.find(fileName)) {

@@ -103,6 +103,6 @@ export default class DevConsole {
     }
 
     setVolume(...args) {
-        Sound.setVolume(...args);
+        this.game.setVolume(...args);
     }
 }

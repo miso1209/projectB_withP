@@ -249,6 +249,10 @@ export default class Game extends EventEmitter {
             gold: this.storage.data.gold
         });
 
+        for (let type in this.storage.data.settings.sound.volume) {
+            this.setVolume(type, this.storage.data.settings.sound.volume[type]);
+        }
+
         // 퀘스트 정보를 등록한다
         for (let questId in this.storage.data.quests) {
             this.setQuest(questId, this.storage.data.quests[questId]);
@@ -682,6 +686,24 @@ export default class Game extends EventEmitter {
     onGameClick(event) {
         if (this.currentMode && this.currentMode.onGameClick) {
             this.currentMode.onGameClick(event);
+        }
+    }
+
+    setVolume(type, volume) {
+        console.log('game set Volume');
+        const prevVolume = this.storage.data.settings.sound.volume[type];
+
+        if (prevVolume !== undefined) {
+            this.storage.setVolume(type, volume);
+
+            switch(type) {
+                case 'BGM' :
+                    Sound.setVolume(type, volume);
+                break;
+                default :        
+                    Sound[`set${type}Volume`](volume);
+                break;
+            }
         }
     }
 
