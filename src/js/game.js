@@ -485,10 +485,10 @@ export default class Game extends EventEmitter {
         // 집일경우 2배줌
         if (stageName === 'house') {
             stage.zoomTo(2, true);
-            Sound.playSound('house_bgm_1.wav', { loop: true, type: 'BGM', volume: 0.17 });
+            Sound.playSound('house_bgm_1.wav', { loop: true, type: 'BGM' });
         } else {
             stage.zoomTo(1.5, true);
-            Sound.playSound('open_field_bgm_1.wav', { loop: true, type: 'BGM', volume: 0.17 });
+            Sound.playSound('open_field_bgm_1.wav', { loop: true, type: 'BGM' });
         }
 
         this.stage = stage;
@@ -541,7 +541,7 @@ export default class Game extends EventEmitter {
         stage.enter();
 
         // BGM 읽어오기, Scale(Zoom) 읽어오기 추가해야할 것.
-        Sound.playSound('castle_bgm_1.wav', { loop: true, type: 'BGM', volume: 0.17 });
+        Sound.playSound('castle_bgm_1.wav', { loop: true, type: 'BGM' });
     }
 
     async $leaveStage(eventName) {
@@ -623,7 +623,6 @@ export default class Game extends EventEmitter {
                 this.player.inventory.gold += monster.gold;
             });
             this.currentMode.on('lose', async () => {
-                Sound.playSound('castle_bgm_1.wav', { singleInstance: true });
                 this.currentMode.battleResult = 'lose';
                 this.stage.pathFinder.setDynamicCell(this.stage.player.gridX, this.stage.player.gridY, false);
                 this.stage.leave();
@@ -637,6 +636,7 @@ export default class Game extends EventEmitter {
                 if (this.stage.battleResult === 'win' && monsterObj.die) {
                     monsterObj.die(this);
                 }
+                Sound.playSound('castle_bgm_1.wav', { loop: true, type: 'BGM' });
                 this.stage.enter();
             });
             
@@ -651,7 +651,7 @@ export default class Game extends EventEmitter {
             await this.$fadeIn(0.5);
 
             // BGM 읽어오기, Scale(Zoom) 읽어오기 추가해야할 것.
-            Sound.playSound('battle_bgm_1.wav', { loop: true, type: 'BGM', volume: 0.17 });
+            Sound.playSound('battle_bgm_1.wav', { loop: true, type: 'BGM' });
         }
     }
 
@@ -902,6 +902,7 @@ export default class Game extends EventEmitter {
             this.ui.flagArray[3] = 'true';
             this.ui.checkFlag();
 
+            this.ui.showQuestStatus(this.player.quests[questId]);
             Sound.playSound('quest_accept_1.wav', { singleInstance: true });
         }
     }
@@ -965,7 +966,7 @@ export default class Game extends EventEmitter {
                 quest.data[key] = { count: 0 };
             }
         } else if (quest.data[key] !== undefined) {
-            quest.data[key].count++;
+            quest.data[key].count += quest.data[key].count<count?1:0;
         } else {
             quest.data[key] = { count: 0 };
         }

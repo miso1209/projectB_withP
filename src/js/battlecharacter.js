@@ -65,13 +65,13 @@ export default class BattleCharacter extends EventEmitter{
         this.progressBar.setProgress(healthRate);
     }
 
-    nextTurn() {
+    nextTurn(isAllyTurn) {
         if (!this.canFight) {
             return;
         }
         
         // 캐릭터의 스킬 쿨타임 감소.
-        if (this.coolTime > 0 && !this.isExtraSkillIn) {
+        if (this.coolTime > 0 && !this.isExtraSkillIn && !isAllyTurn) {
             this.coolTime--;
         }
 

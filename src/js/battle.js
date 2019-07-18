@@ -193,7 +193,6 @@ export class Battle extends EventEmitter {
         // 스킬이 모두 종료되었으면 스킬을 종료하고 다음 스킬을 발동시킨다
         if (!this.activeSkill) {
             let nextSkill = null;
-            this.updateTurn();
             
             // 스페셜 스킬이 예약되어 있는가
             while (this.extraSkillQueue.length > 0 ){
@@ -217,6 +216,7 @@ export class Battle extends EventEmitter {
          
             // 다음 스킬을 설정
             this.activeSkill = nextSkill;
+            this.updateTurn(this.activeSkill.owner);
         }
 
         // 기본 스킬을 업데이트 한다
@@ -225,12 +225,13 @@ export class Battle extends EventEmitter {
         }
     }
 
-    updateTurn() {
+    updateTurn(owner) {
+        let allyFlag = this.allies.indexOf(owner) >= 0;
         for (const bchar of this.allies){
-            bchar.nextTurn();
+            bchar.nextTurn(allyFlag);
         }
         for (const bchar of this.enemies){
-            bchar.nextTurn();
+            bchar.nextTurn(!allyFlag);
         }
     }
 

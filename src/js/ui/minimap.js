@@ -11,6 +11,17 @@ const MAP_DATA = {
     ' ◎ ': null,
     ' N ': 'minimap_tile.png',
 };
+const MAP_COLOR = {
+    '   ': null,
+    ' ▨ ': '0xFFFFFF',
+    ' # ': '0xFFFFFF',
+    ' B ': '0xFF0000',
+    ' P ': '0xAAAAFF',
+    ' H ': '0xF6BB43',
+    ' ● ': null,
+    ' ◎ ': null,
+    ' N ': '0xAAFFAA',
+};
 
 export default class Minimap extends PIXI.Application {
     constructor(width, height, canvas) {
@@ -35,7 +46,7 @@ export default class Minimap extends PIXI.Application {
         for (let y = 0; y < map.length; y++) {
             for (let x = 0; x < map[y].length; x++) {
                 if (MAP_DATA[map[y][x]]) {
-                    const mapTile = new MiniMapTile(MAP_DATA[map[y][x]]);
+                    const mapTile = new MiniMapTile(map[y][x]);
                     mapTile.position.x = (x * TILE_WIDTH/2) - (y * TILE_WIDTH / 2);
                     mapTile.position.y = (x * TILE_HEIGHT/2) + (y * TILE_HEIGHT / 2);
                     this.mapTile[Math.round(x + y * this.mapLength)] = mapTile;
@@ -67,7 +78,7 @@ export default class Minimap extends PIXI.Application {
                     this.mapContainer.position.x = (this.screenWidth / 2) - ((x * TILE_WIDTH / 2) - (y * TILE_WIDTH / 2) + TILE_WIDTH / 2);
                     this.mapContainer.position.y = (this.screenHeight / 2) - ((x * TILE_HEIGHT / 2) + (y * TILE_HEIGHT / 2) + TILE_HEIGHT / 2);
                     this.mapTile[Math.round(x + y * this.mapLength)].show();
-                    this.mapTile[Math.round(x + y * this.mapLength)].changeTint('0xFFFFFF');
+                    this.mapTile[Math.round(x + y * this.mapLength)].showColor();
                     
                     if (stage.neighbor.up) {
                         this.mapTile[(x) + (y-1) * this.mapLength].show();
@@ -88,9 +99,10 @@ export default class Minimap extends PIXI.Application {
 }
 
 class MiniMapTile extends PIXI.Container {
-    constructor(textureName) {
+    constructor(stringMap) {
         super();
-        const sprite = new PIXI.Sprite(PIXI.Texture.fromFrame(textureName));
+        const sprite = new PIXI.Sprite(PIXI.Texture.fromFrame(MAP_DATA[stringMap]));
+        this.color = MAP_COLOR[stringMap];
         this.addChild(sprite);
         this.sprite = sprite;
         this.visible = false;
@@ -99,6 +111,10 @@ class MiniMapTile extends PIXI.Container {
 
     changeTint(tint) {
         this.sprite.tint = tint;
+    }
+
+    showColor() {
+        this.sprite.tint = this.color;
     }
 
     show() {

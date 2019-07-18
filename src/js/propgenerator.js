@@ -176,6 +176,15 @@ export default class PropGenerator {
                rewardsItemList.push(Items[itemId]);
            });
 
+           monsterParty.battle.characters.sort((a, b) => {
+               const A = new Character(a.id);
+               const B = new Character(b.id);
+               A.level = a.level;
+               B.level = b.level;
+
+               return A.armorFigure < B.armorFigure?1:-1;
+           });
+
            const selectedItem = this.getRarityItem(rewardsItemList);
            if (monsterParty.rewards[selectedItem.id]) {
                 monsterParty.rewards[selectedItem.id]++;
