@@ -26,7 +26,7 @@ export default class CharacterDetail extends Panel {
     modal.dom.classList.add('characterDetail');
     modal.addTitle('캐릭터 정보');
     modal.addCloseButton();
-    modal.closeBtn.addEventListener('click', this.closeModal.bind(this, 'close'));
+    modal.closeBtn.addEventListener('click', this.onClose.bind(this, 'close'));
     this.dom = modal.dom;
 
     // 모달 내부 컨텐츠 영역
@@ -462,7 +462,7 @@ export default class CharacterDetail extends Panel {
     this.showEquipInfo();
   }
 
-  closeModal(){
+  onClose(){
     this.callback(this.statItem, 'close');
   }
 }

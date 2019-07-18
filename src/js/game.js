@@ -71,7 +71,13 @@ export default class Game extends EventEmitter {
             const inven_gold = this.player.inventory.gold;
             this.ui.showInventory(inputs, inven_gold);
         });
-        
+
+        this.ui.on('options', () => {
+            // 현재 설정 데이터.. 필요함..inputs 에 넣어주세요
+            const inputs = null;
+            this.ui.showSetting(inputs);
+        });
+
         this.ui.on('party', () => {
             const inputs = []; // 가지고 있는 캐릭터 데이터
             for (const cid in this.player.characters) {
@@ -894,6 +900,8 @@ export default class Game extends EventEmitter {
     }
 
     addQuest(questId) {
+        console.log('add quest');
+
         if (!this.storage.data.quests[questId]) {
             this.storage.setQuest(questId, {});
             this.setQuest(questId, {});
@@ -903,6 +911,7 @@ export default class Game extends EventEmitter {
             this.ui.checkFlag();
 
             this.ui.showQuestStatus(this.player.quests[questId]);
+
             Sound.playSound('quest_accept_1.wav', { singleInstance: true });
         }
     }
@@ -924,22 +933,26 @@ export default class Game extends EventEmitter {
 
             if (isChanged && showFlag) {
                 if (quest.success) {
-                    // success quest
+                    console.log('success quest');
 
+                    // success quest
                     // UI Flag
                     this.ui.flagArray[3] = 'true';
                     this.ui.checkFlag();
-                    
+
                     this.ui.showQuestStatus(this.player.quests[questId]);
                     Sound.playSound('quest_done_1.wav', { singleInstance: true });
                 } else {
                     // change condition
+                    console.log('change condition');
                 }
+
+                this.ui.resetQuestStatus();
             }
         });
-
         quest.load();
     }
+
     setCompletedQuest(questId, data) {
         const quest = new Quest(questId);
         quest.data = data;

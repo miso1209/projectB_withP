@@ -859,7 +859,7 @@ button, .button{
   width:140px;
   height:30px;
   color: #dad0c7;
-  background: url(~assets/ui/button_nav_active.png) no-repeat #2a0a0f;
+  background: url(~assets/ui/button_nav_active.png) no-repeat;
 }
 
 .gnb-navi .setting {
@@ -868,7 +868,7 @@ button, .button{
 
   width:40px;
   height: 40px;
-  background: url(~assets/ui/button_setting.png) no-repeat #2a0a0f;
+  background: url(~assets/ui/button_setting.png) no-repeat;
   pointer-events: auto;
   opacity:1;
 }

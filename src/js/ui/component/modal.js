@@ -9,7 +9,9 @@ export default class Modal extends Panel {
     constructor(pane, width, height, callback) {
         super();
         this.pane = pane;
+
         const modal = new NineBox(this.pane, width, height);
+
         this.dom = modal.dom;
         this.dom.classList.add('modal');
         this.dom.style.top = '50%';
@@ -21,7 +23,7 @@ export default class Modal extends Panel {
         this.closeBtn = closeBtn.dom;
         this.closeBtn.classList.add('modal-closeBtn');
         this.closeBtn.style.display = 'none';
-        this.closeBtn.addEventListener('click', this.closeModal.bind(this));
+        this.closeBtn.addEventListener('click', this.onClose.bind(this));
         
         this.dom.appendChild(this.closeBtn);
     }
@@ -54,20 +56,9 @@ export default class Modal extends Panel {
 
         title.innerText = text;
         this.dom.appendChild(title);
-    
-        // this.subTitle = document.createElement('h2');
-        // this.subTitle.className = 'sub-title';
-        // this.subTitle.innerText = text;
-        // this.dom.appendChild(this.subTitle);
-        // this.subTitle.style.display = 'none';
     }
     
-    // setSubTitle(text) {
-    //     this.subTitle.innerText = text;
-    //     this.subTitle.style.display = 'block';
-    // }
-    
-    closeModal() {
+    onClose() {
         this.pane.removeChild(this.dom);
         this.remove(this.pane);
     }

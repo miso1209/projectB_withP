@@ -17,6 +17,7 @@ import ItemAcquire from "./itemAcquire";
 import Profile from "./profile";
 import QuestList from "./quest";
 import QuestModal from "./questModal";
+import Setting from "./setting";
 
 
 export default class DomUI extends EventEmitter {
@@ -77,9 +78,9 @@ export default class DomUI extends EventEmitter {
         });
 
         // 설정버튼
-        this.setting = new Button('', 'setting');
-        gnb.appendChild(this.setting.dom);
-        this.setting.dom.addEventListener('click', ()=>{
+        this.settingBtn = new Button('', 'setting');
+        gnb.appendChild(this.settingBtn.dom);
+        this.settingBtn.dom.addEventListener('click', ()=>{
             this.emit('options');
         });
 
@@ -120,28 +121,42 @@ export default class DomUI extends EventEmitter {
     }
 
     showQuestStatus(currentQuest) {
-        console.log(currentQuest);
-        this.questStatus.innerHTML = '';
+        setTimeout(() => {
+            // class 제거 함수랑 동시에 호출되는 경우가 생기면 비동기 호출로 적용이 되지 않는 경우가 생겨서 딜레이 걸어둠. 
+            // TOOD async...then.... 수정...음음..
+            this.questStatus.innerHTML = '';
+            this.questStatus.classList.remove('show');
 
-        const frag = document.createDocumentFragment();
-        const title = new MakeDom('p', 'quest_name', currentQuest.title);
-        const desc = new MakeDom('p', 'quest_desc', `퀘스트`);
+            const frag = document.createDocumentFragment();
+            const title = new MakeDom('p', 'quest_name', currentQuest.title);
+            const desc = new MakeDom('p', 'quest_desc', `퀘스트`);
+            frag.appendChild(title);
+            frag.appendChild(desc);
 
-        title.innerText = currentQuest.title;
+            title.innerText = currentQuest.title;
 
-        frag.appendChild(title);
-        frag.appendChild(desc);
+            if (currentQuest.success) {
+                desc.innerText = `퀘스트가 완료되었습니다.`;
+            } else {
+                desc.innerText = `신규 퀘스트가 추가되었습니다.`;
+            }
+            this.questStatus.appendChild(frag);
+            this.questStatus.classList.add('show');
+        }, 10);
+    }
+    
+    showSetting(inputs) {
+        // input : 현재 설정정보.
+        const pane = this.createContainer();
+        pane.classList.add('screen');
 
-        if (currentQuest.success) {
-            desc.innerText = `퀘스트가 완료되었습니다.`;
-        } else {
-            desc.innerText = `신규 퀘스트가 추가되었습니다.`;
-        }
-        this.questStatus.classList.add('show');
-        this.questStatus.appendChild(frag);
+        const settingModal = new Setting(pane, inputs, ()=>{
+            console.log('설정 데이터 저장쓰');
+        });
     }
 
     resetQuestStatus() {
+        // console.log('clear');
         this.questStatus.classList.remove('show');
     }
 
@@ -223,7 +238,7 @@ export default class DomUI extends EventEmitter {
         this.gnbContainer.style.opacity = '0';
         this.gnbContainer.style.display = 'none';
         
-        this.resetQuestStatus();
+        // this.resetQuestStatus();
         this.hideQuest();
     }
 
@@ -292,17 +307,12 @@ export default class DomUI extends EventEmitter {
     showConfirmModal(text, cancelable, result) {
         const pane = this.createContainer();
         const confirmModal = new SystemModal(pane, 300, 200, text, cancelable, result);
-        confirmModal.dom.style.top = '50%';
-        confirmModal.dom.style.marginTop = 200 * -0.5 + 'px';
         Sound.playSound('modal_1.wav', { singleInstance: true });
     }
 
     showUseItemModal(text, items, result) {
         const pane = this.createContainer();
         const confirmModal = new SystemModal(pane, 300, 240, text, true, result);
-
-        confirmModal.dom.style.top = '50%';
-        confirmModal.dom.style.marginTop = 240 * -0.5 + 'px';
 
         const options = new MakeDom('div', 'contents-option');
         let option = new ItemImage(items.data.image.texture, items.data.image.x, items.data.image.y);
@@ -337,8 +347,6 @@ export default class DomUI extends EventEmitter {
         
         const modal = new Modal(pane, 360, domHeight);
         modal.addTitle('아이템 조합중');
-        modal.dom.style.top = '50%';
-        modal.dom.style.marginTop = domHeight * -0.5 + 'px';
 
         const itemText = document.createElement('div');
         itemText.className = 'contents';
@@ -383,8 +391,6 @@ export default class DomUI extends EventEmitter {
     
     // 퀘스트 모달
     showQuestModal(inputs, quest){
-        
-
         // console.log();
         if(inputs.length === 0) {
             // 진행할 수 있는 퀘스트가 없고, 신규로 받을 수 있는 퀘스트도 없는 상태.. 

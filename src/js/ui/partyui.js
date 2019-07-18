@@ -59,7 +59,7 @@ export default class PartyUI extends Panel {
       return this.result('buttoncallback', 'partyConfirm');
     });
 
-    modal.closeBtn.addEventListener('click', this.closeModal.bind(this, 'partyCancel'));
+    modal.closeBtn.addEventListener('click', this.onClose.bind(this, 'partyCancel'));
     buttonWrap.appendChild(submitButton.dom);
     rightBox.appendChild(infoWrap);
     rightBox.appendChild(this.ownedCharacters);
@@ -86,7 +86,7 @@ export default class PartyUI extends Panel {
     this.ownedCharacters.appendChild(buttonWrap);
   }
 
-  closeModal(callback) {
+  onClose(callback) {
     if(this.result) {
       this.result('buttoncallback', callback)
     }
