@@ -1834,6 +1834,12 @@ button.disabled {
 .list-detail .infoWrap .portraitWrap img {
   height: 100%;
 }
+
+.list-detail .infoWrap .portraitWrap img.death {
+
+  -webkit-filter: grayscale(1); /* Google Chrome, Safari 6+ & Opera 15+ */
+  filter: grayscale(1); /* Microsoft Edge and Firefox 35+ */
+}
 .list-detail .titleWrap {
   position: relative;
   width: 236px;
@@ -2048,6 +2054,10 @@ button.disabled {
 .party .ownedCharacters {
   padding: 0;
 }
+.party .ownedCharacters .scrollBlind {
+  margin: 2px 0 2px;
+}
+
 .party .list-detail .infoWrap {
   width: 236px;
   height: 86px;

@@ -63,7 +63,7 @@ export default class PartyUI extends Panel {
     buttonWrap.appendChild(submitButton.dom);
     rightBox.appendChild(infoWrap);
     rightBox.appendChild(this.ownedCharacters);
-    this.ownedCharacters.appendChild(buttonWrap);
+    
 
     // 파티 리스트
     // characterList
@@ -82,6 +82,8 @@ export default class PartyUI extends Panel {
 
     this.updateMembers();
     this.initList();
+
+    this.ownedCharacters.appendChild(buttonWrap);
   }
 
   closeModal(callback) {
@@ -92,7 +94,7 @@ export default class PartyUI extends Panel {
 
   initList(){
     // 캐릭터 리스트 
-    this.list = new ListBox(230, 204, this.select.bind(this));
+    this.list = new ListBox(230, 200, this.select.bind(this));
     this.ownedCharacters.appendChild(this.list.dom);
     this.list.update(this.inputs, 'character');
   }
@@ -129,7 +131,7 @@ export default class PartyUI extends Panel {
         if(selectedavatar) {
           selectedavatar.classList.remove('active');
 
-          if (selectedavatar.classList.contains('isCrew')) {
+          if (selectedavatar.classList.contains('isCrew') && selectedavatar === avatar.dom) {
             // 파티멤버 뺄 때-hp 체크
             if(member.character) {
               if ((totalhealth - member.character.health) < 1) {

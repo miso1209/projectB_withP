@@ -144,13 +144,19 @@ export default class CharacterSelect extends Panel {
     this.descName.innerText = current.name;
     this.portrait.src = `${path}sprite/${current.name}/${current.name}_idle_sw.png`;
     this.level.innerText = 'Lv.' + current.level;
-
     this.updateStatus(current);
   }
+
   updateStatus(current) {
     this.hp.update(current.health, current.maxHealth);
     this.exp.update(current.exp, current.maxexp);
-    // this.updateHealth();
+    
+    this.portrait.classList.remove('death');
+    
+    if(current.health === 0) {
+      this.portrait.classList.add('death');
+    } 
+    
     this.checkAvatar();
   }
 

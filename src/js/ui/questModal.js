@@ -149,6 +149,9 @@ export default class QuestModal extends Panel {
 
       this.rewardItem = new MakeDom('div', 'rewardItem');
       rewards.appendChild(this.rewardItem);
+      this.rewardItem.addEventListener('click', ()=>{
+        this.rewardItem.classList.remove('show');
+      });
 
       for(const r in quest.rewards) {
         const rewardText = quest.rewards[r].text;
