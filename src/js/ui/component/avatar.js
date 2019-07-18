@@ -7,14 +7,23 @@ export default class Avatar {
     
     this.profile = null;
     this.avatar = null;
-    
+
+    // 사망한 캐릭터 표시
+    let status = 'idle';
+    if (input.health === 0) {
+        status = 'die';
+        avatar.classList.add('die');
+    } else {
+      avatar.classList.remove('die');
+    }
+   
     if (input === null) {
       avatar.classList.add('empty');
     } else {
       avatar.classList.add('isCrew');
 
       this.path = '/src/assets/sprite/';
-      this.path = `${this.path}${input.data.name}/${input.data.name}_idle_sw.png`;
+      this.path = `${this.path}${input.data.name}/${input.data.name}_${status}_sw.png`;
       
       const infoWrap = new MakeDom('div', 'infoWrap');
       const level = new MakeDom('p', 'level', `LV.${input.level}`);
@@ -35,13 +44,9 @@ export default class Avatar {
       const stage = new MakeDom('p', 'stage');
       imgWrap.appendChild(profileimg);
       this.profile = imgWrap;
+      
+      
 
-      // 사망한 캐릭터 표시
-      if (input.health === 0) {
-        profileimg.classList.add('death');
-      } else {
-        profileimg.classList.remove('death');
-      }
 
       // equipments
       avatar.appendChild(stage);

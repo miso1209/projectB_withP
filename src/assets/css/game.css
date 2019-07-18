@@ -1860,7 +1860,12 @@ button.disabled {
   height: 100%;
 }
 
-img.death {
+/* img.die { */
+img.die {
+  -webkit-filter: grayscale(1); /* Google Chrome, Safari 6+ & Opera 15+ */
+  filter: grayscale(1); /* Microsoft Edge and Firefox 35+ */
+}
+.die .profileImg {
   -webkit-filter: grayscale(1); /* Google Chrome, Safari 6+ & Opera 15+ */
   filter: grayscale(1); /* Microsoft Edge and Firefox 35+ */
 }
@@ -1889,7 +1894,6 @@ img.death {
 .list-detail .titleWrap span {
   color: #fff;
 }
-
 .baseStats {
   padding: 10px;
   margin: 1px 1px 0;
@@ -2000,18 +2004,22 @@ img.death {
 .avatar .infoWrap * {
   color: #fff;
   font-size: 13px;
+}
+.avatar .infoWrap .name {
+  padding-top: 70px;
   padding-bottom: 3px;
 }
-.avatar .infoWrap .name{
-  padding-top: 68px;
-}
+
 .avatar .statBox {
   width: 100px;
-  margin: 0 auto;
+  margin: 1px auto 0; 
 }
 .avatar .statBox p {
   font-size: 15px;
   color: #000;
+}
+.avatar.die .statBox p{
+  color: #a19a94;
 }
 .avatar .statBox::before{
   display: block;
