@@ -901,6 +901,7 @@ export default class Game extends EventEmitter {
             // UI Flag
             this.ui.flagArray[3] = 'true';
             this.ui.checkFlag();
+
             Sound.playSound('quest_accept_1.wav', { singleInstance: true });
         }
     }
@@ -928,8 +929,7 @@ export default class Game extends EventEmitter {
                     this.ui.flagArray[3] = 'true';
                     this.ui.checkFlag();
                     
-                    this.ui.showCompleteQuest(this.player.quests[questId]);
-                    
+                    this.ui.showQuestStatus(this.player.quests[questId]);
                     Sound.playSound('quest_done_1.wav', { singleInstance: true });
                 } else {
                     // change condition

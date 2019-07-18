@@ -55,17 +55,17 @@ export default class Modal extends Panel {
         title.innerText = text;
         this.dom.appendChild(title);
     
-        this.subTitle = document.createElement('h2');
-        this.subTitle.className = 'sub-title';
-        this.subTitle.innerText = text;
-        this.dom.appendChild(this.subTitle);
-        this.subTitle.style.display = 'none';
+        // this.subTitle = document.createElement('h2');
+        // this.subTitle.className = 'sub-title';
+        // this.subTitle.innerText = text;
+        // this.dom.appendChild(this.subTitle);
+        // this.subTitle.style.display = 'none';
     }
     
-    setSubTitle(text) {
-        this.subTitle.innerText = text;
-        this.subTitle.style.display = 'block';
-    }
+    // setSubTitle(text) {
+    //     this.subTitle.innerText = text;
+    //     this.subTitle.style.display = 'block';
+    // }
     
     closeModal() {
         this.pane.removeChild(this.dom);

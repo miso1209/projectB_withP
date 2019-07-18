@@ -16,12 +16,10 @@ class CombinerUI extends Panel {
     
         this.recipe = null;
         this.materialsData = null;
-
     
         const contents = document.createElement('div');
         contents.classList.add('contents');
-        contents.classList.add('combineItemInfo');
-    
+
         const combineItem = document.createElement('div');
         combineItem.className = 'combineItem';
     
@@ -33,14 +31,12 @@ class CombinerUI extends Panel {
     
         this.itemImg = new ItemImage('items@2.png', 21, 14);
         this.itemImg.dom.classList.add('itemImg');
-    
-        combineItem.appendChild(this.itemImg.dom);
-        combineItem.appendChild(this.itemDesc);
-        contents.appendChild(this.itemName);
-        contents.appendChild(combineItem);
-    
         this.comment = new MakeDom('p', 'comment');
         
+
+        const combineItemInfo = new MakeDom('div', 'combineItemInfo');
+        contents.appendChild(combineItemInfo);
+
         // 아이템 옵션
         this.options = document.createElement('ul');
         this.options.classList.add('options');
@@ -51,30 +47,41 @@ class CombinerUI extends Panel {
     
         const costswrap = new MakeDom('div', 'costswrap');
         this.costs = new MakeDom('div', 'gold', '0');
-        // this.costs.classList.add('disabled');
         costswrap.appendChild(this.costs);
 
-        const combineButton = new Button('제작');
-        combineButton.moveToCenter(10);
-        combineButton.moveToBottom(15);
+        const buttonWrap = new MakeDom('div', 'buttonWrap');
+        const combineButton = new Button('제작', 'submit');
+        combineButton.dom.classList.add('wide');
         combineButton.dom.classList.add('disabled');
         
         this.button = combineButton.dom;
-    
-        contents.appendChild(this.options);
-        contents.appendChild(this.materialInfo);
-        
-        contents.appendChild(costswrap);
-        contents.appendChild(this.comment);
-
-        this.dom.appendChild(contents);
-        this.dom.appendChild(this.button);
-    
         this.button.removeEventListener('click', this.doCombineItem.bind(this));
+
+        contents.appendChild(this.itemName);
+        contents.appendChild(this.comment);
+        
+        combineItem.appendChild(this.itemImg.dom);
+        combineItem.appendChild(this.itemDesc);
+
+        combineItemInfo.appendChild(this.options);
+        combineItemInfo.appendChild(this.materialInfo);
+        // combineItemInfo.appendChild(costswrap);
+        // 하단 영역 고정 - 가격, 버튼
+        buttonWrap.appendChild(costswrap);
+        buttonWrap.appendChild(this.button);
+
+        contents.appendChild(combineItem);
+        contents.appendChild(combineItemInfo);
+        contents.appendChild(buttonWrap);
+        this.dom.appendChild(contents);
     }
 
     checkReason() {
         let reasons = this.recipe.reason;
+        // console.log(reasons);
+
+        this.comment.style.display = 'none';
+        this.costs.classList.remove('disabled');
 
         reasons.forEach(reason => {
             if(reason.level === false) {
@@ -82,7 +89,7 @@ class CombinerUI extends Panel {
                 this.comment.style.display = 'block';
             } else if (reason.gold === false) {
                 this.costs.classList.add('disabled');
-            }
+            } 
         });
     }
 
@@ -129,7 +136,6 @@ class CombinerUI extends Panel {
 
                 // 스타일이 적용되는 타겟이 각각 생성되므로, ui 단계에서 체크
                 if (mat.owned - mat.count < 0) {
-                    // material3.style.color = '#fd6240';
                     material3.classList.add('unavailable')
                 }
                 
@@ -170,11 +176,16 @@ export default class RecipeUI extends Panel {
         this.category = null;
         this.recipes = null;
         this.tabs = [];
-    
+        
+        this.recipeCategory = new MakeDom('p', 'recipe-category', 'recipe');
+
+        const contents = new MakeDom('div', 'contents');
         this.list = new ListBox((width - 40), 320, this.updateCombiner.bind(this));
         this.list.dom.classList.add('recipeList');
-        this.list.dom.style.top = '100px';
-        this.dom.appendChild(this.list.dom);
+
+        contents.appendChild(this.recipeCategory);
+        contents.appendChild(this.list.dom);
+        this.dom.appendChild(contents);
     }
   
     select(category) {
@@ -188,7 +199,8 @@ export default class RecipeUI extends Panel {
     }
   
     update(){
-        this.recipeModal.setSubTitle(this.category);
+        this.recipeCategory.innerText = this.category;
+
         this.list.update(this.recipes, 'recipe');
         this.recipeModal.addTab(this.tabs, this.category, this.select.bind(this));
     

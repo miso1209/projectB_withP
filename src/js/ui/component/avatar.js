@@ -34,8 +34,14 @@ export default class Avatar {
 
       const stage = new MakeDom('p', 'stage');
       imgWrap.appendChild(profileimg);
-
       this.profile = imgWrap;
+
+      // 사망한 캐릭터 표시
+      if (input.health === 0) {
+        profileimg.classList.add('death');
+      } else {
+        profileimg.classList.remove('death');
+      }
 
       // equipments
       avatar.appendChild(stage);

@@ -514,6 +514,7 @@
 }
 .questWrap .scrollBlind{
   width: calc(100% - 10px);
+  margin: 0;
 }
 .questWrap .list-box {
   height: 137px;
@@ -903,7 +904,7 @@ button, .button{
   background: url(~assets/ui/title_bg.png) no-repeat;
 }
 
-.sub-title {
+/* .sub-title {
   position: absolute;
   top: 60px;
   left: 30px;
@@ -916,7 +917,7 @@ button, .button{
   color: #fff;
   overflow: hidden;
   padding: 0 0 5px;
-}
+} */
 
 
 .stageTitle, .notificationText {
@@ -1132,7 +1133,9 @@ button, .button{
   margin: 7% auto;
   vertical-align: middle;
 }
-
+.acquireModal .name {
+  padding: 5px 0 0;
+}
 .acquireModal .contents-option .comment {
   margin: 10px 0;
   font-size: 14px;
@@ -1401,60 +1404,10 @@ button, .button{
 }
 
 .gold {
-  font-size: 15px;
+  font-size: 14px;
   color: #ffd800;
-  overflow: hidden;
+  /* overflow: hidden; */
   transition: color 0.3s;
-}
-
-/* 아이템 조합창 */
-.combineItemInfo {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  right: 20px;
-  padding: 0 0;
-  margin: 0 auto 10px;
-}
-
-.combineItemInfo .title {
-  position: static;
-  font-size: 18px;
-}
-
-.combineItemInfo .materialsImg {
-  max-width: 100px;
-  max-height: 100px;
-  margin-top: 20px;
-}
-
-.combineItemInfo .comment {
-  display: none;
-  position: absolute;
-  top: 110px;
-  z-index: 222;
-  width: 100%;
-  line-height: 90px;
-  color: #fd6240;
-  background-color: rgba(0,0,0,0.85);
-}
-
-.combineItemInfo .costswrap {
-  display: inline-block;
-  width: calc(100% - 50px);
-  margin: 10px 0 0;
-}
-
-.combineItemInfo .gold::before {
-  content: '비용 : ';
-  display: inline-block;
-  padding-right: 5px;
-}
-
-.combineItemInfo .gold.disabled {
-  font-size: 15px;
-  color: #fd6240;
-  overflow: hidden;
 }
 
 button.isAvailable, .isAvailable.button:active  {
@@ -1472,16 +1425,36 @@ button.disabled {
 }
 
 
-/* 레시피 리스트 */
-.recipeList.scrollView{
-  position: absolute;
+
+/* 조합 - 레시피 */
+.modal.recipe .contents {
   left: 10px;
+  right: 10px;
+  top: 60px;
+  color: #dad0c7;
+}
+.modal.recipe .recipe-category {
+  padding: 0 20px;
+
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.2;
+  text-align: left;
+
+  opacity: 0.8;
+}
+/* .modal.recipe .recipe-category + .recipeList {
+  margin-top: 10px;
+} */
+.modal.recipe .recipeList .scrollBlind {
+  background: #281b10;
 }
 .recipeList li {
   width: 100%;
 }
 .recipeList li p {
   width: 5%;
+  /* color: #dad0c7; */
   text-align: right;
   overflow: hidden;
 }
@@ -1496,104 +1469,153 @@ button.disabled {
 .recipeList li .recipe_level{
   width: 15%;
 }
+.recipeList .list-cell.isAvailable p {
+  color: #8fc13b;
+}
 
 
 /* 아이템 조합 */
-.combineItem {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  margin: 15px 0;
+.modal.combiner .title {
+  background: none;
+  position: static;
+  font-size: 18px;
+}
+.modal.combiner .contents {
+  top: 20px; 
+  bottom: 20px;
+  max-height: 100%;
+
+  color: #dad0c7;
+}
+.modal.combiner .comment {
+  display: none;
+  position: absolute;
+  bottom: 0;
+  z-index: 222;
+  width: 100%;
+  line-height: 40px;
+  color: #fd6240;
+  background-color: rgba(0,0,0,0.85);
 }
 
-.combineItem::after{
+.modal.combiner .buttonWrap {
+  margin: 0 auto;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+.modal.combiner .buttonWrap button {
+  margin-left: 0;
+  margin-top: 10px;
+}
+
+.modal.combiner .combineItem {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+
+  width: 100%;
+  margin: 0 0 15px;
+
+}
+.modal.combiner .combineItem::after{
   content: '';
   display: block;
   clear: both;
   width: 100%;
   height: 0;
 }
-
-.combineItem .itemImg {
+.modal.combiner .combineItem .itemImg {
   width: 64px;
   height: 64px;
-
-  transform: perspective(1px) translateZ(0);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  object-fit: contain; 
+  margin-right: 15px;
 }
 
-.combineItem .itemDesc {
-  width: 65%;
+.modal.combiner .combineItem .itemDesc {
+  width: calc(100% - 79px);
   height: 64px;
+  padding: 10px 0 0;
   
   font-size: 13px;
   line-height: 1.4;
   text-align: left;
   word-break: keep-all;
-  overflow: hidden;
 
-  padding: 10px 0 0;
+  overflow: hidden;
 }
 
-/* 아이템 옵션 */
-.combineItemInfo .options {
+/* .modal.combiner .combineItemInfo .materialsImg {
+  max-width: 100px;
+  max-height: 100px;
+  margin-top: 20px;
+} */
+
+.modal.combiner .costswrap {
+  display: inline-block;
+  width: 100%;
+  margin: 10px 0 0;
+}
+
+.modal.combiner .gold::before {
+  content: '비용 : ';
+  display: inline-block;
+  padding-right: 5px;
+}
+
+.modal.combiner .gold.disabled {
+  font-size: 15px;
+  color: #fd6240;
+  overflow: hidden;
+}
+
+.modal.combiner .combineItemInfo .options {
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
-
   background: none;
-  height: 80px;
+  height: 60px;
 }
 
-.combineItemInfo .options li {
-  line-height: 1.5;
+.modal.combiner .combineItemInfo .options li {
+  color: #ffd800;
+  font-size: 14px;
+  line-height: 1.3;
   text-align: left;
 }
-
-.combineItemInfo .options li::before  {
+.modal.combiner .combineItemInfo .options li::before  {
   content: '';
   display: inline-block;
-  width: 5px;
-  height: 5px;
-  margin-right: 10px;
-  margin-left: 10px;
+  width: 3px;
+  height: 3px;
+  margin-right: 8px;
+  margin-left: 8px;
   vertical-align: middle;
-  background-color: #1f130a;
+  background-color: #dad0c7;
 }
-
-/* 재료정보 */
-.materialInfo {
+.modal.combiner .materialInfo {
   width: 100%;
   min-height: 116px;
   margin: 10px auto 0;
   padding: 10px;
   background-color: #1f130a;
-  border-radius: 10px;
-
   transition: all 0.3s;
 }
 
-.materialInfo li {
+.modal.combiner .materialInfo li {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   height: 32px;
 }
-
-.materialInfo li:not(:last-child) {
+.modal.combiner .materialInfo li:not(:last-child) {
   margin-bottom: 5px;
 }
-
-/* 재료정보 */
-.materialInfo img {
+.modal.combiner .materialInfo img {
   display: block;
   width: 32px;
   height: 32px;
 }
-
-.materialInfo p {
+.modal.combiner .materialInfo p {
   max-height: 34px;
   font-size: 15px;
   font-weight: normal;
@@ -1602,18 +1624,21 @@ button.disabled {
   color: #fff;
   overflow: hidden;
 }
-
-.materialInfo p.mat_name {
+.modal.combiner .materialInfo p.mat_name {
   width: 60%;
   font-size: 13px;
-
 }
-.materialInfo p.mat_count {
+.modal.combiner .materialInfo p.mat_count {
   width: 15%;
+  text-align: right;
 }
-.materialInfo p.unavailable {
+.modal.combiner .materialInfo p.unavailable {
   color: #fd6240;
 }
+
+
+
+
 /* inventory  */
 .inventory .contents {
   margin: 0 25px;
@@ -1835,11 +1860,11 @@ button.disabled {
   height: 100%;
 }
 
-.list-detail .infoWrap .portraitWrap img.death {
-
+img.death {
   -webkit-filter: grayscale(1); /* Google Chrome, Safari 6+ & Opera 15+ */
   filter: grayscale(1); /* Microsoft Edge and Firefox 35+ */
 }
+
 .list-detail .titleWrap {
   position: relative;
   width: 236px;
@@ -1992,12 +2017,6 @@ button.disabled {
   display: block;
   width: 26px;
   height: 26px;
-}
-
-
-/* 아이템조합 */
-.modal.combiner .title{
-  background: none;
 }
 
 
@@ -2185,6 +2204,7 @@ button.disabled {
 .characterDetail .flex-left .list-detail {
   margin: 0 2px 0 0;
   border: 1px solid #281b10;
+  border-top: none;
 }
 .characterDetail .flex-left .list-detail .infoWrap {
   position: relative;
@@ -2225,19 +2245,22 @@ button.disabled {
 /* 스탯리스트 */
 .characterDetail .characterStat {
   width: 146px;
-  padding: 10px 15px;
-  background-color: #281b10;
+  padding: 1px;
   border: 1px solid #281b10;
 }
 .characterDetail .characterStat .statWrap {
   width: auto;
+  height: 344px;
+  overflow: hidden;
+  padding: 10px 5px 10px;
   text-align: left;
+  background-color: #281b10;
 }
 .characterDetail .characterStat .statWrap li:not(:first-child) {
   margin-top: 5px;
 }
 .characterDetail .characterStat .statWrap p {
-  line-height: 1.3;
+  line-height: 1.2;
 }
 .characterDetail .characterStat .statWrap .plusStat {
   color: #8fc13b;
@@ -2371,7 +2394,7 @@ button.disabled {
 }
 
 .characterDetail .descBox {
-  height: 106px;
+  height: 108px;
   margin: 6px;
   background-color: #272523;
 }
@@ -2394,7 +2417,9 @@ button.disabled {
   color: #d2a026;
   font-size: 14px;
 }
-
+.description .desc-text em:not(:first-child) {
+  padding-left: 6px;
+}
 
 /* loading - progress bar */
 .progressWrap {
@@ -2490,16 +2515,19 @@ button.disabled {
   right: 6px;
   
   height: 230px;
-  padding: 15px 0;
+  padding: 15px 10px;
 
   border: 1px solid #ffd800;
   background-color: rgba(40, 27, 16, 0.95);
 }
-
 .characterDetail .equipInven .scrollView {
   width: calc(100% - 20px);
   left: 20px;
 }
+.characterDetail .equipInven .scrollBlind{
+  margin: 5px 0;
+}
+
 .characterDetail .equipInven .slot-list-box {
   display: block;
   text-align: left;
@@ -2514,11 +2542,11 @@ button.disabled {
 .characterDetail .equipInven .slot-list-box li {
   display: block;
   float: left;
-  width: 50px;
-  height: 50px;
-  margin: 0 5px 5px 0;
+  width: 56px;
+  height: 56px;
+  margin: 0 10px 10px 0;
 }
 .characterDetail .equipInven .slot-list-box li.slot:nth-child(5n) {
-  margin: 0 0 5px 0;
+  margin: 0 0 10px 0;
 }
 

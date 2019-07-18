@@ -119,23 +119,25 @@ export default class DomUI extends EventEmitter {
         }
     }
 
-    showCompleteQuest(currentQuest) {
-        // console.log('showCompleteQuest');
-        // console.log(currentQuest);
+    showQuestStatus(currentQuest) {
+        console.log(currentQuest);
         this.questStatus.innerHTML = '';
 
         const frag = document.createDocumentFragment();
         const title = new MakeDom('p', 'quest_name', currentQuest.title);
-        const desc = new MakeDom('p', 'quest_desc', `퀘스트가 완료되었습니다.`);
+        const desc = new MakeDom('p', 'quest_desc', `퀘스트`);
+
         title.innerText = currentQuest.title;
-        desc.innerText = `퀘스트가 완료되었습니다.`;
 
         frag.appendChild(title);
         frag.appendChild(desc);
 
         if (currentQuest.success) {
-            this.questStatus.classList.add('show');
+            desc.innerText = `퀘스트가 완료되었습니다.`;
+        } else {
+            desc.innerText = `신규 퀘스트가 추가되었습니다.`;
         }
+        this.questStatus.classList.add('show');
         this.questStatus.appendChild(frag);
     }
 
