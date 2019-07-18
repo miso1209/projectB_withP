@@ -99,7 +99,7 @@ export default class Party {
         let result = 0;
 
         this.members.forEach((character) => {
-            if (character) {
+            if (character && character.health > 0) {
                 result += character.totalPowerFigure;
             }
         });

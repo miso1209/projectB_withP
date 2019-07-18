@@ -30,6 +30,7 @@ export default class AntiPower extends SkillBase {
                 break;
             }
             case 30: {
+                Sound.playSound('anti_power_1.wav', { singleInstance: true });
                 this.targets.forEach((target) => {
                     target.removeBuff("antiPower");
                     const antiPower = this.calcSkillExpressions(this.target, this.skillExpressions[0]) * -1;

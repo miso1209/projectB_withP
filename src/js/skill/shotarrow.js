@@ -19,6 +19,7 @@ export default class ShotArrow extends SkillBase {
                 break;
             }
             case 40: {
+                Sound.playSound('arrow_shot_1.wav', { singleInstance: true });
                 const arrow = this.addEffect(this.owner, { name: 'arrow.png', animation: false, removeFrame: 60 });
 
                 let toX = this.target.position.x + this.target.width / 2;
@@ -52,6 +53,7 @@ export default class ShotArrow extends SkillBase {
                 break;
             }
             case 65: {
+                Sound.playSound('arrow_shot_hit_1.wav', { singleInstance: true });
                 this.addEffect(this.target, { name: 'shoted', animation: true, animationLength: 18, removeFrame: 60, speed: 0.5 });
                 let damage = this.calcSkillExpressions(this.owner, this.skillExpressions[0]);
 

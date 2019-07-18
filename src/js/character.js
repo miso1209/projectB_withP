@@ -142,9 +142,9 @@ export default class Character {
         return Number((this.baseCritical + critical)>=1?1:(this.baseCritical + critical).toFixed(4));
     }
 
-    // 기본적인 크리티컬 데미지는 1.2배로 한다.
+    // 기본적인 크리티컬 데미지는 1.5배로 한다.
     get baseCriticalPotential() {
-        return Number((1.2).toFixed(4));
+        return Number((1.5).toFixed(4));
     }
 
     get criticalPotential() {
@@ -485,6 +485,9 @@ export default class Character {
         this.simulationEquipments.weapon = this.equipments.weapon;
         this.simulationEquipments.armor = this.equipments.armor;
         this.simulationEquipments.accessory = this.equipments.accessory;
+        if (this.health > this.maxHealth) {
+            this.health = this.maxHealth
+        }
     }
 
     applySimulationOption(option) {

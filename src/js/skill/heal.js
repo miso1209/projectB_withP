@@ -31,6 +31,7 @@ export default class Heal extends SkillBase {
                 break;
             }
             case 30: {
+                Sound.playSound('heal_1.flac', { singleInstance: true });
                 this.targets.forEach((target) => {
                     const heal = this.calcSkillExpressions(target, this.skillExpressions[0]);
 

@@ -84,14 +84,18 @@ export default class DevConsole {
 
     levelUp() {
         for (let key in this.game.player.characters) {
-            this.game.player.characters[key].increaseExp(375000);
+            this.game.player.characters[key].increaseExp(8700);
         }
+    }
+
+    killCharacter(key) {
+        this.game.player.characters[key].health = 0;
     }
 
     getItem() {
         for (let key in items) {
             const item = items[key];
-            this.game.addItem(item.id, 20);
+            this.game.addItem(item.id, 1);
         }
     }
     addCharacter(id) {

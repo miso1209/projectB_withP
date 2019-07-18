@@ -30,6 +30,7 @@ export default class FireCape extends SkillBase {
                 break;
             }
             case 51: {
+                Sound.playSound('fire_cape_2.wav', { singleInstance: true });
                 this.owner.removeBuff("fireCape");
                 const fireCape = this.calcSkillExpressions(this.owner, this.skillExpressions[0]);
 

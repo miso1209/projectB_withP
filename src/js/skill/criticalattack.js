@@ -30,6 +30,7 @@ export default class CriticalAttack extends SkillBase {
             } 
             case 30: {
                 // TODO : 데미지 계산 공식을 어디서 가져와야 할까??
+                Sound.playSound('critical_attack_1.wav', { singleInstance: true });
                 this.addEffect(this.target, { name: 'criticalattack', animation: true, animationLength: 19, removeFrame: 60, speed: 0.5 });
                 let damage = this.calcSkillExpressions(this.owner, this.skillExpressions[0]);
 

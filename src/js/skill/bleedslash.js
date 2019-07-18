@@ -31,6 +31,7 @@ export default class BleedSlash extends SkillBase {
                 break;
             } 
             case 30: {
+                Sound.playSound('bleed_slash_1.wav', { singleInstance: true });
                 this.target.removeBuff("bleedSlash");
                 this.target.addBuff("bleedSlash", 5, new BlinkEffectBuff({
                     abilityOptions: [],

@@ -33,6 +33,7 @@ export default class DouobleAttack extends SkillBase {
             case 25: {
                 // TODO : 데미지 계산 공식을 어디서 가져와야 할까??
                 // 추후 slash effect 를 방패타격 이펙트로만 바꿔주면 될듯하다.
+                Sound.playSound('shield_attack_1.wav', { singleInstance: true });
                 this.addEffect(this.target, { name: 'shieldattack', animation: true, animationLength: 5, removeFrame: 60, speed: 0.2 });
                 let damage = this.calcSkillExpressions(this.owner, this.skillExpressions[0]);
 
@@ -44,6 +45,7 @@ export default class DouobleAttack extends SkillBase {
                 break;
             }
             case 79: {
+                Sound.playSound('slash_1.wav', { singleInstance: true });
                 this.owner.removeBuff("doubleAttack");
                 let armor = this.calcSkillExpressions(this.owner, this.skillExpressions[2]);
                 this.owner.addBuff("doubleAttack", 10, new BlinkEffectBuff({

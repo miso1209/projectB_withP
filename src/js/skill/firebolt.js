@@ -18,6 +18,7 @@ export default class FireBolt extends SkillBase {
                 break;
             }
             case 30: {
+                Sound.playSound('fire_bolt_shot_1.wav', { singleInstance: true });
                 const fireBall = this.addEffect(this.owner, { name: 'fireball.png', animation: false, removeFrame: 60 });
 
                 let toX = this.target.position.x + this.target.width / 2;
@@ -37,6 +38,7 @@ export default class FireBolt extends SkillBase {
                 break;
             }
             case 40: {
+                Sound.playSound('fire_bolt_hit_1.wav', { singleInstance: true });
                 this.addEffect(this.target, { name: 'explosion', animation: true, animationLength: 16, removeFrame: 60, speed: 0.5 });
                 let damage = this.calcSkillExpressions(this.owner, this.skillExpressions[0]);
 

@@ -30,6 +30,7 @@ export default class FireRain extends SkillBase {
                 break;
             }
             case 51: {
+                Sound.playSound('fire_rain_casting_1.wav', { singleInstance: true });
                 this.addEffect(this.owner, { name: 'firerainprop', animation: true, animationLength: 7, removeFrame: 15, speed: 0.5 });
                 break;
             }
@@ -63,6 +64,7 @@ export default class FireRain extends SkillBase {
                 break;
             }
             case 100: {
+                Sound.playSound('fire_bolt_hit_1.wav', { singleInstance: true });
                 this.targets.forEach((target) => {
                     this.addEffect(target, { name: 'explosion', animation: true, animationLength: 16, removeFrame: 60, speed: 0.5 });
                     let damage = this.calcSkillExpressions(this.owner, this.skillExpressions[0]);
