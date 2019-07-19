@@ -108,8 +108,8 @@ export default class Combiner {
 
         for(const mat of recipe.materials) {
             inventory.deleteItem(mat.item, mat.count);
-            inventory.gold -= recipe.gold;
         }
+        inventory.gold -= recipe.gold;
 
         // Rank 판독해서 리턴하자 확률은 다음과 같이 정의해보자.
         /*
