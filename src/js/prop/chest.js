@@ -27,9 +27,12 @@ export default class Chest extends PropBase {
             this.isOpened = true;
             Sound.playSound('chest_open_1.wav', { singleInstance: true });
         } else {
+            game.exploreMode.setInteractive(false);
             game.ui.showDialog([
                 { text: "상자는 비어있다." }
-            ], () => {});
+            ], () => {
+                game.exploreMode.setInteractive(true);
+            });
         }
     }
     showOutline() {
