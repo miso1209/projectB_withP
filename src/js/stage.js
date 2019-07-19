@@ -139,6 +139,7 @@ export default class Stage extends PIXI.Container {
 
         this.monsters = [];
         this.player = null;
+        this.footSound = false;
         
         this.interactive = true;
 
@@ -743,6 +744,10 @@ export default class Stage extends PIXI.Container {
        
         this.moveEngine.setMoveParameters(obj, x, y);
         this.moveEngine.addMovable(obj); 
+        this.footSound = !this.footSound;
+        if (this.footSound) {
+            Sound.playSound('foot_step.wav', { singleInstance: true });
+        }
         return true;
       
     }
@@ -779,6 +784,7 @@ export default class Stage extends PIXI.Container {
             this.moveObjThrough(obj, obj.newPath);
         } else {
             // reached to the end of the path
+            this.footSound = false;
             obj.isMoving = false;
             obj.changeVisualToDirection(obj.currentDirection);
 
