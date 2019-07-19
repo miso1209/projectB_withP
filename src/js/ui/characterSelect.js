@@ -48,8 +48,8 @@ export default class CharacterSelect extends Panel {
     const portraitWrap = new MakeDom('div', 'portraitWrap'); 
     this.portrait = document.createElement('img');
     this.changeAvatarBtn = new Button('아바타 설정', 'checkbox');
-
     this.changeAvatarBtn.dom.addEventListener('click', (ok) => {
+      // console.log('click');
       this.changeAvatarBtn.dom.classList.toggle('active');
       this.setMainAvatar();
     });
@@ -59,6 +59,12 @@ export default class CharacterSelect extends Panel {
     this.descName = new MakeDom('span', 'stat_name');
     this.level = new MakeDom('span', 'stat_level');
     this.level.style.paddingRight = '10px';
+
+
+    this.dieMsg = document.createElement('p');
+    this.dieMsg.innerText = '사망한 캐릭터는 부활해야 다음 배틀에 참여할 수 있다';
+    infoWrap.appendChild(this.dieMsg);
+    this.dieMsg.style.display = 'none';
 
     // hp, exp 상태바
     const statWrap = new MakeDom('div', 'baseStats');
@@ -150,11 +156,14 @@ export default class CharacterSelect extends Panel {
   updateStatus(current) {
     this.hp.update(current.health, current.maxHealth);
     this.exp.update(current.exp, current.maxexp);
-    
-    this.portrait.classList.remove('death');
+
+
+    this.portrait.classList.remove('die');
+    this.dieMsg.style.display = 'none';
     
     if(current.health === 0) {
-      this.portrait.classList.add('death');
+      this.portrait.classList.add('die');
+      this.dieMsg.style.display = 'block';
     } 
     
     this.checkAvatar();

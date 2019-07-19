@@ -195,6 +195,8 @@ export default class Inventory extends Panel {
             }
 
             item.data.options.forEach(option => {
+                // const parser = new parser(option);
+                // parser.text; // => 힘 20
                 let li = document.createElement('li');
                 li.innerText = option;
                 this.itemOptions.appendChild(li);

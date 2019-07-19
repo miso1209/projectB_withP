@@ -1154,7 +1154,7 @@ export default class Game extends EventEmitter {
     }
 
     async $fadeIn(duration) {
-        // this.ui.showBlackScreen();
+        // this.ui.hideBlackScreen();
         await this.tweens.$addTween(this.blackScreen, duration, { alpha: 0 }, 0, "linear", true);
     }
 

@@ -18,9 +18,10 @@ export default class Avatar {
 
       // 사망한 캐릭터 표시
       if (input.health === 0) {
-        // this.status = 'die';
+        this.status = 'die';
         avatar.classList.add('die');
       } else {
+        this.status = 'idle';
         avatar.classList.remove('die');
       }
 

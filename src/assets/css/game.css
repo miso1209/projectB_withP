@@ -733,7 +733,9 @@ button, .button{
   height: 14px;
   color: #fff;
   text-align: left;
-  background: url(~assets/ui/checkbox.png) 100% 100% no-repeat;
+  
+  background: url(~assets/ui/checkbox.png) 100% 0 no-repeat;
+  overflow: hidden;
 }
 .checkbox:hover, 
 .checkbox:active, 
@@ -743,8 +745,37 @@ button, .button{
 }
 
 .checkbox.active {
-  background: url(~assets/ui/checkbox_checked.png) 100% 100% no-repeat;
+  background: url(~assets/ui/checkbox.png) 100% -14px no-repeat;
 }
+
+.radioBtn {
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+.radioBtn input {
+  display: none;
+
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.radioBtn > i.checkmark {
+  display: inline-block;
+  vertical-align: middle;
+  
+  width: 16px;
+  height: 16px;
+  margin-left: 10px;
+  background: url(~assets/ui/radioButton.png) 0 0 no-repeat;
+}
+
+.radioBtn > input:checked + i.checkmark {
+  background: url(~assets/ui/radioButton.png) 0 -16px no-repeat;
+}
+
 /*./버튼스타일  */
 
 
@@ -862,7 +893,7 @@ button, .button{
   background: url(~assets/ui/button_nav_active.png) no-repeat;
 }
 
-.gnb-navi .setting {
+.gnb-navi .settingBtn {
   right: -55px;
   top: -24px;
 
@@ -873,7 +904,7 @@ button, .button{
   opacity:1;
 }
 
-.gnb-navi .setting:hover{
+.gnb-navi .settingBtn:hover{
   opacity: 0.7;
 }
 
@@ -903,22 +934,6 @@ button, .button{
 
   background: url(~assets/ui/title_bg.png) no-repeat;
 }
-
-/* .sub-title {
-  position: absolute;
-  top: 60px;
-  left: 30px;
-  right: 30px;
-
-  font-size: 16px;
-  font-weight: normal;
-
-  line-height: 1.2;
-  color: #fff;
-  overflow: hidden;
-  padding: 0 0 5px;
-} */
-
 
 .stageTitle, .notificationText {
   display: inline-block;
@@ -1002,8 +1017,6 @@ button, .button{
   margin: 10px 0;
 }
 
-
-
 .blinkAnim {
   animation: blink .3s steps(30, end) .3s 1 normal both;
   -webkit-animation: blink .3s steps(30, end) .3s 1 normal both;
@@ -1080,6 +1093,7 @@ button, .button{
   transition: all 0.8s;
 }
 
+/* 시스템 모달  */
 #SYSTEM .contents{
   top: 0;
   margin: 40px auto 0;
@@ -1108,6 +1122,38 @@ button, .button{
   text-overflow:ellipsis;
   white-space:nowrap;	
 }
+
+
+
+/* 셋팅창 */
+.modal.setting .contents {
+  margin: 10px 40px;
+}
+
+.modal.setting section {
+  text-align: left;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.modal.setting section + section {
+  margin-top: 10px;
+  text-align: left;
+}
+
+.modal.setting .group_title {
+  width: 80px;
+  margin-right: 20px;
+  margin-bottom: 15px;
+  font-weight: normal;
+  font-size: 16px;
+}
+
+.modal.setting .options .radioBtn:not(:first-child){
+  margin-left: 20px;
+}
+
 
 /* 아이템 획득창 */
 .acquireModal .contents {
@@ -1199,6 +1245,17 @@ button, .button{
   line-height: 1.4;
   font-size: 16px;
   padding-bottom: 5px;
+}
+
+.modal.quest .quest_title.new::after {
+  content: '';
+  display: inline-block;
+  height: 15px;
+  width: 15px;
+  padding: 0;
+  margin-left: 5px;
+  vertical-align: middle;
+  background: url(~assets/ui/new_icon.svg) no-repeat;
 }
 
 .modal.quest .flex-right.questInfo .quest_title {
@@ -1321,7 +1378,8 @@ button, .button{
   text-align: left;
   height: auto;
   padding: 5px;
-  border: 1px solid transparent;
+  /* border: 1px solid transparent; */
+  border-bottom: 1px dotted #fff;
 }
 
 .modal.quest .questList li:hover, 
@@ -2043,15 +2101,17 @@ img.die {
   border: solid 2px transparent;
 }
 .party .avatar.isCrew:hover::after {
-  content: '-';
+  content: '';
   display: block;
   position: absolute;
   z-index:222;
   width: 100%;
   height: 100%;
   font-size: 100px;
-  line-height: 130px;
+  /* line-height: 130px; */
   color: #d2a026;
+  background: url(~assets/ui/party_icon_remove.png) 50% 50% no-repeat;
+
 }
 .party .avatar.isCrew:hover {
   box-shadow: inset 0 0 10px 0 rgba(255, 255, 255, 0.5);
@@ -2066,15 +2126,16 @@ img.die {
 }
 
 .party .avatar.empty::after {
-  content: '+';
+  content: '';
   display: block;
   position: absolute;
   z-index:222;
   width: 100%;
   height: 100%;
   font-size: 100px;
-  line-height: 130px;
+  /* line-height: 130px; */
   color: #98e21c;
+  background: url(~assets/ui/party_icon_combine.png) 50% 50% no-repeat;
 }
 
 /* 파티 캐릭터 리스트 */
@@ -2260,7 +2321,7 @@ img.die {
   width: auto;
   height: 344px;
   overflow: hidden;
-  padding: 10px 5px 10px;
+  padding: 10px 5px 10px 10px;
   text-align: left;
   background-color: #281b10;
 }

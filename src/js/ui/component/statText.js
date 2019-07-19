@@ -52,11 +52,11 @@ export default class StatText {
       en: 'spd',
       ko: '속도'
     }, {
-      key: 'criticalPotential',
+      key: 'critical',
       en: 'cric',
       ko: '치명타 확률'
     }, {
-      key: 'critical',
+      key: 'criticalPotential',
       en: 'crid',
       ko: '치명타 피해'
     }, {

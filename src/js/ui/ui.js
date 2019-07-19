@@ -78,7 +78,7 @@ export default class DomUI extends EventEmitter {
         });
 
         // 설정버튼
-        this.settingBtn = new Button('', 'setting');
+        this.settingBtn = new Button('', 'settingBtn');
         gnb.appendChild(this.settingBtn.dom);
         this.settingBtn.dom.addEventListener('click', ()=>{
             this.emit('options');
@@ -150,8 +150,9 @@ export default class DomUI extends EventEmitter {
         const pane = this.createContainer();
         pane.classList.add('screen');
 
-        const settingModal = new Setting(pane, inputs, ()=>{
-            console.log('설정 데이터 저장쓰');
+        const settingModal = new Setting(pane, inputs, (type, value)=>{
+            console.log('setting volume..' + type + ' / ' +  value);
+            this.emit('setVolume', type, value);
         });
     }
 
@@ -230,6 +231,10 @@ export default class DomUI extends EventEmitter {
         // 기본 ui 를 보여준다
         this.gnbContainer.style.opacity = '1';
         this.gnbContainer.style.display = 'block';
+        
+        // if(this.questWrap) {
+        //     this.emit('questList');
+        // }
         this.emit('questList');
     }
 
@@ -237,8 +242,6 @@ export default class DomUI extends EventEmitter {
         // 기본 ui 를 가린다
         this.gnbContainer.style.opacity = '0';
         this.gnbContainer.style.display = 'none';
-        
-        // this.resetQuestStatus();
         this.hideQuest();
     }
 
@@ -369,11 +372,11 @@ export default class DomUI extends EventEmitter {
 
     showBlackScreen() {
         console.log('showBlackScreen');
-        this.displayLayer.style.backgroundColor = 'rgba(0,0,0,1)';
+        // this.displayLayer.style.backgroundColor = 'rgba(0,0,0,1)';
     }
     hideBlackScreen() {
         console.log('hideBlackScreen');
-        this.displayLayer.style.backgroundColor = 'transparent';
+        // this.displayLayer.style.backgroundColor = 'transparent';
     }
 
     // 아이템 획득
