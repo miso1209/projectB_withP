@@ -4,6 +4,7 @@ export default class Storage extends EventEmitter {
     constructor() {
         super();
         this.VERSION = 0.2;
+        this.LAST_DATE = new Date();
 
         if (localStorage.data) {
             this.data = JSON.parse(localStorage.data);
@@ -24,6 +25,7 @@ export default class Storage extends EventEmitter {
         this.data.party = [0, 0, 0, 0, 0, 0]; // 파티최대 숫자를 어딘가에?
         this.data.inventory = {};
         this.data.gold = 0;
+        this.data.playTime = 0;
         this.data.tags = [];
         this.data.location = {};
         this.data.settings = {
@@ -49,6 +51,7 @@ export default class Storage extends EventEmitter {
     }
 
     save() {
+        this.updatePlayTime();
         localStorage.data = JSON.stringify(this.data);
         this.emit('save');
     }
@@ -57,9 +60,16 @@ export default class Storage extends EventEmitter {
         localStorage.data = "";
         this.resetData();
     }
+
     setVolume(type, volume) {
         this.data.settings.sound.volume[type] = volume;
         this.save();
+    }
+
+    updatePlayTime() {
+        const NEW_DATE = new Date();
+        this.data.playTime += NEW_DATE - this.LAST_DATE;
+        this.LAST_DATE = NEW_DATE;
     }
 
     addTag(tag) {

@@ -45,6 +45,10 @@ export default class Game extends EventEmitter {
         this.combiner = new Combiner();
         this.ui = new UI();
 
+        // Play Time을 기록하기위한 Date
+        this.lastDate = new Date();
+        this.currentFrame = 0;
+
         // 제거해야한다...
         this.currentMode = null;
         this.exploreMode = new Explore(this);

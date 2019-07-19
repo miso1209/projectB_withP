@@ -16,6 +16,17 @@ export default class DevConsole {
         this.game = game;
     }
 
+    getPlayTime() {
+        const SEC_PER_MILLISEC = 1000;
+        const MINUTE_PER_MILLISEC = SEC_PER_MILLISEC * 60;
+        const HOUR_PER_MILLISEC = MINUTE_PER_MILLISEC * 60;
+        const sec = this.game.storage.data.playTime % (SEC_PER_MILLISEC * 60);
+        const minute = (this.game.storage.data.playTime - sec) % (MINUTE_PER_MILLISEC * 60);
+        const hour = (this.game.storage.data.playTime - minute - sec);
+
+        console.log(`play time : ${hour/HOUR_PER_MILLISEC}시간 ${minute/MINUTE_PER_MILLISEC}분 ${Math.round(sec/SEC_PER_MILLISEC)}초`);
+    }
+
     resetPlayer() {
         if (this.game && this.game.storage) {
             this.game.storage.clear();
