@@ -46,7 +46,7 @@ export default class StatText {
     }, {
       key: 'stamina',
       en: 'sta',
-      ko: '내구력'
+      ko: '지구력'
     }, {
       key: 'speed',
       en: 'spd',

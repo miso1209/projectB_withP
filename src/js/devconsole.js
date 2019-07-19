@@ -1,4 +1,5 @@
 import items from "./items";
+import { parsingOption } from "./utils";
 
 // 이 함수에 하나씩 콘솔 명령어를 하나씩 추가하면 된다
 
@@ -25,6 +26,18 @@ export default class DevConsole {
         const hour = (this.game.storage.data.playTime - minute - sec);
 
         console.log(`play time : ${hour/HOUR_PER_MILLISEC}시간 ${minute/MINUTE_PER_MILLISEC}분 ${Math.round(sec/SEC_PER_MILLISEC)}초`);
+    }
+    
+    parsing() {
+        for (let key in items) {
+            const item = items[key];
+
+            if (item.options.length > 0) {
+                item.options.forEach((option) => {
+                    console.log(parsingOption(option));
+                });
+            }
+        }
     }
 
     resetPlayer() {
