@@ -8,8 +8,8 @@ export default class Sound {
     constructor() {
         this._soundTypesMap = {};
         this.options = {
-            masterVolume: 1,
-            default: 1
+            Master: 1,
+            Default: 1
         };
     }
 
@@ -21,23 +21,24 @@ export default class Sound {
         this.pixiSound.speedAll = speed;
     }
 
-    setVolume(type, volume) {
-        this.options[type] = volume;
-        const fileName = this._soundTypesMap[type];
-        const sound = this.pixiSound.find(fileName);
-
-        if (sound) {
-            sound.volume = this.options[type];
+    setVolume(type, volume, defaultFileName) {
+        const fileName = this._soundTypesMap[type]?this._soundTypesMap[type]:defaultFileName;
+        if (type) {
+            this.options[type] = volume;
         }
-    }
 
-    setDefaultVolume(volume) {
-        this.options['default'] = volume;
-    }
+        switch(type) {
+            case 'Master': 
+                this.pixiSound.volumeAll = this.options[type];
+                break;
 
-    setMasterVolume(volume) {
-        this.options.masterVolume = volume;
-        this.pixiSound.volumeAll = this.options.masterVolume;
+            default :
+                const sound = this.pixiSound.find(fileName);
+                if (sound) {
+                    sound.volume = this.options[type] !== undefined?this.options[type]:this.options['Default'];
+                }
+                break;
+        }
     }
 
     _addSound(fileName, options) {
@@ -68,23 +69,20 @@ export default class Sound {
         // 해당 타입으로 다른 이름의 sound가 들어오면 이전의 sound를 제거한다.
         if (options && options.type) {
             const prevFileName = this._soundTypesMap[options.type];
-
             this._compareAndRemoveSound(prevFileName, fileName);
             this._soundTypesMap[options.type] = fileName;
-
-            if (this.options[options.type] !== undefined) {
-                options = Object.assign(options, { volume: this.options[options.type] });
-            } else {
-                options = Object.assign(options, { volume: this.options['default'] });
-            }
         }
 
+        // 등록하거나, 실행
         if (!this.pixiSound.find(fileName)) {
             this._addSound(fileName, options);
         } else if (!this.pixiSound.find(fileName).isPlaying) {
             this.pixiSound.play(fileName, options);
-        } else if (options && options.singleInstance) {
+        } else {
             this.pixiSound.play(fileName, options);
         }
+
+        // 실행한 뒤 Setting에 맞춰서 볼륨조절한다.
+        this.setVolume(options.type, this.options[options.type], fileName);
     }
 }

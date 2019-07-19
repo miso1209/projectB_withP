@@ -78,6 +78,10 @@ export default class Game extends EventEmitter {
             this.ui.showSetting(inputs);
         });
 
+        this.ui.on('setVolume', (type, volume) => {
+            this.setVolume(type, volume);
+        });
+
         this.ui.on('party', () => {
             const inputs = []; // 가지고 있는 캐릭터 데이터
             for (const cid in this.player.characters) {
@@ -689,21 +693,16 @@ export default class Game extends EventEmitter {
         }
     }
 
+    /*
+        type: 'Default' | 'Master' | 'BGM'
+        volume: float
+    */
     setVolume(type, volume) {
-        console.log('game set Volume');
         const prevVolume = this.storage.data.settings.sound.volume[type];
 
         if (prevVolume !== undefined) {
             this.storage.setVolume(type, volume);
-
-            switch(type) {
-                case 'BGM' :
-                    Sound.setVolume(type, volume);
-                break;
-                default :        
-                    Sound[`set${type}Volume`](volume);
-                break;
-            }
+            Sound.setVolume(type, volume);
         }
     }
 
@@ -922,8 +921,6 @@ export default class Game extends EventEmitter {
     }
 
     addQuest(questId) {
-        console.log('add quest');
-
         if (!this.storage.data.quests[questId]) {
             this.storage.setQuest(questId, {});
             this.setQuest(questId, {});
