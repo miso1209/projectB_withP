@@ -234,7 +234,7 @@ export default class CharacterDetail extends Panel {
         baseStat.appendChild(stText);
         let baseValue = new MakeDom('p', 'statvalue', `${this.selected[baseStatText]}`);
         baseStat.appendChild(baseValue);
-        plusStat.innerText = `(+${this.selected[plusStatText]})`;
+        plusStat.innerText = `(${this.selected[plusStatText]>=0?'+':''}${this.selected[plusStatText]})`;
 
         if (base.includes('critical')) {
           baseValue.innerText = `${(this.selected[baseStatText] * 100).toFixed(1)}%`;

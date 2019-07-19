@@ -111,9 +111,43 @@ export default class Combiner {
             inventory.gold -= recipe.gold;
         }
 
+        // Rank 판독해서 리턴하자 확률은 다음과 같이 정의해보자.
+        /*
+            C: 40%
+            B: 30%
+            A: 20%
+            S: 7%
+            U: 3%
+        */
+       let rank = '';
+        if (this.isEquipable(recipe.item)) {
+            const rand = Math.random();
+
+            if (rand <= 0.4) {
+            } else if (rand <= 0.7) {
+                rank = 'B';
+            } else if (rand <= 0.9) {
+                rank = 'A';
+            } else if (rand <= 0.97) {
+                rank = 'S';
+            } else {
+                rank = 'U';
+            }
+        }
+
         // 새로운 아이넴을 추가한다
-        inventory.addItem(recipe.item);
+        inventory.addItem(`${rank}${recipe.item}`);
         return true;
+    }
+
+    isEquipable(id) {
+        let result = false;
+
+        result |= items[id].category === 'weapon';
+        result |= items[id].category === 'armor';
+        result |= items[id].category === 'accessory';
+
+        return result;
     }
 
     isAvailable(id, inventory, level) {

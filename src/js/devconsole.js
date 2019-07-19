@@ -120,8 +120,11 @@ export default class DevConsole {
     getItem() {
         for (let key in items) {
             const item = items[key];
-            this.game.addItem(item.id, 1);
+            if (item.category === 'material' || item.category === 'recipes') {
+                this.game.addItem(item.id, 50);
+            }
         }
+        this.game.addGold(50000);
     }
     addCharacter(id) {
         this.game.game.addCharacter(id, { level: 1, exp: 0, equips: {}});

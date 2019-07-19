@@ -326,7 +326,7 @@ export default class Character {
                 this.plusCritical += Number(option.args[0]);
                 break;
         }
-
+        this.fixStat();
         this.refreshSimulationData();
         return result;
     }
@@ -369,6 +369,7 @@ export default class Character {
                 break;
         }
 
+        this.fixStat();
         this.refreshSimulationData();
     }
 
@@ -490,6 +491,31 @@ export default class Character {
         }
     }
 
+    fixStat() {
+        this.plusAttack = Number(this.plusAttack.toFixed(3));
+        this.plusMagic = Number(this.plusMagic.toFixed(3));
+        this.plusArmor = Number(this.plusArmor.toFixed(3));
+        this.health = Number(this.health.toFixed(3));
+        this.plusMaxHealth = Number(this.plusMaxHealth.toFixed(3));
+        this.plusStrength = Number(this.plusStrength.toFixed(3));
+        this.plusIntellect = Number(this.plusIntellect.toFixed(3));
+        this.plusAgility = Number(this.plusAgility.toFixed(3));
+        this.plusStamina = Number(this.plusStamina.toFixed(3));
+        this.plusCritical = Number(this.plusCritical.toFixed(3));
+        this.plusSpeed = Number(this.plusSpeed.toFixed(3));
+        
+        this.simulatedMaxHealth = Number(this.simulatedMaxHealth.toFixed(3));
+        this.simulatedStrength = Number(this.simulatedStrength.toFixed(3));
+        this.simulatedIntellect = Number(this.simulatedIntellect.toFixed(3));
+        this.simulatedAgility = Number(this.simulatedAgility.toFixed(3));
+        this.simulatedStamina = Number(this.simulatedStamina.toFixed(3));
+        this.simulatedSpeed = Number(this.simulatedSpeed.toFixed(3));
+        this.simulatedCritical = Number(this.simulatedCritical.toFixed(3));
+        this.simulatedAttack = Number(this.simulatedAttack.toFixed(3));
+        this.simulatedMagic = Number(this.simulatedMagic.toFixed(3));
+        this.simulatedArmor = Number(this.simulatedArmor.toFixed(3));
+    }
+
     applySimulationOption(option) {
         // TODO : 매번 옵션을 파싱하지 않고 미리 캐싱해놓을필요가 있다
         option = new ScriptParser(option);
@@ -522,11 +548,14 @@ export default class Character {
                 break;
             case "speed":
                 this.simulatedSpeed += Number(option.args[0]);
+                this.simulatedSpeed = Number(this.simulatedSpeed.toFixed(3));
                 break;
             case "critical":
                 this.simulatedCritical += Number(option.args[0]);
+                this.simulatedCritical = Number(this.simulatedCritical.toFixed(3));
                 break;
         }
+        this.fixStat();
     }
 
     clearSimulationOption(option) {
@@ -560,10 +589,13 @@ export default class Character {
                 break;
             case "speed":
                 this.simulatedSpeed -= Number(option.args[0]);
+                this.simulatedSpeed = Number(this.simulatedSpeed.toFixed(3));
                 break;
             case "critical":
                 this.simulatedCritical -= Number(option.args[0]);
+                this.simulatedCritical = Number(this.simulatedCritical.toFixed(3));
                 break;
         }
+        this.fixStat();
     }
 }
