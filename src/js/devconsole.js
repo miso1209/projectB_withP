@@ -1,5 +1,6 @@
 import items from "./items";
 import { parsingOption } from "./utils";
+import ScriptParser from "./scriptparser";
 
 // 이 함수에 하나씩 콘솔 명령어를 하나씩 추가하면 된다
 

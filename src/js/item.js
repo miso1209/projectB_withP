@@ -4,6 +4,7 @@ export default class Item {
     constructor(id, count) {
         this.data = items[id];
         if (!this.data) {
+            console.log('wrong data');
         }
         
         this.id = id;

@@ -21,6 +21,7 @@ import Portal from './portal';
 import Notification from './notification';
 import Item from './item';
 import MapGenerator from './mapgenerator';
+import items from './items';
 
 export default class Game extends EventEmitter {
     constructor(pixi) {
@@ -32,6 +33,9 @@ export default class Game extends EventEmitter {
 
         this.screenWidth = width;
         this.screenHeight = height;
+
+        // Load 되자마자 랭크달린 아이템 생성.
+        this.makeRankedItems();
 
         // 렌더링 레이어를 설정한다
         this.gamelayer = new PIXI.Container(); // 게임용
@@ -1152,6 +1156,46 @@ export default class Game extends EventEmitter {
     async $fadeIn(duration) {
         // this.ui.showBlackScreen();
         await this.tweens.$addTween(this.blackScreen, duration, { alpha: 0 }, 0, "linear", true);
+    }
+
+    makeRankedItems() {
+        const newItems = {};
+        for (let key in items) {
+            const item = items[key];
+            const category = item.category;
+            const ranksStat = {
+                B: 1.05,
+                A: 1.15,
+                S: 1.3,
+                U: 1.5
+            };
+
+            if (category === 'weapon' || category === 'armor' || category === 'accessory') {
+                for (let rank in ranksStat) {
+                    const newItem = Object.assign({}, item);
+                    newItem.rank = rank;
+                    newItem.id = `${rank}${key}`;
+                    newItems[`${rank}${key}`] = newItem;
+
+                    // ScriptParser로 모든 option rankStat만큼 증가.
+                    newItem.options = newItem.options.map((option) => {
+                        const parser = new ScriptParser(option);
+                        parser.name;
+                        parser.args[0];
+                        if (Number(parser.args[0]) > 0) {
+                            let newStat = Number(parser.args[0]) * ranksStat[rank];
+                            return `${parser.name}(+${Number(newStat.toFixed(3))})`;
+                        } else {
+                            return `${parser.name}(${parser.args[0]})`;
+                        }
+                    });
+                }
+            }
+        }
+
+        for (let id in newItems) {
+            items[id] = newItems[id];
+        }
     }
 
     onNotify(options) {
