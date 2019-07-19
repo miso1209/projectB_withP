@@ -78,7 +78,7 @@ export default class Sound {
             this._addSound(fileName, options);
         } else if (!this.pixiSound.find(fileName).isPlaying) {
             this.pixiSound.play(fileName, options);
-        } else {
+        } else if (options.singleInstance){
             this.pixiSound.play(fileName, options);
         }
 
