@@ -1153,7 +1153,9 @@ button, .button{
 .modal.setting .options .radioBtn:not(:first-child){
   margin-left: 20px;
 }
-
+.modal.setting .options .radioBtn.checked{
+  color: #8fc13b;
+}
 
 /* 아이템 획득창 */
 .acquireModal .contents {

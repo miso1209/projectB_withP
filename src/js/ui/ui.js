@@ -145,13 +145,12 @@ export default class DomUI extends EventEmitter {
         }, 10);
     }
     
-    showSetting(inputs) {
+    showSetting() {
         // input : 현재 설정정보.
         const pane = this.createContainer();
         pane.classList.add('screen');
 
-        const settingModal = new Setting(pane, inputs, (type, value)=>{
-            console.log('setting volume..' + type + ' / ' +  value);
+        const settingModal = new Setting(pane, (type, value)=>{
             this.emit('setVolume', type, value);
         });
     }

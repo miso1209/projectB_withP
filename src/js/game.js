@@ -82,11 +82,11 @@ export default class Game extends EventEmitter {
 
         this.ui.on('options', () => {
             // 현재 설정 데이터.. 필요함..inputs 에 넣어주세요
-            const inputs = null;
-            this.ui.showSetting(inputs);
+            this.ui.showSetting();
         });
 
         this.ui.on('setVolume', (type, volume) => {
+            // console.log(type, volume);
             this.setVolume(type, volume);
         });
 
