@@ -762,11 +762,11 @@ export default class Game extends EventEmitter {
 
     combine(id) {
         const result = this.combiner.combine(id, this.player.inventory);
-        if (result) {
-            this.emit('combine', id);
-            this.emit('additem', id, 1);
+        if (result.success) {
+            this.emit('combine', result.item);
+            this.emit('additem', result.item, 1);
         }
-        return true;
+        return result;
     }
 
     // 인벤토리에 있는 레시피들을 가져와야할듯하다.

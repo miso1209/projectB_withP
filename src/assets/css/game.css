@@ -11,8 +11,6 @@
   greyish-brown: #4e4a47;
   eggplant : #2a0a0f
 */
-
-
 .quest_desc em {
   color: #8fc13b;
 }
@@ -621,45 +619,13 @@
 .ico-avatar{
   background: url('~assets/items/items.png') no-repeat -576px -96px;
 }
-/* .ico-life {
-  background: url('~assets/items/items.png') no-repeat -576px -96px;
-}
-.ico-life.half {
-  background: url('~assets/items/items.png') no-repeat -608px -96px;
-  -webkit-animation: rubberBand; 
-  animation: rubberBand;
-  -webkit-transform-origin: center;
-  transform-origin: center;
-
-  -webkit-animation-duration: 1s;
-  animation-duration: 1s;
-  -webkit-animation-fill-mode: both;
-  animation-fill-mode: both;
-  -webkit-animation-iteration-count: infinite;
-  animation-iteration-count: infinite;
-}
-.ico-life.empty {
-  background: url('~assets/items/items.png') no-repeat -640px -96px;
-
-  -webkit-animation: rubberBand; 
-  animation: rubberBand;
-  -webkit-transform-origin: center;
-  transform-origin: center;
-
-  -webkit-animation-duration: 1s;
-  animation-duration: 1s;
-  -webkit-animation-fill-mode: both;
-  animation-fill-mode: both;
-  -webkit-animation-iteration-count: infinite;
-  animation-iteration-count: infinite;
-} */
 
 .ico-life:hover {
   border-color: transparent;
 }
 
 *.disabled {
-  opacity: 0.7;
+  opacity: 0.5;
 }
 
 /* 버튼 스타일 */
@@ -798,7 +764,26 @@ button, .button{
   background: url(~assets/ui/radioButton.png) 0 -16px no-repeat;
 }
 
-/*./버튼스타일  */
+.selectWrap {
+  width: 80px;
+  height: 30px;
+  background-color: #272523;
+  border: 1px solid #4e4a47;
+  
+}
+.selectWrap select {
+  width: calc(100% - 10px);
+  height: inherit;
+  margin: 0 5px;
+  padding: 3px 0;
+
+  font-size: 14px;
+  color: #fff;
+  background: transparent;
+  border: none;
+}
+
+/*./컴포넌트  */
 
 
 .paging {
@@ -1610,8 +1595,10 @@ button.disabled {
 
   width: 100%;
   margin: 0 0 15px;
-
+  background: #281b10;
+  border: 1px solid #4e4a47;
 }
+
 .modal.combiner .combineItem::after{
   content: '';
   display: block;
@@ -1628,38 +1615,14 @@ button.disabled {
 .modal.combiner .combineItem .itemDesc {
   width: calc(100% - 79px);
   height: 64px;
-  padding: 10px 0 0;
+  padding: 10px 0 0 10px;
+  overflow: hidden;
   
   font-size: 13px;
   line-height: 1.4;
   text-align: left;
   word-break: keep-all;
-
-  overflow: hidden;
-}
-
-/* .modal.combiner .combineItemInfo .materialsImg {
-  max-width: 100px;
-  max-height: 100px;
-  margin-top: 20px;
-} */
-
-.modal.combiner .costswrap {
-  display: inline-block;
-  width: 100%;
-  margin: 10px 0 0;
-}
-
-.modal.combiner .gold::before {
-  content: '비용 : ';
-  display: inline-block;
-  padding-right: 5px;
-}
-
-.modal.combiner .gold.disabled {
-  font-size: 15px;
-  color: #fd6240;
-  overflow: hidden;
+  border-left: 1px solid #4e4a47;
 }
 
 .modal.combiner .combineItemInfo .options {
@@ -1710,27 +1673,77 @@ button.disabled {
   height: 32px;
 }
 .modal.combiner .materialInfo p {
-  max-height: 34px;
-  font-size: 15px;
+  font-size: 13px;
   font-weight: normal;
-  /* line-height: 32px;; */
   text-align: left;
   color: #fff;
   overflow: hidden;
 }
-.modal.combiner .materialInfo p.mat_name {
+.modal.combiner .materialInfo .mat_name {
   width: 60%;
-  font-size: 13px;
+  line-height: 30px;
+  text-overflow: ellipsis;
+  white-space:nowrap;
+  overflow: hidden;
 }
-.modal.combiner .materialInfo p.mat_count {
+.modal.combiner .materialInfo .mat_count {
   width: 20%;
-  /* height: 32px; */
-  /* line-height: 1; */
   text-align: right;
+  font-size: 14px;
 }
-.modal.combiner .materialInfo p.unavailable {
+.modal.combiner .materialInfo .unavailable {
   color: #fd6240;
 }
+
+.modal.combiner .total {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.modal.combiner .gold::before {
+  content: '비용 : ';
+  display: inline-block;
+  padding-right: 5px;
+}
+
+.modal.combiner .gold.disabled {
+  font-size: 15px;
+  color: #fd6240;
+  overflow: hidden;
+}
+
+.modal.combiner .gold{
+  text-align: right;
+}
+
+.modal.combiner .total .countWrap {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  
+  width: 110px;
+  padding: 8px 10px;
+  
+  font-size: 13px;
+  background-color: #1f130a;
+  box-sizing: border-box;
+  border-top: 1px solid #4e4a47;
+}
+.modal.combiner .total .costswrap{
+  width: calc(100% - 110px);
+} 
+.modal.combiner .total .selectWrap {
+  
+  width: 48px;
+  height: 22px;
+  margin-left: 10px;
+}
+
+
+
+
 
 
 

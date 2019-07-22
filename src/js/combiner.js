@@ -137,7 +137,10 @@ export default class Combiner {
 
         // 새로운 아이넴을 추가한다
         inventory.addItem(`${rank}${recipe.item}`);
-        return true;
+        return {
+            item: `${rank}${recipe.item}`,
+            success: true
+        };
     }
 
     isEquipable(id) {

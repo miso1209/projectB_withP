@@ -4,6 +4,7 @@ import Button from './component/button';
 import ListBox from './component/listbox';
 import ItemImage from './component/itemimage';
 import MakeDom from './component/makedom';
+import DropDown from './component/dropdown';
 
 
 class CombinerUI extends Panel {
@@ -33,7 +34,6 @@ class CombinerUI extends Panel {
         this.itemImg.dom.classList.add('itemImg');
         this.comment = new MakeDom('p', 'comment');
         
-
         const combineItemInfo = new MakeDom('div', 'combineItemInfo');
         contents.appendChild(combineItemInfo);
 
@@ -44,10 +44,25 @@ class CombinerUI extends Panel {
         // 재료 리스트
         this.materialInfo = document.createElement('ul');
         this.materialInfo.classList.add('materialInfo');
+
+        
+        const totalCount = new MakeDom('section', 'total');
+        // 수량선택
+        const selectCountWrap = new MakeDom('div', 'countWrap');
+        const countText = new MakeDom('strong', 'text', '수량');
+        const selectNum = new DropDown(0, 10, (result)=>{
+            console.log(result);
+        });
+        selectCountWrap.appendChild(countText);
+        selectCountWrap.appendChild(selectNum.dom);
     
         const costswrap = new MakeDom('div', 'costswrap');
         this.costs = new MakeDom('div', 'gold', '0');
         costswrap.appendChild(this.costs);
+
+        totalCount.appendChild(selectCountWrap);
+        totalCount.appendChild(costswrap);
+
 
         const buttonWrap = new MakeDom('div', 'buttonWrap');
         const combineButton = new Button('제작', 'submit');
@@ -65,13 +80,18 @@ class CombinerUI extends Panel {
 
         combineItemInfo.appendChild(this.options);
         combineItemInfo.appendChild(this.materialInfo);
-        // combineItemInfo.appendChild(costswrap);
+
+        
+        
+
         // 하단 영역 고정 - 가격, 버튼
-        buttonWrap.appendChild(costswrap);
+        // buttonWrap.appendChild(costswrap);
         buttonWrap.appendChild(this.button);
 
         contents.appendChild(combineItem);
         contents.appendChild(combineItemInfo);
+
+        contents.appendChild(totalCount);
         contents.appendChild(buttonWrap);
         this.dom.appendChild(contents);
     }

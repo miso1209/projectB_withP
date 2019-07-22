@@ -269,7 +269,7 @@ export default class CharacterDetail extends Panel {
         let item = d.data.data;
         let itemIcon = new ItemImage(item.image.texture, item.image.x, item.image.y);
         let rankIcon = new ItemImage('icon_rank.png', item.rank, 0);
-
+        
         itemIcon.dom.style.display = 'inline-block';
 
         liWrap.appendChild(itemIcon.dom);

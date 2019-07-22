@@ -90,7 +90,8 @@ export default class ItemAcquire extends Panel {
       let count = new MakeDom('span', '', `x${item.count}`);
       let name = new MakeDom('p', 'name', item.name);
       // let rank = new MakeDom('p', 'rank', item.rank);
-      let iconRank = new ItemImage('icon_rank.png', item.rank, 0);
+      
+      let iconRank = new ItemImage('icon_rank.png', item.data.rank, 0);
       iconRank.dom.classList.add('rank');
 
       this.options.appendChild(option.dom);
