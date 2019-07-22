@@ -7,7 +7,6 @@ import ItemImage from './component/itemimage';
 export default class QuestModal extends Panel {
     constructor(pane, inputs, currentQuest, result){
       super();
-      console.log(inputs);
 
       pane.classList.add('screen');
       this.pane = pane;
@@ -61,12 +60,6 @@ export default class QuestModal extends Panel {
         const title = new MakeDom('p', 'quest_title', quest.title);
         const status = new MakeDom('p', 'quest_status');
 
-        if(quest.success) {
-          title.classList.add('new');
-        } else {
-          title.classList.remove('new');
-        }
-
         if (quest.type === 'Acceptable') {
           status.innerText = '미진행';
         } else {
@@ -77,6 +70,12 @@ export default class QuestModal extends Panel {
           cell.classList.add('success');
         } else {
           cell.classList.remove('success');
+        }
+
+        if(quest.isNotify === true) {
+          cell.classList.add('new');
+        } else {
+          cell.classList.remove('new');
         }
 
         cell.appendChild(title);
@@ -102,6 +101,7 @@ export default class QuestModal extends Panel {
               selectedCell.classList.remove('active');
           }
           cell.classList.add('active');
+          cell.classList.remove('new');
           selectedCell = cell;
         });
 
@@ -111,8 +111,8 @@ export default class QuestModal extends Panel {
     }
 
     listcallback(quest) {
-
       this.callback('checkNotify', quest);
+
       this.questInfo.innerHTML = '';
       
       const frag = document.createDocumentFragment();
@@ -129,7 +129,6 @@ export default class QuestModal extends Panel {
       button.moveToCenter(0);
       button.moveToBottom(20);
       
-
       if (quest.type === 'Acceptable') {
         status.innerHTML = '미진행';
 

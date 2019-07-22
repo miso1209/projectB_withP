@@ -172,7 +172,7 @@ export default class Game extends EventEmitter {
             this.addQuest(id);
         });
 
-        this.ui.on('checkQuest', (id) => {
+        this.ui.on('checkNotify', (id) => {
             this.setNotify(id, false);
         });
         

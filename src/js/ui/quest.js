@@ -54,10 +54,14 @@ export default class QuestList extends Panel {
         
         quest_mission.innerHTML = `${quest.objectives[0].text} ${quest.objectives[0].count} / ${quest.objectives[0].maxCount}`
         
-        if (this.inputs.length === index) {
+        // if (this.inputs.length === index) {
+        //   listCell.classList.add('new');
+        // }
+
+        if (quest.isNotify === true) {
           listCell.classList.add('new');
         }
-
+        
         if (quest.success) {
           listCell.classList.add('success');
         }

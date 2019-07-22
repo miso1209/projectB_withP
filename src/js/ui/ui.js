@@ -142,6 +142,11 @@ export default class DomUI extends EventEmitter {
             }
             this.questStatus.appendChild(frag);
             this.questStatus.classList.add('show');
+
+            if(this.questWrap) {
+                this.hideQuest(close);
+            }
+
         }, 10);
     }
     
@@ -393,6 +398,10 @@ export default class DomUI extends EventEmitter {
     
     // 퀘스트 모달
     showQuestModal(inputs, quest){
+        if(this.questWrap) {
+            this.hideQuest(close);
+        }
+
         if (inputs.length === 0) {
             // 진행할 수 있는 퀘스트가 없고, 신규로 받을 수 있는 퀘스트도 없는 상태.. 
             this.showConfirmModal('현재 새로운 퀘스트가 없습니다.', false, ()=>{});
@@ -413,8 +422,7 @@ export default class DomUI extends EventEmitter {
             }
         });
 
-        
-        this.hideQuest(close);
+        // this.hideQuest();
     }
 
     showInventory(inputs, inven_gold) {

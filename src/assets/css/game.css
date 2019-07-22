@@ -1234,16 +1234,7 @@ button, .button{
   padding-bottom: 5px;
 }
 
-.modal.quest .quest_title.new::after {
-  content: '';
-  display: inline-block;
-  height: 15px;
-  width: 15px;
-  padding: 0;
-  margin-left: 5px;
-  vertical-align: middle;
-  background: url(~assets/ui/new_icon.svg) no-repeat;
-}
+
 
 .modal.quest .flex-right.questInfo .quest_title {
   font-size: 20px;
@@ -1398,12 +1389,27 @@ button, .button{
   background-color: #272523;
 }
 .modal.quest .questList li {
+  position: relative;
   display: block;
   text-align: left;
   height: auto;
   padding: 5px;
   border: 1px solid transparent;
   border-bottom: 1px dotted #fff;
+}
+.modal.quest .new::after {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+
+  content: '';
+  display: inline-block;
+  height: 15px;
+  width: 15px;
+  padding: 0;
+  margin-left: 5px;
+  vertical-align: middle;
+  background: url(~assets/ui/new_icon.svg) no-repeat;
 }
 .modal.quest .questList li.success {
   color: #8fc13b;
@@ -1421,6 +1427,13 @@ button, .button{
   display: none;
   position: static;
   margin-top: 10px;
+}
+
+.modal.quest .questList li .quest_title {
+  width: 180px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
 }
 
 
