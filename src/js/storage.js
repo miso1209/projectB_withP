@@ -37,11 +37,18 @@ export default class Storage extends EventEmitter {
                 }
             }
         };
-        this.data.currentFloor = 0;
-        this.data.cutsene = null;
+        this.data.selectableFloor = [1];
+        this.data.cutscene = null;
         this.data.created = new Date();
         this.data.quests = {};
         this.data.completedQuests = {};
+    }
+
+    addSelectableFloor(floor) {
+        if (this.data.selectableFloor.indexOf(floor) < 0 && floor > 0) {
+            this.data.selectableFloor.push(floor);
+            this.save();
+        }
     }
 
     convertVersion(src) {
@@ -107,13 +114,8 @@ export default class Storage extends EventEmitter {
     addCharacter(id, character) {
         if (!this.data.characters[id]) {
             this.data.characters[id] = character;
+            this.save();
         }
-        this.save();
-    }
-
-    changeFloor(floor) {
-        this.data.currentFloor = floor;
-        this.save();
     }
 
     setQuest(questId, data) {

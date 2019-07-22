@@ -171,6 +171,10 @@ export default class Game extends EventEmitter {
         this.ui.on('addQuest', (id) =>  {
             this.addQuest(id);
         });
+
+        this.ui.on('checkQuest', (id) => {
+            this.setNotify(id, false);
+        });
         
         this.ui.on('setMainAvatar', (id) => {
             this.setMainAvatar(id);
@@ -213,9 +217,6 @@ export default class Game extends EventEmitter {
             this.storage.data.party[2] = 0;
             this.storage.data.party[3] = 0;
             this.storage.data.party[4] = 0;
-
-            // 마지막 던전 층 초기화
-            this.storage.data.currentFloor = 0;
 
             // 현지 진행해야하는 컷신 아이디를 적는다
             this.storage.data.cutscene = 1;
@@ -274,7 +275,8 @@ export default class Game extends EventEmitter {
             this.setCompletedQuest(questId, this.storage.data.completedQuests[questId]);
         }
 
-        this.currentFloor = this.storage.data.currentFloor;
+        this.currentFloor = 0;
+        this.selectableFloor = this.storage.data.selectableFloor;
         
         this.ui.player = this.player;
         this.ui.characters = Characters;
@@ -437,8 +439,8 @@ export default class Game extends EventEmitter {
     // [정리] 기존처럼 Map을 바로 생성하는 것 이 아니라, 미치 다 생성해서 들고있어서, Stage객체를 가지고 있다.
     // 던전에서는 어떤 방향으로 입장하는지 모르기 때문에 입장 방향도 dir 이라는 파라메타로 넘겨준다.
     async $nextFloor(from, dir, options) {
-        this.storage.changeFloor(this.currentFloor);
         this.currentFloor++;
+        this.storage.addSelectableFloor(this.currentFloor);
         this.ui.showTheaterUI(0.5);
         this.ui.hideMenu();
         await this.$leaveStage(from);
@@ -937,18 +939,35 @@ export default class Game extends EventEmitter {
     }
 
     addQuest(questId) {
+        // 없을 경우 추가.
         if (!this.storage.data.quests[questId]) {
-            this.storage.setQuest(questId, {});
-            this.setQuest(questId, {});
+            this.storage.setQuest(questId, {
+                isNotify: true,
+                isSuccess: false
+            });
+            this.setQuest(questId, {
+                isNotify: true,
+                isSuccess: false
+            });
 
             // UI Flag
             this.ui.flagArray[3] = 'true';
             this.ui.checkFlag();
 
             this.ui.showQuestStatus(this.player.quests[questId]);
-            this.player.quests[questId].isNotify = true;
 
             Sound.playSound('quest_accept_1.wav', { singleInstance: true });
+        }
+    }
+
+    setNotify(questId, bool) {
+        const quest = this.player.quests[questId];
+
+        if (quest) {
+            this.storage.setQuest(questId, {
+                isNotify: bool
+            });
+            quest.isNotify = bool;
         }
     }
 
@@ -965,14 +984,11 @@ export default class Game extends EventEmitter {
         quest.on('checkQuestCondition', (objective, script, showFlag) => {
             const conditionResult = this.runQuestScript(quest, script);
             const isChanged = quest.setObjective(objective, conditionResult);
-            this.storage.setQuest(questId, quest.data);
 
             if (isChanged && showFlag) {
-                if (quest.success && !quest.isSuccess) {
+                if (quest.success && !quest.data.isSuccess) {
                     quest.isSuccess = true;
                     quest.isNotify = true;
-                    // success quest
-                    // UI Flag
                     this.ui.flagArray[3] = 'true';
                     this.ui.checkFlag();
 
@@ -985,6 +1001,7 @@ export default class Game extends EventEmitter {
 
                 this.ui.resetQuestStatus();
             }
+            this.storage.setQuest(questId, quest.data);
         });
         quest.load();
     }
@@ -1081,7 +1098,8 @@ export default class Game extends EventEmitter {
                     description: newQuest.description,
                     objectives: newQuest.objectives,
                     rewards: newQuest.rewards,
-                    success: newQuest.isAllObjectivesCompleted()
+                    success: newQuest.isAllObjectivesCompleted(),
+                    isNotify: false
                 });
             }
         }
@@ -1102,7 +1120,8 @@ export default class Game extends EventEmitter {
                 description: quest.description,
                 objectives: quest.objectives,
                 rewards: quest.rewards,
-                success: quest.isAllObjectivesCompleted()
+                success: quest.isAllObjectivesCompleted(),
+                isNotify: quest.isNotify
             });
         }
 

@@ -11,8 +11,6 @@ export default class Quest extends EventEmitter {
         this.origin = Object.assign({}, quests[questid]);
         this.copy = this.origin.objectives.map((objective) => { return Object.assign({}, objective)});
         this.objectiveEventsList = [];
-        this.isNotify = false;
-        this.isSuccess = false;
         this.data = {};
         this.isInitData = {};
 
@@ -30,6 +28,22 @@ export default class Quest extends EventEmitter {
                 handler: handler,
             });
         }
+    }
+
+    get isNotify() {
+        return this.data.isNotify;
+    }
+
+    set isNotify(bool) {
+        this.data.isNotify = bool;
+    }
+
+    get isSuccess() {
+        return this.data.isSuccess;
+    }
+
+    set isSuccess(bool) {
+        this.data.isSuccess = bool;
     }
 
     setObjective(objective, conditionResult) {
