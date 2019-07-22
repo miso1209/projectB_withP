@@ -447,7 +447,7 @@
   
   border: 1px solid #dad0c7;
   box-sizing: border-box;
-  background: url(~assets/ui/ico_quest.png) 50% 50% #000 no-repeat; 
+  background: url(~assets/ui/icon_quest.png) 50% 50% #000 no-repeat; 
 }
 
 .questStatusBar .quest_name {
@@ -531,9 +531,23 @@
   margin-bottom: 10px;
 }
 /* 반복퀘스트인 경우 아이콘으로 처리 - 임시처리  */
-.questWrap .list-box li.iterable .quest_name {
+.questWrap .list-box li.iterable .quest_name{
   color: #fd6240;
+  margin-left: 10px;
 }
+.questWrap .list-box li.iterable::before{
+  position: absolute;
+  top: 8px;
+  left: 0;
+  content: '';
+  display: inline-block;
+  height: 14px;
+  width: 15px;
+  vertical-align: bottom;
+  background: url(~assets/ui/icon_quest.png) no-repeat;
+  background-size: contain;
+}
+
 .questWrap .list-box li.new::after {
   position: absolute;
   top: 8px;
@@ -546,7 +560,7 @@
   padding: 0;
   margin-left: 5px;
   vertical-align: bottom;
-  background: url(~assets/ui/new_icon.svg) no-repeat;
+  background: url(~assets/ui/icon_new.svg) no-repeat;
 }
 .questWrap .list-box li:not(:first-child) {
   border-top: 1px dotted #dad0c7;
@@ -886,7 +900,7 @@ button, .button{
   z-index: 111;
   height: 15px;
   width: 15px;
-  background: url(~assets/ui/new_icon.svg) no-repeat;
+  background: url(~assets/ui/icon_new.svg) no-repeat;
 }
 
 .gnb-navi .nav:not(:first-child) {
@@ -1218,6 +1232,11 @@ button, .button{
   margin-left: 5px;
 }
 
+.acquireModal .contents-option .rank {
+  position: absolute;
+
+}
+
 /* 퀘스트 모달 */
 .modal.quest .contents {
   margin: 0 25px;
@@ -1429,7 +1448,7 @@ button, .button{
   padding: 0;
   margin-left: 5px;
   vertical-align: middle;
-  background: url(~assets/ui/new_icon.svg) no-repeat;
+  background: url(~assets/ui/icon_new.svg) no-repeat;
 }
 .modal.quest .questList li.success {
   color: #8fc13b;
@@ -1694,7 +1713,7 @@ button.disabled {
   max-height: 34px;
   font-size: 15px;
   font-weight: normal;
-  line-height: 32px;;
+  /* line-height: 32px;; */
   text-align: left;
   color: #fff;
   overflow: hidden;
@@ -1704,7 +1723,9 @@ button.disabled {
   font-size: 13px;
 }
 .modal.combiner .materialInfo p.mat_count {
-  width: 15%;
+  width: 20%;
+  /* height: 32px; */
+  /* line-height: 1; */
   text-align: right;
 }
 .modal.combiner .materialInfo p.unavailable {
@@ -1933,6 +1954,21 @@ button.disabled {
 }
 .list-detail .infoWrap .portraitWrap img {
   height: 100%;
+}
+
+.character .dieMsg {
+  position: absolute;
+  z-index: 111;
+  top: 0;
+  left: 20px;
+  right: 20px;
+  margin: 163px auto 0;
+
+  font-size: 14px;
+  line-height: 1.6;
+  color: #fd6240;
+
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
 }
 
 /* img.die { */
@@ -2470,6 +2506,12 @@ img.die {
 .characterDetail li .img {
   z-index: 11;
 }
+
+.characterDetail .equipItems li .icon {
+  position: absolute;
+  left:0;
+  bottom: 0;
+}
 .characterDetail li .descText {
   font-size: 11px;
   position: absolute;
@@ -2607,8 +2649,9 @@ img.die {
   background-color: rgba(40, 27, 16, 0.95);
 }
 .characterDetail .equipInven .scrollView {
-  width: calc(100% - 20px);
-  left: 20px;
+  width: calc(100% - 5px);
+  margin: 0;
+  left: 0;
 }
 .characterDetail .equipInven .scrollBlind{
   margin: 5px 0;
@@ -2628,11 +2671,16 @@ img.die {
 .characterDetail .equipInven .slot-list-box li {
   display: block;
   float: left;
-  width: 56px;
-  height: 56px;
-  margin: 0 10px 10px 0;
+  width: 55px;
+  height: 55px;
+  margin: 0 5px 5px 0;
 }
 .characterDetail .equipInven .slot-list-box li.slot:nth-child(5n) {
-  margin: 0 0 10px 0;
+  margin: 0 0 5px 0;
 }
 
+.characterDetail .equipInven .slot-list-box li .icon {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+}

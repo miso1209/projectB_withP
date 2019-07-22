@@ -7,11 +7,9 @@ import Button from "./component/button";
 export default class ItemAcquire extends Panel {
   constructor(pane, text, items, result) {
     super();
-
     pane.classList.add('screen');
 
     let domheight = 240;
-
     if (items.length > 3) {
       domheight += 80;
     }
@@ -86,11 +84,18 @@ export default class ItemAcquire extends Panel {
         this.options.appendChild(wrap);
       });
     } else {
+      // 조합으로 얻어진 아이템인 경우를 체크해야함.. 음음
       let item = this.items;
       let option = new ItemImage(item.data.image.texture, item.data.image.x, item.data.image.y);
       let count = new MakeDom('span', '', `x${item.count}`);
       let name = new MakeDom('p', 'name', item.name);
+      // let rank = new MakeDom('p', 'rank', item.rank);
+      let iconRank = new ItemImage('icon_rank.png', item.rank, 0);
+      iconRank.dom.classList.add('rank');
+
       this.options.appendChild(option.dom);
+      this.options.appendChild(iconRank.dom);
+
       this.options.appendChild(count);
       this.options.appendChild(name);
     }

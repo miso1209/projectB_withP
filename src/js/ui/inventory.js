@@ -212,20 +212,11 @@ export default class Inventory extends Panel {
     }
 
     addSlot(size) {
-        // let selected = null;
         for (let i = 0; i < size; i++) {
             let slot = document.createElement('li');
             slot.classList.add('slot');
             this.storageContent.appendChild(slot);
-            // slot.addEventListener('click', function(){
-            //     if (selected) {
-            //         selected.classList.remove('active');
-            //     }
-            //     slot.classList.add('active');
-            //     selected = slot;
-            // });
         }
-
     }
 }
 

@@ -5,8 +5,6 @@ import Button from './component/button';
 export default class QuestList extends Panel {
   constructor(inputs, result){
     super();
-    
-    console.log(inputs);
 
     this.inputs = inputs;
     this.callback = result;

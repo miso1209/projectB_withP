@@ -268,8 +268,12 @@ export default class CharacterDetail extends Panel {
       if (d.data !== null) {
         let item = d.data.data;
         let itemIcon = new ItemImage(item.image.texture, item.image.x, item.image.y);
+        let rankIcon = new ItemImage('icon_rank.png', item.rank, 0);
+
         itemIcon.dom.style.display = 'inline-block';
+
         liWrap.appendChild(itemIcon.dom);
+        liWrap.appendChild(rankIcon.dom);
       } else {
         liWrap.classList.add('empty');
       }
@@ -410,12 +414,17 @@ export default class CharacterDetail extends Panel {
 
     this.tempEquipData.forEach(item => {
       ++index;
-
+      
+      // console.log(item);
       let liWrap = new MakeDom('li', 'slot');
       let itemIcon = new ItemImage(item.data.image.texture, item.data.image.x, item.data.image.y);
+      let rankIcon = new ItemImage('icon_rank.png', item.data.rank, 0);
+
       itemIcon.dom.style.display = 'inline-block';
 
       liWrap.appendChild(itemIcon.dom);
+      liWrap.appendChild(rankIcon.dom);
+
       liWrap.addEventListener('click', ()=>{
         if(isActive) {
           isActive.classList.remove('active');

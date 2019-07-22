@@ -10,6 +10,7 @@ export default class Avatar {
 
     // 사망한 캐릭터 표시
     this.status = 'idle';
+    this.path = '/src/assets/sprite/';
 
     if (input === null) {
       avatar.classList.add('empty');
@@ -20,13 +21,12 @@ export default class Avatar {
       if (input.health === 0) {
         this.status = 'die';
         avatar.classList.add('die');
+        this.path = `${this.path}character_die.png`;
       } else {
         this.status = 'idle';
         avatar.classList.remove('die');
+        this.path = `${this.path}${input.data.name}/${input.data.name}_idle_sw.png`;
       }
-
-      this.path = '/src/assets/sprite/';
-      this.path = `${this.path}${input.data.name}/${input.data.name}_${this.status}_sw.png`;
 
       const infoWrap = new MakeDom('div', 'infoWrap');
       const level = new MakeDom('p', 'level', `LV.${input.level}`);
