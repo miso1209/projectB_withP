@@ -523,26 +523,22 @@
   background-color: rgba(78,74,71,0.8);
 }
 .questWrap .list-box li {
+  position: relative;
+
   display: block;
   text-align: left;
-  padding: 5px 3px 0;
   width: 100%;
   margin-bottom: 10px;
 }
-.questWrap .list-box li:not(:first-child) {
-  border-top: 1px dotted #dad0c7;
-  padding-top: 5px;
+/* 반복퀘스트인 경우 아이콘으로 처리 - 임시처리  */
+.questWrap .list-box li.iterable .quest_name {
+  color: #fd6240;
 }
+.questWrap .list-box li.new::after {
+  position: absolute;
+  top: 8px;
+  right: 5px;
 
-.questWrap .list-box li .quest_name {
-  width: 100%;
-  min-height: 20px;
-  font-size: 12px;
-  word-break: break-all;
-  vertical-align: top;
-}
-
-.questWrap .list-box li.new .quest_name::after {
   content: '';
   display: inline-block;
   height: 15px;
@@ -552,23 +548,38 @@
   vertical-align: bottom;
   background: url(~assets/ui/new_icon.svg) no-repeat;
 }
-.questWrap .list-box li .quest_desc {
-  font-size: 13px;
-  line-height: normal;
+.questWrap .list-box li:not(:first-child) {
+  border-top: 1px dotted #dad0c7;
+  padding-top: 5px;
+}
+
+.questWrap .list-box li p {
+  max-width: 110px;
+
+  word-break: break-all;
   color: #dad0c7;
+  font-size: 12px;
+  text-overflow:ellipsis;
+  white-space:nowrap;	
+  line-height: normal;
+
+  overflow: hidden;
+}
+.questWrap .list-box li .quest_name {
+  width: 100%;
+  line-height: 1.6;
+  padding: 5px 0;
+  color: #fff;
+  vertical-align: top;
 }
 
 .questWrap .list-box li .quest_mission {
-  display: inline-block;
-  color: #dad0c7;
-  padding-top: 5px;
-  word-break: keep-all;
+  font-size: 14px;
+  line-height: 1.6;
 }
 
 .questWrap .list-box li .completeText{
   display: none;
-
-  font-size: 12px;
   line-height: 24px;
   color: #2a0a0f;
 }
@@ -1224,7 +1235,7 @@ button, .button{
   text-align: left;
   color: #dad0c7;
   background-color: #281b10;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 .modal.quest .quest_title {
@@ -1378,6 +1389,7 @@ button, .button{
   top: 15px;
   font-size: 12px;
 }
+
 .modal.quest .flex-left.questList {
   width: 236px;
   padding: 2px;
@@ -1397,11 +1409,19 @@ button, .button{
   border: 1px solid transparent;
   border-bottom: 1px dotted #fff;
 }
-.modal.quest .new::after {
+.modal.quest .questList li .quest_title {
+  width: 180px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.modal.quest .questList li.iterable .quest_title {
+  color: #fd6240;
+}
+.modal.quest .questList li.new::after {
   position: absolute;
   top: 8px;
   right: 10px;
-
   content: '';
   display: inline-block;
   height: 15px;
@@ -1428,14 +1448,6 @@ button, .button{
   position: static;
   margin-top: 10px;
 }
-
-.modal.quest .questList li .quest_title {
-  width: 180px;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-}
-
 
 /* .퀘스트 모달 */
 

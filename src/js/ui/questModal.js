@@ -68,15 +68,15 @@ export default class QuestModal extends Panel {
 
         if (quest.success) {
           cell.classList.add('success');
-        } else {
-          cell.classList.remove('success');
+        } 
+
+        if (quest.isIterable) {
+          cell.classList.add('iterable');
         }
 
-        if(quest.isNotify === true) {
+        if(quest.isNotify) {
           cell.classList.add('new');
-        } else {
-          cell.classList.remove('new');
-        }
+        } 
 
         cell.appendChild(title);
         cell.appendChild(status);
@@ -129,6 +129,10 @@ export default class QuestModal extends Panel {
       button.moveToCenter(0);
       button.moveToBottom(20);
       
+
+      let selected = null;
+      let posX = 0;
+
       if (quest.type === 'Acceptable') {
         status.innerHTML = '미진행';
 
@@ -159,7 +163,8 @@ export default class QuestModal extends Panel {
 
       this.rewardItem = new MakeDom('div', 'rewardItem');
       rewards.appendChild(this.rewardItem);
-      this.rewardItem.addEventListener('click', ()=>{
+      
+      this.rewardItem.addEventListener('click', ()=> {
         this.rewardItem.classList.remove('show');
       });
 
@@ -176,13 +181,21 @@ export default class QuestModal extends Panel {
             item.appendChild(img.dom);
             item.classList.add('tooltipBtn');
             count.innerText = `x${itemData.count}`;
-
+            
             item.addEventListener('click', () => {
-              item.classList.toggle('active');
+              if(selected) {
+                selected.classList.remove('active');
+              }
+              selected = item;
+              item.classList.add('active');
+              this.rewardItem.classList.add('show');
 
-              this.rewardItem.classList.toggle('show');
-              this.rewardItem.style.left = item.offsetLeft + 66 + 'px';
+              posX = item.offsetLeft + 66;
+              if(posX > 280) {
+                posX = item.offsetLeft - 270;
+              }
 
+              this.rewardItem.style.left = posX + 'px';
               this.showRewardItem(itemData.item);
             });
 
