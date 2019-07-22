@@ -19,8 +19,8 @@ export default class Quest extends EventEmitter {
         // 수정해보자.
         for(let i = 0; i < this.copy.length; ++i) {
             const objective = this.copy[i];
-            const handler = () => {
-                this.emit('checkQuestCondition', objective, objective.conditionScript, true);
+            const handler = (param) => {
+                this.emit('checkQuestCondition', objective, objective.conditionScript, true, param);
             };
 
             this.objectiveEventsList.push({

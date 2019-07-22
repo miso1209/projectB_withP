@@ -94,7 +94,7 @@ export class Portal5 {
             $t();
         } else {
             const title = quests[failQuest].title;
-            game.ui.showConfirmModal(`"${title}" 퀘스트를 완료 해야 합니다.`, false, (result) => {
+            game.ui.showConfirmModal(`"${title}" 퀘스트 보상을 받아야 입장 가능 합니다.`, false, (result) => {
             });
         }
     }

@@ -41,15 +41,15 @@
         "title": "기초 전투훈련 - 1",
         "description" : "어둠의 성에 돌아다니는 <em>몬스터</em>들과 싸워서 승리하자",
         "objectives": [
-            { "text": "전투 승리", "event": ["win"], "conditionScript": "checkCount(win, >=, 3)"}
+            { "text": "전투 승리", "event": ["win"], "conditionScript": "checkCount(win, >=, 5)"}
         ],
         "rewards": [
-            { "text": "탁한 사파이어 x 3",  "script": "addItem(4011, 3)" },
-            { "text": "탁한 토파즈 x 3",  "script": "addItem(4014, 3)" },
-            { "text": "탁한 아쿠아마린 x 3",  "script": "addItem(4017, 3)" },
-            { "text": "탁한 루비 x 3",  "script": "addItem(4020, 3)" },
-            { "text": "탁한 다이아몬드 x 3",  "script": "addItem(4023, 3)" },
-            { "text": "탁한 오르하르콘 x 3",  "script": "addItem(4026, 3)" }
+            { "text": "탁한 사파이어 x 6",  "script": "addItem(4011, 6)" },
+            { "text": "탁한 토파즈 x 6",  "script": "addItem(4014, 6)" },
+            { "text": "탁한 아쿠아마린 x 6",  "script": "addItem(4017, 6)" },
+            { "text": "탁한 루비 x 6",  "script": "addItem(4020, 6)" },
+            { "text": "탁한 다이아몬드 x 6",  "script": "addItem(4023, 6)" },
+            { "text": "탁한 오르하르콘 x 6",  "script": "addItem(4026, 6)" }
         ]
     },
     "4": {
@@ -92,15 +92,15 @@
         "secForNextIterable": 86400,
         "levelBound": { "min": 1, "max": 10 },
         "title": "어둠의 성 탐험 - 1",
-        "description" : "어둠의 성 5층까지 탐험하자.",
+        "description" : "어둠의 성 <em>3층</em>까지 탐험하자.",
         "objectives": [
-            { "text": "어둠의 성 탐험", "event": ["nextfloor"], "conditionScript": "checkFloor(floor, >=, 5)"}
+            { "text": "어둠의 성 탐험", "event": ["nextfloor"], "conditionScript": "checkFloor(floor, >=, 3)"}
         ],
         "rewards": [
-            { "text": "소형 원소결정체(물) x 3",  "script": "addItem(4029, 3)" },
-            { "text": "소형 원소결정체(불) x 3",  "script": "addItem(4032, 3)" },
-            { "text": "소형 원소결정체(어둠) x 3",  "script": "addItem(4035, 3)" },
-            { "text": "소형 원소결정체(빛) x 3",  "script": "addItem(4038, 3)" },
+            { "text": "소형 원소결정체(물) x 6",  "script": "addItem(4029, 6)" },
+            { "text": "소형 원소결정체(불) x 6",  "script": "addItem(4032, 6)" },
+            { "text": "소형 원소결정체(어둠) x 6",  "script": "addItem(4035, 6)" },
+            { "text": "소형 원소결정체(빛) x 6",  "script": "addItem(4038, 6)" },
             { "text": "50 Gold",  "script": "addGold(50)" }
         ]
     },
@@ -113,15 +113,15 @@
         "title": "기초 전투훈련 - 2",
         "description" : "어둠의 성에 돌아다니는 <em>몬스터</em>들과 싸워서 승리하자",
         "objectives": [
-            { "text": "전투 승리", "event": ["win"], "conditionScript": "checkCount(win, >=, 5)"}
+            { "text": "전투 승리", "event": ["win"], "conditionScript": "checkCount(win, >=, 7)"}
         ],
         "rewards": [
-            { "text": "맑은 사파이어 x 3",  "script": "addItem(4012, 3)" },
-            { "text": "맑은 토파즈 x 3",  "script": "addItem(4015, 3)" },
-            { "text": "맑은 아쿠아마린 x 3",  "script": "addItem(4018, 3)" },
-            { "text": "맑은 루비 x 3",  "script": "addItem(4021, 3)" },
-            { "text": "맑은 다이아몬드 x 3",  "script": "addItem(4024, 3)" },
-            { "text": "맑은 오르하르콘 x 3",  "script": "addItem(4027, 3)" }
+            { "text": "맑은 사파이어 x 6",  "script": "addItem(4012, 6)" },
+            { "text": "맑은 토파즈 x 6",  "script": "addItem(4015, 6)" },
+            { "text": "맑은 아쿠아마린 x 6",  "script": "addItem(4018, 6)" },
+            { "text": "맑은 루비 x 6",  "script": "addItem(4021, 6)" },
+            { "text": "맑은 다이아몬드 x 6",  "script": "addItem(4024, 6)" },
+            { "text": "맑은 오르하르콘 x 6",  "script": "addItem(4027, 6)" }
         ]
     },
     "8": {
@@ -131,16 +131,16 @@
         "secForNextIterable": 86400,
         "levelBound": { "min": 11, "max": 20 },
         "title": "어둠의 성 탐험 - 2",
-        "description" : "어둠의 성 10층까지 탐험하자.",
+        "description" : "어둠의 성 <em>8층</em>까지 탐험하자.",
         "objectives": [
-            { "text": "어둠의 성 탐험", "event": ["nextfloor"], "conditionScript": "checkFloor(floor, >=, 10)"}
+            { "text": "어둠의 성 탐험", "event": ["nextfloor"], "conditionScript": "checkFloor(floor, >=, 8)"}
         ],
         "rewards": [
-            { "text": "중형 원소결정체(물) x 3",  "script": "addItem(4030, 3)" },
-            { "text": "중형 원소결정체(불) x 3",  "script": "addItem(4033, 3)" },
-            { "text": "중형 원소결정체(어둠) x 3",  "script": "addItem(4036, 3)" },
-            { "text": "중형 원소결정체(빛) x 3",  "script": "addItem(4039, 3)" },
-            { "text": "150 Gold",  "script": "addGold(50)" }
+            { "text": "중형 원소결정체(물) x 6",  "script": "addItem(4030, 6)" },
+            { "text": "중형 원소결정체(불) x 6",  "script": "addItem(4033, 6)" },
+            { "text": "중형 원소결정체(어둠) x 6",  "script": "addItem(4036, 6)" },
+            { "text": "중형 원소결정체(빛) x 6",  "script": "addItem(4039, 6)" },
+            { "text": "150 Gold",  "script": "addGold(150)" }
         ]
     },
     "9": {
@@ -155,12 +155,12 @@
             { "text": "전투 승리", "event": ["win"], "conditionScript": "checkCount(win, >=, 10)"}
         ],
         "rewards": [
-            { "text": "영롱한 사파이어 x 3",  "script": "addItem(4013, 3)" },
-            { "text": "영롱한 토파즈 x 3",  "script": "addItem(4016, 3)" },
-            { "text": "영롱한 아쿠아마린 x 3",  "script": "addItem(4019, 3)" },
-            { "text": "영롱한 루비 x 3",  "script": "addItem(4022, 3)" },
-            { "text": "영롱한 다이아몬드 x 3",  "script": "addItem(4025, 3)" },
-            { "text": "영롱한 오르하르콘 x 3",  "script": "addItem(4028, 3)" }
+            { "text": "영롱한 사파이어 x 6",  "script": "addItem(4013, 6)" },
+            { "text": "영롱한 토파즈 x 6",  "script": "addItem(4016, 6)" },
+            { "text": "영롱한 아쿠아마린 x 6",  "script": "addItem(4019, 6)" },
+            { "text": "영롱한 루비 x 6",  "script": "addItem(4022, 6)" },
+            { "text": "영롱한 다이아몬드 x 6",  "script": "addItem(4025, 6)" },
+            { "text": "영롱한 오르하르콘 x 6",  "script": "addItem(4028, 6)" }
         ]
     },
     "10": {
@@ -170,16 +170,67 @@
         "secForNextIterable": 86400,
         "levelBound": { "min": 21, "max": 30 },
         "title": "어둠의 성 탐험 - 3",
-        "description" : "어둠의 성 15층까지 탐험하자.",
+        "description" : "어둠의 성 <em>15층</em>까지 탐험하자.",
         "objectives": [
             { "text": "어둠의 성 탐험", "event": ["nextfloor"], "conditionScript": "checkFloor(floor, >=, 15)"}
         ],
         "rewards": [
-            { "text": "물의 오브 x 3",  "script": "addItem(4031, 3)" },
-            { "text": "불의 오브 x 3",  "script": "addItem(4034, 3)" },
-            { "text": "어둠의 오브 x 3",  "script": "addItem(4037, 3)" },
-            { "text": "빛의 오브 x 3",  "script": "addItem(4040, 3)" },
-            { "text": "300 Gold",  "script": "addGold(50)" }
+            { "text": "물의 오브 x 6",  "script": "addItem(4031, 6)" },
+            { "text": "불의 오브 x 6",  "script": "addItem(4034, 6)" },
+            { "text": "어둠의 오브 x 6",  "script": "addItem(4037, 6)" },
+            { "text": "빛의 오브 x 6",  "script": "addItem(4040, 6)" },
+            { "text": "300 Gold",  "script": "addGold(300)" }
+        ]
+    },
+    "11": {
+        "id": 11,
+        "isStoryQuest": false,
+        "isIterable": true,
+        "secForNextIterable": 86400,
+        "levelBound": { "min": 1, "max": 10 },
+        "title": "재련의 고수 - 1",
+        "description" : "<em>작업용 테이블</em>에서 제작 <em>2회</em>를 진행하자",
+        "objectives": [
+            { "text": "제작", "event": ["combine"], "conditionScript": "checkCount(combine, >=, 2)"}
+        ],
+        "rewards": [
+            { "text": "소형 강철 x 10",  "script": "addItem(4005, 10)" },
+            { "text": "중형 강철 x 10",  "script": "addItem(4006, 10)" },
+            { "text": "50 Gold",  "script": "addGold(50)" }
+        ]
+    },
+    "12": {
+        "id": 12,
+        "isStoryQuest": false,
+        "isIterable": true,
+        "secForNextIterable": 86400,
+        "levelBound": { "min": 11, "max": 20 },
+        "title": "재련의 고수 - 2",
+        "description" : "<em>작업용 테이블</em>에서 제작 <em>3회</em>를 진행하자",
+        "objectives": [
+            { "text": "제작", "event": ["combine"], "conditionScript": "checkCount(combine, >=, 3)"}
+        ],
+        "rewards": [
+            { "text": "대형 강철 x 10",  "script": "addItem(4007, 10)" },
+            { "text": "소형 미스릴 x 10",  "script": "addItem(4008, 10)" },
+            { "text": "150 Gold",  "script": "addGold(150)" }
+        ]
+    },
+    "13": {
+        "id": 13,
+        "isStoryQuest": false,
+        "isIterable": true,
+        "secForNextIterable": 86400,
+        "levelBound": { "min": 21, "max": 30 },
+        "title": "재련의 고수 - 3",
+        "description" : "<em>작업용 테이블</em>에서 제작 <em>4회</em>를 진행하자",
+        "objectives": [
+            { "text": "제작", "event": ["combine"], "conditionScript": "checkCount(combine, >=, 4)"}
+        ],
+        "rewards": [
+            { "text": "중형 미스릴 x 10",  "script": "addItem(4009, 10)" },
+            { "text": "대형 미스릴 x 10",  "script": "addItem(4010, 10)" },
+            { "text": "300 Gold",  "script": "addGold(300)" }
         ]
     }
 }

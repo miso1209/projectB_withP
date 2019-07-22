@@ -321,7 +321,6 @@ export default class Game extends EventEmitter {
             this.player.characters[key].applyOption('recovery()');
         }
         this.currentFloor = 0;
-        this.storage.changeFloor(this.currentFloor);
     }
 
     _playCutscene(script, callback) {
@@ -764,6 +763,7 @@ export default class Game extends EventEmitter {
     combine(id) {
         const result = this.combiner.combine(id, this.player.inventory);
         if (result) {
+            this.emit('combine', id);
             this.emit('additem', id, 1);
         }
         return true;
@@ -938,6 +938,27 @@ export default class Game extends EventEmitter {
         }
 
         this.emit('useitem', itemId, count);
+    }
+
+    addQuests(questIds) {
+        // 없을 경우 추가.
+        questIds.forEach((questId) => {
+            if (!this.storage.data.quests[questId]) {
+                this.storage.setQuest(questId, {
+                    isSuccess: false
+                });
+                this.setQuest(questId, {
+                    isSuccess: false
+                });
+    
+                // UI Flag
+                this.ui.flagArray[3] = 'true';
+                this.ui.checkFlag();
+    
+                this.ui.showQuestStatus(this.player.quests[questId]);
+            }
+        });
+        Sound.playSound('quest_accept_1.wav', { singleInstance: true });
     }
 
     addQuest(questId) {
