@@ -213,14 +213,14 @@ class BattleActivePortraitUI extends PIXI.Container {
         this.healthProgressBar.setScale({x: 2, y: 2});
         this.healthProgressBar.setPosition({x: this.portrait.width / 2, y: this.height + margin.y});
         this.healthProgressBar.show();
-        this.healthProgressBar.tinting('0xff0000');
+        this.healthProgressBar.tinting('0xAF2A3F');
         this.addChild(this.healthProgressBar);
 
         this.activeProgressBar = new BattleProgressBar();
         this.activeProgressBar.setScale({x: 2, y: 2});
         this.activeProgressBar.setPosition({x: this.portrait.width / 2, y: this.height + margin.y});
         this.activeProgressBar.show();
-        this.activeProgressBar.tinting('0xff7f00');
+        this.activeProgressBar.tinting('0xAF952A');
         this.addChild(this.activeProgressBar);
     }
 
@@ -260,6 +260,7 @@ class BattleActivePortraitUI extends PIXI.Container {
 
 function getText(inputText, options) {
     const style = new PIXI.TextStyle();
+    style.fontFamily = 'DungGeunMoFont', 'PixelFont', 'Nanum Gothic', 'Malgun Gothic', '\B9D1\C740   \ACE0\B515', 'AppleSDGothicNeo', 'SF Pro Display', 'Roboto', 'Helvetica Neue', 'sans-serif';
     style.dropShadow = true;
     style.dropShadowDistance = 3;
     style.fontStyle = 'italic';
@@ -346,12 +347,12 @@ class RewardUI extends PIXI.Container {
         this.blackScreen.beginFill(0x000000);
         this.blackScreen.drawRect(0, 0, screenSize.width, screenSize.height);
         this.blackScreen.endFill();
-        this.blackScreen.alpha = 0.3;
+        this.blackScreen.alpha = 0.7;
         this.addChild(this.blackScreen);
 
         // 아이템 보상 모달 (상단)
-        this.itemRewardContainer = new ItemRewardUI({ width: screenSize.width - 180, height: 190 });
-        this.itemRewardContainer.setPosition({ x: 90, y: 40 });
+        this.itemRewardContainer = new ItemRewardUI({ width: screenSize.width - 180, height: 170 });
+        this.itemRewardContainer.setPosition({ x: 90, y: 60 });
         this.itemRewardContainer.setReward(reward);
         this.itemRewardContainer.changeTitle('- Reward -', { fontSize: 36 });
         this.addChild(this.itemRewardContainer);
@@ -359,24 +360,25 @@ class RewardUI extends PIXI.Container {
         // Close Btn
         this.closeBtn = new PIXI.Sprite(PIXI.Texture.fromFrame('btn_close.png'));
         this.closeBtn.anchor.x = 1;
-        this.closeBtn.width = 32;
-        this.closeBtn.height = 32;
-        this.closeBtn.position.x = this.itemRewardContainer.position.x + this.itemRewardContainer.width - 47;
-        this.closeBtn.position.y = this.itemRewardContainer.position.y - 12;
+        this.closeBtn.width = 34;
+        this.closeBtn.height = 34;
+        this.closeBtn.position.x = this.itemRewardContainer.position.x + this.itemRewardContainer.width - 30;
+        this.closeBtn.position.y = this.itemRewardContainer.position.y - 30;
         this.addChild(this.closeBtn);
 
 
         // 캐릭터 보상 모달 (하단)
         this.expRewardContainer = [];
-        const marginX = 62.8;
+        // const marginX = 62.8;
+        const marginX = 64;
         const size = {
-            width: 81,
-            height: 170
+            width: 80,
+            height: 150
         };
 
         reward.characters.forEach((character, i) => {
             const characterReward = new CharacterRewardUI(size);
-            characterReward.setPosition({ x: 90 + (i * (size.width + marginX)), y: 290 });
+            characterReward.setPosition({ x: 90 + (i * (size.width + marginX)), y: 294 });
             characterReward.setCharacter(character, reward.exp);
             this.addChild(characterReward);
 
