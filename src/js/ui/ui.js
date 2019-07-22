@@ -169,9 +169,9 @@ export default class DomUI extends EventEmitter {
             this.questWrap = new QuestList(questlist, (result)=>{
                 this.emit('quest', result);
             });
+
             this.questWrap.dom.addEventListener('click', ()=>{
                 this.questWrap.dom.classList.toggle('open');
-    
                 if(this.questWrap.dom.classList.contains('open')) {
                     this.emit('questList');
                 }
@@ -393,18 +393,23 @@ export default class DomUI extends EventEmitter {
     
     // 퀘스트 모달
     showQuestModal(inputs, quest){
-        // console.log();
-        if(inputs.length === 0) {
+        if (inputs.length === 0) {
             // 진행할 수 있는 퀘스트가 없고, 신규로 받을 수 있는 퀘스트도 없는 상태.. 
             this.showConfirmModal('현재 새로운 퀘스트가 없습니다.', false, ()=>{});
             return;
         }
+
         const pane = this.createContainer();
-        const questModal = new QuestModal(pane, inputs, quest, (result) => {
-            if(result.type === 'Acceptable') {
-                this.emit('addQuest', result.id);
+        const questModal = new QuestModal(pane, inputs, quest, (status, result) => {
+
+            if (status === 'checkNotify') {
+                this.emit(status, result.id);
             } else {
-                this.emit('completeQuest', result.id);
+                if (result.type === 'Acceptable') {
+                    this.emit('addQuest', result.id);
+                } else {
+                    this.emit('completeQuest', result.id);
+                }
             }
         });
 

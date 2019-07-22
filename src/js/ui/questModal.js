@@ -7,19 +7,20 @@ import ItemImage from './component/itemimage';
 export default class QuestModal extends Panel {
     constructor(pane, inputs, currentQuest, result){
       super();
+      console.log(inputs);
 
       pane.classList.add('screen');
       this.pane = pane;
       this.currentQuest = currentQuest;
       this.inputs = inputs; // 현재 진행중인 퀘스트 데이터
-      this.result = result;
-    
+      this.callback = result;
+      
       const modal = new Modal(pane, 800, 440, null);
       modal.addTitle('퀘스트');
       modal.addCloseButton();
       this.dom = modal.dom;
       this.dom.classList.add('quest');
-      
+
       // 전체 컨텐츠 wrapper
       const wrapper = new MakeDom('div', 'flexWrap');
       wrapper.classList.add('contents');
@@ -43,10 +44,11 @@ export default class QuestModal extends Panel {
       questList.appendChild(scrollView);
       wrapper.appendChild(this.questInfo);
       wrapper.appendChild(questList);
-
+    
       this.dom.appendChild(wrapper);
       this.updateList();
     }
+    
 
     updateList() {
       let selectedCell = null;
@@ -58,6 +60,12 @@ export default class QuestModal extends Panel {
         const cell = new MakeDom('li', 'cell');
         const title = new MakeDom('p', 'quest_title', quest.title);
         const status = new MakeDom('p', 'quest_status');
+
+        if(quest.success) {
+          title.classList.add('new');
+        } else {
+          title.classList.remove('new');
+        }
 
         if (quest.type === 'Acceptable') {
           status.innerText = '미진행';
@@ -103,6 +111,8 @@ export default class QuestModal extends Panel {
     }
 
     listcallback(quest) {
+
+      this.callback('checkNotify', quest);
       this.questInfo.innerHTML = '';
       
       const frag = document.createDocumentFragment();
@@ -118,6 +128,7 @@ export default class QuestModal extends Panel {
       button.dom.classList.add('submit');
       button.moveToCenter(0);
       button.moveToBottom(20);
+      
 
       if (quest.type === 'Acceptable') {
         status.innerHTML = '미진행';
@@ -135,10 +146,10 @@ export default class QuestModal extends Panel {
         }
         status.innerHTML = (quest.success)?'완료':'진행중';
       }
-
+      
       button.dom.addEventListener('click', ()=>{
         this.pane.parentNode.removeChild(this.pane);
-        return this.result(quest)
+        return this.callback('progress', quest);
       });
 
       const rewardTitle = new MakeDom('p', 'reward_title', '완료보상');

@@ -285,7 +285,6 @@
   display: block;
   width: 24px;
   height: 24px;
-  /* border-right: 1px solid #4e4a47; */
   background: url(~assets/ui/icon_dps.png) no-repeat 50% 50% #741b28;
 }
 .profileWrap .infoWrap .statBox:not(:first-child):before {
