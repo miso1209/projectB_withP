@@ -11,6 +11,8 @@ export default class Quest extends EventEmitter {
         this.origin = Object.assign({}, quests[questid]);
         this.copy = this.origin.objectives.map((objective) => { return Object.assign({}, objective)});
         this.objectiveEventsList = [];
+        this.isNotify = false;
+        this.isSuccess = false;
         this.data = {};
         this.isInitData = {};
 

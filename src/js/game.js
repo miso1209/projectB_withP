@@ -946,6 +946,7 @@ export default class Game extends EventEmitter {
             this.ui.checkFlag();
 
             this.ui.showQuestStatus(this.player.quests[questId]);
+            this.player.quests[questId].isNotify = true;
 
             Sound.playSound('quest_accept_1.wav', { singleInstance: true });
         }
@@ -967,9 +968,9 @@ export default class Game extends EventEmitter {
             this.storage.setQuest(questId, quest.data);
 
             if (isChanged && showFlag) {
-                if (quest.success) {
-                    console.log('success quest');
-
+                if (quest.success && !quest.isSuccess) {
+                    quest.isSuccess = true;
+                    quest.isNotify = true;
                     // success quest
                     // UI Flag
                     this.ui.flagArray[3] = 'true';
@@ -977,7 +978,7 @@ export default class Game extends EventEmitter {
 
                     this.ui.showQuestStatus(this.player.quests[questId]);
                     Sound.playSound('quest_done_1.wav', { singleInstance: true });
-                } else {
+                } else if(!quest.success) {
                     // change condition
                     console.log('change condition');
                 }

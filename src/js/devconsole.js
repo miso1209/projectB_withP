@@ -113,6 +113,10 @@ export default class DevConsole {
         }
     }
 
+    showQuest() {
+        console.log(this.game.player.quests);
+    }
+
     killCharacter(key) {
         this.game.player.characters[key].health = 0;
     }
