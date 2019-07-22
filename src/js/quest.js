@@ -30,6 +30,10 @@ export default class Quest extends EventEmitter {
         }
     }
     
+    get isIterable() {
+        return this.origin.isIterable;
+    }
+
     get isSuccess() {
         return this.data.isSuccess;
     }

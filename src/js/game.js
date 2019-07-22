@@ -470,7 +470,7 @@ export default class Game extends EventEmitter {
             }
         }
 
-        if (options.enterPortalStage) {
+        if (options && options.enterPortalStage) {
             const portal = mapGenerator.getPortal();
             await this.$enterStageIns(portal, 'portalway');
         } else {
@@ -950,8 +950,6 @@ export default class Game extends EventEmitter {
                 isSuccess: false
             });
 
-            this.setNotify(questId, true);
-
             // UI Flag
             this.ui.flagArray[3] = 'true';
             this.ui.checkFlag();
@@ -1025,7 +1023,7 @@ export default class Game extends EventEmitter {
     }
 
     checkCount(quest, key, operator, count) {
-        // 초기 로드시는 증가시키지 않는다.
+        // 차기 로드시는 증가시키지 않는다.
         if (!quest.isInitData[key]) {
             quest.isInitData[key] = true;
             if (quest.data[key] === undefined) {
@@ -1099,7 +1097,8 @@ export default class Game extends EventEmitter {
                     objectives: newQuest.objectives,
                     rewards: newQuest.rewards,
                     success: newQuest.isAllObjectivesCompleted(),
-                    isNotify: this.isNotifiedQuest(ID)
+                    isNotify: this.isNotifiedQuest(ID),
+                    isIterable: newQuest.isIterable
                 });
             }
         }
@@ -1121,7 +1120,8 @@ export default class Game extends EventEmitter {
                 objectives: quest.objectives,
                 rewards: quest.rewards,
                 success: quest.isAllObjectivesCompleted(),
-                isNotify: this.isNotifiedQuest(ID)
+                isNotify: this.isNotifiedQuest(ID),
+                isIterable: quest.isIterable
             });
         }
 
@@ -1139,6 +1139,28 @@ export default class Game extends EventEmitter {
             success: result,
             count: result?1:0,
             maxCount: 1
+        };
+    }
+
+    checkFloor(quest, key, operator, count) {
+        // 차기 로드시는 증가시키지 않는다.
+        if (!quest.isInitData[key]) {
+            quest.isInitData[key] = true;
+            if (quest.data[key] === undefined) {
+                quest.data[key] = { count: 0 };
+            }
+        } else if (quest.data[key] !== undefined && this.currentFloor >= quest.data[key].count) {
+            quest.data[key].count = this.currentFloor<count?this.currentFloor:count;
+        } else {
+            quest.data[key] = { count: 0 };
+        }
+
+        const result = eval(`${quest.data[key].count} ${operator} ${count}`);
+
+        return {
+            success: result,
+            count: quest.data[key].count,
+            maxCount: count
         };
     }
 
