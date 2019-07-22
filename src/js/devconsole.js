@@ -114,7 +114,7 @@ export default class DevConsole {
     }
 
     showQuest() {
-        console.log(this.game.player.quests);
+        console.log(this.game.getAllQuests());
     }
 
     killCharacter(key) {

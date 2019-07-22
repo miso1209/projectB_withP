@@ -37,6 +37,7 @@ export default class Storage extends EventEmitter {
                 }
             }
         };
+        this.data.checkedQuest = [];
         this.data.selectableFloor = [1];
         this.data.cutscene = null;
         this.data.created = new Date();
@@ -116,6 +117,17 @@ export default class Storage extends EventEmitter {
             this.data.characters[id] = character;
             this.save();
         }
+    }
+
+    checkQuest(questId, bool) {
+        const index = this.data.checkedQuest.indexOf(Number(questId));
+        if (index >= 0 && bool) {
+            this.data.checkedQuest.splice(this.data.checkedQuest.indexOf(Number(questId)), 1);
+        } else if (index < 0 && !bool) {
+            this.data.checkedQuest.push(Number(questId));
+        }
+        
+        this.save();
     }
 
     setQuest(questId, data) {

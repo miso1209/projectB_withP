@@ -275,6 +275,8 @@ export default class Game extends EventEmitter {
             this.setCompletedQuest(questId, this.storage.data.completedQuests[questId]);
         }
 
+        this.checkedQuest = this.storage.data.checkedQuest;
+
         this.currentFloor = 0;
         this.selectableFloor = this.storage.data.selectableFloor;
         
@@ -942,13 +944,13 @@ export default class Game extends EventEmitter {
         // 없을 경우 추가.
         if (!this.storage.data.quests[questId]) {
             this.storage.setQuest(questId, {
-                isNotify: true,
                 isSuccess: false
             });
             this.setQuest(questId, {
-                isNotify: true,
                 isSuccess: false
             });
+
+            this.setNotify(questId, true);
 
             // UI Flag
             this.ui.flagArray[3] = 'true';
@@ -961,14 +963,12 @@ export default class Game extends EventEmitter {
     }
 
     setNotify(questId, bool) {
-        const quest = this.player.quests[questId];
+        this.storage.checkQuest(questId, bool);
+        this.checkedQuest = this.storage.data.checkedQuest;
+    }
 
-        if (quest) {
-            this.storage.setQuest(questId, {
-                isNotify: bool
-            });
-            quest.isNotify = bool;
-        }
+    isNotifiedQuest(questId) {
+        return this.checkedQuest.indexOf(Number(questId)) < 0;
     }
 
     setQuest(questId, data) {
@@ -988,7 +988,7 @@ export default class Game extends EventEmitter {
             if (isChanged && showFlag) {
                 if (quest.success && !quest.data.isSuccess) {
                     quest.isSuccess = true;
-                    quest.isNotify = true;
+                    this.setNotify(questId, true);
                     this.ui.flagArray[3] = 'true';
                     this.ui.checkFlag();
 
@@ -1099,7 +1099,7 @@ export default class Game extends EventEmitter {
                     objectives: newQuest.objectives,
                     rewards: newQuest.rewards,
                     success: newQuest.isAllObjectivesCompleted(),
-                    isNotify: false
+                    isNotify: this.isNotifiedQuest(ID)
                 });
             }
         }
@@ -1121,7 +1121,7 @@ export default class Game extends EventEmitter {
                 objectives: quest.objectives,
                 rewards: quest.rewards,
                 success: quest.isAllObjectivesCompleted(),
-                isNotify: quest.isNotify
+                isNotify: this.isNotifiedQuest(ID)
             });
         }
 

@@ -29,15 +29,7 @@ export default class Quest extends EventEmitter {
             });
         }
     }
-
-    get isNotify() {
-        return this.data.isNotify;
-    }
-
-    set isNotify(bool) {
-        this.data.isNotify = bool;
-    }
-
+    
     get isSuccess() {
         return this.data.isSuccess;
     }
