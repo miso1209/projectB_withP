@@ -5,6 +5,7 @@ import ListBox from './component/listbox';
 import ItemImage from './component/itemimage';
 import MakeDom from './component/makedom';
 import DropDown from './component/dropdown';
+import { parsingOption } from '../utils';
 
 
 class CombinerUI extends Panel {
@@ -17,7 +18,7 @@ class CombinerUI extends Panel {
     
         this.recipe = null;
         this.materialsData = null;
-    
+
         const contents = document.createElement('div');
         contents.classList.add('contents');
 
@@ -51,7 +52,7 @@ class CombinerUI extends Panel {
         const selectCountWrap = new MakeDom('div', 'countWrap');
         const countText = new MakeDom('strong', 'text', '수량');
         const selectNum = new DropDown(0, 10, (result)=>{
-            console.log(result);
+            console.log('select----' + result);
         });
         selectCountWrap.appendChild(countText);
         selectCountWrap.appendChild(selectNum.dom);
@@ -63,7 +64,8 @@ class CombinerUI extends Panel {
         totalCount.appendChild(selectCountWrap);
         totalCount.appendChild(costswrap);
 
-
+        this.availableCount = new MakeDom('p', 'availableCount', 0);
+        
         const buttonWrap = new MakeDom('div', 'buttonWrap');
         const combineButton = new Button('제작', 'submit');
         combineButton.dom.classList.add('wide');
@@ -74,21 +76,19 @@ class CombinerUI extends Panel {
 
         contents.appendChild(this.itemName);
         contents.appendChild(this.comment);
+        contents.appendChild(this.itemDesc);
         
         combineItem.appendChild(this.itemImg.dom);
-        combineItem.appendChild(this.itemDesc);
-
-        combineItemInfo.appendChild(this.options);
+        combineItem.appendChild(this.options);
+        // combineItemInfo.appendChild(this.options);
         combineItemInfo.appendChild(this.materialInfo);
-
-        
-        
 
         // 하단 영역 고정 - 가격, 버튼
         // buttonWrap.appendChild(costswrap);
         buttonWrap.appendChild(this.button);
 
         contents.appendChild(combineItem);
+        contents.appendChild(this.availableCount);
         contents.appendChild(combineItemInfo);
 
         contents.appendChild(totalCount);
@@ -113,6 +113,13 @@ class CombinerUI extends Panel {
         });
     }
 
+    checkAvailableCount() {
+        // 제작가능한 수량 계산
+        this.count = 0;
+        this.availableCount.innerHTML = `제작가능 <em>[${this.count}]</em>`;
+    }
+
+
     update() {
         if (this.recipe !== null) {
             if (this.recipe.available === 1) {
@@ -122,6 +129,7 @@ class CombinerUI extends Panel {
                 this.button.classList.remove('disabled');
                 this.button.classList.add('isAvailable');
                 this.button.addEventListener('click', this.doCombineItem.bind(this));
+                
             } else {
                 this.checkReason();
 
@@ -129,6 +137,7 @@ class CombinerUI extends Panel {
                 this.button.classList.remove('isAvailable');
                 this.button.removeEventListener('click', this.doCombineItem.bind(this));
             }
+            this.checkAvailableCount();
 
             // 기존데이터 초기화
             this.materialInfo.innerHTML = '';
@@ -144,7 +153,8 @@ class CombinerUI extends Panel {
             // 아이템 효과는 배열로 전달된다.
             for (const option of this.recipe.data.options ) {
                 let node = new MakeDom('li', 'li');
-                node.innerText = option.toString();
+                // node.innerText = option.toString();
+                node.innerText = parsingOption(option);
                 this.options.appendChild(node);
             }
             

@@ -5,6 +5,7 @@ import MakeDom from "./component/makedom";
 import Button from "./component/button";
 import StatText from "./component/statText";
 import StatusBar from "./component/statusbar";
+import { parsingOption } from "../utils";
 
 
 
@@ -363,7 +364,7 @@ export default class CharacterDetail extends Panel {
       let desc = new MakeDom('p', 'desc', `${this.statItem.data.description}`);
       
       this.statItem.data.options.forEach(option => {
-        let optionText = new MakeDom('em', 'option', `${option}`);
+        let optionText = new MakeDom('em', 'option', `${parsingOption(option)}`);
         desctext.appendChild(optionText);
       });
 

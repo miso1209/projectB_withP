@@ -2,6 +2,7 @@ import Panel from "./component/panel";
 import Modal from "./component/modal";
 import ItemImage from "./component/itemimage";
 import MakeDom from "./component/makedom";
+import { parsingOption } from "../utils";
 
 export default class Inventory extends Panel {
     
@@ -128,6 +129,7 @@ export default class Inventory extends Panel {
 
                 let selected = null;
                 let index = -1;
+                // parsingOption(option);
 
                 // 여기서 아이템을 가져온다
                 for (const item of input.items) {
@@ -198,7 +200,8 @@ export default class Inventory extends Panel {
                 // const parser = new parser(option);
                 // parser.text; // => 힘 20
                 let li = document.createElement('li');
-                li.innerText = option;
+                // li.innerText = option;
+                li.innerText = parsingOption(option);
                 this.itemOptions.appendChild(li);
             });
         } else {

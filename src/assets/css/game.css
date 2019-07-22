@@ -1588,15 +1588,28 @@ button.disabled {
   margin-top: 10px;
 }
 
+.modal.combiner .itemDesc {
+  /* width: calc(100% - 79px); */
+  height: 48px;
+  margin-bottom: 10px;
+
+  font-size: 12px;
+  line-height: 1.4;
+  text-align: center;
+  word-break: keep-all;
+  color: #968d85;
+  overflow: hidden;
+}
+
 .modal.combiner .combineItem {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
 
   width: 100%;
-  margin: 0 0 15px;
+  /* margin-bottom: 25px; */
   background: #281b10;
-  border: 1px solid #4e4a47;
+  border: 2px solid #968d85;
 }
 
 .modal.combiner .combineItem::after{
@@ -1609,51 +1622,40 @@ button.disabled {
 .modal.combiner .combineItem .itemImg {
   width: 64px;
   height: 64px;
-  margin-right: 15px;
+  margin: 5px;
 }
 
-.modal.combiner .combineItem .itemDesc {
-  width: calc(100% - 79px);
-  height: 64px;
-  padding: 10px 0 0 10px;
-  overflow: hidden;
-  
-  font-size: 13px;
-  line-height: 1.4;
-  text-align: left;
-  word-break: keep-all;
-  border-left: 1px solid #4e4a47;
-}
-
-.modal.combiner .combineItemInfo .options {
+.modal.combiner .combineItem .options {
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
+  padding: 5px 10px;
   background: none;
-  height: 60px;
+  border-left: 2px solid #968d85;
 }
 
-.modal.combiner .combineItemInfo .options li {
+.modal.combiner .combineItem .options li {
   color: #ffd800;
-  font-size: 14px;
-  line-height: 1.3;
+  font-size: 13px;
+  line-height: 1.6;
   text-align: left;
 }
-.modal.combiner .combineItemInfo .options li::before  {
-  content: '';
-  display: inline-block;
-  width: 3px;
-  height: 3px;
-  margin-right: 8px;
-  margin-left: 8px;
-  vertical-align: middle;
-  background-color: #dad0c7;
+
+.modal.combiner .availableCount {
+  text-align: right;
+  font-size: 12px;
+  line-height: 30px;
+  color: #fff;
 }
+.modal.combiner .availableCount em {
+  color: #8fc13b;
+  font-size: 14px;
+}
+
 .modal.combiner .materialInfo {
   width: 100%;
   min-height: 116px;
-  margin: 10px auto 0;
-  padding: 10px;
+  padding: 10px 10px 5px;
   background-color: #1f130a;
   transition: all 0.3s;
 }
@@ -1700,6 +1702,8 @@ button.disabled {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+
+  border:1px solid #4e4a47;
 }
 
 .modal.combiner .gold::before {
@@ -1722,20 +1726,21 @@ button.disabled {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  
+
   width: 110px;
   padding: 8px 10px;
   
   font-size: 13px;
   background-color: #1f130a;
   box-sizing: border-box;
-  border-top: 1px solid #4e4a47;
 }
 .modal.combiner .total .costswrap{
   width: calc(100% - 110px);
+  border: none;
+  border-left: 1px solid #4e4a47;
 } 
+
 .modal.combiner .total .selectWrap {
-  
   width: 48px;
   height: 22px;
   margin-left: 10px;

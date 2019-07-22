@@ -3,6 +3,7 @@ import Modal from './component/modal';
 import MakeDom from './component/makedom';
 import Button from './component/button';
 import ItemImage from './component/itemimage';
+import { parsingOption } from '../utils';
 
 export default class QuestModal extends Panel {
     constructor(pane, inputs, currentQuest, result){
@@ -235,7 +236,7 @@ export default class QuestModal extends Panel {
 
       item.options.forEach(option => {
         let optionText = document.createElement('li');
-        optionText.innerText = option;
+        optionText.innerText = `${parsingOption(option)}`;
         options.appendChild(optionText);
       });
     }
