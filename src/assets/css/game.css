@@ -733,7 +733,6 @@ button, .button{
   height: 14px;
   color: #fff;
   text-align: left;
-  
   background: url(~assets/ui/checkbox.png) 100% 0 no-repeat;
   overflow: hidden;
 }
@@ -743,7 +742,6 @@ button, .button{
   border: none;
   box-shadow: none;
 }
-
 .checkbox.active {
   background: url(~assets/ui/checkbox.png) 100% -14px no-repeat;
 }
@@ -1217,18 +1215,6 @@ button, .button{
   padding: 6px;
   
 }
-.modal.quest .flex-left.questList {
-  width: 236px;
-  padding: 2px;
-  height: 344px;
-  /* background-color: #281b10; */
-  border: 1px solid #281b10;
-}
-.modal.quest .questList .scrollView {
-  margin: 0;
-  /* padding: 10px 0; */
-  background-color: #272523;
-}
 
 .modal.quest .flex-right.questInfo {
   position: relative;
@@ -1304,6 +1290,37 @@ button, .button{
   display: block;
 }
 
+/* 보상 아이템 툴팁박스 */
+.modal.quest .quest_reward .rewardItem .name {
+  font-size: 16px;
+  max-height: 22px;
+  margin-bottom: 5px;
+
+  color: #fff;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  overflow: hidden
+}
+.modal.quest .quest_reward .rewardItem .category {
+  font-size: 12px;
+  color: #968d85;
+}
+.modal.quest .quest_reward .rewardItem .options {
+  max-height: 50px;
+  overflow: hidden;
+}
+.modal.quest .quest_reward .rewardItem .options li {
+  font-size: 13px;
+  line-height: 1.2;
+  color: #d2a026;
+}
+.modal.quest .quest_reward .rewardItem .description {
+  max-height: 50px;
+  margin: 5px 0 0;
+  font-size: 12px;
+  line-height: 1.4;
+  overflow: hidden;
+}
 .modal.quest .quest_reward .reward_title {
   position: absolute;
   top: -25px;
@@ -1311,7 +1328,6 @@ button, .button{
   font-size: 16px;
   color: #fff;
 }
-
 
 .modal.quest .quest_reward .item {
   position: relative;
@@ -1335,7 +1351,6 @@ button, .button{
   text-align: right;
   color: #fff;
   overflow: hidden;
-  /* color: #ffd800; */
 }
 .modal.quest .quest_reward .item_gold {
   display: block;
@@ -1371,69 +1386,45 @@ button, .button{
   position: absolute;
   right: 20px;
   top: 15px;
-
   font-size: 12px;
 }
-
+.modal.quest .flex-left.questList {
+  width: 236px;
+  padding: 2px;
+  height: 344px;
+  border: 1px solid #281b10;
+}
+.modal.quest .questList .scrollView {
+  margin: 0;
+  background-color: #272523;
+}
 .modal.quest .questList li {
   display: block;
   text-align: left;
   height: auto;
   padding: 5px;
-  /* border: 1px solid transparent; */
+  border: 1px solid transparent;
   border-bottom: 1px dotted #fff;
 }
-
+.modal.quest .questList li.success {
+  color: #8fc13b;
+}
+.modal.quest .questList li.success button.rewardBtn {
+  display: block;
+  background: url(~assets/ui/button_wide.png) no-repeat;
+}
 .modal.quest .questList li:hover, 
 .modal.quest .questList li:active, 
 .modal.quest .questList li.active {
   border: 1px solid #ffd800;
 }
-
-.modal.quest li button.rewardBtn{
+.modal.quest .questList li button.rewardBtn{
   display: none;
   position: static;
   margin-top: 10px;
 }
-.modal.quest li.success {
-  color: #8fc13b;
-}
-.modal.quest li.success button.rewardBtn {
-  display: block;
-  background: url(~assets/ui/button_wide.png) no-repeat;
-}
 
-/* 보상 아이템 툴팁박스 */
-.rewardItem .name {
-  font-size: 16px;
-  max-height: 22px;
-  margin-bottom: 5px;
 
-  color: #fff;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-  overflow: hidden
-}
-.rewardItem .category {
-  font-size: 12px;
-  color: #968d85;
-}
-.rewardItem .options {
-  max-height: 50px;
-  overflow: hidden;
-}
-.rewardItem .options li {
-  font-size: 13px;
-  line-height: 1.2;
-  color: #d2a026;
-}
-.rewardItem .description {
-  max-height: 50px;
-  margin: 5px 0 0;
-  font-size: 12px;
-  line-height: 1.4;
-  overflow: hidden;
-}
 /* .퀘스트 모달 */
 
 

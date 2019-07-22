@@ -20,8 +20,6 @@ export default class Setting extends Panel {
     this.contents = document.createElement('div');
     this.contents.className = 'contents';
 
-    console.log(Sound.options);
-
     this.addOption('Master', Sound.options['Master']);
     this.addOption('BGM', Math.round(Sound.options['BGM']*2));
     this.addOption('Default', Math.round(Sound.options['Default']*2));
@@ -58,7 +56,6 @@ export default class Setting extends Panel {
       options.appendChild(option3);
     }
     
-    // options.querySelectorAll('.radioBtn')[index].classList.add('checked');
     this.onChanged(options.querySelectorAll('input')[index]);
 
     let data = options.querySelectorAll('input');
@@ -77,10 +74,10 @@ export default class Setting extends Panel {
   onChanged (option) {
     let value = 0;
     let sibilings = option.parentNode.parentNode.childNodes;
-
     sibilings.forEach(node => {
       node.classList.remove('checked');
     });
+    option.parentNode.classList.add('checked');
     
     if(option.value === 'ON') {
       value = 1;
@@ -89,8 +86,7 @@ export default class Setting extends Panel {
     } else {
       value = option.value*0.5;
     }
-    
-    option.parentNode.classList.add('checked');
+
     this.callback(option.name, value); 
   }
 }
