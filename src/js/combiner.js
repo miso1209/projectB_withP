@@ -52,10 +52,12 @@ export default class Combiner {
 
         for (let key in playerRecipes) {
             playerRecipes[key].forEach((recipe) => {
+                const isAvailableResult = this.isAvailable(recipe.id, inventory, level);
                 recipe.owned = inventory.getCount(recipe.item);
                 recipe.data = items[recipe.item];
-                recipe.available = this.isAvailable(recipe.id, inventory, level).success;
-                recipe.reason = this.isAvailable(recipe.id, inventory, level).reason;
+                recipe.available = isAvailableResult.success;
+                recipe.reason = isAvailableResult.reason;
+                recipe.maxCount = isAvailableResult.maxCount;
                 for(const mat of recipe.materials) {
                     mat.owned = inventory.getCount(mat.item);
                     mat.data = items[mat.item];
@@ -156,32 +158,43 @@ export default class Combiner {
     isAvailable(id, inventory, level) {
         const result = {
             success: true,
-            reason: []
+            reason: [],
+            maxCount: 0
         };
         const recipe = recipes[id];
         for(const mat of recipe.materials) {
-            result.success &= (mat.count <= inventory.getCount(mat.item));
+            result.success &= (mat.count * 1 <= inventory.getCount(mat.item));
         }
-        
-        // result.reason += result.success?'':'[재료 부족]';
-
-        // result.success &= (recipe.gold <= inventory.gold);
-        // result.reason += (recipe.gold <= inventory.gold)?'':'[Gold 부족]';
-
-        // result.success &= (recipe.level <= level);
-        // result.reason += (recipe.level <= level)?'':'[제한레벨 미달.]';
-
         result.reason.push(result.success?{materials: true}:{materials: false});
         
-        result.success &= (recipe.gold <= inventory.gold);
-        result.reason.push((recipe.gold <= inventory.gold)?{gold: true}:{gold: false});
+        result.success &= (recipe.gold * 1 <= inventory.gold);
+        result.reason.push((recipe.gold * 1 <= inventory.gold)?{gold: true}:{gold: false});
 
         result.success &= (recipe.level <= level);
         result.reason.push((recipe.level <= level)?{level: true}:{level: false});
         
-        // console.log(result);
-        
-        return result;
+        result.maxCount = this.getMaxCount(recipe, inventory, level);
 
+        return result;
+    }
+
+    getMaxCount(recipe, inventory) {
+        let maxCount = 0;
+
+        for (let i=0; i<=10; i++) {
+            let success = true;
+            for(const mat of recipe.materials) {
+                success &= (mat.count * i <= inventory.getCount(mat.item));
+            }
+            success &= (recipe.gold * i <= inventory.gold);
+            
+            if (success) {
+                maxCount = i;
+            } else {
+                break;
+            }
+        }
+
+        return maxCount;
     }
 }

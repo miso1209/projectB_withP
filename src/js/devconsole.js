@@ -130,6 +130,7 @@ export default class DevConsole {
         }
         this.game.addGold(50000);
     }
+    
     addCharacter(id) {
         this.game.game.addCharacter(id, { level: 1, exp: 0, equips: {}});
     }

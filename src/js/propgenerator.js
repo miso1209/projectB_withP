@@ -127,7 +127,7 @@ export default class PropGenerator {
     }
     
     createMonster(floor, isBoss) {
-        const partyLength = isBoss?(4 + Math.round(Math.random() * 2)):(2 + Math.round(Math.random() * 4));
+        const partyLength = isBoss?6:(2 + Math.round(Math.random() * 4));
         const floorData = FloorMonsters[floor];
         const monsterParty = {
             name : null,
@@ -143,7 +143,6 @@ export default class PropGenerator {
             gold: 0,
             exp: 0,
             rewards: {
-
             }
         };
 

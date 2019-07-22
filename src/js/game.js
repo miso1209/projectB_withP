@@ -760,12 +760,30 @@ export default class Game extends EventEmitter {
         }
     }
 
-    combine(id) {
-        const result = this.combiner.combine(id, this.player.inventory);
-        if (result.success) {
-            this.emit('combine', result.item);
-            this.emit('additem', result.item, 1);
+    combine(id, count) {
+        let result = {
+            items: {
+                
+            },
+            success: false
+        };
+
+        for (let i=0;i<count;i++) {
+            const combineResult = this.combiner.combine(id, this.player.inventory);
+    
+            if (combineResult.success) {
+                this.emit('combine', combineResult.item);
+                this.emit('additem', combineResult.item, 1);
+            }
+    
+            if (result.items[combineResult.item]) {
+                result.items[combineResult.item]++;
+            } else {
+                result.items[combineResult.item]=1;
+            }
+            result.success |= combineResult.success;
         }
+        
         return result;
     }
 
