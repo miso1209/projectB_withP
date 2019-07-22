@@ -30,7 +30,7 @@ export default class Slash extends SkillBase {
             } 
             case 30: {
                 // TODO : 데미지 계산 공식을 어디서 가져와야 할까??
-                Sound.playSound('slash_1.wav', { singleInstance: true });
+                Sound.randomPlaySound(['slash_1.wav', 'slash_2.mp3', 'slash_3.wav'], { singleInstance: true });
                 this.addEffect(this.target, { name: 'slash', animation: true, animationLength: 8, removeFrame: 60, speed: 0.5 });
                 let damage = this.calcSkillExpressions(this.owner, this.skillExpressions[0]);
 

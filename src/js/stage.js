@@ -240,6 +240,8 @@ export default class Stage extends PIXI.Container {
             } else {
                 this.eventMap[x + y * this.mapWidth] = new Portal4(x, y, tile);
             }
+        } else if(tile.name === 'portalway') {
+            this.eventMap[x + y * this.mapWidth] = new Portal4(x, y, tile);
         } else if (tile.name === 'nextFloor') {
             this.eventMap[x + y * this.mapWidth] = new NextFloorPortal(x, y, tile);
         } else {

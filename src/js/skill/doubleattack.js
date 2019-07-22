@@ -45,7 +45,7 @@ export default class DouobleAttack extends SkillBase {
                 break;
             }
             case 79: {
-                Sound.playSound('slash_1.wav', { singleInstance: true });
+                Sound.randomPlaySound(['slash_1.wav', 'slash_2.mp3', 'slash_3.wav'], { singleInstance: true });
                 this.owner.removeBuff("doubleAttack");
                 let armor = this.calcSkillExpressions(this.owner, this.skillExpressions[2]);
                 this.owner.addBuff("doubleAttack", 10, new BlinkEffectBuff({

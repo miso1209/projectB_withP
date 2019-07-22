@@ -436,7 +436,7 @@ export default class Game extends EventEmitter {
 
     // [정리] 기존처럼 Map을 바로 생성하는 것 이 아니라, 미치 다 생성해서 들고있어서, Stage객체를 가지고 있다.
     // 던전에서는 어떤 방향으로 입장하는지 모르기 때문에 입장 방향도 dir 이라는 파라메타로 넘겨준다.
-    async $nextFloor(from, dir) {
+    async $nextFloor(from, dir, options) {
         this.storage.changeFloor(this.currentFloor);
         this.currentFloor++;
         this.ui.showTheaterUI(0.5);
@@ -448,8 +448,6 @@ export default class Game extends EventEmitter {
         mapGenerator.setFloor(this.currentFloor);
         mapGenerator.setInventory(this.player.inventory);
         const maps = await mapGenerator.createMap(dir);
-        const hall = mapGenerator.getHall();
-        let hallKey = (dir === 'left'? 'right':'down');
         
         this.ui.minimap.makeNewMap(mapGenerator.map, mapGenerator.realMap);
 
@@ -468,7 +466,14 @@ export default class Game extends EventEmitter {
             }
         }
 
-        await this.$enterStageIns(hall, hallKey);
+        if (options.enterPortalStage) {
+            const portal = mapGenerator.getPortal();
+            await this.$enterStageIns(portal, 'portalway');
+        } else {
+            const hall = mapGenerator.getHall();
+            let hallKey = (dir === 'left'? 'right':'down');
+            await this.$enterStageIns(hall, hallKey);
+        }
         this.ui.showStageTitle(`- 어둠의 성 ${this.currentFloor}층 -`);
         this.emit('nextfloor', this.currentFloor);
     }
@@ -676,7 +681,7 @@ export default class Game extends EventEmitter {
             await this.$fadeIn(0.5);
 
             // BGM 읽어오기, Scale(Zoom) 읽어오기 추가해야할 것.
-            Sound.playSound('battle_bgm_1.wav', { loop: true, type: 'BGM' });
+            Sound.playSound('bgm_3.mp3', { loop: true, type: 'BGM' });
         }
     }
 

@@ -31,7 +31,7 @@ export default class WandAttack extends SkillBase {
             case 30: {
                 // TODO : 데미지 계산 공식을 어디서 가져와야 할까??
                 // 완드 공격 이펙트로 변경하면 될 것 같다.
-                Sound.playSound('wand_attack_1.wav', { singleInstance: true });
+                Sound.playSound('melee.wav', { singleInstance: true });
                 this.addEffect(this.target, { name: 'wandattack', animation: true, animationLength: 12, removeFrame: 60, speed: 0.5 });
                 let damage = this.calcSkillExpressions(this.owner, this.skillExpressions[0]);
 

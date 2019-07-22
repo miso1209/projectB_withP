@@ -64,6 +64,11 @@ export default class Sound {
         }
     }
 
+    randomPlaySound(fileNames, options) {
+        const fileName = fileNames[Math.round(Math.random() * (fileNames.length - 1))];
+        this.playSound(fileName, options);
+    }
+
     playSound(fileName, options) {
         // BGM 같은 것은 중복되어 실행되면 안된다. => 따라서 type을 두고
         // 해당 타입으로 다른 이름의 sound가 들어오면 이전의 sound를 제거한다.

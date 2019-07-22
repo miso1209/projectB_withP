@@ -164,6 +164,10 @@ export default class MapGenerator {
         return this.hall;
     }
 
+    getPortal() {
+        return this.portal;
+    }
+
     setFloor(currentFloor) {
         // 층 정보를 담는다.
         this.currentFloor = currentFloor;
@@ -264,6 +268,7 @@ export default class MapGenerator {
                     await stage.$load(stageName);
                     stage.setTags(this.tags);
                     realMap[y][x] = stage;
+                    this.portal = stage;
                 } else if (this.map[y][x] === MAP_DATA.HALL) {
                     const stageName = path.basename(`assets/mapdata/${hall}.json`, ".json");
                     const stage = new Stage(neighbor);
