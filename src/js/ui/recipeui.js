@@ -129,13 +129,13 @@ class CombinerUI extends Panel {
         if (this.recipe !== null) {
             this.costs.innerText = this.recipe.gold * num;
             this.count = num;
+
             this.updatematerialInfo();
         }
     }
 
     updatematerialInfo(){
         this.materialInfo.innerHTML = '';
-
         this.recipe.materials.forEach(mat => {
             let node = new MakeDom('li', 'li');
             let material1 = new ItemImage(mat.data.image.texture, mat.data.image.x, mat.data.image.y);
@@ -179,6 +179,7 @@ class CombinerUI extends Panel {
             // 기존데이터 초기화
             this.materialInfo.innerHTML = '';
             this.options.innerHTML = '';
+            this.count = 1;
 
             // 제작가능한 수량
             // 드롭다운에 최대값 재설정
@@ -199,6 +200,7 @@ class CombinerUI extends Panel {
                 node.innerText = parsingOption(option);
                 this.options.appendChild(node);
             }
+            
             this.updatematerialInfo();
         } 
     }

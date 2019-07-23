@@ -1222,7 +1222,7 @@ button, .button{
 
 .acquireModal .contents-option .rank {
   position: absolute;
-  top: -2px;
+  /* top: -2px; */
 }
 
 /* 퀘스트 모달 */
@@ -1620,9 +1620,8 @@ button.disabled {
 }
 
 .modal.combiner .itemDesc {
-  /* width: calc(100% - 79px); */
   height: 48px;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 
   font-size: 12px;
   line-height: 1.4;
