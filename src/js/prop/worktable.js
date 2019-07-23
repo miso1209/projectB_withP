@@ -37,8 +37,6 @@ export default class WorkTable extends PropBase {
             const recipes = game.getRecipes();
             Sound.playSound('table.wav', { singleInstance: true });
             game.ui.showCombineItemList(recipes, (recipe, count) => {
-                console.log('showCombineItemList---' + count);
-
                 // TODO : 나중에 아이템 이름과 아이콘을 표시할수 있도록 하자
                 game.ui.showCraftUI(count, () => {
                     count = count?count:1;

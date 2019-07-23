@@ -64,6 +64,12 @@ export default class QuestModal extends Panel {
         if (quest.type === 'Acceptable') {
           status.innerText = '미진행';
         } else {
+          if (quest.success) {
+            status.classList.add('done');
+          } else {
+            status.classList.add('ing');
+          }
+
           status.innerText = (quest.success)?'완료':'진행중';
         }
 
@@ -113,9 +119,12 @@ export default class QuestModal extends Panel {
 
     listcallback(quest) {
       this.callback('checkNotify', quest);
-
       this.questInfo.innerHTML = '';
-      
+
+      if (quest.isIterable) {
+        this.questInfo.classList.add('iterable');
+      }
+
       const frag = document.createDocumentFragment();
       const title = new MakeDom('p', 'quest_title', quest.title);
       const description = new MakeDom('p', 'quest_desc');

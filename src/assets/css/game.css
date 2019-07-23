@@ -529,7 +529,7 @@
   margin-bottom: 10px;
 }
 /* 반복퀘스트인 경우 아이콘으로 처리 - 임시처리  */
-.questWrap .list-box li.iterable .quest_name{
+/* .questWrap .list-box li.iterable .quest_name{
   color: #fd6240;
   margin-left: 10px;
 }
@@ -544,7 +544,7 @@
   vertical-align: bottom;
   background: url(~assets/ui/icon_quest.png) no-repeat;
   background-size: contain;
-}
+} */
 
 .questWrap .list-box li.new::after {
   position: absolute;
@@ -1246,24 +1246,10 @@ button, .button{
 } 
 
 .modal.quest .quest_mission {
-  padding-top: 15px;
+  padding-top: 20px;
+
   font-size: 14px;
-}
-
-
-.modal.quest .questInfo {
-  position: relative;
-  width: calc(100% - 244px);
-  height: 344px;
-
-  padding: 20px 20px;
-  text-align: left;
-  color: #dad0c7;
-  background-color: #281b10;
-}
-
-.modal.quest .questInfo .quest_title {
-  font-size: 20px;
+  line-height: 1;
 }
 
 /* 보상 아이템 툴팁박스 */
@@ -1417,11 +1403,41 @@ button, .button{
   text-overflow:ellipsis;
   white-space:nowrap;
 }
-.modal.quest .questList li.iterable .quest_title::before {
-  content: '';
 
-  /* color: #fd6240; */
+
+.modal.quest .quest_title::before {
+  content: '';
+  display: inline-block;
+  width: 28px;
+  height: 16px;
+  padding: 0;
+  margin-right: 5px;
+  vertical-align: top;
+  background: url(~assets/ui/quest_normal.png) no-repeat;
 }
+
+.modal.quest .iterable .quest_title::before {
+  content: '';
+  display: inline-block;
+  width: 28px;
+  height: 16px;
+  padding: 0;
+  margin-right: 5px;
+  vertical-align: top;
+
+  background: url(~assets/ui/quest_daily.png) no-repeat;
+}
+.modal.quest .epic .quest_title::before {
+  content: '';
+  display: inline-block;
+  width: 28px;
+  height: 16px;
+  padding: 0;
+  margin-right: 5px;
+  vertical-align: top;
+  background: url(~assets/ui/quest_epic.png) no-repeat;
+}
+
 .modal.quest .questList li.new::after {
   position: absolute;
   top: 8px;
@@ -1454,6 +1470,26 @@ button, .button{
 }
 
 
+.modal.quest .questInfo {
+  position: relative;
+  width: calc(100% - 244px);
+  height: 344px;
+
+  padding: 20px 20px;
+  text-align: left;
+  color: #dad0c7;
+  background-color: #281b10;
+}
+
+.modal.quest .questInfo .quest_title {
+  font-size: 20px;
+}
+
+.modal.quest .questInfo > .quest_title::before{
+  width: 29px;
+  background-size: contain;
+  vertical-align: middle;
+}
 
 
 /* .퀘스트 모달 */
@@ -1625,8 +1661,8 @@ button.disabled {
 .modal.combiner .combineItem .rankBg {
   position: absolute;
   z-index: 11;
-  bottom: -4px;
-  left: -4px;
+  top: -20px;
+  left: -5px;
   width: 32px;
   height: 32px;
   background: url(~assets/ui/rankBg.png) no-repeat;

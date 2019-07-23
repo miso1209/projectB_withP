@@ -160,9 +160,6 @@ class CombinerUI extends Panel {
 
     update() {
         if (this.recipe !== null) {
-
-            console.log(this.recipe);
-
             if (this.recipe.available === 1) {
                 this.comment.style.display = 'none';
                 this.costs.classList.remove('disabled');
@@ -194,8 +191,6 @@ class CombinerUI extends Panel {
             this.itemImg.updateImage(this.recipe.data.image.x, this.recipe.data.image.y);
             this.itemName.innerText = this.recipe.data.name;
             this.itemDesc.innerText = this.recipe.data.description;
-            // this.materialsData = this.recipe.materials;
-
             this.itemRank.updateIcon(this.recipe.data.rank);
 
             // 아이템 효과는 배열로 전달된다.

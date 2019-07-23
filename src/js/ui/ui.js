@@ -386,9 +386,6 @@ export default class DomUI extends EventEmitter {
 
     // 아이템 획득
     showItemAcquire(text, inputs, result) {
-        
-        console.log('showItemAcquire');
-
         const pane = this.createContainer();
         const acquire = new ItemAcquire(pane, text, inputs, (response) => {
             this.removeContainer(pane);
