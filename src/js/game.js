@@ -1150,7 +1150,18 @@ export default class Game extends EventEmitter {
     }
 
     getAllQuests() {
-        return this.getAcceptableQuests().concat(this.getAcceptedQuests());
+        // Sorting 추가하자.
+        const accepted = this.getAcceptedQuests();
+        const acceptable = this.getAcceptableQuests();
+        const concatedQuests = accepted.concat(acceptable);
+
+        concatedQuests.sort((a,b) => {
+            const valA = a.success?1:0;
+            const valB = b.success?1:0;
+            return valB - valA;
+        });
+        
+        return concatedQuests;
     }
 
     getAcceptableQuests() {
