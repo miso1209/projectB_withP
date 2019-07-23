@@ -61,7 +61,8 @@ export default class PropGenerator {
             const itemData = this.getRarityItem(this.getFilteredItems(items, floorData));
             const removeIndex = this.getIndex(items ,itemData, (a, b) => { return a.id === b.id });
             items.splice(removeIndex, 1);
-            rewards.push({ id: itemData.id, owned: 1 + Math.round(Math.random() * (rewardsRank + 1))});
+            const count = 1 + Math.round(Math.random() * (rewardsRank + 1));
+            rewards.push({ id: itemData.id, owned: count, count: count});
         }
 
         let chest = {

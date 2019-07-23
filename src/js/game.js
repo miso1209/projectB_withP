@@ -774,12 +774,11 @@ export default class Game extends EventEmitter {
             if (combineResult.success) {
                 this.emit('combine', combineResult.item);
                 this.emit('additem', combineResult.item, 1);
-            }
-    
-            if (result.items[combineResult.item]) {
-                result.items[combineResult.item]++;
-            } else {
-                result.items[combineResult.item]=1;
+                if (result.items[combineResult.item]) {
+                    result.items[combineResult.item]++;
+                } else {
+                    result.items[combineResult.item] = 1;
+                }
             }
             result.success |= combineResult.success;
         }
@@ -1220,8 +1219,23 @@ export default class Game extends EventEmitter {
             // 이벤트 연결을 끊어놓는다
             quest.foreEachEvent(this.removeListener.bind(this));
 
+            // rewards 스크립트를 돌리는 과정이다.. 이 때 addItem이면 addItems로 통합해서 사용하도록 변경..
+           const items = [];
             for(const reward of quest.rewards) {
-                this.runScript(reward.script);
+                const parsed = new ScriptParser(reward.script);
+                if (parsed.name === 'addItem') {
+                    items.push({
+                        id: parsed.args[0],
+                        owned: parsed.args[1],
+                        count: parsed.args[1]
+                    });
+                } else {
+                    this.runScript(reward.script);
+                }
+            }
+
+            if (items.length > 0) {
+                this.addItems(items);
             }
             
             // 가지고 있는 퀘스트에서 제거한다. 
