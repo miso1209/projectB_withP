@@ -116,6 +116,7 @@ export default class Game extends EventEmitter {
             }
             this.player.party.confirm();
             this.storage.saveParty(party);
+            this.emit('partyConfirm');
         })
         this.ui.on('characterselect', ()=> {
             const inputs = [];
@@ -202,6 +203,7 @@ export default class Game extends EventEmitter {
             if(this.ui.player_profile) {
                 this.ui.updateProfile();
             }
+            this.emit('save');
         });
     }
 
@@ -671,6 +673,9 @@ export default class Game extends EventEmitter {
             // 승리했을때만이 close Battle로 들어온다 => 버튼을 눌러서 battle을 퇴장하기 때문.
             this.currentMode.on('closeBattle', async () => {
                 await this.$leaveBattle('win');
+                if (monster.isBoss) {
+                    this.emit('bossWin');
+                }
                 if (this.stage.battleResult === 'win' && monsterObj.die) {
                     monsterObj.die(this);
                 }
@@ -918,6 +923,7 @@ export default class Game extends EventEmitter {
 
     addGold(gold) {
         this.player.inventory.gold += Number(gold);
+        this.emit('addGold');
     }
 
     addItem(itemId, count) {
@@ -1041,8 +1047,9 @@ export default class Game extends EventEmitter {
                 }
 
                 this.ui.resetQuestStatus();
+            } else if (isChanged) {
+                this.storage.setQuest(questId, quest.data);
             }
-            this.storage.setQuest(questId, quest.data);
         });
         quest.load();
     }
@@ -1063,6 +1070,61 @@ export default class Game extends EventEmitter {
         }
 
         return func.bind(this)(quest, ...parsed.args);
+    }
+    checkLevel(quest, key, operator, count) {
+        let level = 0;
+        for (let id in this.player.characters) {
+            const character = this.player.characters[id];
+            level = character.level>level?character.level:level;
+        }
+
+        const result = eval(`${level} ${operator} ${count}`);
+
+        return {
+            success: result,
+            count: level,
+            maxCount: count
+        };
+    }
+
+    getPlayTime() {
+        const SEC_PER_MILLISEC = 1000;
+        const MINUTE_PER_MILLISEC = SEC_PER_MILLISEC * 60;
+        const HOUR_PER_MILLISEC = MINUTE_PER_MILLISEC * 60;
+        const sec = this.storage.data.playTime % (SEC_PER_MILLISEC * 60);
+        const minute = (this.storage.data.playTime - sec) % (MINUTE_PER_MILLISEC * 60);
+        const hour = (this.storage.data.playTime - minute - sec);
+        
+        return {
+            sec: sec / SEC_PER_MILLISEC,
+            minute: minute / MINUTE_PER_MILLISEC,
+            hour: hour / HOUR_PER_MILLISEC
+        };
+    }
+
+    checkPlaytime(quest, key, operator, count) {
+        const playTime = this.getPlayTime();
+        let time = Math.round(playTime.sec / 60 + playTime.minute + playTime.hour * 60);
+
+        const result = eval(`${time} ${operator} ${count}`);
+
+        return {
+            success: result,
+            count: time,
+            maxCount: count
+        };
+    }
+
+    checkPower(quest, power, operator, count) {
+        const powerFigure = this.player.party.totalPowerFigure;
+
+        const result = eval(`${powerFigure} ${operator} ${count}`);
+
+        return {
+            success: result,
+            count: powerFigure,
+            maxCount: count
+        };
     }
 
     checkCount(quest, key, operator, count) {
@@ -1205,6 +1267,17 @@ export default class Game extends EventEmitter {
         return {
             success: result,
             count: quest.data[key].count,
+            maxCount: count
+        };
+    }
+
+    checkGold(quest, goldparam, operator, count) {
+        const gold = this.player.inventory.gold;
+        const result = eval(`${gold} ${operator} ${count}`);
+
+        return {
+            success: result,
+            count: gold,
             maxCount: count
         };
     }

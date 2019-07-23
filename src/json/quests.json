@@ -232,5 +232,297 @@
             { "text": "대형 미스릴 x 10",  "script": "addItem(4010, 10)" },
             { "text": "300 Gold",  "script": "addGold(300)" }
         ]
+    },
+
+    "14": {
+        "id": 14,
+        "isStoryQuest": false,
+        "isIterable": false,
+        "secForNextIterable": 0,
+        "levelBound": { "min": 0, "max": 999 },
+        "title": "성장의 달인 - 1",
+        "description" : "한 <em>캐릭터의 레벨</em>을 <em>10레벨 이상</em>달성하자",
+        "objectives": [
+            { "text": "10레벨 달성", "event": ["save"], "conditionScript": "checkLevel(level, >=, 10)"}
+        ],
+        "rewards": [
+            { "text": "강철 검 x 1",  "script": "addItem(A2, 1)" },
+            { "text": "강철 장검 x 1",  "script": "addItem(A102, 1)" },
+            { "text": "강철 단검 x 1",  "script": "addItem(A202, 1)" },
+            { "text": "숏보우 x 1",  "script": "addItem(A302, 1)" },
+            { "text": "강철 완드 x 1",  "script": "addItem(A402, 1)" },
+            { "text": "신입 마법서 x 1",  "script": "addItem(A502, 1)" },
+            { "script": "addQuest(15)" }
+        ]
+    },
+    "15": {
+        "id": 15,
+        "isStoryQuest": false,
+        "isIterable": false,
+        "secForNextIterable": 0,
+        "levelBound": { "min": 0, "max": 0 },
+        "title": "성장의 달인 - 2",
+        "description" : "한 <em>캐릭터의 레벨</em>을 <em>20레벨 이상</em>달성하자",
+        "objectives": [
+            { "text": "20레벨 달성", "event": ["save"], "conditionScript": "checkLevel(level, >=, 20)"}
+        ],
+        "rewards": [
+            { "text": "샤프 소드 x 1",  "script": "addItem(A4, 1)" },
+            { "text": "은빛 장검 x 1",  "script": "addItem(A104, 1)" },
+            { "text": "실버 나이프 x 1",  "script": "addItem(A204, 1)" },
+            { "text": "실버 보우 x 1",  "script": "addItem(A304, 1)" },
+            { "text": "실버 완드 x 1",  "script": "addItem(A404, 1)" },
+            { "text": "고대의 마법서 x 1",  "script": "addItem(A504, 1)" },
+            { "script": "addQuest(16)" }
+        ]
+    },
+    "16": {
+        "id": 16,
+        "isStoryQuest": false,
+        "isIterable": false,
+        "secForNextIterable": 0,
+        "levelBound": { "min": 0, "max": 0 },
+        "title": "성장의 달인 - 3",
+        "description" : "한 <em>캐릭터의 레벨</em>을 <em>30레벨 이상</em>달성하자",
+        "objectives": [
+            { "text": "30레벨 달성", "event": ["save"], "conditionScript": "checkLevel(level, >=, 30)"}
+        ],
+        "rewards": [
+            { "text": "미스릴 소드 x 1",  "script": "addItem(A6, 1)" },
+            { "text": "미스릴 장검 x 1",  "script": "addItem(A106, 1)" },
+            { "text": "미스릴 나이프 x 1",  "script": "addItem(A206, 1)" },
+            { "text": "미스릴 보우 x 1",  "script": "addItem(A306, 1)" },
+            { "text": "미스릴 완드 x 1",  "script": "addItem(A406, 1)" },
+            { "text": "암흑 마법서 x 1",  "script": "addItem(A506, 1)" }
+        ]
+    },
+    "17": {
+        "id": 17,
+        "isStoryQuest": false,
+        "isIterable": true,
+        "secForNextIterable": 86400,
+        "levelBound": { "min": 1, "max": 30 },
+        "title": "보스소탕",
+        "description" : "10층마다 서식하는 <em>보스</em>를 <em>처치</em>하자",
+        "objectives": [
+            { "text": "보스 처치", "event": ["bossWin"], "conditionScript": "checkCount(boss, >=, 1)"}
+        ],
+        "rewards": [
+            { "text": "더 튼튼한 경갑 x 1",  "script": "addItem(S1004, 1)" },
+            { "text": "더 튼튼한 경갑 x 1",  "script": "addItem(S1004, 1)" },
+            { "text": "더 튼튼한 중갑 x 1",  "script": "addItem(S1104, 1)" },
+            { "text": "더 튼튼한 중갑 x 1",  "script": "addItem(S1104, 1)" },
+            { "text": "더 튼튼한 플레이트 아머 x 1",  "script": "addItem(S1204, 1)" },
+            { "text": "더 튼튼한 플레이트 아머 x 1",  "script": "addItem(S1204, 1)" }
+        ]
+    },
+    "18": {
+        "id": 18,
+        "isStoryQuest": false,
+        "isIterable": false,
+        "secForNextIterable": 0,
+        "levelBound": { "min": 0, "max": 999 },
+        "title": "포션맛을 아느냐 - 1",
+        "description" : "<em>소모성 아이템</em>을 <em>5회 이상</em> 사용해보자.",
+        "objectives": [
+            { "text": "물약 사용", "event": ["useitem"], "conditionScript": "checkCount(use, >=, 5)"}
+        ],
+        "rewards": [
+            { "text": "체력포션(소) x 3",  "script": "addItem(3001, 3)" },
+            { "text": "체력포션(중) x 3",  "script": "addItem(3002, 3)" },
+            { "text": "체력포션(대) x 3",  "script": "addItem(3003, 3)" },
+            { "text": "부활포션 x 3",  "script": "addItem(3004, 3)" },
+            { "script": "addQuest(19)" }
+        ]
+    },
+    "19": {
+        "id": 19,
+        "isStoryQuest": false,
+        "isIterable": false,
+        "secForNextIterable": 0,
+        "levelBound": { "min": 0, "max": 0 },
+        "title": "포션맛을 아느냐 - 2",
+        "description" : "<em>소모성 아이템</em>을 <em>10회 이상</em> 사용해보자.",
+        "objectives": [
+            { "text": "물약 사용", "event": ["useitem"], "conditionScript": "checkCount(use, >=, 10)"}
+        ],
+        "rewards": [
+            { "text": "체력포션(소) x 4",  "script": "addItem(3001, 4)" },
+            { "text": "체력포션(중) x 4",  "script": "addItem(3002, 4)" },
+            { "text": "체력포션(대) x 4",  "script": "addItem(3003, 4)" },
+            { "text": "부활포션 x 4",  "script": "addItem(3004, 4)" },
+            { "script": "addQuest(20)" }
+        ]
+    },
+    "20": {
+        "id": 20,
+        "isStoryQuest": false,
+        "isIterable": false,
+        "secForNextIterable": 0,
+        "levelBound": { "min": 0, "max": 0 },
+        "title": "포션맛을 아느냐 - 3",
+        "description" : "<em>소모성 아이템</em>을 <em>20회 이상</em> 사용해보자.",
+        "objectives": [
+            { "text": "물약 사용", "event": ["useitem"], "conditionScript": "checkCount(use, >=, 20)"}
+        ],
+        "rewards": [
+            { "text": "체력포션(소) x 5",  "script": "addItem(3001, 5)" },
+            { "text": "체력포션(중) x 5",  "script": "addItem(3002, 5)" },
+            { "text": "체력포션(대) x 5",  "script": "addItem(3003, 5)" },
+            { "text": "부활포션 x 5",  "script": "addItem(3004, 5)" }
+        ]
+    },
+    "21": {
+        "id": 21,
+        "isStoryQuest": false,
+        "isIterable": false,
+        "secForNextIterable": 0,
+        "levelBound": { "min": 0, "max": 999 },
+        "title": "시간의 대가 - 1",
+        "description" : "누적 게임시간 <em>1시간</em>을 달성해보자.",
+        "objectives": [
+            { "text": "누적 게임시간(분)", "event": ["save"], "conditionScript": "checkPlaytime(time, >=, 60)"}
+        ],
+        "rewards": [
+            { "text": "견습 장갑 x 1",  "script": "addItem(U2001, 1)" },
+            { "text": "견습 투구 x 1",  "script": "addItem(U2101, 1)" },
+            { "text": "견습 반지 x 1",  "script": "addItem(U2201, 1)" },
+            { "script": "addQuest(22)" }
+        ]
+    },
+    "22": {
+        "id": 22,
+        "isStoryQuest": false,
+        "isIterable": false,
+        "secForNextIterable": 0,
+        "levelBound": { "min": 0, "max": 0 },
+        "title": "시간의 대가 - 2",
+        "description" : "누적 게임시간 <em>2시간</em>을 달성해보자.",
+        "objectives": [
+            { "text": "누적 게임시간(분)", "event": ["save"], "conditionScript": "checkPlaytime(time, >=, 120)"}
+        ],
+        "rewards": [
+            { "text": "빛나는 장화 x 1",  "script": "addItem(U2302, 1)" },
+            { "text": "빛나는 목걸이 x 1",  "script": "addItem(U2402, 1)" },
+            { "text": "빛나는 방패 x 1",  "script": "addItem(U2502, 1)" },
+            { "script": "addQuest(23)" }
+        ]
+    },
+    "23": {
+        "id": 23,
+        "isStoryQuest": false,
+        "isIterable": false,
+        "secForNextIterable": 0,
+        "levelBound": { "min": 0, "max": 0 },
+        "title": "시간의 대가 - 3",
+        "description" : "누적 게임시간 <em>3시간</em>을 달성해보자.",
+        "objectives": [
+            { "text": "누적 게임시간(분)", "event": ["save"], "conditionScript": "checkPlaytime(time, >=, 180)"}
+        ],
+        "rewards": [
+            { "text": "튼튼한 장갑 x 1",  "script": "addItem(U2003, 1)" },
+            { "text": "튼튼한 투구 x 1",  "script": "addItem(U2103, 1)" },
+            { "text": "튼튼한 반지 x 1",  "script": "addItem(U2203, 1)" }
+        ]
+    },
+    "24": {
+        "id": 24,
+        "isStoryQuest": false,
+        "isIterable": false,
+        "secForNextIterable": 0,
+        "levelBound": { "min": 1, "max": 999 },
+        "title": "이자가 좋아 - 1",
+        "description" : "<em>1,000 Gold</em> 이상을 달성해보자.",
+        "objectives": [
+            { "text": "소유 Gold", "event": ["addGold"], "conditionScript": "checkGold(gold, >=, 1000)"}
+        ],
+        "rewards": [
+            { "text": "200 Gold",  "script": "addGold(200)" },
+            { "script": "addQuest(25)" }
+        ]
+    },
+    "25": {
+        "id": 25,
+        "isStoryQuest": false,
+        "isIterable": false,
+        "secForNextIterable": 0,
+        "levelBound": { "min": 0, "max": 0 },
+        "title": "이자가 좋아 - 2",
+        "description" : "<em>5,000 Gold</em> 이상을 달성해보자.",
+        "objectives": [
+            { "text": "소유 Gold", "event": ["addGold"], "conditionScript": "checkGold(gold, >=, 5000)"}
+        ],
+        "rewards": [
+            { "text": "2,000 Gold",  "script": "addGold(2000)" },
+            { "script": "addQuest(26)" }
+        ]
+    },
+    "26": {
+        "id": 26,
+        "isStoryQuest": false,
+        "isIterable": false,
+        "secForNextIterable": 0,
+        "levelBound": { "min": 0, "max": 0 },
+        "title": "이자가 좋아 - 3",
+        "description" : "<em>10,000 Gold</em> 이상을 달성해보자.",
+        "objectives": [
+            { "text": "소유 Gold", "event": ["addGold"], "conditionScript": "checkGold(gold, >=, 10000)"}
+        ],
+        "rewards": [
+            { "text": "10,000 Gold",  "script": "addGold(10000)" }
+        ]
+    },
+    "27": {
+        "id": 27,
+        "isStoryQuest": false,
+        "isIterable": false,
+        "secForNextIterable": 0,
+        "levelBound": { "min": 1, "max": 999 },
+        "title": "파티의 힘 - 1",
+        "description" : "파티의 <em>총 전투력 1,500</em> 이상을 달성해보자.",
+        "objectives": [
+            { "text": "전투력", "event": ["save"], "conditionScript": "checkPower(power, >=, 1500)"}
+        ],
+        "rewards": [
+            { "text": "견습 장화 x 1",  "script": "addItem(U2301, 1)" },
+            { "text": "견습 목걸이 x 1",  "script": "addItem(U2401, 1)" },
+            { "text": "견습 방패 x 1",  "script": "addItem(U2501, 1)" },
+            { "script": "addQuest(28)" }
+        ]
+    },
+    "28": {
+        "id": 28,
+        "isStoryQuest": false,
+        "isIterable": false,
+        "secForNextIterable": 0,
+        "levelBound": { "min": 0, "max": 0 },
+        "title": "파티의 힘 - 2",
+        "description" : "파티의 <em>총 전투력 3,000</em> 이상을 달성해보자.",
+        "objectives": [
+            { "text": "전투력", "event": ["save"], "conditionScript": "checkPower(power, >=, 3000)"}
+        ],
+        "rewards": [
+            { "text": "빛나는 장갑 x 1",  "script": "addItem(U2002, 1)" },
+            { "text": "빛나는 투구 x 1",  "script": "addItem(U2102, 1)" },
+            { "text": "빛나는 반지 x 1",  "script": "addItem(U2202, 1)" },
+            { "script": "addQuest(29)" }
+        ]
+    },
+    "29": {
+        "id": 29,
+        "isStoryQuest": false,
+        "isIterable": false,
+        "secForNextIterable": 0,
+        "levelBound": { "min": 0, "max": 0 },
+        "title": "파티의 힘 - 3",
+        "description" : "파티의 <em>총 전투력 4,500</em> 이상을 달성해보자.",
+        "objectives": [
+            { "text": "전투력", "event": ["save"], "conditionScript": "checkPower(power, >=, 4500)"}
+        ],
+        "rewards": [
+            { "text": "튼튼한 장화 x 1",  "script": "addItem(U2303, 1)" },
+            { "text": "튼튼한 목걸이 x 1",  "script": "addItem(U2403, 1)" },
+            { "text": "튼튼한 방패 x 1",  "script": "addItem(U2503, 1)" }
+        ]
     }
 }

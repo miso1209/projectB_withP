@@ -3,6 +3,7 @@ import Character from "./character";
 export default class Monster {
     constructor(origin) {
         this.origin = origin;
+        this.isBoss = false;;
     }
 
     get fieldCharacter() {

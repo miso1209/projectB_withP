@@ -203,7 +203,10 @@ export default class PropGenerator {
             monsterParty.exp = 1;
         }
 
-        return new Monster(monsterParty);
+        const result = new Monster(monsterParty);
+        result.isBoss = isBoss?isBoss:false;
+
+        return result;
     }
 
     createStoryMonster(type) {
