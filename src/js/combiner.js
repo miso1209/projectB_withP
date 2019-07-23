@@ -137,7 +137,27 @@ export default class Combiner {
             }
         }
 
-        // 새로운 아이넴을 추가한다
+        // 랜덤한 재련값을 가지도록 하자. 추후 재련이 생기기 전까지는..
+        /*
+            +0  : 20%, +1  : 16%
+            +2  : 13%, +3  : 11%
+            +4  : 9%, +5  : 8%
+            +6  : 7%, +7  : 6%
+            +8  : 5%, +9  : 3%, +10 : 2% 
+        */
+        // let reinforce = '';
+        // let reinRand = [0.2, 0.16, 0.13, 0.11, 0.09, 0.08, 0.07, 0.06, 0.05, 0.03, 0.02];
+        // if (this.isEquipable(recipe.item)) {
+        //     const rand = Math.random();
+        //     let sum = 0;
+        //     reinRand.forEach((comp, i) => {
+        //         if (rand > sum && rand <= sum + comp) {
+        //             sum += sum;
+        //         }
+        //     });
+        // }
+
+        // 새로운 아이넴을 추가한다 ${reinforce}
         inventory.addItem(`${rank}${recipe.item}`);
         return {
             item: `${rank}${recipe.item}`,

@@ -29,6 +29,10 @@ export default class Quest extends EventEmitter {
             });
         }
     }
+
+    get isStoryQuest() {
+        return this.origin.isStoryQuest;
+    }
     
     get isIterable() {
         return this.origin.isIterable;

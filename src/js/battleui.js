@@ -201,7 +201,7 @@ class BattleActivePortraitUI extends PIXI.Container {
     constructor(character) {
         super();
         this.character = character;
-        this.portrait = new PIXI.Sprite(PIXI.Texture.fromFrame(character.character.data.portrait));
+        this.portrait = new PIXI.Sprite(PIXI.Texture.fromFrame(character.character.data.battleportrait));
         this.addChild(this.portrait);
 
         const margin = {

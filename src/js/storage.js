@@ -38,7 +38,7 @@ export default class Storage extends EventEmitter {
             }
         };
         this.data.checkedQuest = [];
-        this.data.selectableFloor = [1];
+        this.data.selectableFloor = [0,1];
         this.data.cutscene = null;
         this.data.created = new Date();
         this.data.quests = {};
@@ -50,6 +50,8 @@ export default class Storage extends EventEmitter {
             this.data.selectableFloor.push(floor);
             this.save();
         }
+
+        return this.data.selectableFloor;
     }
 
     convertVersion(src) {

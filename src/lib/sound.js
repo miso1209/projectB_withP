@@ -29,7 +29,7 @@ export default class Sound {
 
         switch(type) {
             case 'Master': 
-                this.pixiSound.volumeAll = this.options[type];
+                this.pixiSound.volumeAll = (1 - this.options[type]);
                 break;
 
             default :

@@ -125,9 +125,10 @@ export default class DevConsole {
         for (let key in items) {
             const item = items[key];
             if (item.category === 'material' || item.category === 'recipes') {
-                this.game.addItem(item.id, 50);
+                this.game.player.inventory.addItem(item.id, Number(50));
             }
         }
+        this.levelUp();
         this.game.addGold(50000);
     }
     

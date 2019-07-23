@@ -36,6 +36,7 @@ export default class Game extends EventEmitter {
 
         // Load 되자마자 랭크달린 아이템 생성.
         this.makeRankedItems();
+        // this.makeReinforcedItems();
 
         // 렌더링 레이어를 설정한다
         this.gamelayer = new PIXI.Container(); // 게임용
@@ -437,11 +438,15 @@ export default class Game extends EventEmitter {
         }
     }
 
+    setFloor(floor) {
+        this.currentFloor = floor;
+    }
+
     // [정리] 기존처럼 Map을 바로 생성하는 것 이 아니라, 미치 다 생성해서 들고있어서, Stage객체를 가지고 있다.
     // 던전에서는 어떤 방향으로 입장하는지 모르기 때문에 입장 방향도 dir 이라는 파라메타로 넘겨준다.
     async $nextFloor(from, dir, options) {
         this.currentFloor++;
-        this.storage.addSelectableFloor(this.currentFloor);
+        this.selectableFloor = this.storage.addSelectableFloor(this.currentFloor);
         this.ui.showTheaterUI(0.5);
         this.ui.hideMenu();
         await this.$leaveStage(from);
@@ -1136,7 +1141,8 @@ export default class Game extends EventEmitter {
                     rewards: newQuest.rewards,
                     success: newQuest.isAllObjectivesCompleted(),
                     isNotify: this.isNotifiedQuest(ID),
-                    isIterable: newQuest.isIterable
+                    isIterable: newQuest.isIterable,
+                    isStoryQuest: newQuest.isStoryQuest
                 });
             }
         }
@@ -1159,7 +1165,8 @@ export default class Game extends EventEmitter {
                 rewards: quest.rewards,
                 success: quest.isAllObjectivesCompleted(),
                 isNotify: this.isNotifiedQuest(ID),
-                isIterable: quest.isIterable
+                isIterable: quest.isIterable,
+                isStoryQuest: quest.isStoryQuest
             });
         }
 
@@ -1256,6 +1263,54 @@ export default class Game extends EventEmitter {
     async $fadeIn(duration) {
         // this.ui.hideBlackScreen();
         await this.tweens.$addTween(this.blackScreen, duration, { alpha: 0 }, 0, "linear", true);
+    }
+
+    // 넣지 않는다. 추후 여유가 생기면 다시 생각.
+    makeReinforcedItems() {
+        const newItems = {};
+        for (let key in items) {
+            const item = items[key];
+            const category = item.category;
+            const reinforceStat = {
+                '+1': 1.10, // +10%
+                '+2': 1.12, // +2%
+                '+3': 1.15, // +3%
+                '+4': 1.19, // +4%
+                '+5': 1.24, // +5%
+                '+6': 1.30, // +6%
+                '+7': 1.37, // +7%
+                '+8': 1.45, // +8%
+                '+9': 1.54, // +9%
+                '+10': 1.7 // +16%
+            };
+
+            if (category === 'weapon' || category === 'armor' || category === 'accessory') {
+                for (let reinforce in reinforceStat) {
+                    const newItem = Object.assign({}, item);
+                    newItem.reinforce = reinforce;
+                    newItem.id = `${key}${reinforce}`;
+                    newItem.name = `${reinforce} ${newItem.name}`;
+                    newItems[`${key}${reinforce}`] = newItem;
+
+                    // ScriptParser로 모든 option rankStat만큼 증가.
+                    newItem.options = newItem.options.map((option) => {
+                        const parser = new ScriptParser(option);
+                        parser.name;
+                        parser.args[0];
+                        if (Number(parser.args[0]) > 0) {
+                            let newStat = Number(parser.args[0]) * reinforceStat[reinforce];
+                            return `${parser.name}(+${Number(newStat.toFixed(3))})`;
+                        } else {
+                            return `${parser.name}(${parser.args[0]})`;
+                        }
+                    });
+                }
+            }
+        }
+
+        for (let id in newItems) {
+            items[id] = newItems[id];
+        }
     }
 
     makeRankedItems() {
