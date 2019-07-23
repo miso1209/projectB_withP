@@ -399,11 +399,11 @@ export default class DomUI extends EventEmitter {
     }
 
     // 포털 리스트 모달
-    showPortals() {
+    showPortals(inputs, callback) {
         const pane = this.createContainer();
-        const portals = new Portal(pane, inputs, (result)=> {
-            console.log(result)
-        });
+        pane.classList.add('screen');
+        
+        const portals = new Portal(pane, inputs, callback);
     }
 
     // 퀘스트 모달

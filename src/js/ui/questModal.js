@@ -78,11 +78,12 @@ export default class QuestModal extends Panel {
         if (quest.success) {
           cell.classList.add('success');
         } 
-
         if (quest.isIterable) {
           cell.classList.add('iterable');
         }
-
+        if (quest.isStoryQuest) {
+          cell.classList.add('epic');
+        }
         if(quest.isNotify) {
           cell.classList.add('new');
         } 
@@ -120,14 +121,17 @@ export default class QuestModal extends Panel {
     }
 
     listcallback(quest) {
-      console.log(quest);
-
       this.callback('checkNotify', quest);
       this.questInfo.innerHTML = '';
 
+      this.questInfo.classList.remove('epic');
+      this.questInfo.classList.remove('iterable');
+
       if (quest.isIterable) {
         this.questInfo.classList.add('iterable');
-      }
+      } else if (quest.isStoryQuest) {
+        this.questInfo.classList.add('epic');
+      } 
 
       const frag = document.createDocumentFragment();
       const title = new MakeDom('p', 'quest_title', quest.title);
@@ -142,7 +146,6 @@ export default class QuestModal extends Panel {
       button.dom.classList.add('submit');
       button.moveToCenter(0);
       button.moveToBottom(20);
-      
 
       let selected = null;
       let posX = 0;

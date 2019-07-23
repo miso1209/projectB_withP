@@ -864,7 +864,7 @@ button, .button{
 }
 
 
-.gnb-navi .nav {
+.gnb-navi .nav, button.nav {
   position: relative !important;
   text-align: center;
   width:140px;
@@ -893,7 +893,9 @@ button, .button{
 }
 
 .gnb-navi .nav:hover, 
-.gnb-navi .nav.active {
+.gnb-navi .nav.active,
+button.nav:hover, 
+button.nav.active  {
   width:140px;
   height:30px;
   color: #dad0c7;
@@ -1536,6 +1538,20 @@ button.disabled {
   background-color: #f9f9f9;
   background-blend-mode: darken;
   pointer-events: none;
+}
+
+
+/* 포털 리스트모달 */
+.modal.portal .contents{
+  left: 10px;
+  right: 10px;
+  top: 60px;
+  bottom: 0;
+  
+  color: #dad0c7;
+}
+.modal.portal .scrollView {
+  min-height: 200px;
 }
 
 /* 조합 - 레시피 */

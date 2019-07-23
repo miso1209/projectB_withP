@@ -29,10 +29,10 @@ export default class PortalWizard extends PropBase {
         console.log('player 가 선택 가능한 층(List로 나온다.) :', uiSelectableList);
 
        game.exploreMode.setInteractive(false);
-       game.ui.showDialog([
-            { text: "후후.. 제가 필요하실 줄 알았습니다." },
-            { text: "어디로 이동하실 껀가요?." }
-        ], () => {
+    //    game.ui.showDialog([
+    //         { text: "후후.. 제가 필요하실 줄 알았습니다." },
+    //         { text: "어디로 이동하실 껀가요?." }
+    //     ], () => {
 
             /*
             game.selectableFloor : 사용자가 입장 가능한 실제 층의 배열 => [0, 1, 2, 3 ...]
@@ -50,14 +50,32 @@ export default class PortalWizard extends PropBase {
                 }
             });
             */
-            game.ui.showConfirmModal("포털 이동?", true, (result) => {
-                if (result === 'ok') {
-                    this.portal(game, game.selectableFloor[game.selectableFloor.length - 1]);
-                } else {
+            game.ui.showPortals(uiSelectableList, (result) => {
+                console.log(result);
+                if (result === 'ok') { // 리스트갱신- 시스템 모달
+                    // this.portal(game, game.selectableFloor[result]);
+                    game.ui.showConfirmModal("이동가능한 포털리스트를 갱신하시겠습니까?", true, (result) => {
+                        if (result === 'ok') {
+                            console.log('리스트갱신 뿜!');
+                        } else {
+                            game.exploreMode.setInteractive(true);
+                        }
+                    });
+                } else if(result === 'cancel'){
                     game.exploreMode.setInteractive(true);
+                } else {
+                    console.log('???');
+                    this.portal(game, result);
                 }
             });
-        });
+            // game.ui.showConfirmModal("포털 이동?", true, (result) => {
+            //     if (result === 'ok') {
+            //         this.portal(game, game.selectableFloor[game.selectableFloor.length - 1]);
+            //     } else {
+            //         game.exploreMode.setInteractive(true);
+            //     }
+            // });
+        // });
     }
 
     portal(game, floor) {
