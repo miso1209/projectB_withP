@@ -1169,7 +1169,7 @@ button, .button{
   left: 0;
   right: 0;
   top: 40px;
-  padding: 10px 10px;
+  padding: 10px 15px;
   margin: 0 auto;
 }
 
@@ -1189,8 +1189,10 @@ button, .button{
   vertical-align: middle;
 }
 .acquireModal .name {
+  font-size: 12px;
   padding: 5px 0 0;
 }
+
 .acquireModal .contents-option .comment {
   margin: 10px 0;
   font-size: 14px;
@@ -1201,13 +1203,14 @@ button, .button{
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-  justify-content:space-evenly;
+  justify-content:space-around;
   
   width: 100%;
   max-height: 180px;
 }
 
 .acquireModal .contents-option.items section {
+  position: relative;
   width: 30%;
   padding: 5px 0;
   margin-bottom: 10px;
@@ -1219,7 +1222,7 @@ button, .button{
 
 .acquireModal .contents-option .rank {
   position: absolute;
-
+  top: -2px;
 }
 
 /* 퀘스트 모달 */
@@ -1227,33 +1230,15 @@ button, .button{
   margin: 0 25px;
   background: #b2a9a0;
   padding: 6px;
-  
-}
-
-.modal.quest .flex-right.questInfo {
-  position: relative;
-  width: calc(100% - 244px);
-  height: 344px;
-
-  padding: 20px 20px;
-  text-align: left;
-  color: #dad0c7;
-  background-color: #281b10;
-  /* overflow: hidden; */
 }
 
 .modal.quest .quest_title {
   display: block;
   line-height: 1.4;
-  font-size: 16px;
+  font-size: 14px;
   padding-bottom: 5px;
 }
 
-
-
-.modal.quest .flex-right.questInfo .quest_title {
-  font-size: 20px;
-}
 
 .modal.quest .quest_desc {
   font-size: 14px;
@@ -1265,6 +1250,23 @@ button, .button{
   font-size: 14px;
 }
 
+
+.modal.quest .questInfo {
+  position: relative;
+  width: calc(100% - 244px);
+  height: 344px;
+
+  padding: 20px 20px;
+  text-align: left;
+  color: #dad0c7;
+  background-color: #281b10;
+}
+
+.modal.quest .questInfo .quest_title {
+  font-size: 20px;
+}
+
+/* 보상 아이템 툴팁박스 */
 .modal.quest .quest_reward {
   position: absolute;
   bottom: 80px;
@@ -1273,7 +1275,6 @@ button, .button{
   padding: 10px;
   background:#39281a;
 }
-
 .modal.quest .quest_reward .rewardItem {
   display: none;
   position: absolute;
@@ -1285,17 +1286,13 @@ button, .button{
   min-height: 140px;
   max-height: 180px;
   padding: 5px 20px 10px;
-  
   line-height: 1.5;
-  
   border: solid 1px #4e4a47;
   background-color: rgba(0,0,0,0.9);
 }
 .modal.quest .quest_reward .rewardItem.show {
   display: block;
 }
-
-/* 보상 아이템 툴팁박스 */
 .modal.quest .quest_reward .rewardItem .name {
   font-size: 16px;
   max-height: 22px;
@@ -1333,7 +1330,6 @@ button, .button{
   font-size: 16px;
   color: #fff;
 }
-
 .modal.quest .quest_reward .item {
   position: relative;
   display: block;
@@ -1413,14 +1409,18 @@ button, .button{
   border: 1px solid transparent;
   border-bottom: 1px dotted #fff;
 }
+
 .modal.quest .questList li .quest_title {
+  font-size: 14px;
   width: 180px;
   overflow:hidden;
   text-overflow:ellipsis;
   white-space:nowrap;
 }
-.modal.quest .questList li.iterable .quest_title {
-  color: #fd6240;
+.modal.quest .questList li.iterable .quest_title::before {
+  content: '';
+
+  /* color: #fd6240; */
 }
 .modal.quest .questList li.new::after {
   position: absolute;
@@ -1452,6 +1452,9 @@ button, .button{
   position: static;
   margin-top: 10px;
 }
+
+
+
 
 /* .퀘스트 모달 */
 
@@ -1499,12 +1502,6 @@ button.disabled {
   pointer-events: none;
 }
 
-.paging.disabled {
-  background-color: transparent;
-}
-
-
-
 /* 조합 - 레시피 */
 .modal.recipe .contents {
   left: 10px;
@@ -1522,9 +1519,7 @@ button.disabled {
 
   opacity: 0.8;
 }
-/* .modal.recipe .recipe-category + .recipeList {
-  margin-top: 10px;
-} */
+
 .modal.recipe .recipeList .scrollBlind {
   background: #281b10;
 }
@@ -1602,6 +1597,7 @@ button.disabled {
 }
 
 .modal.combiner .combineItem {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
@@ -1610,6 +1606,7 @@ button.disabled {
   /* margin-bottom: 25px; */
   background: #281b10;
   border: 2px solid #968d85;
+  box-shadow: inset 0 0 10px 0 rgba(0, 0, 0, 0.5);
 }
 
 .modal.combiner .combineItem::after{
@@ -1625,10 +1622,25 @@ button.disabled {
   margin: 5px;
 }
 
+.modal.combiner .combineItem .rankBg {
+  position: absolute;
+  z-index: 11;
+  bottom: -4px;
+  left: -4px;
+  width: 32px;
+  height: 32px;
+  background: url(~assets/ui/rankBg.png) no-repeat;
+  background-size: cover;
+}
+.modal.combiner .combineItem .rankBg .icon {
+  margin: 8px auto 0;
+}
+
 .modal.combiner .combineItem .options {
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
+  max-height: 80px;
   padding: 5px 10px;
   background: none;
   border-left: 2px solid #968d85;
@@ -1728,12 +1740,15 @@ button.disabled {
   justify-content: space-between;
 
   width: 110px;
-  padding: 8px 10px;
-  
-  font-size: 13px;
+  padding: 6px 10px;
   background-color: #1f130a;
   box-sizing: border-box;
 }
+.modal.combiner .total .countWrap .text{
+  font-size: 13px;
+  line-height: 22px;
+}
+
 .modal.combiner .total .costswrap{
   width: calc(100% - 110px);
   border: none;
@@ -1745,11 +1760,6 @@ button.disabled {
   height: 22px;
   margin-left: 10px;
 }
-
-
-
-
-
 
 
 

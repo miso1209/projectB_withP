@@ -346,10 +346,11 @@ export default class DomUI extends EventEmitter {
         this.recipeUI.moveToLeft(110);
     }
 
-    showCraftUI(itemId, result) {
+    showCraftUI(itemCount, result) {
         const pane = this.createContainer();
         pane.classList.add('screen');
 
+        // console.log('showCraftUI --- ' + itemCount);
         let domHeight = 240;
         
         const modal = new Modal(pane, 360, domHeight);
@@ -365,7 +366,7 @@ export default class DomUI extends EventEmitter {
         const loading = new ProgressUI(modal.dom, interval, (onComplete)=>{
             itemText.innerText = "아이템 조합 성공!"
             this.removeContainer(pane);
-            result(itemId);
+            result();
         });
     
         loading.moveToCenter(130);

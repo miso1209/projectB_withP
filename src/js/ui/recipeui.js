@@ -15,9 +15,11 @@ class CombinerUI extends Panel {
         const combineModal = new Modal(pane, width, height);
         this.dom = combineModal.dom;
         this.callback = callback;
-    
+        
         this.recipe = null;
         this.materialsData = null;
+        this.count = 1;
+
 
         const contents = document.createElement('div');
         contents.classList.add('contents');
@@ -35,6 +37,13 @@ class CombinerUI extends Panel {
         this.itemImg.dom.classList.add('itemImg');
         this.comment = new MakeDom('p', 'comment');
         
+        const rankWrap = new MakeDom('div', 'rankBg');
+        combineItem.appendChild(rankWrap);
+
+        this.itemRank = new ItemImage('icon_rank.png', 'c', 0);
+        this.itemRank.dom.classList.add('rank');
+        rankWrap.appendChild(this.itemRank.dom);
+
         const combineItemInfo = new MakeDom('div', 'combineItemInfo');
         contents.appendChild(combineItemInfo);
 
@@ -51,11 +60,13 @@ class CombinerUI extends Panel {
         // 수량선택
         const selectCountWrap = new MakeDom('div', 'countWrap');
         const countText = new MakeDom('strong', 'text', '수량');
-        const selectNum = new DropDown(0, 10, (result)=>{
-            console.log('select----' + result);
+        this.selectNum = new DropDown(1, 9, (result)=>{
+            // console.log('select----' + result);
+            this.updateCount(result);
         });
+
         selectCountWrap.appendChild(countText);
-        selectCountWrap.appendChild(selectNum.dom);
+        selectCountWrap.appendChild(this.selectNum.dom);
     
         const costswrap = new MakeDom('div', 'costswrap');
         this.costs = new MakeDom('div', 'gold', '0');
@@ -113,15 +124,45 @@ class CombinerUI extends Panel {
         });
     }
 
-    checkAvailableCount() {
+    updateCount(num) {
         // 제작가능한 수량 계산
-        this.count = 0;
-        this.availableCount.innerHTML = `제작가능 <em>[${this.count}]</em>`;
+        if (this.recipe !== null) {
+            this.costs.innerText = this.recipe.gold * num;
+            this.count = num;
+            this.updatematerialInfo();
+        }
     }
 
+    updatematerialInfo(){
+        this.materialInfo.innerHTML = '';
+
+        this.recipe.materials.forEach(mat => {
+            let node = new MakeDom('li', 'li');
+            let material1 = new ItemImage(mat.data.image.texture, mat.data.image.x, mat.data.image.y);
+            let material2 = new MakeDom('p', 'mat_name');
+            let material3 = new MakeDom('p', 'mat_count');
+
+            // 스타일이 적용되는 타겟이 각각 생성되므로, ui 단계에서 체크
+            if (mat.owned - mat.count < 0) {
+                material3.classList.add('unavailable')
+            }
+            
+            material2.innerText = `${mat.data.name}`;
+            material3.innerText = `${mat.owned} / ${mat.count * this.count}`;
+
+            node.appendChild(material1.dom);
+            node.appendChild(material2);
+            node.appendChild(material3);
+        
+            this.materialInfo.appendChild(node);
+        });
+    }
 
     update() {
         if (this.recipe !== null) {
+
+            console.log(this.recipe);
+
             if (this.recipe.available === 1) {
                 this.comment.style.display = 'none';
                 this.costs.classList.remove('disabled');
@@ -137,47 +178,33 @@ class CombinerUI extends Panel {
                 this.button.classList.remove('isAvailable');
                 this.button.removeEventListener('click', this.doCombineItem.bind(this));
             }
-            this.checkAvailableCount();
 
             // 기존데이터 초기화
             this.materialInfo.innerHTML = '';
             this.options.innerHTML = '';
+
+            // 제작가능한 수량
+            // 드롭다운에 최대값 재설정
+            this.selectNum.update(1, this.recipe.maxCount);
+            this.availableCount.innerHTML = `제작가능 <em>[${this.recipe.maxCount}]</em>`;
+            // 드롭다운 선택값 * 골드 
 
             // this.recipe.data
             this.costs.innerText = this.recipe.gold;
             this.itemImg.updateImage(this.recipe.data.image.x, this.recipe.data.image.y);
             this.itemName.innerText = this.recipe.data.name;
             this.itemDesc.innerText = this.recipe.data.description;
-            this.materialsData = this.recipe.materials;
+            // this.materialsData = this.recipe.materials;
+
+            this.itemRank.updateIcon(this.recipe.data.rank);
 
             // 아이템 효과는 배열로 전달된다.
             for (const option of this.recipe.data.options ) {
                 let node = new MakeDom('li', 'li');
-                // node.innerText = option.toString();
                 node.innerText = parsingOption(option);
                 this.options.appendChild(node);
             }
-            
-            this.materialsData.forEach(mat => {
-                let node = new MakeDom('li', 'li');
-                let material1 = new ItemImage(mat.data.image.texture, mat.data.image.x, mat.data.image.y);
-                let material2 = new MakeDom('p', 'mat_name');
-                let material3 = new MakeDom('p', 'mat_count');
-
-                // 스타일이 적용되는 타겟이 각각 생성되므로, ui 단계에서 체크
-                if (mat.owned - mat.count < 0) {
-                    material3.classList.add('unavailable')
-                }
-                
-                material2.innerText = `${mat.data.name}`;
-                material3.innerText = `${mat.owned} / ${mat.count}`;
-        
-                node.appendChild(material1.dom);
-                node.appendChild(material2);
-                node.appendChild(material3);
-            
-                this.materialInfo.appendChild(node);
-            });
+            this.updatematerialInfo();
         } 
     }
   
@@ -257,11 +284,11 @@ export default class RecipeUI extends Panel {
   
     onCombine(combine){
         if(combine) {
-            this.callback(combine);
+            // console.log(this.combinerUI.count);
+            this.callback(combine, this.combinerUI.count);
             this.onClose();
         }
     }
-  
     onClose() {
         this.remove(this.pane);
     }

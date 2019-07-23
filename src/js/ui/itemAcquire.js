@@ -7,14 +7,14 @@ import Button from "./component/button";
 export default class ItemAcquire extends Panel {
   constructor(pane, text, items, result) {
     super();
-    pane.classList.add('screen');
+    let domheight = 250;
 
-    let domheight = 240;
     if (items.length > 3) {
       domheight += 80;
     }
 
-    const modal = new Modal(pane, 360, domheight);
+    pane.classList.add('screen');
+    const modal = new Modal(pane, 380, domheight);
     this.callback = result;
 
     // 레시피, 아이템인 경우
@@ -49,7 +49,6 @@ export default class ItemAcquire extends Panel {
 
   initButton(){
     const buttonWrap = new MakeDom('div', 'buttonWrap');
-
     const okButton = new Button('확인', 'submit');
     const cancelButton = new Button('취소');
 
@@ -78,7 +77,13 @@ export default class ItemAcquire extends Panel {
         let option = new ItemImage(item.data.image.texture, item.data.image.x, item.data.image.y);
         let count = new MakeDom('span', '', `x${item.count}`);
         let name = new MakeDom('p', 'name', item.name);
+
+        let iconRank = new ItemImage('icon_rank.png', item.data.rank, 0);
+        iconRank.dom.classList.add('rank');
+
         wrap.appendChild(option.dom);
+        wrap.appendChild(iconRank.dom);
+
         wrap.appendChild(count);
         wrap.appendChild(name);
         this.options.appendChild(wrap);
