@@ -38,8 +38,8 @@ export default class Setting extends Panel {
       let option1 = new RadioButton('option1', type, 'ON');
       let option2 = new RadioButton('option2', type, 'OFF');
       
-      options.appendChild(option2);
       options.appendChild(option1);
+      options.appendChild(option2);
     } else {
       if ( type === 'BGM') {
         title.innerText = '배경음악';

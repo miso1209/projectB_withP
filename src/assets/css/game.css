@@ -1654,7 +1654,7 @@ button.disabled {
 .modal.combiner .combineItem .itemImg {
   width: 64px;
   height: 64px;
-  margin: 5px;
+  margin: 5px 10px;
 }
 
 .modal.combiner .combineItem .rankBg {

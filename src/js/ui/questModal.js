@@ -15,6 +15,8 @@ export default class QuestModal extends Panel {
       this.inputs = inputs; // 현재 진행중인 퀘스트 데이터
       this.callback = result;
       
+      console.log(inputs);
+
       const modal = new Modal(pane, 800, 440, null);
       modal.addTitle('퀘스트');
       modal.addCloseButton();
@@ -118,6 +120,8 @@ export default class QuestModal extends Panel {
     }
 
     listcallback(quest) {
+      console.log(quest);
+
       this.callback('checkNotify', quest);
       this.questInfo.innerHTML = '';
 

@@ -18,6 +18,7 @@ import Profile from "./profile";
 import QuestList from "./quest";
 import QuestModal from "./questModal";
 import Setting from "./setting";
+import Portal from "./portal";
 
 
 export default class DomUI extends EventEmitter {
@@ -396,7 +397,15 @@ export default class DomUI extends EventEmitter {
         });
         Sound.playSound('modal_1.wav', { singleInstance: true });
     }
-    
+
+    // 포털 리스트 모달
+    showPortals() {
+        const pane = this.createContainer();
+        const portals = new Portal(pane, inputs, (result)=> {
+            console.log(result)
+        });
+    }
+
     // 퀘스트 모달
     showQuestModal(inputs, quest){
         if(this.questWrap) {
