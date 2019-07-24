@@ -11,7 +11,7 @@ export default class Portal extends Panel {
     this.data = inputs;
     this.callback = result;
 
-    const modal = new Modal(pane, 360, 320);
+    const modal = new Modal(pane, 360, 340);
     modal.addTitle('포털');
     modal.dom.classList.add('portal');
 
@@ -53,14 +53,16 @@ export default class Portal extends Panel {
 
     contents.appendChild(scrollView);
 
-    this.showSelectableList();
+    this.showSelectableList(this.data);
   }
 
-  showSelectableList(){
+  showSelectableList(data){
+
     this.list.innerHTML = '';
-    for (const fid in this.data) {
+
+    for (const fid in data) {
       let liwrap = new MakeDom('li', 'li');
-      const linkBtn = new Button(`${this.data[fid]}`, 'nav');
+      const linkBtn = new Button(`${data[fid]}`, 'nav');
       liwrap.appendChild(linkBtn.dom);
       linkBtn.dom.addEventListener('click', this.moveToFloor.bind(this, fid));
 

@@ -1551,7 +1551,14 @@ button.disabled {
   color: #dad0c7;
 }
 .modal.portal .scrollView {
-  min-height: 200px;
+  width: auto;
+  /* height: 140px; */
+  margin: 10px;
+  /* background: #272523; */
+}
+
+.modal.portal .scrollView li:not(:first-child){
+  margin-top: 5px;
 }
 
 /* 조합 - 레시피 */
