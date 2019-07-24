@@ -53,6 +53,10 @@ export default class QuestModal extends Panel {
     
 
     updateList() {
+      console.log('updatelist');
+      
+      this.list.innerHTML = '';
+
       let selectedCell = null;
       let index = -1;
       
@@ -168,7 +172,9 @@ export default class QuestModal extends Panel {
       }
       
       button.dom.addEventListener('click', ()=>{
-        this.pane.parentNode.removeChild(this.pane);
+        // this.pane.parentNode.removeChild(this.pane);
+        this.updateList();
+        this.listcallback(quest);
         return this.callback('progress', quest);
       });
 

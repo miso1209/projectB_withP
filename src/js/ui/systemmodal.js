@@ -13,7 +13,7 @@ export default class SystemModal extends Panel {
     
         this.contents = document.createElement('p');
         this.contents.className = 'contents';
-        this.contents.innerText = text;
+        this.contents.innerHTML = `${text}`;
         confirmModal.dom.appendChild(this.contents);
     
         this.callback = callback;

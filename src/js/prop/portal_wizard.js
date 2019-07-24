@@ -24,16 +24,25 @@ export default class PortalWizard extends PropBase {
         // List 갱신은 갱신 후 매 1시간 or, 새로운 층을 돌파하였을 경우 갱신된다.
         const list = game.getSelectableFloor();
         const uiSelectableList = list.map((floor) => { return floor===0?'집':`${floor}층`});
-        const gold = game.selectableFloor.length * 5; // 가진 층 수 * 5 Gold의 비용이 소모된다고 하자. 
-        game.exploreMode.setInteractive(false);
+        const cost = game.selectableFloor.length * 5; // 가진 층 수 * 5 Gold의 비용이 소모된다고 하자. 
 
+        game.exploreMode.setInteractive(false);
         game.ui.showPortals(uiSelectableList, (result) => {
+
             if (result === 'ok') {
-                console.log('refresh gold : ', gold);
-                game.ui.showConfirmModal("이동가능한 포털리스트를 갱신하시겠습니까?", true, (result) => {
+                game.ui.showConfirmModal(`포털 리스트를 갱신하면 <em>${cost}골드</em>가 소모됩니다. 이동가능한 포털리스트를 갱신하시겠습니까?`, true, (result) => {
                     if (result === 'ok') {
-                        game.addGold(-gold);
-                        game.refreshSelectableFloor();
+                        // 소모비용 / 가지고 있는 골드 체크
+                        if (game.player.inventory.gold - cost < 0) {
+                            game.ui.showConfirmModal(`갱신에 필요한 골드가 부족합니다.`, false, (result) => {
+                                if (result === 'ok') {
+                                    game.exploreMode.setInteractive(true);
+                                }
+                            });
+                        } else{
+                            game.addGold(-cost);
+                            game.refreshSelectableFloor();
+                        } 
                     } else {
                         game.exploreMode.setInteractive(true);
                     }

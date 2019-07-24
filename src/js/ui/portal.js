@@ -11,7 +11,7 @@ export default class Portal extends Panel {
     this.data = inputs;
     this.callback = result;
 
-    const modal = new Modal(pane, 360, 340);
+    const modal = new Modal(pane, 360, 360);
     modal.addTitle('포털');
     modal.dom.classList.add('portal');
 

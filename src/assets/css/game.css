@@ -1111,7 +1111,9 @@ button.nav.active  {
   word-break: keep-all;
   background-color: transparent;
 }
-
+#SYSTEM .contents em {
+  color: #ffd800;
+}
 #SYSTEM .contents-option {
   margin: 12% auto;
 }
@@ -1216,6 +1218,9 @@ button.nav.active  {
   width: 30%;
   padding: 5px 0;
   margin-bottom: 10px;
+}
+.acquireModal .contents-option.items section:nth-child(3n+1) {
+  margin-top: 5px;
 }
 
 .contents-option section:not(:first-child){
@@ -2525,13 +2530,25 @@ img.die {
   border-radius: 60%;
   background-color: rgba(0,0,0,0.3);
 }
-
 .skillItems .img, 
 .equipItems .img {
   margin: 0 auto;
   display: block;
   overflow: visible;
 }
+
+.equipItems li.shiny::after {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  content: '';
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+}
+
 .characterDetail .skillItems, 
 .characterDetail .equipItems {
   position: absolute;

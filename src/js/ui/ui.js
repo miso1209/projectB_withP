@@ -402,7 +402,7 @@ export default class DomUI extends EventEmitter {
     showPortals(inputs, callback) {
         const pane = this.createContainer();
         pane.classList.add('screen');
-        
+
         const portals = new Portal(pane, inputs, callback);
     }
 
@@ -514,7 +514,7 @@ export default class DomUI extends EventEmitter {
                 this.emit('playerInvenData', {category:result.category, class: player.data.class} );
             }
             
-            if (characterDetail.pauseData !== null) {
+            if (characterDetail.pauseData !== null && characterDetail.pauseData.category === result.category) {
                 this.emit('playerInvenData', {category:characterDetail.pauseData, class: player.data.class} );
             }
 

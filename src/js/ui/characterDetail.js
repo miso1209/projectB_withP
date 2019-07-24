@@ -406,6 +406,9 @@ export default class CharacterDetail extends Panel {
   }
 
   showEquipInven() {
+    console.log('showEquipInven');
+
+    
     this.storageContent.innerHTML = '';
     this.equipInven.style.display = 'block';
     this.slotSize = 15;
