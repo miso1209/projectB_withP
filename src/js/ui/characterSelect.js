@@ -32,7 +32,7 @@ export default class CharacterSelect extends Panel {
     wrap.classList.add('contents');
     this.dom.appendChild(wrap);
 
-    
+
     // characterList
     const characterListWrap = new MakeDom('div', 'list-wrap');
     characterListWrap.classList.add('flex-left');
@@ -44,7 +44,7 @@ export default class CharacterSelect extends Panel {
     characterDesc.classList.add('flex-right');
 
     const infoWrap = new MakeDom('div', 'infoWrap');
-    const portraitWrap = new MakeDom('div', 'portraitWrap'); 
+    const portraitWrap = new MakeDom('div', 'portraitWrap');
 
     this.portrait = document.createElement('img');
 
@@ -69,10 +69,10 @@ export default class CharacterSelect extends Panel {
     const statWrap = new MakeDom('div', 'baseStats');
     this.hp = new StatusBar(0, 10);
     this.hp.setBar('health');
-    
+
     this.exp = new StatusBar(0, 10);
     this.exp.setBar('exp');
-    
+
     statWrap.appendChild(this.hp.dom);
     statWrap.appendChild(this.exp.dom);
 
@@ -111,7 +111,7 @@ export default class CharacterSelect extends Panel {
     this.createCharacters();
   }
 
-  createCharacters(){
+  createCharacters() {
     let selectedavatar = null;
     let index = 0;
 
@@ -148,6 +148,7 @@ export default class CharacterSelect extends Panel {
     this.descName.innerText = current.name;
     this.portrait.src = `${path}sprite/${current.name}/${current.name}_idle_sw.png`;
     this.level.innerText = 'Lv.' + current.level;
+
     this.updateStatus(current);
   }
 
@@ -155,16 +156,21 @@ export default class CharacterSelect extends Panel {
     this.hp.update(current.health, current.maxHealth);
     this.exp.update(current.exp, current.maxexp);
 
-
     this.portrait.classList.remove('die');
     this.dieMsg.style.display = 'none';
-    
-    if(current.health === 0) {
+    this.portrait.src = `/src/assets/sprite/${current.name}/${current.name}_idle_sw.png`;
+
+    if (current.health === 0) {
       this.portrait.classList.add('die');
       this.dieMsg.style.display = 'block';
-    } 
-    
+    }
     this.checkAvatar();
+  }
+
+  recoveryAvatar() {
+    let avatar = this.characterList.querySelector('.active');
+    avatar.classList.remove('die');
+    avatar.querySelector('.profileImg').src = `/src/assets/sprite/${this.selected.name}/${this.selected.name}_idle_sw.png`;
   }
 
   checkAvatar() {

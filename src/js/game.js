@@ -167,11 +167,13 @@ export default class Game extends EventEmitter {
         // 퀘스트 보상 ( 퀘스트 완료요청 Emit )
         this.ui.on('completeQuest', (id) =>  {
             this.completeQuest(id);
+            this.ui.questData = this.getAllQuests();
         });
 
         // 퀘스트 보상 ( 퀘스트 완료요청 Emit )
         this.ui.on('addQuest', (id) =>  {
             this.addQuest(id);
+            this.ui.questData = this.getAllQuests();
         });
 
         this.ui.on('checkNotify', (id) => {

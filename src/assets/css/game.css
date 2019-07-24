@@ -1041,22 +1041,21 @@ button.nav.active  {
 
 .dialog .dialog-speaker {
   display: none;
-
   position: absolute;
   z-index: 11;
-  left: -5px;
-  top: -30px;
+  left: 10px;
+  top: 10px;
 }
 
 .dialog .contents {
-  top: 15px;
-  left: 20px;
+  top: 12px;
+  left: 22px;
   right: 20px;
   z-index: 10;
   max-height: 90px;
   margin: 10px 0;
   padding: 0;
-  font-size: 20px;
+  font-size: 18px;
   letter-spacing: .12em;
   line-height: 1.4;
   text-align: left;
@@ -1064,7 +1063,7 @@ button.nav.active  {
   background-color: transparent;
 }
 .dialog.portrait .contents {
-  left: 100px;
+  left: 115px;
 }
 .dialog.portrait .dialog-speaker {
   display: block;
@@ -1075,9 +1074,9 @@ button.nav.active  {
 .dialog.portrait .name {
   display: block;
   position: absolute;
-  left: 0;
-  top: 65px;
-  width: 80px;
+  left: 10px;
+  bottom: 15px;
+  width: 93px;
   z-index: 22;
 
   font-size: 15px;
@@ -1296,6 +1295,12 @@ button.nav.active  {
   white-space:nowrap;
   overflow: hidden
 }
+.modal.quest .quest_reward .rewardItem .icon {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
 .modal.quest .quest_reward .rewardItem .category {
   font-size: 12px;
   color: #968d85;
@@ -2053,12 +2058,9 @@ button.disabled {
   top: 0;
   left: 20px;
   right: 20px;
-  margin: 163px auto 0;
-
+  margin: 160px auto 0;
   font-size: 14px;
-  line-height: 1.6;
   color: #fd6240;
-
   text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
 }
 

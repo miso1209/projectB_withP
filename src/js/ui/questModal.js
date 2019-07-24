@@ -8,15 +8,11 @@ import { parsingOption } from '../utils';
 export default class QuestModal extends Panel {
     constructor(pane, inputs, currentQuest, result){
       super();
-
-      pane.classList.add('screen');
-      this.pane = pane;
+      
       this.currentQuest = currentQuest;
-      this.inputs = inputs; // 현재 진행중인 퀘스트 데이터
+      this.questData = inputs; // 현재 진행중인 퀘스트 데이터
       this.callback = result;
       
-      console.log(inputs);
-
       const modal = new Modal(pane, 800, 440, null);
       modal.addTitle('퀘스트');
       modal.addCloseButton();
@@ -53,14 +49,12 @@ export default class QuestModal extends Panel {
     
 
     updateList() {
-      console.log('updatelist');
-      
       this.list.innerHTML = '';
 
       let selectedCell = null;
       let index = -1;
       
-      this.inputs.forEach(quest => {
+      this.questData.forEach(quest => {
         ++index;
 
         const cell = new MakeDom('li', 'cell');
@@ -172,9 +166,6 @@ export default class QuestModal extends Panel {
       }
       
       button.dom.addEventListener('click', ()=>{
-        // this.pane.parentNode.removeChild(this.pane);
-        this.updateList();
-        this.listcallback(quest);
         return this.callback('progress', quest);
       });
 
@@ -245,13 +236,16 @@ export default class QuestModal extends Panel {
 
     showRewardItem(item) {
       this.rewardItem.innerHTML = '';
-
+      
       const name = new MakeDom('p', 'name', item.name);
       const category = new MakeDom('p', 'category', item.category);
+      const rank = new ItemImage('icon_rank.png', item.rank, 0);
       const options = new MakeDom('ul', 'options');
       const description = new MakeDom('p', 'description', item.description);
 
       this.rewardItem.appendChild(category);
+      this.rewardItem.appendChild(rank.dom);
+
       this.rewardItem.appendChild(name);
       this.rewardItem.appendChild(options);
       this.rewardItem.appendChild(description);

@@ -101,6 +101,7 @@ export default class DomUI extends EventEmitter {
         this.character = null;
         this.playerInvenData = null;
         this.characters = null;
+        this.questData = null;
     }
 
     clearFlag(index) {
@@ -417,8 +418,8 @@ export default class DomUI extends EventEmitter {
             this.showConfirmModal('현재 새로운 퀘스트가 없습니다.', false, ()=>{});
             return;
         }
-
         const pane = this.createContainer();
+        pane.classList.add('screen');
         const questModal = new QuestModal(pane, inputs, quest, (status, result) => {
 
             if (status === 'checkNotify') {
@@ -429,9 +430,11 @@ export default class DomUI extends EventEmitter {
                 } else {
                     this.emit('completeQuest', result.id);
                 }
+
+                questModal.questData = this.questData;
+                questModal.updateList();
             }
         });
-
         // this.hideQuest();
     }
 
@@ -486,10 +489,14 @@ export default class DomUI extends EventEmitter {
                     if (confirmed === "ok") {
                         if( characterSelect.selected.health === characterSelect.selected.maxHealth) {
                             this.showConfirmModal('full--hp.....', false, ()=>{});
-                            console.log('full--hp');
                         } else {
                             this.emit('useItem', selected.data.id, 1, characterSelect.selected);
                             characterSelect.updateStatus(characterSelect.selected);
+
+                            if(characterSelect.selected.health === characterSelect.selected.maxHealth) {
+                                characterSelect.recoveryAvatar();
+                            }
+
                             this.emit('playerInvenData', {category:'consumables'});
                             characterSelect.consumablesData = this.playerInvenData;
                             characterSelect.createConsumablesItem(useItem);
