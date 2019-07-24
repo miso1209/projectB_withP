@@ -38,9 +38,11 @@ export default class Storage extends EventEmitter {
             }
         };
         this.data.checkedQuest = [];
-        this.data.selectableFloor = [0,1];
+        this.data.selectableFloor = [1];
+        this.data.selectableList = [0, 1];
         this.data.cutscene = null;
         this.data.created = new Date();
+        this.data.refreshSelectableDate = new Date();
         this.data.quests = {};
         this.data.completedQuests = {};
     }
@@ -48,7 +50,9 @@ export default class Storage extends EventEmitter {
     addSelectableFloor(floor) {
         if (this.data.selectableFloor.indexOf(floor) < 0 && floor > 0) {
             this.data.selectableFloor.push(floor);
-            this.save();
+            
+            // selectableList 갱신.
+            this.refreshSelectableFloorList();
         }
 
         return this.data.selectableFloor;
@@ -87,6 +91,26 @@ export default class Storage extends EventEmitter {
             this.data.tags.push(tag);
             this.save();
         }
+    }
+
+    refreshSelectableFloorList() {
+        const list = [].concat(this.data.selectableFloor);
+        while(list.length > 4) {
+            const rand = Math.round(Math.random() * (list.length - 1));
+            list.splice(rand, 1);
+        }
+
+        list.sort((a, b) => {
+            return a>b?1:-1
+        });
+
+        this.data.selectableList = [0].concat(list);
+        this.refreshSelectableFloorDate();
+    }
+
+    refreshSelectableFloorDate() {
+        this.data.refreshSelectableDate = new Date();
+        this.save();
     }
 
     setControlCharacter(id) {

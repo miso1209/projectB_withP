@@ -734,6 +734,23 @@ export default class Game extends EventEmitter {
             Sound.setVolume(type, volume);
         }
     }
+    
+    getSelectableFloor() {
+        const HOUR_PER_MILLISEC = 1000 * 60 * 60;
+        const currentDate = new Date();
+        const diff = (currentDate - this.storage.data.refreshSelectableDate);
+
+        // 리프레쉬 한지 1시간 이후라면..
+        if (diff / HOUR_PER_MILLISEC >= 1) {
+            this.storage.refreshSelectableFloorList();
+        }
+
+        return this.storage.data.selectableList
+    }
+
+    refreshSelectableFloor() {
+        this.storage.refreshSelectableFloorList();
+    }
 
     isGamePuase() {
         // 현재까지는 PAUSE가 UI 나왔을 때 밖에 없다.
