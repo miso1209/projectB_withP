@@ -32,7 +32,7 @@ export default class Portal extends Panel {
 
     buttonWrap.appendChild(cancelButton.dom);
     buttonWrap.appendChild(okButton.dom);
-
+    
     cancelButton.dom.addEventListener('click', this.onCancel.bind(this));
     okButton.dom.addEventListener('click', this.onSubmit.bind(this));
     contents.appendChild(buttonWrap)
@@ -59,30 +59,36 @@ export default class Portal extends Panel {
   showSelectableList(data){
 
     this.list.innerHTML = '';
+    // const floorList = data.map((floor) => { return floor===0?'집':`${floor}층`});
 
     for (const fid in data) {
       let liwrap = new MakeDom('li', 'li');
       const linkBtn = new Button(`${data[fid]}`, 'nav');
       liwrap.appendChild(linkBtn.dom);
-      linkBtn.dom.addEventListener('click', this.moveToFloor.bind(this, fid));
+      linkBtn.dom.addEventListener('click', this.onSelect.bind(this, fid));
 
       this.list.appendChild(liwrap);
     }
   }
 
-  moveToFloor(floor){
-    this.callback(floor);
-    this.onClose();
+  onSelect(floor){
+    if(this.callback) {
+      this.callback(floor);
+      this.onClose();
+    }
   }
 
   onCancel(){
-    this.callback('cancel');
-    this.onClose();
+    if(this.callback){
+      this.callback('cancel');
+      this.onClose();
+    }
   }
 
   onSubmit(){
-    this.callback('ok');
-    // this.onClose();
+    if(this.callback) {
+      this.callback('ok');
+    }    
   }
 
   onClose(){

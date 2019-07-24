@@ -1218,9 +1218,9 @@ button.nav.active  {
   padding: 5px 0;
   margin-bottom: 10px;
 }
-.acquireModal .contents-option.items section:nth-child(3n+1) {
+/* .acquireModal .contents-option.items section:nth-child(3n+1) {
   margin-top: 5px;
-}
+} */
 
 .contents-option section:not(:first-child){
   margin-left: 5px;
@@ -1936,10 +1936,9 @@ button.disabled {
 .inventory-itemCount {
   position: absolute;
   z-index: 11;
-  bottom: 5px;
+  bottom: 2px;
   right: 5px;
   font-size: 13px;
-  font-weight: bold;
   color: #fff;
 }
 
@@ -1951,6 +1950,9 @@ button.disabled {
 
   border: none;
   border-top: 2px solid #b2a9a0;
+}
+.inventory .flex-right .costswrap .gold {
+  font-size: 18px;
 }
 
 .inventory .scrollbox {

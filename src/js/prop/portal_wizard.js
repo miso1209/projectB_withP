@@ -22,8 +22,8 @@ export default class PortalWizard extends PropBase {
 
     touch(game) {
         // List 갱신은 갱신 후 매 1시간 or, 새로운 층을 돌파하였을 경우 갱신된다.
-        const list = game.getSelectableFloor();
-        const uiSelectableList = list.map((floor) => { return floor===0?'집':`${floor}층`});
+        let list = game.getSelectableFloor();
+        let uiSelectableList = list.map((floor) => { return floor===0?'집':`${floor}층`});
         const cost = game.selectableFloor.length * 5; // 가진 층 수 * 5 Gold의 비용이 소모된다고 하자. 
 
         game.exploreMode.setInteractive(false);
@@ -40,8 +40,14 @@ export default class PortalWizard extends PropBase {
                                 }
                             });
                         } else{
+                            console.log('리스트 갱신~!');
                             game.addGold(-cost);
                             game.refreshSelectableFloor();
+
+                            list = game.getSelectableFloor();
+                            uiSelectableList = list.map((floor) => { return floor===0?'집':`${floor}층`});
+
+                            game.ui.showPortals(uiSelectableList);
                         } 
                     } else {
                         game.exploreMode.setInteractive(true);

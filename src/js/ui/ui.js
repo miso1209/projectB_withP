@@ -401,10 +401,20 @@ export default class DomUI extends EventEmitter {
 
     // 포털 리스트 모달
     showPortals(inputs, callback) {
-        const pane = this.createContainer();
-        pane.classList.add('screen');
-
-        const portals = new Portal(pane, inputs, callback);
+        const portaldom = document.querySelector('.portal');
+        
+        if (this.portals && portaldom) {
+            console.log('aaa');
+            this.portals.showSelectableList(inputs);
+            this.portals = null;
+            return;
+        } else {
+            console.log('bbb');
+            const pane = this.createContainer();
+            pane.classList.add('screen');
+            const portals = new Portal(pane, inputs, callback);
+            this.portals = portals;
+        }
     }
 
     // 퀘스트 모달
@@ -488,7 +498,9 @@ export default class DomUI extends EventEmitter {
                 this.showUseItemModal('포션을 사용하시겠습니까?', selected, (confirmed) => {
                     if (confirmed === "ok") {
                         if( characterSelect.selected.health === characterSelect.selected.maxHealth) {
-                            this.showConfirmModal('full--hp.....', false, ()=>{});
+                            // this.showConfirmModal('Full HP.....', false, ()=>{});
+                            // 피가 만땅일때 포션은 사용되지 않음. TODO 모달 외에 표현방법을 찾아보자
+                            return;
                         } else {
                             this.emit('useItem', selected.data.id, 1, characterSelect.selected);
                             characterSelect.updateStatus(characterSelect.selected);

@@ -45,7 +45,12 @@ export default class ItemImage {
 
         for (let i = 0; i < rankData.length; i++) {
             let index = rankData[i].toUpperCase();
+            
             if (_rank === index) {
+                if( i > 2) {
+                    this.dom.classList.add('shiny');
+                }
+
                 this.dom.style.backgroundPositionX = -(i * this.size) + 'px';
             }
         }
