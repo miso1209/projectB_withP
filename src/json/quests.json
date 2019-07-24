@@ -308,12 +308,12 @@
             { "text": "보스 처치", "event": ["bossWin"], "conditionScript": "checkCount(boss, >=, 1)"}
         ],
         "rewards": [
-            { "text": "더 튼튼한 경갑 x 1",  "script": "addItem(S1004, 1)" },
-            { "text": "더 튼튼한 경갑 x 1",  "script": "addItem(S1004, 1)" },
-            { "text": "더 튼튼한 중갑 x 1",  "script": "addItem(S1104, 1)" },
-            { "text": "더 튼튼한 중갑 x 1",  "script": "addItem(S1104, 1)" },
-            { "text": "더 튼튼한 플레이트 아머 x 1",  "script": "addItem(S1204, 1)" },
-            { "text": "더 튼튼한 플레이트 아머 x 1",  "script": "addItem(S1204, 1)" }
+            { "text": "더 튼튼한 경갑 x 1",  "script": "addItem(A1004, 1)" },
+            { "text": "더 튼튼한 경갑 x 1",  "script": "addItem(A1004, 1)" },
+            { "text": "더 튼튼한 중갑 x 1",  "script": "addItem(A1104, 1)" },
+            { "text": "더 튼튼한 중갑 x 1",  "script": "addItem(A1104, 1)" },
+            { "text": "더 튼튼한 플레이트 아머 x 1",  "script": "addItem(A1204, 1)" },
+            { "text": "더 튼튼한 플레이트 아머 x 1",  "script": "addItem(A1204, 1)" }
         ]
     },
     "18": {
@@ -384,9 +384,9 @@
             { "text": "누적 게임시간(분)", "event": ["save"], "conditionScript": "checkPlaytime(time, >=, 60)"}
         ],
         "rewards": [
-            { "text": "견습 장갑 x 1",  "script": "addItem(U2001, 1)" },
-            { "text": "견습 투구 x 1",  "script": "addItem(U2101, 1)" },
-            { "text": "견습 반지 x 1",  "script": "addItem(U2201, 1)" },
+            { "text": "견습 장갑 x 1",  "script": "addItem(A2001, 1)" },
+            { "text": "견습 투구 x 1",  "script": "addItem(A2101, 1)" },
+            { "text": "견습 반지 x 1",  "script": "addItem(A2201, 1)" },
             { "script": "addQuest(22)" }
         ]
     },
@@ -402,9 +402,9 @@
             { "text": "누적 게임시간(분)", "event": ["save"], "conditionScript": "checkPlaytime(time, >=, 120)"}
         ],
         "rewards": [
-            { "text": "빛나는 장화 x 1",  "script": "addItem(U2302, 1)" },
-            { "text": "빛나는 목걸이 x 1",  "script": "addItem(U2402, 1)" },
-            { "text": "빛나는 방패 x 1",  "script": "addItem(U2502, 1)" },
+            { "text": "빛나는 장화 x 1",  "script": "addItem(A2302, 1)" },
+            { "text": "빛나는 목걸이 x 1",  "script": "addItem(A2402, 1)" },
+            { "text": "빛나는 방패 x 1",  "script": "addItem(A2502, 1)" },
             { "script": "addQuest(23)" }
         ]
     },
@@ -420,9 +420,9 @@
             { "text": "누적 게임시간(분)", "event": ["save"], "conditionScript": "checkPlaytime(time, >=, 180)"}
         ],
         "rewards": [
-            { "text": "튼튼한 장갑 x 1",  "script": "addItem(U2003, 1)" },
-            { "text": "튼튼한 투구 x 1",  "script": "addItem(U2103, 1)" },
-            { "text": "튼튼한 반지 x 1",  "script": "addItem(U2203, 1)" }
+            { "text": "튼튼한 장갑 x 1",  "script": "addItem(A2003, 1)" },
+            { "text": "튼튼한 투구 x 1",  "script": "addItem(A2103, 1)" },
+            { "text": "튼튼한 반지 x 1",  "script": "addItem(A2203, 1)" }
         ]
     },
     "24": {
@@ -484,9 +484,9 @@
             { "text": "전투력", "event": ["save"], "conditionScript": "checkPower(power, >=, 1500)"}
         ],
         "rewards": [
-            { "text": "견습 장화 x 1",  "script": "addItem(U2301, 1)" },
-            { "text": "견습 목걸이 x 1",  "script": "addItem(U2401, 1)" },
-            { "text": "견습 방패 x 1",  "script": "addItem(U2501, 1)" },
+            { "text": "견습 장화 x 1",  "script": "addItem(A2301, 1)" },
+            { "text": "견습 목걸이 x 1",  "script": "addItem(A2401, 1)" },
+            { "text": "견습 방패 x 1",  "script": "addItem(A2501, 1)" },
             { "script": "addQuest(28)" }
         ]
     },
@@ -502,9 +502,9 @@
             { "text": "전투력", "event": ["save"], "conditionScript": "checkPower(power, >=, 3000)"}
         ],
         "rewards": [
-            { "text": "빛나는 장갑 x 1",  "script": "addItem(U2002, 1)" },
-            { "text": "빛나는 투구 x 1",  "script": "addItem(U2102, 1)" },
-            { "text": "빛나는 반지 x 1",  "script": "addItem(U2202, 1)" },
+            { "text": "빛나는 장갑 x 1",  "script": "addItem(A2002, 1)" },
+            { "text": "빛나는 투구 x 1",  "script": "addItem(A2102, 1)" },
+            { "text": "빛나는 반지 x 1",  "script": "addItem(A2202, 1)" },
             { "script": "addQuest(29)" }
         ]
     },
@@ -520,9 +520,9 @@
             { "text": "전투력", "event": ["save"], "conditionScript": "checkPower(power, >=, 4500)"}
         ],
         "rewards": [
-            { "text": "튼튼한 장화 x 1",  "script": "addItem(U2303, 1)" },
-            { "text": "튼튼한 목걸이 x 1",  "script": "addItem(U2403, 1)" },
-            { "text": "튼튼한 방패 x 1",  "script": "addItem(U2503, 1)" }
+            { "text": "튼튼한 장화 x 1",  "script": "addItem(A2303, 1)" },
+            { "text": "튼튼한 목걸이 x 1",  "script": "addItem(A2403, 1)" },
+            { "text": "튼튼한 방패 x 1",  "script": "addItem(A2503, 1)" }
         ]
     }
 }

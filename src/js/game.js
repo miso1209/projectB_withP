@@ -662,7 +662,7 @@ export default class Game extends EventEmitter {
                     this.player.inventory.addItem(itemID, monster.rewards[itemID]);
                 }
 
-                this.player.inventory.gold += monster.gold;
+                this.addGold(monster.gold);
             });
             this.currentMode.on('lose', async () => {
                 this.currentMode.battleResult = 'lose';
@@ -798,7 +798,7 @@ export default class Game extends EventEmitter {
         };
 
         for (let i=0;i<count;i++) {
-            const combineResult = this.combiner.combine(id, this.player.inventory);
+            const combineResult = this.combiner.combine(id, this);
     
             if (combineResult.success) {
                 this.emit('combine', combineResult.item);

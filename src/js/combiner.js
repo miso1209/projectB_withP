@@ -94,7 +94,7 @@ export default class Combiner {
         return result;
     }
 
-    combine(id, inventory) {
+    combine(id, game) {
         // 해당 아이템을 조합한다
         // 레시피를 보고 인벤토리에서 아이템을 제거한다
         // 모든 아이템 제거가 끝나면 새로운 아이템을 추가한다
@@ -109,9 +109,9 @@ export default class Combiner {
         }
 
         for(const mat of recipe.materials) {
-            inventory.deleteItem(mat.item, mat.count);
+            game.player.inventory.deleteItem(mat.item, mat.count);
         }
-        inventory.gold -= recipe.gold;
+        game.addGold(-recipe.gold);
 
         // Rank 판독해서 리턴하자 확률은 다음과 같이 정의해보자.
         /*
@@ -158,7 +158,7 @@ export default class Combiner {
         // }
 
         // 새로운 아이넴을 추가한다 ${reinforce}
-        inventory.addItem(`${rank}${recipe.item}`);
+        game.player.inventory.addItem(`${rank}${recipe.item}`);
         return {
             item: `${rank}${recipe.item}`,
             success: true
