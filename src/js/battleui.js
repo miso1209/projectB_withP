@@ -260,7 +260,6 @@ class BattleActivePortraitUI extends PIXI.Container {
 
 function getText(inputText, options) {
     const style = new PIXI.TextStyle();
-    style.fontFamily = 'DungGeunMoFont', 'PixelFont', 'Nanum Gothic', 'Malgun Gothic', '\B9D1\C740   \ACE0\B515', 'AppleSDGothicNeo', 'SF Pro Display', 'Roboto', 'Helvetica Neue', 'sans-serif';
     style.dropShadow = true;
     style.dropShadowDistance = 3;
     style.fontStyle = 'italic';
@@ -354,7 +353,7 @@ class RewardUI extends PIXI.Container {
         this.itemRewardContainer = new ItemRewardUI({ width: screenSize.width - 180, height: 170 });
         this.itemRewardContainer.setPosition({ x: 90, y: 60 });
         this.itemRewardContainer.setReward(reward);
-        this.itemRewardContainer.changeTitle('- Reward -', { fontSize: 36 });
+        this.itemRewardContainer.changeTitle('- REWARD -', { fontSize: 36 });
         this.addChild(this.itemRewardContainer);
 
         // Close Btn
