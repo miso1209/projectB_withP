@@ -171,10 +171,10 @@ export default class PropGenerator {
             monsterParty.exp += monsterData.exp + monsterData.expPerLevel * monster.level;
 
             // Item Rewards
-           const rewardsItemList = [];
-           monsterData.rewards.forEach((itemId) => {
-               rewardsItemList.push(Items[itemId]);
-           });
+            // const rewardsItemList = [];
+            // monsterData.rewards.forEach((itemId) => {
+            //     rewardsItemList.push(Items[itemId]);
+            // });
 
            monsterParty.battle.characters.sort((a, b) => {
                const A = new Character(a.id);
@@ -185,7 +185,8 @@ export default class PropGenerator {
                return A.armorFigure < B.armorFigure?1:-1;
            });
 
-           const selectedItem = this.getRarityItem(rewardsItemList);
+            // const selectedItem = this.getRarityItem(rewardsItemList);
+            const selectedItem = this.getRarityItem(this.getFilteredItems(this.getMaterials(), floorData));
            if (monsterParty.rewards[selectedItem.id]) {
                 monsterParty.rewards[selectedItem.id]++;
            } else {
