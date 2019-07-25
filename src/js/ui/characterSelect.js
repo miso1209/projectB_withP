@@ -61,7 +61,7 @@ export default class CharacterSelect extends Panel {
     this.level.style.paddingRight = '10px';
 
     this.dieMsg = new MakeDom('p', 'dieMsg');
-    this.dieMsg.innerText = '사망한 캐릭터는 부활해야 다음 배틀에 참여할 수 있다';
+    this.dieMsg.innerText = '사망한 캐릭터는 부활해야 다음 배틀에 참여할 수 있습니다.';
     characterListWrap.appendChild(this.dieMsg);
     this.dieMsg.style.display = 'none';
 

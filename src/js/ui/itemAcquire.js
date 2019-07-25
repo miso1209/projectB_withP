@@ -43,6 +43,10 @@ export default class ItemAcquire extends Panel {
     this.options = new MakeDom('div', 'contents-option');
     contents.appendChild(this.options);
 
+
+    this.effect = new MakeDom('div', 'effectBg');
+    contents.appendChild(this.effect);
+
     this.update();
     this.initButton();
   }
@@ -71,6 +75,8 @@ export default class ItemAcquire extends Panel {
 
   update() {
     if (this.items.length > 0) {
+      this.effect.style.display = 'block';
+      
       this.options.classList.add('items');
       this.items.forEach((item) => {
         let wrap = new MakeDom('section', 'option');
