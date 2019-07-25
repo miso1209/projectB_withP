@@ -1178,18 +1178,39 @@ button.nav.active  {
 
 .acquireModal .effectBg {
   display: none;
+}
+
+.acquireModal .effectBg::before {
+  content: '';
   position: absolute;
-  width: 200px;
-  height: 200px;
+  width: 160px;
+  height: 160px;
   top: -70px;
-  left: -70px;
+  right: -120px;
+
+  background: url(~assets/ui/effect_sparkles.gif) 50% 50% no-repeat;
+  background-size: cover;
+  pointer-events: none;
+  opacity: 0.7;
+
+  -webkit-animation: tada 1.5s both;
+  animation: tada 1.5s both;
+}
+.acquireModal .effectBg::after{
+  content: '';
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  bottom: -80px;
+  left: -100px;
 
   background: url(~assets/ui/effect_sparkles.gif) no-repeat;
   background-size: cover;
-  pointer-events: none;
 
-  opacity: 0.7;
+  -webkit-animation: zoomIn .5s both;
+  animation: zoomIn .5s both;
 }
+
 
 .acquireModal .contents .desc {
   margin:15px 0;
