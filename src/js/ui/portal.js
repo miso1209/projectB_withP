@@ -37,30 +37,16 @@ export default class Portal extends Panel {
     okButton.dom.addEventListener('click', this.onSubmit.bind(this));
     contents.appendChild(buttonWrap)
 
-    // IE 스크롤바 이슈 대응
-    const scrollView = document.createElement('div');
-    scrollView.classList.add('scrollView');
-    
-    const scrollBlind = document.createElement('div');
-    scrollBlind.className = 'scrollBlind';
-
+    // 항상 이동가능한 선택지는 5개로 랜덤하게 보여줌. 
     this.list = document.createElement('ul');
-    this.list.classList.add('list-box');
-    this.list.classList.add('scrollbox');
+    this.list.classList.add('portal_list');
 
-    scrollView.appendChild(scrollBlind);
-    scrollBlind.appendChild(this.list);
-
-    contents.appendChild(scrollView);
-
+    contents.appendChild(this.list);
     this.showSelectableList(this.data);
   }
 
   showSelectableList(data){
-
     this.list.innerHTML = '';
-    // const floorList = data.map((floor) => { return floor===0?'집':`${floor}층`});
-
     for (const fid in data) {
       let liwrap = new MakeDom('li', 'li');
       const linkBtn = new Button(`${data[fid]}`, 'nav');

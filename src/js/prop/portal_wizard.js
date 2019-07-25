@@ -40,13 +40,11 @@ export default class PortalWizard extends PropBase {
                                 }
                             });
                         } else{
-                            console.log('리스트 갱신~!');
                             game.addGold(-cost);
                             game.refreshSelectableFloor();
 
                             list = game.getSelectableFloor();
                             uiSelectableList = list.map((floor) => { return floor===0?'집':`${floor}층`});
-
                             game.ui.showPortals(uiSelectableList);
                         } 
                     } else {

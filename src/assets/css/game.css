@@ -1560,14 +1560,13 @@ button.disabled {
   
   color: #dad0c7;
 }
-.modal.portal .scrollView {
-  width: auto;
-  /* height: 140px; */
-  margin: 10px;
-  /* background: #272523; */
+.modal.portal .portal_list {
+  margin: 15px 0;
+  max-height: 170px;
+  overflow: hidden;
 }
 
-.modal.portal .scrollView li:not(:first-child){
+.modal.portal .portal_list li:not(:first-child){
   margin-top: 5px;
 }
 
@@ -1930,7 +1929,6 @@ button.disabled {
 /* inventory - right */
 .inventory .flex-right .scrollView {
   margin: 0;
-  
 }
 
 .inventory-itemCount {

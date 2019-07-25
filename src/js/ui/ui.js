@@ -102,6 +102,7 @@ export default class DomUI extends EventEmitter {
         this.playerInvenData = null;
         this.characters = null;
         this.questData = null;
+        this.portals = null;
     }
 
     clearFlag(index) {
@@ -237,10 +238,7 @@ export default class DomUI extends EventEmitter {
         // 기본 ui 를 보여준다
         this.gnbContainer.style.opacity = '1';
         this.gnbContainer.style.display = 'block';
-        
-        // if(this.questWrap) {
-        //     this.emit('questList');
-        // }
+
         this.emit('questList');
     }
 
@@ -402,14 +400,10 @@ export default class DomUI extends EventEmitter {
     // 포털 리스트 모달
     showPortals(inputs, callback) {
         const portaldom = document.querySelector('.portal');
-        
+
         if (this.portals && portaldom) {
-            console.log('aaa');
             this.portals.showSelectableList(inputs);
-            this.portals = null;
-            return;
         } else {
-            console.log('bbb');
             const pane = this.createContainer();
             pane.classList.add('screen');
             const portals = new Portal(pane, inputs, callback);
