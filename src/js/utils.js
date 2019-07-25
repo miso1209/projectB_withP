@@ -73,3 +73,9 @@ export function parsingOption(option) {
 
     return text;
 }
+
+export function ParsingNumber(input) {
+    if(input === '') return '';
+    const text = input.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return text;
+}

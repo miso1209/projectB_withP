@@ -1,6 +1,7 @@
 import Panel from './component/panel';
 import MakeDom from './component/makedom';
 import Button from './component/button';
+import { ParsingNumber } from '../utils';
 
 export default class Profile extends Panel {
     constructor(player, callback){
@@ -36,7 +37,7 @@ export default class Profile extends Panel {
     const avatar = player.characters[cid];
 
     this.profileImg.src = `/src/assets/${avatar.data.portrait}`;
-    this.avatar_dps.innerText = player.party.totalPowerFigure;
-    this.avatar_gold.innerText = player.inventory.gold;
+    this.avatar_dps.innerText = ParsingNumber(player.party.totalPowerFigure);
+    this.avatar_gold.innerText = ParsingNumber(player.inventory.gold);
   }
 }

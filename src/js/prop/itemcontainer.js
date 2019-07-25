@@ -10,7 +10,9 @@ export default class ItemContainer extends PropBase {
 
     touch(game) {
         const inputs = game.getInvenotryData();
-        game.ui.showInventory(inputs);
+        const inven_gold = game.player.inventory.gold;
+        
+        game.ui.showInventory(inputs, inven_gold);
         Sound.playSound('chest_open_1.wav', { singleInstance: true });
     }
 

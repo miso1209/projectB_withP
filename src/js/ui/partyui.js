@@ -5,6 +5,7 @@ import Button from "./component/button";
 import Avatar from "./component/avatar";
 import ListBox from "./component/listbox";
 import StatText from "./component/statText";
+import { ParsingNumber } from "../utils";
 
 const PARTY_SIZE = 6;
 
@@ -103,7 +104,7 @@ export default class PartyUI extends Panel {
     let totalhealth = 0;
     let selectedavatar = null;
 
-    this.totaldps.innerText = `${this.party.totalPowerFigure}`;
+    this.totaldps.innerText = `${ParsingNumber(this.party.totalPowerFigure)}`;
     this.characterList.innerHTML = '';
 
     for (let i = 0; i < PARTY_SIZE; i++) {

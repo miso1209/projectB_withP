@@ -19,6 +19,7 @@ import QuestList from "./quest";
 import QuestModal from "./questModal";
 import Setting from "./setting";
 import Portal from "./portal";
+import { ParsingNumber } from "../utils";
 
 
 export default class DomUI extends EventEmitter {
@@ -447,7 +448,7 @@ export default class DomUI extends EventEmitter {
         const inventory = new Inventory(pane, inputs);
     
         if (inven_gold) {
-            inventory.gold.innerText = inven_gold;
+            inventory.gold.innerText = ParsingNumber(inven_gold);
         }
 
         inventory.moveToRight(70);

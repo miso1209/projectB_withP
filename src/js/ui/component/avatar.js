@@ -1,4 +1,5 @@
 import MakeDom from "./makedom";
+import { ParsingNumber } from "../../utils";
 
 export default class Avatar {
   constructor(input) {
@@ -34,7 +35,7 @@ export default class Avatar {
       const stats = new MakeDom('div', 'statBox');
       stats.classList.add('_dps');
 
-      this.dps = new MakeDom('p', 'stat', input.totalPowerFigure);
+      this.dps = new MakeDom('p', 'stat', ParsingNumber(input.totalPowerFigure));
       this.health = new MakeDom('p', 'health', `${input.health}`);
 
       const imgWrap = new MakeDom('p', 'imgWrap');

@@ -5,7 +5,7 @@ import MakeDom from "./component/makedom";
 import Button from "./component/button";
 import StatText from "./component/statText";
 import StatusBar from "./component/statusbar";
-import { parsingOption } from "../utils";
+import { parsingOption, ParsingNumber } from "../utils";
 
 
 
@@ -213,9 +213,10 @@ export default class CharacterDetail extends Panel {
 
   updateStat() {
     this.statWrap.innerHTML = '';
-    this.dps.innerText = `${this.selected.totalPowerFigure}`;
-    this.statDps.innerText = `${this.selected.strongFigure}`;
-    this.statArmor.innerText = `${this.selected.armorFigure}`;
+    // let dps = ParsingNumber(this.selected.totalPowerFigure)
+    this.dps.innerText = `${ParsingNumber(this.selected.totalPowerFigure)}`;
+    this.statDps.innerText = `${ParsingNumber(this.selected.strongFigure)}`;
+    this.statArmor.innerText = `${ParsingNumber(this.selected.armorFigure)}`;
     
     // console.log(this.selected);
     for (let base in this.selected.data.base) {
