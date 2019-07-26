@@ -388,6 +388,8 @@ export default class DomUI extends EventEmitter {
     // 아이템 획득
     showItemAcquire(text, inputs, result) {
         const pane = this.createContainer();
+        pane.classList.add('screen');
+        
         const acquire = new ItemAcquire(pane, text, inputs, (response) => {
             this.removeContainer(pane);
 
@@ -446,7 +448,8 @@ export default class DomUI extends EventEmitter {
     showInventory(inputs, inven_gold) {
         const pane = this.createContainer();
         const inventory = new Inventory(pane, inputs);
-    
+        pane.classList.add('screen');
+
         if (inven_gold) {
             inventory.gold.innerText = ParsingNumber(inven_gold);
         }
@@ -457,6 +460,8 @@ export default class DomUI extends EventEmitter {
 
     showParty(inputs, partyinputs){
         const pane = this.createContainer();
+        pane.classList.add('screen');
+
         const party = new PartyUI(pane, inputs, partyinputs, (id, result) => {
             if (id === 'buttoncallback') {
                 if (result === 'partyConfirm') {

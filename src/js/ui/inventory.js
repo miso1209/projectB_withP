@@ -16,7 +16,6 @@ export default class Inventory extends Panel {
 
         inventory.addTitle('인벤토리');
         inventory.addCloseButton();
-        pane.classList.add('screen');
     
         this.tabs = [
             {category: 'weapon', display: '무기'},

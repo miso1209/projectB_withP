@@ -2623,10 +2623,13 @@ img.die {
   height: 50px;
   background-color: #22150a;
   border: 1px solid transparent;
+  box-sizing: border-box;
 }
 
 .characterDetail .skillItems li{
   min-height: 50px;
+  padding: 0;
+  margin: 1px;
 }
 
 .characterDetail .equipItems li:not(:first-child),
@@ -2640,10 +2643,11 @@ img.die {
 
 .equipItems li:hover, 
 .equipItems li:active,
-.equipItems li.active,
-.skillItems li:hover, 
+.equipItems li.active
+/* .skillItems li:hover, 
 .skillItems li:active,
-.skillItems li.active {
+.skillItems li.active { */
+{
   background-color: #22150a;
   border-color: #ffd800;
 }

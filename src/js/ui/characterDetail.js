@@ -13,8 +13,6 @@ export default class CharacterDetail extends Panel {
   constructor(pane, input, result) {
     super();
     
-    pane.classList.add('screen');
-
     this.selected = input;
     this.statItem = null; 
     this.isActive = null; // 장비, 스킬 아이콘 같이 체크해야함.
@@ -311,7 +309,7 @@ export default class CharacterDetail extends Panel {
       liWrap.index = index;
 
       if (d !== null) {
-        let skillIcon = new ItemImage('items.png', 20, 1);
+        let skillIcon = new ItemImage('icon_skills.png', this.selected.id-1, index);
         skillIcon.dom.style.display = 'inline-block';
 
         let descText = new MakeDom('span', 'descText', skillItemsData[liWrap.index].data.name);

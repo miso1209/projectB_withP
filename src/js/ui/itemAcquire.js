@@ -13,7 +13,7 @@ export default class ItemAcquire extends Panel {
       domheight += 80;
     }
 
-    pane.classList.add('screen');
+    
     const modal = new Modal(pane, 380, domheight);
     this.callback = result;
 

@@ -13,8 +13,6 @@ export default class PartyUI extends Panel {
   constructor(pane, inputs, partyinputs, result) {
     super();
     
-    pane.classList.add('screen');
-
     this.inputs = inputs; // input 캐릭터 데이터
     this.party = partyinputs; // input 파티 데이터
     this.result = result; // 콜백

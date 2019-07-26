@@ -141,6 +141,8 @@ export default class CharacterSelect extends Panel {
   }
 
   select(current) {
+    console.log(current);
+    
     this.selected = current;
     const path = '/src/assets/';
 
