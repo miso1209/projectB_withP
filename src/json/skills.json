@@ -54,7 +54,7 @@
 
     "doubleattack": {
         "name": "연속공격",
-        "description": "방패와 검으로 연속 공격한다.",
+        "description": "방패와 검으로 연속 공격하고 방어력을 10% 증가시킨다.",
         "coolTime": 7,
         "maxCoolTime": 7,
         "skillExpressions": [
@@ -75,7 +75,7 @@
         "description": "완드에 마력을 실어 가격한다.",
         "skillExpressions": [
             [
-                "magicCoefficient(0.85)"
+                "magicCoefficient(0.9)"
             ]
         ]
     },
@@ -138,14 +138,14 @@
         "description": "전방의 적에게 화염구체를 날려 공격한다.",
         "skillExpressions": [
             [
-                "magicCoefficient(1.1)"
+                "magicCoefficient(1.2)"
             ]
         ]
     },
 
     "firecape": {
         "name": "화염망토",
-        "description": "화염망토를 둘러 방어력을 증가시킨다.",
+        "description": "화염망토를 둘러 방어력을 20% 증가시킨다.",
         "skillExpressions": [
             [
                 "armorCoefficient(0.2)"
@@ -160,7 +160,7 @@
         "maxCoolTime": 9,
         "skillExpressions": [
             [
-                "magicCoefficient(0.8)"
+                "magicCoefficient(0.85)"
             ]
         ]
     },
