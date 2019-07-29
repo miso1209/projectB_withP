@@ -525,6 +525,7 @@ export default class Game extends EventEmitter {
         if (stageName === 'house') {
             stage.zoomTo(2, true);
             Sound.playSound('bgm_6.wav', { loop: true, type: 'BGM' });
+            this.ui.showStageTitle('아지트');
         } else if(stageName === 'castle_lobby') {
             stage.zoomTo(1.5, true);
             Sound.playSound('bgm_7.mp3', { loop: true, type: 'BGM' });
@@ -1062,7 +1063,7 @@ export default class Game extends EventEmitter {
                     Sound.playSound('quest_done_1.wav', { singleInstance: true });
                 } else if(!quest.success) {
                     // change condition
-                    console.log('change condition');
+                    // console.log('change condition');
                 }
 
                 this.ui.resetQuestStatus();
