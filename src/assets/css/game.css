@@ -743,6 +743,7 @@ button, .button{
   user-select: none;
   -webkit-user-select: none;
   -webkit-touch-callout: none;
+  vertical-align: middle;
 }
 .radioBtn input {
   display: none;
@@ -1139,7 +1140,8 @@ button.nav.active  {
 
 /* 셋팅창 */
 .modal.setting .contents {
-  margin: 10px 40px;
+  top: 70px;
+  margin: 0 40px;
 }
 
 .modal.setting section {

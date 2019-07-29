@@ -175,7 +175,7 @@ export default class Inventory extends Panel {
         } else {
             if (total > this.slotSize) {
                 let page = Math.ceil(total/this.slotSize); 
-                this.addSlot(this.slotSize*page);
+                this.addSlot(this.slotSize*page - total);
             } else {
                 this.addSlot(emptySlot);
             }

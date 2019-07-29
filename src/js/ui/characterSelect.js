@@ -50,8 +50,6 @@ export default class CharacterSelect extends Panel {
 
     this.changeAvatarBtn = new Button('아바타 설정', 'checkbox');
     this.changeAvatarBtn.dom.addEventListener('click', (ok) => {
-      console.log('click');
-      // this.changeAvatarBtn.dom.classList.toggle('active');
       this.changeAvatarBtn.dom.classList.add('active');
       this.setMainAvatar();
     });
@@ -155,9 +153,6 @@ export default class CharacterSelect extends Panel {
   }
 
   updateStatus(current) {
-    
-    console.log(current);
-
     this.hp.update(current.health, current.maxHealth);
     this.exp.update(current.exp, current.maxexp);
 

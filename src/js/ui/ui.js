@@ -480,8 +480,6 @@ export default class DomUI extends EventEmitter {
         const pane = this.createContainer();
         pane.classList.add('screen');
 
-        console.log(this.player.controlCharacter);
-
         const characterSelect = new CharacterSelect(pane, inputs, avatar, (result, option) => {
             if(result === 'characterDetail') {
                 this.showCharacterDatail(option);

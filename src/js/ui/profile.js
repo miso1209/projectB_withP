@@ -12,7 +12,8 @@ export default class Profile extends Panel {
     const profileWrap = new MakeDom('div', 'profileWrap');
     const imageWrap = new MakeDom('div', 'imageWrap');
     const button = new Button('아바타 변경', 'textButton');
-    button.dom.addEventListener('click', ()=> {
+    
+    profileWrap.addEventListener('click', ()=> {
       callback();
     });
 
