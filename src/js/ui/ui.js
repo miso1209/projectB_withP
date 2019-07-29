@@ -150,7 +150,6 @@ export default class DomUI extends EventEmitter {
             if(this.questWrap) {
                 this.hideQuest(close);
             }
-
         }, 10);
     }
     
@@ -389,7 +388,7 @@ export default class DomUI extends EventEmitter {
     showItemAcquire(text, inputs, result) {
         const pane = this.createContainer();
         pane.classList.add('screen');
-        
+
         const acquire = new ItemAcquire(pane, text, inputs, (response) => {
             this.removeContainer(pane);
 
@@ -480,6 +479,9 @@ export default class DomUI extends EventEmitter {
         const avatar = this.player.controlCharacter;
         const pane = this.createContainer();
         pane.classList.add('screen');
+
+        console.log(this.player.controlCharacter);
+
         const characterSelect = new CharacterSelect(pane, inputs, avatar, (result, option) => {
             if(result === 'characterDetail') {
                 this.showCharacterDatail(option);

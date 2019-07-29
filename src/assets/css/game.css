@@ -265,14 +265,16 @@
   display: block;
   width: 108px;
   height: 26px;
-  line-height: 26px;
-  overflow: hidden;
-  border: 1px solid #4e4a47;
-  background-color: #dad0c7;
+  padding: 0 6px 0 23px;
 
-  padding: 0 6px 0 35px;
+  font-size: 15px;
+  line-height: 26px;
   text-align: right;
   font-weight: normal;
+  overflow: hidden;
+
+  border: 1px solid #4e4a47;
+  background-color: #dad0c7;
 }
 
 .profileWrap .statBox::before, .statBox._dps::before{
@@ -2617,17 +2619,16 @@ img.die {
 .characterDetail .skillItems li {
   position: relative;
   display: block;
-  width: 100%;
   margin: 0;
   padding: 7px 2px;
-  height: 50px;
+  height: 52px;
+  width: 52px;
   background-color: #22150a;
   border: 1px solid transparent;
   box-sizing: border-box;
 }
 
 .characterDetail .skillItems li{
-  min-height: 50px;
   padding: 0;
 }
 
