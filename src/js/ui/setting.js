@@ -80,9 +80,9 @@ export default class Setting extends Panel {
     option.parentNode.classList.add('checked');
     
     if(option.value === 'ON') {
-      value = 1;
-    } else if (option.value === 'OFF') {
       value = 0;
+    } else if (option.value === 'OFF') {
+      value = 1;
     } else {
       value = option.value*0.5;
     }
