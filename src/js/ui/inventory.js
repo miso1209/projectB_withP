@@ -89,8 +89,6 @@ export default class Inventory extends Panel {
         this.storageContent.classList.add('scrollbox');
         this.storageContent.style.height = scrollHeight;
 
-        // 스크롤 이벤트 추가
-        // this.storageContent.addEventListener('scroll', this.scrolled.bind(this, storageContent));
         this.slotSize = 24;
 
         scrollView.appendChild(scrollBlind);
@@ -104,13 +102,6 @@ export default class Inventory extends Panel {
         
         inventory.dom.appendChild(wrapper);
     }
-
-    // scrolled(event) {
-    //     //visible height + pixel scrolled = total height 
-    //     if (event.offsetHeight + event.scrollTop == event.scrollHeight) {
-    //         console.log(event.scrollTop);
-    //     } 
-    // }
 
     onTabSelected(category) {
         this.itemCat.innerText = category;
@@ -129,7 +120,6 @@ export default class Inventory extends Panel {
 
                 let selected = null;
                 let index = -1;
-                // parsingOption(option);
 
                 // 여기서 아이템을 가져온다
                 for (const item of input.items) {
@@ -189,7 +179,6 @@ export default class Inventory extends Panel {
             this.itemName.innerText = item.data.name;
             this.itemDesc.innerText = item.data.description;
             this.itemRank.updateIcon(item.data.rank);
-            // this.itemRank.dom.style.display = 'block';
             this.rankbg.style.display = 'block';
 
             if (this.itemOptions.children !== 0) {
@@ -197,10 +186,7 @@ export default class Inventory extends Panel {
             }
 
             item.data.options.forEach(option => {
-                // const parser = new parser(option);
-                // parser.text; // => 힘 20
                 let li = document.createElement('li');
-                // li.innerText = option;
                 li.innerText = parsingOption(option);
                 this.itemOptions.appendChild(li);
             });
