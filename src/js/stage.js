@@ -52,14 +52,46 @@ function isInPolygon(gp, vertices) {
 	return c;
 };
 
-const isBoxInFront = function (box1, box2) {
+function isBoxInFront(box1, box2) {
     // test for intersection x-axis
-    if (box1.xmin > box2.xmax) { return true; }
-    else if (box2.xmin > box1.xmax) { return false; }
-
+    if (box1.xmin > box2.xmax) {
+        return true;
+    } else if (box2.xmin > box1.xmax) {
+        return false;
+    }
+    
     // test for intersection y-axis
-    if (box1.ymin > box2.ymax) { return true; }
-    else if (box2.ymin > box1.ymax) { return false; }
+    if (box1.ymin > box2.ymax) {
+        return true;
+    } else if (box2.ymin > box1.ymax) {
+        return false;
+    }
+};
+
+function isBoxInFrontX(box1, box2) {
+    // test for intersection x-axis
+    if (box1.xmin > box2.xmax) {
+        return true;
+    } else if (box2.xmin > box1.xmax) {
+        return false;
+    } else {
+        return 0;
+    }
+};
+
+function isBoxInFrontY(box1, box2) {
+    if (box1.ymin > box2.ymax) {
+        return true;
+    } else if (box2.ymin > box1.ymax) {
+        return false;
+    }
+
+    if (box1.xmin > box2.xmax) {
+        return true;
+    } else if (box2.xmin > box1.xmax) {
+        return false;
+    }
+    return 0;
 };
 
 // [정리] 지금 Stage쪽이 아주 난잡하고 별에 별 많은것이 섞여있다.. 몬스터 움직임 처리라던가..
@@ -120,6 +152,7 @@ export default class Stage extends PIXI.Container {
         this.groundMap = new Array(arraySize);
         this.objectMap = new Array(arraySize);
         this.eventMap = new Array(arraySize);
+        this.lightMap = new Array(arraySize);
 
         this.alphaTiles = [];
         this.nameTiles = [];
@@ -186,6 +219,8 @@ export default class Stage extends PIXI.Container {
                         this.setObjectTile(x, y, tile);
                     } else if (group === "event") {
                         this.setEventTile(x, y, tile);
+                    } else if (group === "light") {
+                        this.setLightTile(x, y, tile);
                     } else {
                         throw Error("invalid group :" + group);
                     }
@@ -248,6 +283,29 @@ export default class Stage extends PIXI.Container {
             this.eventMap[x + y * this.mapWidth] = new Portal5(x, y, tile);
         }
         this.pathFinder.setCell(x, y, true);
+    }
+
+    setLightTile(x, y, src) {
+        let findPos = {
+            x: x,
+            y: y
+        };
+
+        while (!this.groundMap[findPos.x + findPos.y * this.mapWidth]) {
+            findPos.x++;
+            findPos.y++;
+        }
+
+        const tile = this.newTile(findPos.x, findPos.y, src);
+        for(let j = 0; j < src.xsize; ++j ) {
+            for(let i = 0; i < src.ysize; ++i ) {
+                const cx = findPos.x - i;
+                const cy = findPos.y - j;
+                if (cx >= 0 && cy >= 0) {
+                    this.lightMap[cx + cy * this.mapWidth] = tile;
+                }
+            }
+        }
     }
 
     setObjectTile(x, y, src) {
@@ -344,10 +402,36 @@ export default class Stage extends PIXI.Container {
                 tileData.movable = true;
             } else {
                 tileData.texture = PIXI.Texture.fromFrame(randomProperties.imageArray[randomProperties.id]); // 선택된 이미지를 그린다.
+                
+                const isWindow = randomProperties.imageArray[randomProperties.id].indexOf('window') >= 0;
+                const flip = randomProperties.imageArray[randomProperties.id].indexOf('flip') >= 0;
+                if (isWindow) {
+                    let pos = {};
+                    let light = {
+                        type: "light",
+                        xsize: 1,
+                        ysize: 1,
+                        blendMode: 'OVERLAY',
+                        offsetX: 0,
+                        offsetY: 110
+                    };
+                    if (flip) {
+                        light.texture = PIXI.Texture.fromFrame('castle_window_light_left.png');
+                        pos.x = x+1;
+                        pos.y = y-3;
+                        light.offsetX = -30;
+                    } else {
+                        light.texture = PIXI.Texture.fromFrame('castle_window_light_right.png');
+                        pos.x = x-4;
+                        pos.y = y+1;
+                        light.offsetX = -150;
+                    }
+                    const lightTile = this.newTile(pos.x, pos.y, light);
+                    this.lightMap[pos.x + pos.y * this.mapWidth] = lightTile;
+                }
             }
             
             tile = Prop.New(tileData.type, x, y, tileData);
-        
         } else if( tileData.type == "door_portal"){
             if ( this.doorTarget.indexOf(tileData.target) < 0 ){
                 tileData.texture = false;
@@ -385,6 +469,7 @@ export default class Stage extends PIXI.Container {
                 imageArray: tileData.randomImage,
                 type: 'object'
             }; // 랜덤수 초기화
+
             if( tileData.freeFlip == true ){
                 var randomFlip = Math.floor( Math.random() * (2)); 
 
@@ -418,9 +503,13 @@ export default class Stage extends PIXI.Container {
             }
 
             tile = Prop.New(tileData.type, x, y, tileData);
+        } else if (tileData.type === "light") {
+            tileData.imageOffset = {
+                x: Number(tileData.offsetX),
+                y: Number(tileData.offsetY)
+            };
+            tile = Prop.New(tileData.type, x, y, tileData);
         }
-        
-        //END 호영 테스트
         else if (tileData.type !== "groundtile") {
             tile = Prop.New(tileData.type, x, y, tileData);
         } else {
@@ -453,7 +542,6 @@ export default class Stage extends PIXI.Container {
     }
 
     buildObjectRederOrder() {
-
         const objects = {};
         for (let y = 0; y < this.mapHeight;++y) {
             for (let x = 0; x < this.mapWidth;++x) {
@@ -476,10 +564,11 @@ export default class Stage extends PIXI.Container {
 
         const sortedObjects = [];
         for (const groupId in objects) {
+
             const obj = objects[groupId];
-            for (let i = 0; i < sortedObjects.length; ++i) {
+            for (let i = 0; i < sortedObjects.length; i++) {
                 if (isBoxInFront(obj, sortedObjects[i])) {
-                    sortedObjects.splice(i, 0, obj)
+                    sortedObjects.splice(i, 0, obj);
                     break;
                 } 
             }
@@ -487,6 +576,15 @@ export default class Stage extends PIXI.Container {
             // 마지막까지 왔는데 추가되지 못했다
             if (sortedObjects.indexOf(obj) < 0) {
                 sortedObjects.push(obj);
+            }
+        }
+
+        for (let y = 0; y < this.mapHeight;++y) {
+            for (let x = 0; x < this.mapWidth;++x) {
+                const light = this.lightMap[x + y * this.mapWidth];
+                if (light) {
+                    sortedObjects.splice(0,0,light);
+                }
             }
         }
 
@@ -913,7 +1011,8 @@ export default class Stage extends PIXI.Container {
         let targetIndex = null;
         for (let y = gridY; y < this.mapHeight; y++) {
             for (let x = gridX; x < this.mapWidth ; x++) {
-                const prop = this.objectMap[x + y * this.mapWidth];
+                let prop = this.objectMap[x + y * this.mapWidth];
+
                 if (prop) {
                     const i = this.objectContainer.getChildIndex(prop);
                     targetIndex = targetIndex !== null ? Math.min(i, targetIndex) : i;

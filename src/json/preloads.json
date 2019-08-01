@@ -46,6 +46,8 @@
     ["castle_treasurebox_flip.png", "assets/mapdata/castle_treasurebox_flip.png"],
     ["assets/mapdata/recipeshelf_1x1_sprite.json"],
     ["assets/mapdata/castle_treasurebox_sprite.json"],
+    ["castle_window_light_right.png", "assets/mapdata/castle_window_light_right.png"],
+    ["castle_window_light_left.png", "assets/mapdata/castle_window_light_left.png"],
 
     ["assets/sprite/dragon/dragon_atk_nw.json"],
     ["assets/sprite/dragon/dragon_atk_sw.json"],

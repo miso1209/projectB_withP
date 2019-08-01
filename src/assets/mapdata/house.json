@@ -88,8 +88,30 @@
          "visible":true,
          "x":0,
          "y":0
+        }, 
+        {
+         "id":21,
+         "layers":[
+                {
+                 "data":[0, 0, 0, 0, 0, 0, 82, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 "height":16,
+                 "id":22,
+                 "name":"light",
+                 "opacity":1,
+                 "type":"tilelayer",
+                 "visible":true,
+                 "width":16,
+                 "x":0,
+                 "y":0
+                }],
+         "name":"light",
+         "opacity":1,
+         "type":"group",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextlayerid":21,
+ "nextlayerid":23,
  "nextobjectid":1,
  "orientation":"isometric",
  "renderorder":"right-down",
@@ -1081,6 +1103,61 @@
                         }]
                 }],
          "tilewidth":80
+        }, 
+        {
+         "columns":0,
+         "firstgid":82,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"light",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":194,
+         "tileoffset":
+            {
+             "x":-168,
+             "y":110
+            },
+         "tiles":[
+                {
+                 "id":0,
+                 "image":"house_window_light.png",
+                 "imageheight":194,
+                 "imagewidth":220,
+                 "properties":[
+                        {
+                         "name":"blendMode",
+                         "type":"string",
+                         "value":"OVERLAY"
+                        }, 
+                        {
+                         "name":"offsetX",
+                         "type":"string",
+                         "value":"-165"
+                        }, 
+                        {
+                         "name":"offsetY",
+                         "type":"string",
+                         "value":"90"
+                        }, 
+                        {
+                         "name":"xsize",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"ysize",
+                         "type":"int",
+                         "value":1
+                        }],
+                 "type":"light"
+                }],
+         "tilewidth":220
         }],
  "tilewidth":32,
  "type":"map",

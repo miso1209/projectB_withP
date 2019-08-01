@@ -26,6 +26,7 @@ import Warrior from './warrior';
 import Dragon from './dragon';
 import PortalWizard from './portal_wizard';
 
+Prop.Register("light", (...args) => { return new StaticProp(...args); });
 Prop.Register("default", (...args) => { return new StaticProp(...args); });
 Prop.Register("gate", (...args) => { return new Gate(...args); });
 Prop.Register("inventory", (...args) => { return new ItemContainer(...args); });

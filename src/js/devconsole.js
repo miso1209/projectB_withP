@@ -17,6 +17,10 @@ export default class DevConsole {
     setGame(game) {
         this.game = game;
     }
+
+    setZoom(num) {
+        this.game.stage.zoomTo(num, true);
+    }
     
     parsing() {
         for (let key in items) {

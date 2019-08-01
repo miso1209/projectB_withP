@@ -14,10 +14,10 @@ export default class App {
         this.dev = new DevConsole();
         this.game = null;
 
-        this.pixi = new PIXI.Application(980, 500, { 
+        this.pixi = new PIXI.Application(980, 500, {
             backgroundColor: 0x000000,
             view: document.getElementById('canvas'),
-        });
+        }, true);
     }
 
     // dom - intro
