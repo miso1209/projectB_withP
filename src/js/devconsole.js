@@ -20,19 +20,19 @@ export default class DevConsole {
 
     kill(id) {
         this.game.player.characters[id].health = 0;
-        this.game.storage.updateCharacter(this.game.player.characters[id]);
+        this.game.storage.updateCharacter(this.game.player.characters[id].save());
     }
     
     recovery(id) {
         this.game.player.characters[id].health = this.game.player.characters[id].maxHealth;
-        this.game.storage.updateCharacter(this.game.player.characters[id]);
+        this.game.storage.updateCharacter(this.game.player.characters[id].save());
     }
 
     increaseExp(exp) {
         for (let key in this.game.player.characters) {
             this.game.player.characters[key].increaseExp(exp);
             this.recovery(key);
-            this.game.storage.updateCharacter(this.game.player.characters[key]);
+            this.game.storage.updateCharacter(this.game.player.characters[key].save());
         }
     }
 
@@ -41,7 +41,7 @@ export default class DevConsole {
             this.game.player.characters[key].level = level;
             this.game.player.characters[key].exp = 0;
             this.recovery(key);
-            this.game.storage.updateCharacter(this.game.player.characters[key]);
+            this.game.storage.updateCharacter(this.game.player.characters[key].save());
         }
     }
 

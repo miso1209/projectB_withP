@@ -20,7 +20,7 @@
         "description": "밀루다 획득 스토리 몬스터."
     },
     "dragon": {
-        "name" : "Lv 80 블루 드래곤",
+        "name" : "Lv 35 블루 드래곤",
         "field": {
             "character": 10008,
             "direction": "sw",
