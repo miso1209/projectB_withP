@@ -31,7 +31,7 @@ export default class Storage extends EventEmitter {
         this.data.settings = {
             sound: {
                 volume: {
-                    Master: 1,
+                    Master: 0,
                     BGM: 1,
                     Default: 1
                 }

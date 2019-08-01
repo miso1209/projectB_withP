@@ -481,6 +481,9 @@ export default class Game extends EventEmitter {
         if (options && options.enterPortalStage) {
             const portal = mapGenerator.getPortal();
             await this.$enterStageIns(portal, 'portalway');
+        } else if (options && options.enterBossStage) {
+            const boss = mapGenerator.getBoss();
+            await this.$enterStageIns(boss, 'down');
         } else {
             const hall = mapGenerator.getHall();
             let hallKey = (dir === 'left'? 'right':'down');

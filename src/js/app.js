@@ -97,20 +97,6 @@ export default class App {
             this.game.start();
             this.update();
         });
-
-        window.addEventListener("keydown", (e) => {
-            if (e.keyCode === 68) { // d키 // ui 는 여기서 테스트 ---- 삭제 예정
-                this.game.ui.showCombineItemList([
-                    { category: 'armor', recipes: this.game.getRecipes('armor') },
-                    { category: 'consumables', recipes: this.game.getRecipes('consumables') },
-                    { category: 'weapon', recipes: this.game.getRecipes('weapon') }], 
-                    (isOk) => { console.log(isOk); });
-            }
-            if (e.keyCode === 66) {
-                const monster = {src: new Monster(StoryMonsters['archer'])};
-                this.game.$enterBattle(monster);
-            }
-        });
     }
 
     update() {

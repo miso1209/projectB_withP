@@ -168,6 +168,10 @@ export default class MapGenerator {
         return this.portal;
     }
 
+    getBoss() {
+        return this.boss;
+    }
+
     setFloor(currentFloor) {
         // 층 정보를 담는다.
         this.currentFloor = currentFloor;
@@ -230,12 +234,12 @@ export default class MapGenerator {
                 const neighbor = this.getNeighbor(x,y);
                 
                 if (this.map[y][x] === MAP_DATA.BOSS) {
-                    const stageName = path.basename(`assets/mapdata/${this.currentFloor===100?lastBoss:middleBoss}.json`, ".json");
+                    const stageName = path.basename(`assets/mapdata/${this.currentFloor===20?lastBoss:middleBoss}.json`, ".json");
                     const stage = new Stage(neighbor);
                     await stage.$load(stageName);
                     stage.setTags(this.tags);
 
-                    if (this.currentFloor === 100) {
+                    if (this.currentFloor === 20) {
                         const monster = this.propGenerator.createStoryMonster('dragon');
                         stage.addMonster(monster, {
                             type: "dragon",
@@ -256,6 +260,7 @@ export default class MapGenerator {
                     }
     
                     realMap[y][x] = stage;
+                    this.boss = stage;
                 } else  if (this.map[y][x] === MAP_DATA.STAIR) {
                     const stageName = path.basename(`assets/mapdata/${stair}.json`, ".json");
                     const stage = new Stage(neighbor);

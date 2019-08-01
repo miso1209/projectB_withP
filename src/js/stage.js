@@ -511,6 +511,13 @@ export default class Stage extends PIXI.Container {
             tile = Prop.New(tileData.type, x, y, tileData);
         }
         else if (tileData.type !== "groundtile") {
+            if (this.neighbor && this.neighbor.output && tileData.type === 'stair_portal') {
+                if (tileData.ysize > 1 && this.neighbor.output === "left") {
+                    tileData.texture = false;
+                } else if (tileData.xsize > 1 && this.neighbor.output === "up") {
+                    tileData.texture = false;
+                }
+            }
             tile = Prop.New(tileData.type, x, y, tileData);
         } else {
             tile = new Tile(x, y, tileData);

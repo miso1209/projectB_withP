@@ -1,8 +1,4 @@
 import items from "./items";
-import { parsingOption } from "./utils";
-import ScriptParser from "./scriptparser";
-
-// 이 함수에 하나씩 콘솔 명령어를 하나씩 추가하면 된다
 
 export default class DevConsole {
     constructor() {
@@ -21,115 +17,138 @@ export default class DevConsole {
     setZoom(num) {
         this.game.stage.zoomTo(num, true);
     }
-    
-    parsing() {
-        for (let key in items) {
-            const item = items[key];
 
-            if (item.options.length > 0) {
-                item.options.forEach((option) => {
-                    console.log(parsingOption(option));
-                });
-            }
-        }
-    }
-
-    resetPlayer() {
-        if (this.game && this.game.storage) {
-            this.game.storage.clear();
-            // 강제 페이지 리로드
-            window.location.reload();
-        }
-    }
-
-    addItem(id, count) {
-        const inven = this.game.player.inventory;
-        inven.addItem(id.toString(), count);
-        return true;
-    }
-
-    addGameItem(id, count) {
-        this.game.addItem(id.toString(), count);
-        return true;
+    kill(id) {
+        this.game.player.characters[id].health = 0;
+        this.game.storage.updateCharacter(this.game.player.characters[id]);
     }
     
-    addItems(...args) {
-        this.game.addItems(...args)
-        return true;
+    recovery(id) {
+        this.game.player.characters[id].health = this.game.player.characters[id].maxHealth;
+        this.game.storage.updateCharacter(this.game.player.characters[id]);
     }
 
-    onNotify(...args) {
-        this.game.onNotify(...args);
-    }
-
-    setScale(scale) {
-        this.game.stage.zoomTo(scale,false);
-    }
-
-    printQuest() {
-        // 현재 퀘스트 상태를 출력한다
-        return this.game.getAllQuests();
-    }
-
-    devEmit(string) {
-        this.game.emit(string);
-    }
-
-    setMainAvatar(...args) {
-        // 현재 퀘스트 상태를 출력한다
-        this.game.setMainAvatar(...args);
-    }
-
-    addQuest(id) {
-        this.game.addQuest(id);
-    }
-
-    completeQuest(Id) {
-        // for (const questId in this.game.player.quests) {
-            this.game.completeQuest(Id);
-        // }
-
-        return this.game.player.quests;
-    }
-
-    equipItem(...args) {
-        this.game.equipItem(...args);
-    }
-
-    playBGM(...args) {
-        Sound.playBGM(...args);
-    }
-
-    levelUp() {
+    increaseExp(exp) {
         for (let key in this.game.player.characters) {
-            this.game.player.characters[key].increaseExp(8700);
+            this.game.player.characters[key].increaseExp(exp);
+            this.recovery(key);
+            this.game.storage.updateCharacter(this.game.player.characters[key]);
         }
     }
 
-    showQuest() {
-        console.log(this.game.getAllQuests());
+    setLevel(level) {
+        for (let key in this.game.player.characters) {
+            this.game.player.characters[key].level = level;
+            this.game.player.characters[key].exp = 0;
+            this.recovery(key);
+            this.game.storage.updateCharacter(this.game.player.characters[key]);
+        }
     }
 
-    killCharacter(key) {
-        this.game.player.characters[key].health = 0;
+    getGold(gold) {
+        this.game.addGold(gold);
+        this.game.storage.updateInventory(this.game.player.inventory.save());
     }
 
-    getItem() {
+    getAllConsumables(count) {
         for (let key in items) {
             const item = items[key];
-            if (item.category === 'material' || item.category === 'recipes') {
-                this.game.player.inventory.addItem(item.id, Number(50));
+            if (item.category === 'consumables') {
+                this.game.player.inventory.addItem(item.id, Number(count));
             }
         }
-        this.levelUp();
-        this.game.addGold(50000);
-    }
-    
-    addCharacter(id) {
-        this.game.game.addCharacter(id, { level: 1, exp: 0, equips: {}});
+        this.game.storage.updateInventory(this.game.player.inventory.save());
     }
 
-    setVolume(...args) {
-        this.game.setVolume(...args);
+    getAllRecipes() {
+        for (let key in items) {
+            const item = items[key];
+            if (item.category === 'recipes') {
+                this.game.player.inventory.addItem(item.id, Number(1));
+            }
+        }
+        this.game.storage.updateInventory(this.game.player.inventory.save());
+    }
+
+    getAllMaterials(count) {
+        for (let key in items) {
+            const item = items[key];
+            if (item.category === 'material') {
+                this.game.player.inventory.addItem(item.id, Number(count));
+            }
+        }
+        this.game.storage.updateInventory(this.game.player.inventory.save());
+    }
+
+    enterCastle() {
+        const func = async () => {
+            await this.game.$leaveStage();
+            await this.game.$enterStage('assets/mapdata/castle_lobby.json', 'castle-to-road3');
+
+            this.game.exploreMode.interactive = true;
+            this.game.stage.showPathHighlight = true;
+            this.game.ui.hideTheaterUI(0.5);
+            this.game.ui.showMenu();
+            this.game.stage.enter();
+        };
+
+        func();
+    }
+
+    makeSelectableFloor(floor) {
+        for(let i = 1; i <= floor; i++) {
+            this.game.storage.addSelectableFloor(i);
+        }
+    }
+
+    enterHouse() {
+        const func = async () => {
+            await this.game.$leaveStage();
+            await this.game.$enterStage('assets/mapdata/house.json', 'house-gate');
+
+            this.game.exploreMode.interactive = true;
+            this.game.stage.showPathHighlight = true;
+            this.game.ui.hideTheaterUI(0.5);
+            this.game.ui.showMenu();
+            this.game.stage.enter();
+        };
+
+        func();
+    }
+
+    enterFloor(floor) {
+        const func = async () => {
+            this.game.setFloor(floor-1);
+            await this.game.$nextFloor(null, 'up');
+        };
+
+        func();
+    }
+
+    enterMiluda() {
+        const func = async () => {
+            this.game.setFloor(1);
+            await this.game.$nextFloor(null, 'up', { enterBossStage: true });
+        };
+
+        func();
+    }
+
+    enterMiddleBoss() {
+        const func = async () => {
+            this.game.setFloor(9);
+            await this.game.$nextFloor(null, 'up', { enterBossStage: true });
+        };
+
+        func();
+    }
+
+    enterFinalBoss() {
+        const func = async () => {
+            this.game.setFloor(19);
+            await this.game.$nextFloor(null, 'up', { enterBossStage: true });
+        };
+
+        func();
     }
 }
