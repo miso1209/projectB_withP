@@ -28,6 +28,8 @@ export default class Setting extends Panel {
   }
 
   addOption(type, index) {
+    console.log(index);
+    
     const optionsWrap = new MakeDom('section', 'group');
     const title = new MakeDom('h3', 'group_title');
     const options = new MakeDom('div', 'options');

@@ -1,5 +1,5 @@
-@import './animate.css';
 @import './base.css';
+@import './animate.css';
 @import './modal.css';
 
 /* 
@@ -145,7 +145,7 @@
   font-size: 20px;
   text-shadow: 0px 0px 5px rgba(0,0,0,1);
   color: #fff;
-  opacity: 0.7;
+  opacity: 0.5;
 }
 .intro .buttonWrap a:hover, 
 .intro .buttonWrap a.active {

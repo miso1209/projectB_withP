@@ -152,7 +152,10 @@ export default class DomUI extends EventEmitter {
             }
         }, 10);
     }
-    
+    resetQuestStatus() {
+        this.questStatus.classList.remove('show');
+    }
+
     showSetting() {
         // input : 현재 설정정보.
         const pane = this.createContainer();
@@ -163,10 +166,6 @@ export default class DomUI extends EventEmitter {
         });
     }
 
-    resetQuestStatus() {
-        // console.log('clear');
-        this.questStatus.classList.remove('show');
-    }
 
     showQuest(questlist) {
         if (this.questWrap !== null) {
@@ -350,7 +349,6 @@ export default class DomUI extends EventEmitter {
         const pane = this.createContainer();
         pane.classList.add('screen');
 
-        // console.log('showCraftUI --- ' + itemCount);
         let domHeight = 240;
         
         const modal = new Modal(pane, 360, domHeight);
