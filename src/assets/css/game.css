@@ -2313,6 +2313,8 @@ img.die {
   color: #d2a026;
   background: url(~assets/ui/party_icon_remove.png) 50% 50% no-repeat;
 
+  -webkit-animation: rotateIn 0.3s both;
+  animation: rotateIn 0.3s both;
 }
 .party .avatar.isCrew:hover {
   box-shadow: inset 0 0 10px 0 rgba(255, 255, 255, 0.5);
@@ -2337,6 +2339,12 @@ img.die {
   
   color: #98e21c;
   background: url(~assets/ui/party_icon_combine.png) 50% 50% no-repeat;
+}
+
+/* .party .avatar.empty.active::after{ */
+.party .avatar.empty:hover::after {
+  -webkit-animation: rotateIn 0.3s both;
+  animation: rotateIn 0.3s both;
 }
 
 /* 파티 캐릭터 리스트 */
