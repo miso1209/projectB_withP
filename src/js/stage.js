@@ -424,7 +424,8 @@ export default class Stage extends PIXI.Container {
                         light.texture = PIXI.Texture.fromFrame('castle_window_light_right.png');
                         pos.x = x-4;
                         pos.y = y+1;
-                        light.offsetX = -73;
+                        light.offsetX = -55;
+                        light.offsetY = 20;
                     }
                     const lightTile = this.newTile(pos.x, pos.y, light);
                     this.lightMap[pos.x + pos.y * this.mapWidth] = lightTile;
