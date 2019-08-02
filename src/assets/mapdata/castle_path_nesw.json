@@ -163,7 +163,7 @@
  "nextobjectid":1,
  "orientation":"isometric",
  "renderorder":"right-down",
- "tiledversion":"1.2.4",
+ "tiledversion":"1.2.3",
  "tileheight":16,
  "tilesets":[
         {
@@ -1789,15 +1789,15 @@
          "tileheight":292,
          "tileoffset":
             {
-             "x":-35,
-             "y":110
+             "x":-14,
+             "y":14
             },
          "tiles":[
                 {
                  "id":0,
                  "image":"castle_window_light_left.png",
-                 "imageheight":292,
-                 "imagewidth":232,
+                 "imageheight":176,
+                 "imagewidth":117,
                  "properties":[
                         {
                          "name":"blendMode",
@@ -1807,12 +1807,12 @@
                         {
                          "name":"offsetX",
                          "type":"string",
-                         "value":"-30"
+                         "value":"-14"
                         }, 
                         {
                          "name":"offsetY",
                          "type":"string",
-                         "value":"110"
+                         "value":"14"
                         }, 
                         {
                          "name":"xsize",

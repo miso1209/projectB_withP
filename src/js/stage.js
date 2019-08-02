@@ -413,18 +413,18 @@ export default class Stage extends PIXI.Container {
                         ysize: 1,
                         blendMode: 'OVERLAY',
                         offsetX: 0,
-                        offsetY: 110
+                        offsetY: 14
                     };
                     if (flip) {
                         light.texture = PIXI.Texture.fromFrame('castle_window_light_left.png');
                         pos.x = x+1;
                         pos.y = y-3;
-                        light.offsetX = -30;
+                        light.offsetX = -14;
                     } else {
                         light.texture = PIXI.Texture.fromFrame('castle_window_light_right.png');
                         pos.x = x-4;
                         pos.y = y+1;
-                        light.offsetX = -150;
+                        light.offsetX = -73;
                     }
                     const lightTile = this.newTile(pos.x, pos.y, light);
                     this.lightMap[pos.x + pos.y * this.mapWidth] = lightTile;
