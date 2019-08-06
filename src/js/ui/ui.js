@@ -520,6 +520,8 @@ export default class DomUI extends EventEmitter {
 
     showCharacterDatail(player) {
         const pane = this.createContainer();
+        pane.classList.add('screen');
+
         const characterDetail = new CharacterDetail(pane, player, (result, option) => {
             
             if (option === 'close') {

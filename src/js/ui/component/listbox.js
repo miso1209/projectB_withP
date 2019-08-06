@@ -109,6 +109,8 @@ export default class ListBox extends Panel {
     }
   
     update (listData, celltype) {
+        this.list.scrollTop = 0;
+        
         if (listData.length < 1) {
             this.list.innerHTML = '데이터가 없습니다.';
             return;

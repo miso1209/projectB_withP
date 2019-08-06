@@ -232,7 +232,9 @@
   width: calc(100% + 10px);
   height: 100%;
   overflow: scroll;
+  scroll-behavior: smooth;
 }
+
 .list-cell {
   position: relative;
   display: flex;
