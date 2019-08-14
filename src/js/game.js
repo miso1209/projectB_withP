@@ -744,16 +744,16 @@ export default class Game extends EventEmitter {
     getSelectableFloor() {
         const HOUR_PER_MILLISEC = 1000 * 60 * 60;
         const currentDate = new Date();
-        const diff = (currentDate - new Date(this.storage.data.refreshSelectableDate));
-
+        const diff = (currentDate.getTime() - this.storage.data.refreshSelectableDate);
+        
         // 리프레쉬 한지 1시간 이후라면..
         if (diff / HOUR_PER_MILLISEC >= 1) {
             this.storage.refreshSelectableFloorList();
-        }
+        } 
 
-        return this.storage.data.selectableList
+        return this.storage.data.selectableList;
     }
-
+    
     refreshSelectableFloor() {
         this.storage.refreshSelectableFloorList();
     }

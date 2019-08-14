@@ -64,7 +64,7 @@ export default class DomUI extends EventEmitter {
         this.minimap = new Minimap(165, 106, this.minimapDOM);
         const menuData = [
             {index:0, name:'캐릭터', event: "characterselect"},
-            {index:1, name:'보관함', event: "inventory"},
+            {index:1, name:'인벤토리', event: "inventory"},
             {index:2, name:'파티', event: "party"},
             {index:3, name:'퀘스트', event: "quest"}
             // {name:'설정', event: "options"}
@@ -398,15 +398,17 @@ export default class DomUI extends EventEmitter {
     }
 
     // 포털 리스트 모달
-    showPortals(inputs, callback) {
+    showPortals(inputs, time, callback) {
         const portaldom = document.querySelector('.portal');
 
         if (this.portals && portaldom) {
-            this.portals.showSelectableList(inputs);
+            this.portals.showSelectableList(inputs, time);
+            // this.portals.updateTime();
+            console.log(time);
         } else {
             const pane = this.createContainer();
             pane.classList.add('screen');
-            const portals = new Portal(pane, inputs, callback);
+            const portals = new Portal(pane, inputs, time, callback);
             this.portals = portals;
         }
     }

@@ -278,9 +278,9 @@
 /* 조합가능 표시 */
 .list-cell .availableIcon {
   display: none;
-  width: 32px;
+  /* width: 32px;
   height: 32px;
-  background: url('~assets/ui/icons.png') -96px 0 no-repeat ;
+  background: url('~assets/ui/icons.png') -96px 0 no-repeat ; */
 }
 
 .list-cell .availableIcon + .img {

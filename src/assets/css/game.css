@@ -98,12 +98,31 @@
   text-align: center;
   color: #fff;
 }
-#Game, #canvas, canvas {
+
+#canvas, canvas {
   position: relative;
   display: block;
   margin: 0 auto;
+  z-index: 3;
   width: 980px;
   height: 500px;
+  background: transparent !important;
+}
+
+
+.game_container{
+  display: block;
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  right: 0;
+  
+  width: 980px;
+  height: 500px;
+  margin: 200px auto 0;
+  border: 1px solid red;
+  background: url(~assets/clouds.png) repeat-x;
 }
 
 .intro {
@@ -181,6 +200,7 @@
 
 .gnbContainer {
   position: absolute;
+  z-index: 10;
   left: 20px;
   right: 0;
   bottom: 0;
@@ -790,9 +810,7 @@ button, .button{
 }
 
 /*./컴포넌트  */
-
-
-.paging {
+/* .paging {
   background: url(~assets/ui/paging.png) no-repeat 0 0;
   width: 32px;
   height: 54px;
@@ -806,7 +824,7 @@ button, .button{
 
 .paging:hover, .paging:active {
   opacity: 0.7;
-}
+} */
 .tabPane {
   position: absolute;
   left: -100px;
@@ -983,12 +1001,12 @@ button.nav.active  {
   padding: 10px 20px;
 }
 
-.tooltip {
+/* .tooltip {
   position: absolute;
   z-index: 111;
   background: url(~assets/ui/tooltip_box.png) no-repeat;
   background-size: contain;
-}
+} */
 
 /* 아이템 이미지 */
 .img {
@@ -1598,11 +1616,17 @@ button.disabled {
 .modal.portal .contents{
   left: 10px;
   right: 10px;
-  top: 60px;
+  top: 70px;
   bottom: 0;
   
   color: #dad0c7;
 }
+
+.modal.portal .timer{
+  font-size: 12px;
+  margin: 10px 0;
+}
+
 .modal.portal .portal_list {
   margin: 15px 0;
   max-height: 170px;
@@ -2650,9 +2674,9 @@ img.die {
   margin-top: 10px;
 }
 
-.character .equipItems li:not(:first-child) {
+/* .character .equipItems li:not(:first-child) {
   margin-left: 10px;
-}
+} */
 
 .equipItems li:hover, 
 .equipItems li:active,

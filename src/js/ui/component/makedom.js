@@ -7,10 +7,11 @@ export default class MakeDom {
       dom.classList.add(classname);
     }
     if (value) {
-      dom.innerText = value;
+      dom.innerHTML = value;
     }
     
     this.dom = dom;
+    
     return this.dom;
   }
 }

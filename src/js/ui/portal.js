@@ -5,11 +5,12 @@ import Button from './component/button';
 
 
 export default class Portal extends Panel {
-  constructor(pane, inputs, result){
+  constructor(pane, inputs, time, result){
     super();
 
     this.data = inputs;
     this.callback = result;
+    this.time = time;
 
     const modal = new Modal(pane, 360, 360);
     modal.addTitle('포털');
@@ -24,6 +25,9 @@ export default class Portal extends Panel {
     const comment = new MakeDom('p', 'comment', '이동할 층을 고르세요.');
     contents.appendChild(comment);
     
+    // this.timerText = new MakeDom('p', 'timer');
+    // contents.appendChild(this.timerText);
+
     const buttonWrap = document.createElement('div');
     buttonWrap.className = 'buttonWrap';
 
@@ -42,10 +46,46 @@ export default class Portal extends Panel {
     this.list.classList.add('portal_list');
 
     contents.appendChild(this.list);
+
     this.showSelectableList(this.data);
+
+    // if(this.time) {
+    //   this.updateTime();
+    // }
   }
 
-  showSelectableList(data){
+
+  // updateTime(){
+  //   let cnt = 60;
+  //   this.timer = setInterval(() =>  {
+  //       let limit = Math.floor(this.time/1000);
+  //       this.timeConvert(limit);
+  //       if (--cnt < 0) {
+  //         cnt = 0;
+  //         this.onClose();
+  //       }
+  //       this.time-=(cnt*60);
+        
+  //   }, 1000);
+  // }
+
+  // clearTimer(){
+  //   clearInterval(this.timer);
+  // }
+
+  // timeConvert(num) {
+  //   let minutes = (num/60);
+  //   let rminutes = Math.floor(minutes);
+  //   let seconds = (minutes - rminutes) * 60;
+  //   let rseconds = Math.floor(seconds);
+
+  //   this.timerText.innerHTML = `다음 리스트 갱신까지 남은 시간은${rminutes}분 ${rseconds}초 입니다.`;
+  //   console.log(rminutes + 'min / ' + rseconds + 'sec' )
+  // }
+
+  showSelectableList(data, time){
+    console.log(time);
+    
     this.list.innerHTML = '';
     for (const fid in data) {
       let liwrap = new MakeDom('li', 'li');
@@ -78,6 +118,7 @@ export default class Portal extends Panel {
   }
 
   onClose(){
+    clearInterval(this.timer);
     this.pane.parentNode.removeChild(this.pane);
   }
 }

@@ -25,9 +25,11 @@ export default class PortalWizard extends PropBase {
         let list = game.getSelectableFloor();
         let uiSelectableList = list.map((floor) => { return floor===0?'집':`${floor}층`});
         const cost = game.selectableFloor.length * 5; // 가진 층 수 * 5 Gold의 비용이 소모된다고 하자. 
-
+        const currentTime = new Date().getTime();
+        const time = currentTime - game.storage.data.refreshSelectableDate;
+        
         game.exploreMode.setInteractive(false);
-        game.ui.showPortals(uiSelectableList, (result) => {
+        game.ui.showPortals(uiSelectableList, time, (result) => {
 
             if (result === 'ok') {
                 game.ui.showConfirmModal(`포털 리스트를 갱신하면 <em>${cost}골드</em>가 소모됩니다. 이동가능한 포털리스트를 갱신하시겠습니까?`, true, (result) => {
@@ -45,7 +47,7 @@ export default class PortalWizard extends PropBase {
 
                             list = game.getSelectableFloor();
                             uiSelectableList = list.map((floor) => { return floor===0?'집':`${floor}층`});
-                            game.ui.showPortals(uiSelectableList);
+                            game.ui.showPortals(uiSelectableList, game.storage.data.refreshSelectableDate);
                         } 
                     } else {
                         game.exploreMode.setInteractive(true);

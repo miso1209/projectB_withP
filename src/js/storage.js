@@ -42,7 +42,7 @@ export default class Storage extends EventEmitter {
         this.data.selectableList = [0, 1];
         this.data.cutscene = null;
         this.data.created = new Date();
-        this.data.refreshSelectableDate = new Date();
+        this.data.refreshSelectableDate = new Date().getTime();
         this.data.quests = {};
         this.data.completedQuests = {};
     }
@@ -109,7 +109,7 @@ export default class Storage extends EventEmitter {
     }
 
     refreshSelectableFloorDate() {
-        this.data.refreshSelectableDate = new Date();
+        this.data.refreshSelectableDate = new Date().getTime();
         this.save();
     }
 

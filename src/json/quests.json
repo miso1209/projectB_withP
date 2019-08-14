@@ -188,7 +188,7 @@
         "isIterable": true,
         "secForNextIterable": 86400,
         "levelBound": { "min": 1, "max": 10 },
-        "title": "재련의 고수 - 1",
+        "title": "제련의 고수 - 1",
         "description" : "<em>작업용 테이블</em>에서 제작 <em>2회</em>를 진행하자",
         "objectives": [
             { "text": "제작", "event": ["combine"], "conditionScript": "checkCount(combine, >=, 2)"}
@@ -205,7 +205,7 @@
         "isIterable": true,
         "secForNextIterable": 86400,
         "levelBound": { "min": 11, "max": 20 },
-        "title": "재련의 고수 - 2",
+        "title": "제련의 고수 - 2",
         "description" : "<em>작업용 테이블</em>에서 제작 <em>3회</em>를 진행하자",
         "objectives": [
             { "text": "제작", "event": ["combine"], "conditionScript": "checkCount(combine, >=, 3)"}
@@ -222,7 +222,7 @@
         "isIterable": true,
         "secForNextIterable": 86400,
         "levelBound": { "min": 21, "max": 30 },
-        "title": "재련의 고수 - 3",
+        "title": "제련의 고수 - 3",
         "description" : "<em>작업용 테이블</em>에서 제작 <em>4회</em>를 진행하자",
         "objectives": [
             { "text": "제작", "event": ["combine"], "conditionScript": "checkCount(combine, >=, 4)"}

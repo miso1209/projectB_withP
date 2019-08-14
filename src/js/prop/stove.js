@@ -11,7 +11,7 @@ export default class Stove extends PropBase {
     touch(game) {
         game.exploreMode.setInteractive(false);
         game.ui.showDialog([
-            { text: "차갑게 식어있다.. 추후 재련할 수 있을것만 같다." }
+            { text: "차갑게 식어있다.. 추후 제련할 수 있을것만 같다." }
         ], () => {
             game.exploreMode.setInteractive(true);
         });
