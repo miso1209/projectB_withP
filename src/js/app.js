@@ -6,6 +6,7 @@ import Monster from './monster';
 import StoryMonsters from './storymonsters';
 import MakeDom from './ui/component/makedom';
 import SystemModal from './ui/systemmodal';
+import $login from './login';
 
 
 export default class App {
@@ -18,6 +19,21 @@ export default class App {
             // backgroundColor: 0x000000,
             view: document.getElementById('canvas'),
         }, true);
+    }
+
+    getIdAndPassword() {
+        const id = prompt("id:");
+        const pw = prompt("password:");
+        
+        if (id && pw) {
+            return {
+                id: id,
+                password: pw
+            };
+        } else {
+            alert("id와 password는 비어있지 않은 값을 사용합니다.");
+            location.reload();
+        }
     }
 
     // dom - intro
@@ -41,7 +57,20 @@ export default class App {
         this.intro.appendChild(logo);
         this.intro.appendChild(buttonWrap);
 
-        document.body.appendChild(this.intro);
+        //document.body.appendChild(this.intro);
+        const idpw = this.getIdAndPassword();
+        $login(idpw.id, idpw.password)
+        .then(gameAPI => {
+            gameAPI.$loadNetworkStorage()
+            .then(storageData => {
+                this.storage.data = storageData;
+                document.body.appendChild(this.intro);
+            });
+
+            this.storage.on('save', () => {
+                gameAPI.$saveNetworkStorage(this.storage.data);
+            });
+        });
     }
     
     showConfirmModal(result) {

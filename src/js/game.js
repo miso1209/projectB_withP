@@ -76,9 +76,9 @@ export default class Game extends EventEmitter {
         // 어느 시점에 해야 좋을까?
         this.ui.on('inventory', () => {
             // 게임에서 인벤토리 데이터를 얻어온다 / 골드정보
-            const inputs = this.getInvenotryData();
-            const inven_gold = this.player.inventory.gold;
-            this.ui.showInventory(inputs, inven_gold);
+            const items = this.getInventoryItems();
+            const gold = this.getInventoryGold();
+            this.ui.showInventory(items, gold);
         });
 
         this.ui.on('options', () => {
@@ -151,7 +151,7 @@ export default class Game extends EventEmitter {
         });
 
         this.ui.on('playerInvenData', (option) => {
-            this.ui.playerInvenData = this.getFiteredInventoryData({category: option.category, class: option.class});
+            this.ui.playerInvenData = this.getFiteredInventoryItems({category: option.category, class: option.class});
         });
 
         this.ui.on('quest', (quest) => {
@@ -787,7 +787,7 @@ export default class Game extends EventEmitter {
             }
 
             if (this.player.inventory.isDirty()) {
-                this.storage.updateInventory(this.player.inventory.save());
+                this.player.inventory.save();
                 this.player.inventory.clearDirty();
             }
         }
@@ -833,8 +833,12 @@ export default class Game extends EventEmitter {
         }
     }
 
+    getInventoryGold() {
+        return this.storage.data.gold;
+    }
+
     // TODO : 나중에 밖으로 빼야 하나?
-    getInvenotryData() {
+    getInventoryItems() {
         const sortByCategory = {};
         // 카테고리별로 묶는다.
         this.player.inventory.forEach((item) => {
@@ -854,7 +858,7 @@ export default class Game extends EventEmitter {
         return result;
     }
     
-    getFiteredInventoryData(filterOption) {
+    getFiteredInventoryItems(filterOption) {
         const items = [];
         this.player.inventory.forEach((item) => {
             if (filterOption.category && item.category === filterOption.category) {
