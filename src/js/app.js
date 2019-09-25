@@ -7,6 +7,7 @@ import StoryMonsters from './storymonsters';
 import MakeDom from './ui/component/makedom';
 import SystemModal from './ui/systemmodal';
 import $login from './login';
+import Inventory from './inventory';
 
 
 export default class App {
@@ -64,8 +65,13 @@ export default class App {
             gameAPI.$loadNetworkStorage()
             .then(storageData => {
                 this.storage.data = storageData;
+                return gameAPI.$loadNetworkInventory();
+            })
+            .then(inventoryData => {
+                this.storage.inventory = new Inventory(gameAPI, this.storage);
+                this.storage.inventory.load(inventoryData);
                 document.body.appendChild(this.intro);
-            });
+            })
 
             this.storage.on('save', () => {
                 gameAPI.$saveNetworkStorage(this.storage.data);

@@ -67,6 +67,11 @@ export default class Storage extends EventEmitter {
         this.resetData();
     }
 
+    setGold(gold) {
+        this.data.gold = gold;
+        this.save();
+    }
+
     setVolume(type, volume) {
         this.data.settings.sound.volume[type] = volume;
         this.save();

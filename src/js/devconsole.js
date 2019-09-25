@@ -47,7 +47,6 @@ export default class DevConsole {
 
     getGold(gold) {
         this.game.addGold(gold);
-        this.game.storage.updateInventory(this.game.player.inventory.save());
     }
 
     getAllConsumables(count) {
@@ -57,7 +56,6 @@ export default class DevConsole {
                 this.game.player.inventory.addItem(item.id, Number(count));
             }
         }
-        this.game.storage.updateInventory(this.game.player.inventory.save());
     }
 
     getAllRecipes() {
@@ -67,7 +65,6 @@ export default class DevConsole {
                 this.game.player.inventory.addItem(item.id, Number(1));
             }
         }
-        this.game.storage.updateInventory(this.game.player.inventory.save());
     }
 
     getAllMaterials(count) {
@@ -77,7 +74,6 @@ export default class DevConsole {
                 this.game.player.inventory.addItem(item.id, Number(count));
             }
         }
-        this.game.storage.updateInventory(this.game.player.inventory.save());
     }
 
     enterCastle() {

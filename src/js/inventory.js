@@ -1,86 +1,91 @@
 import Item from "./item";
 
 export default class Inventory {
-    constructor() {
-        this.items = {};
-        this._gold = 0;
-        this.dirty = false;
+    constructor(gameAPI, storage) {
+        this.gameAPI = gameAPI;
+        this.storage = storage;
+        this.itemListMap = {};
+        this.syncQueue = [];
     }
 
     get gold() {
-        return Number(this._gold);
+        return this.storage.data.gold;
     }
 
     set gold(value) {
-        this._gold = Number(value);
-        this.makeDirty();
+        this.storage.setGold(value);
+    }
+    
+    load(itemListMap) {
+        this.itemListMap = itemListMap;
+        console.log(`Inventory.load:\n${JSON.stringify(itemListMap)}`);
     }
 
     addItem(itemId, count) {
         count = count || 1;
-        const item = this.items[itemId];
-        if (item) {
-            item.count += count;
-        } else {
-            this.items[itemId] = new Item(itemId, count);
-        }
-
-        this.makeDirty();
+        this.syncQueue.push({ add: itemId, count: count });
+        this.save();
     }
 
     deleteItem(itemId, count) {
         // count 가 없으면 기본으로 1을 준다
         count = count || 1;
-
-        const item = this.items[itemId];
-        if (item.count < count) {
-            throw Error("not enough owned items");
+        const itemList = this.itemListMap[itemId];
+        if (itemList && itemList.length >= count) {
+            const assetsToDelete = itemList.splice(0, count);
+            this.syncQueue.push({ delete: itemId, assets: assetsToDelete });
+            this.save();
+        } else {
+            throw new Error(`cannot deleteItem(${itemId}, ${count}): insufficient quantity.`);
         }
+    }
 
-        item.count -= count;
-        if (item.count === 0) {
-            delete this.items[itemId];
-        }
+    save() {
+        this.saveQueue(this.syncQueue);
+        this.syncQueue = [];
+    }
 
-        this.makeDirty();
+    saveQueue(queue) {
+        console.log(`Inventory.saveQueue:\n${JSON.stringify(queue)}`);
+        this.gameAPI.$saveNetworkInventory(queue)
+        .then(result => {
+            console.log(`Inventory.saved!:\n${JSON.stringify(result)}`);
+            if (result && result.added) {
+                for (const itemId in result.added) {
+                    if (!this.itemListMap[itemId]) {
+                        this.itemListMap[itemId] = [];
+                    }
+                    result.added[itemId].forEach(asset => this.itemListMap[itemId].push(asset));
+                }
+                console.log(`\tadded:${JSON.stringify(result.added)}`);
+                console.log(`\t->:${JSON.stringify(this.itemListMap)}`);
+            }
+            if (result && result.deleted) {
+                for (const itemId in result.deleted) {
+                    this.itemListMap[itemId] = 
+                    this.itemListMap[itemId].filter(assetId => result.deleted[itemId].includes(assetId));
+                }
+                console.log(`\tdeleted:${JSON.stringify(result.deleted)}`);
+            }
+            if (result && result.reserved) {
+                this.saveQueue(result.reserved);
+            }
+        });
     }
 
     getCount(itemId) {
-        const item = this.items[itemId];
-        if (item) {
-            return item.count;
+        const itemList = this.itemListMap[itemId];
+        if (itemList) {
+            return itemList.length;
         } else {
             return 0;
         }
     }
 
-    getItem(itemId) {
-        return this.items[itemId];
-    }
-
     forEach(callback) {
-        for(const itemId in this.items) {
-            callback(this.items[itemId]);
+        for (const itemId in this.itemListMap) {
+            callback(new Item(itemId, this.getCount(itemId)));
         }
-    }
-    
-    load(data) {
-        for (const itemId in data.inventory) {
-            this.addItem(itemId, data.inventory[itemId]);
-        }
-        this.gold = data.gold;
-        this.clearDirty();
-    }
-
-    save() {
-        const result = {};
-        for (const itemId in this.items) {
-            result[itemId] = this.items[itemId].count;
-        }
-        return {
-            inventory: result,
-            gold: this.gold
-        };
     }
 
     makeDirty() {

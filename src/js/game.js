@@ -229,15 +229,16 @@ export default class Game extends EventEmitter {
             this.storage.data.location = {};
             this.storage.data.gold = 0;
 
-            this.storage.data.inventory = { 5001: 1, 5004: 1 };
-
             // 필드에 보이는 캐릭터
             this.storage.data.controlCharacter = 1;
 
+            this.storage.inventory.addItem(5001, 1);
+            this.storage.inventory.addItem(5004, 1);
+
             this.storage.save();
         }
-
-        this.player = new Player();
+        
+        this.player = new Player(this.storage.inventory);
 
         // 태그정보를 로딩한다
         for(const tag of this.storage.data.tags) {
@@ -260,12 +261,6 @@ export default class Game extends EventEmitter {
             }
         }
         this.player.party.confirm();
-        
-        // 플레이어의 인벤토리에 복사한다
-        this.player.inventory.load({
-            inventory: this.storage.data.inventory,
-            gold: this.storage.data.gold
-        });
 
         for (let type in this.storage.data.settings.sound.volume) {
             this.setVolume(type, this.storage.data.settings.sound.volume[type]);
@@ -776,7 +771,6 @@ export default class Game extends EventEmitter {
 
         // 캐릭터 데이터를 저장해야 하는지 확인
         if (this.player) {
-            
             // console.log(this.player.characters);
             for (const cid in this.player.characters) {
                 const c = this.player.characters[cid];
@@ -784,11 +778,6 @@ export default class Game extends EventEmitter {
                     c.clearDirty();
                     this.storage.updateCharacter(c.save());
                 }
-            }
-
-            if (this.player.inventory.isDirty()) {
-                this.player.inventory.save();
-                this.player.inventory.clearDirty();
             }
         }
     }

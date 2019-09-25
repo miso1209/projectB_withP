@@ -6,9 +6,9 @@ import Character from './character';
 // 왜냐하면  필드캐릭터는 계속 변경이 될수 있는데, 플레이어는 안바뀌니까 ...
 
 export default class Player {
-    constructor() {
+    constructor(inventory) {
         // 보유하고 있는 아이템 목록
-        this.inventory = new Inventory();
+        this.inventory = inventory;
         // 자신이 가지고 있는 캐릭터 목록
         this.characters = {};
         // 파티 클래스를 만들어서 처리를 한다
