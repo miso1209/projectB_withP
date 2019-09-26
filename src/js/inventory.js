@@ -18,7 +18,6 @@ export default class Inventory {
     
     load(itemListMap) {
         this.itemListMap = itemListMap;
-        console.log(`Inventory.load:\n${JSON.stringify(itemListMap)}`);
     }
 
     addItem(itemId, count) {
@@ -49,26 +48,30 @@ export default class Inventory {
         console.log(`Inventory.saveQueue:\n${JSON.stringify(queue)}`);
         this.gameAPI.$saveNetworkInventory(queue)
         .then(result => {
-            console.log(`Inventory.saved!:\n${JSON.stringify(result)}`);
-            if (result && result.added) {
-                for (const itemId in result.added) {
-                    if (!this.itemListMap[itemId]) {
-                        this.itemListMap[itemId] = [];
+            if (result) {
+                if (result.added) {
+                    for (const itemId in result.added) {
+                        if (!this.itemListMap[itemId]) {
+                            this.itemListMap[itemId] = [];
+                        }
+                        result.added[itemId].forEach(asset => this.itemListMap[itemId].push(asset));
                     }
-                    result.added[itemId].forEach(asset => this.itemListMap[itemId].push(asset));
+                    console.log(`\tresult.added:${JSON.stringify(result.added)}`);
                 }
-                console.log(`\tadded:${JSON.stringify(result.added)}`);
-                console.log(`\t->:${JSON.stringify(this.itemListMap)}`);
-            }
-            if (result && result.deleted) {
-                for (const itemId in result.deleted) {
-                    this.itemListMap[itemId] = 
-                    this.itemListMap[itemId].filter(assetId => result.deleted[itemId].includes(assetId));
+                if (result.deleted) {
+                    for (const itemId in result.deleted) {
+                        this.itemListMap[itemId] = 
+                        this.itemListMap[itemId].filter(assetId => !result.deleted[itemId].includes(assetId));
+                    }
+                    console.log(`\tresult.deleted:${JSON.stringify(result.deleted)}`);
                 }
-                console.log(`\tdeleted:${JSON.stringify(result.deleted)}`);
-            }
-            if (result && result.reserved) {
-                this.saveQueue(result.reserved);
+                console.log(`\tafter:${JSON.stringify(this.itemListMap)}`);
+                if (result.reserved) {
+                    console.log(`\tresult.reserved:${JSON.stringify(result.reserved)}`)
+                    this.saveQueue(result.reserved);
+                }
+            } else {
+                console.log('\twait before save through network..');
             }
         });
     }
@@ -84,7 +87,10 @@ export default class Inventory {
 
     forEach(callback) {
         for (const itemId in this.itemListMap) {
-            callback(new Item(itemId, this.getCount(itemId)));
+            const count = this.getCount(itemId);
+            if (count > 0) {
+                callback(new Item(itemId, count));
+            }
         }
     }
 

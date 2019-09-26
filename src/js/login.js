@@ -30,7 +30,6 @@ class AccessTokenManager {
 
     setRefreshTimer(refreshToken, expiresAt) {
         const expire = new Date(expiresAt);
-        console.log(`expiresAt:${expire.toTimeString()}`);
         const now = new Date();
         const buffer = 60 * 1000; // 60초
         setTimeout(() => this.$refresh(refreshToken), expire.getTime() - now.getTime() - buffer);
@@ -38,7 +37,6 @@ class AccessTokenManager {
 
     async $refresh(refreshToken) {
         this.waitToRefresh = true;
-        console.log('access token refresh started.');
 
         const request = 'auth/refresh';
         const url = baseUrl + request;
@@ -58,7 +56,6 @@ class AccessTokenManager {
             throw e;
         }
 
-        console.log('access token refresh finished.');
         this.waitToRefresh = false;
     }
 
@@ -157,7 +154,7 @@ class NetworkAPI {
                         }
                     }
                 });
-                console.log(`load network inventory data completed.`);
+                console.log(`load network inventory data completed.:\n${JSON.stringify(itemListMap)}`);
                 return itemListMap;
             } else {
                 throw result;
@@ -172,11 +169,10 @@ class NetworkAPI {
 
     async $saveNetworkInventory(queue) {
         if (this.waitSaveInventory) {
-            if (this.reservedSaveInventoryQueue) {
-                this.reservedSaveInventoryQueue.push(queue);
-            } else {
-                this.reservedSaveInventoryQueue = queue;
+            if (!this.reservedSaveInventoryQueue) {
+                this.reservedSaveInventoryQueue = [];
             }
+            queue.forEach(element => this.reservedSaveInventoryQueue.push(element));
             return;
         }
 
@@ -185,21 +181,19 @@ class NetworkAPI {
         const deleted = {};
         for (let i = 0; i < queue.length; ++i) {
             const element = queue[i];
-            console.log(`saveNetworkInventory, element: ${JSON.stringify(element)}`);
+            console.log(`in saveNetworkInventory, element: ${JSON.stringify(element)}, at ${i}`);
             if (element.add) {
                 var result = await this.$addAsset(element.add, element.count);
-                if (added[element.add]) {
-                    added[element.add].push(result);
-                } else {
-                    added[element.add] = [result];
+                if (!added[element.add]) {
+                    added[element.add] = [];
                 }
+                result.forEach(asset => added[element.add].push(asset));
             } else if (element.delete) {
                 await this.$deleteAsset(element.assets);
-                if (deleted[element.delete]) {
-                    deleted[element.delete].push(element.assets);
-                } else {
-                    deleted[element.delete] = [element.assets];
+                if (!deleted[element.delete]) {
+                    deleted[element.delete] = [];
                 }
+                element.assets.forEach(asset => deleted[element.delete].push(asset));
             }
         }
 
@@ -224,13 +218,13 @@ class NetworkAPI {
         const request = 'wallet/addasset';
         const url = baseUrl + request;
         try {
-            console.log(`request addasset(${itemId}, ${count})`);
+            console.log(`\trequest addasset(${itemId}, ${count})`);
             const options = await this.$getOptions();
             const result = await axios.post(url, { appid: appId, key: secret, defid: defId, propjson: propJson }, options);
             if (result.status != 200) {
                 throw result;
             }
-            console.log(`request succeeded. result:${JSON.stringify(result.data)}`);
+            console.log(`\tresponse addasset(${JSON.stringify(result.data)})`);
             return result.data;
         } catch (e) {
             if (e.status) {
@@ -244,13 +238,12 @@ class NetworkAPI {
         const request = 'wallet/destroyasset';
         const url = baseUrl + request;
         try {
-            console.log(`request deleteAsset(count:${assets.length})`);
+            console.log(`\trequest deleteAsset(${JSON.stringify(assets)})`);
             const options = await this.$getOptions();
             const result = await axios.post(url, { appid: appId, key: secret, assetid: assets }, options);
             if (result.status != 200) {
                 throw result;
             }
-            console.log(`request succeeded.hi`);
         } catch (e) {
             if (e.status) {
                 console.error(`request(${request}) is failed. response status: ${e.response.status}`)
@@ -258,8 +251,4 @@ class NetworkAPI {
             throw e;
         }
     }
-}
-
-class NetworkInventory {
-
 }

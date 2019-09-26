@@ -232,6 +232,7 @@ export default class Game extends EventEmitter {
             // 필드에 보이는 캐릭터
             this.storage.data.controlCharacter = 1;
 
+            this.storage.inventory.forEach(item => this.storage.inventory.deleteItem(item.id, item.count));
             this.storage.inventory.addItem(5001, 1);
             this.storage.inventory.addItem(5004, 1);
 
