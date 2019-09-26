@@ -6,8 +6,8 @@ import Monster from './monster';
 import StoryMonsters from './storymonsters';
 import MakeDom from './ui/component/makedom';
 import SystemModal from './ui/systemmodal';
-import $login from './login';
 import Inventory from './inventory';
+import NetworkAPI from './network';
 
 
 export default class App {
@@ -20,21 +20,6 @@ export default class App {
             // backgroundColor: 0x000000,
             view: document.getElementById('canvas'),
         }, true);
-    }
-
-    getIdAndPassword() {
-        const id = prompt("id:");
-        const pw = prompt("password:");
-        
-        if (id && pw) {
-            return {
-                id: id,
-                password: pw
-            };
-        } else {
-            alert("id와 password는 비어있지 않은 값을 사용합니다.");
-            location.reload();
-        }
     }
 
     // dom - intro
@@ -53,29 +38,28 @@ export default class App {
         this.loadgame.className = 'intro-button_load';
         this.loadgame.innerText = '계속하기';
 
-        buttonWrap.appendChild(this.newgame);
-        buttonWrap.appendChild(this.loadgame);
+        //buttonWrap.appendChild(this.newgame);
+        //buttonWrap.appendChild(this.loadgame);
         this.intro.appendChild(logo);
         this.intro.appendChild(buttonWrap);
 
-        //document.body.appendChild(this.intro);
-        const idpw = this.getIdAndPassword();
-        $login(idpw.id, idpw.password)
-        .then(gameAPI => {
-            gameAPI.$loadNetworkStorage()
-            .then(storageData => {
-                this.storage.data = storageData;
-                return gameAPI.$loadNetworkInventory();
-            })
-            .then(inventoryData => {
-                this.storage.inventory = new Inventory(gameAPI, this.storage);
-                this.storage.inventory.load(inventoryData);
-                document.body.appendChild(this.intro);
-            })
-
-            this.storage.on('save', () => {
-                gameAPI.$saveNetworkStorage(this.storage.data);
-            });
+        document.body.appendChild(this.intro);
+        NetworkAPI.login()
+        .then(() => {
+            return NetworkAPI.loadNetworkStorage();
+        })
+        .then(result => {
+            if (result.exists) {
+                this.storage.data = JSON.parse(result.data);
+                buttonWrap.appendChild(this.loadgame);
+            } else {
+                buttonWrap.appendChild(this.newgame);
+            }
+            return NetworkAPI.loadNetworkInventory();
+        })
+        .then(inventoryData => {
+            this.storage.inventory = new Inventory(this.storage);
+            this.storage.inventory.load(inventoryData);
         });
     }
     
@@ -101,16 +85,18 @@ export default class App {
             this.initIntro();
 
             this.newgame.addEventListener('click', ()=> {
-                this.showConfirmModal((result) => {
-                    if(result === 'ok') {
-                        this.storage.data = null;
-                        this.intro.parentNode.removeChild(this.intro);
-                        this.startGame();
-                    } else {
-                        this.intro.parentNode.removeChild(this.intro);
-                        this.startGame();
-                    }
-                });
+                // this.showConfirmModal((result) => {
+                //     if(result === 'ok') {
+                //         this.storage.data = null;
+                //         this.intro.parentNode.removeChild(this.intro);
+                //         this.startGame();
+                //     } else {
+                //         this.intro.parentNode.removeChild(this.intro);
+                //         this.startGame();
+                //     }
+                // });
+                this.intro.parentNode.removeChild(this.intro);
+                this.startGame();
             });
 
             this.loadgame.addEventListener('click', ()=> {

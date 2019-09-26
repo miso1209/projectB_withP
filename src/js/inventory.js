@@ -1,11 +1,10 @@
 import Item from "./item";
+import NetworkAPI from "./network";
 
 export default class Inventory {
-    constructor(gameAPI, storage) {
-        this.gameAPI = gameAPI;
+    constructor(storage) {
         this.storage = storage;
         this.itemListMap = {};
-        this.syncQueue = [];
     }
 
     get gold() {
@@ -22,8 +21,16 @@ export default class Inventory {
 
     addItem(itemId, count) {
         count = count || 1;
-        this.syncQueue.push({ add: itemId, count: count });
-        this.save();
+        NetworkAPI.addAsset(itemId, count)
+        .then(result => {
+            if (!this.itemListMap[itemId]) {
+                this.itemListMap[itemId] = [];
+            }
+            this.itemListMap[itemId].push(...result);
+        })
+        .catch(error => {
+            console.error('add item failed.', error);
+        });
     }
 
     deleteItem(itemId, count) {
@@ -32,48 +39,17 @@ export default class Inventory {
         const itemList = this.itemListMap[itemId];
         if (itemList && itemList.length >= count) {
             const assetsToDelete = itemList.splice(0, count);
-            this.syncQueue.push({ delete: itemId, assets: assetsToDelete });
-            this.save();
+            NetworkAPI.deleteAsset(assetsToDelete)
+            .then(() => {
+                this.itemListMap[itemId] = 
+                itemList.filter(assetId => !assetsToDelete.includes(assetId));
+            })
+            .catch(error => {
+                console.error('delete item failed.', error);
+            });
         } else {
             throw new Error(`cannot deleteItem(${itemId}, ${count}): insufficient quantity.`);
         }
-    }
-
-    save() {
-        this.saveQueue(this.syncQueue);
-        this.syncQueue = [];
-    }
-
-    saveQueue(queue) {
-        console.log(`Inventory.saveQueue:\n${JSON.stringify(queue)}`);
-        this.gameAPI.$saveNetworkInventory(queue)
-        .then(result => {
-            if (result) {
-                if (result.added) {
-                    for (const itemId in result.added) {
-                        if (!this.itemListMap[itemId]) {
-                            this.itemListMap[itemId] = [];
-                        }
-                        result.added[itemId].forEach(asset => this.itemListMap[itemId].push(asset));
-                    }
-                    console.log(`\tresult.added:${JSON.stringify(result.added)}`);
-                }
-                if (result.deleted) {
-                    for (const itemId in result.deleted) {
-                        this.itemListMap[itemId] = 
-                        this.itemListMap[itemId].filter(assetId => !result.deleted[itemId].includes(assetId));
-                    }
-                    console.log(`\tresult.deleted:${JSON.stringify(result.deleted)}`);
-                }
-                console.log(`\tafter:${JSON.stringify(this.itemListMap)}`);
-                if (result.reserved) {
-                    console.log(`\tresult.reserved:${JSON.stringify(result.reserved)}`)
-                    this.saveQueue(result.reserved);
-                }
-            } else {
-                console.log('\twait before save through network..');
-            }
-        });
     }
 
     getCount(itemId) {

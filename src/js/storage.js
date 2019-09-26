@@ -1,4 +1,5 @@
 import { EventEmitter } from "events";
+import NetworkAPI from "./network";
 
 export default class Storage extends EventEmitter {
     constructor() {
@@ -59,6 +60,7 @@ export default class Storage extends EventEmitter {
     save() {
         this.updatePlayTime();
         localStorage.data = JSON.stringify(this.data);
+        NetworkAPI.saveNetworkStorage(this.data);
         this.emit('save');
     }
 

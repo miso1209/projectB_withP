@@ -22,7 +22,7 @@ export default class Recipe extends PropBase {
 
     touch(game) {
         if (!this.isOpened) {
-            if (game.player.inventory.items[this.recipe]) {
+            if (game.player.inventory.getCount(this.recipe) > 0) {
                 this.recipe = 4041;
             }
             game.addItem(this.recipe, 1);
