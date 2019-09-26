@@ -181,7 +181,7 @@ class Network {
             .then(result => {
                 const itemListMap = {};
                 result.forEach(asset => {
-                    if (asset.appId == appId) {
+                    if (asset.appId == appId && !asset.locked) {
                         if (!itemListMap[asset.defId]) {
                             itemListMap[asset.defId] = [asset.assetId];
                         } else {
