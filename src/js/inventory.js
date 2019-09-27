@@ -1,6 +1,18 @@
 import Item from "./item";
 import NetworkAPI from "./network";
 
+function addItems(itemMap, itemId, assetIds) {
+    if (!itemMap[itemId]) {
+        itemMap[itemId] = [];
+    }
+    itemMap[itemId].push(...assetIds);
+}
+
+function deleteItems(itemMap, itemId, assetIds) {
+    itemMap[itemId] = 
+    itemMap[itemId].filter(assetId => !assetIds.includes(assetId));
+}
+
 export default class Inventory {
     constructor(storage) {
         this.storage = storage;
@@ -19,14 +31,21 @@ export default class Inventory {
         this.itemListMap = itemListMap;
     }
 
+    connectToWallet() {
+        NetworkAPI.connectToWallet(
+            (itemId, assetId) => {
+                addItems(this.itemListMap, itemId, [assetId]);
+            },
+            (itemId, assetId) => {
+                deleteItems(this.itemListMap, itemId, [assetId]);
+            });
+    }
+
     addItem(itemId, count) {
         count = count || 1;
         NetworkAPI.addAsset(itemId, count)
         .then(result => {
-            if (!this.itemListMap[itemId]) {
-                this.itemListMap[itemId] = [];
-            }
-            this.itemListMap[itemId].push(...result);
+            addItems(this.itemListMap, itemId, result);
         })
         .catch(error => {
             console.error('add item failed.', error);
@@ -41,8 +60,7 @@ export default class Inventory {
             const assetsToDelete = itemList.splice(0, count);
             NetworkAPI.deleteAsset(assetsToDelete)
             .then(() => {
-                this.itemListMap[itemId] = 
-                itemList.filter(assetId => !assetsToDelete.includes(assetId));
+                deleteItems(this.itemListMap, itemId, assetsToDelete);
             })
             .catch(error => {
                 console.error('delete item failed.', error);

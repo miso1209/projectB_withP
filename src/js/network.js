@@ -1,4 +1,5 @@
 import axios from 'axios';
+import io from 'socket.io-client';
 
 const baseUrl = 'http://localhost:8080/api/v1/';
 const appId = "project_b";
@@ -118,7 +119,6 @@ class Network {
             .then(result => {
                 this.accessToken = result.data.access_token;
                 this.refreshToken = result.data.refresh_token;
-
                 this.waitRequest = false;
                 resolve();
             })
@@ -126,6 +126,58 @@ class Network {
                 this.waitRequest = false;
                 reject(error);
             });
+        });
+        return promise;
+    }
+
+    connectToWallet(addAssetHandler, deleteAssetHandler) {
+        const socket = io.connect('http://localhost:3000/api/message')
+        .on('connect', () => {
+            console.log('wallet conected!');
+            socket.emit('authenticate', this.accessToken);
+            socket.once('authenticated', () => {
+                socket.emit('subscribe', 'asset'); // 이 메시지를 구독하겠다
+            });
+            socket.on('data', data => {
+                if (data.channel == 'asset') {
+                    switch (data.event) {
+                        case 'add':
+                        case 'unlock':
+                            {
+                                const assetId = data.value;
+                                this.loadAsset(assetId)
+                                .then(result => {
+                                    addAssetHandler(result.defId, result.assetId);
+                                });
+                            }
+                            break;
+                        case 'lock':
+                            {
+                                const assetId = data.value;
+                                this.loadAsset(assetId)
+                                .then(result => {
+                                    deleteAssetHandler(result.defId, result.assetId);
+                                });
+                            }
+                            break;
+                        case 'remove':
+                            {
+                                // 어차피 remove는 lock된 이후에나 가능할 거고,
+                                // lock 어셋이면 이미 인벤토리엔 존재하지 않을테니
+                                // 아무것도 하지 않아도 된다??
+                            }
+                            break;
+                    }
+                }
+            });
+        });
+    }
+
+    loadAsset(assetId) {
+        const promise = new Promise((resolve, reject) => {
+            this.get('wallet/asset?assetid=' + assetId)
+            .then(resolve)
+            .catch(reject);
         });
         return promise;
     }

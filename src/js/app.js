@@ -146,6 +146,7 @@ export default class App {
         .then(inventoryData => {
             this.storage.inventory = new Inventory(this.storage);
             this.storage.inventory.load(inventoryData);
+            this.storage.inventory.connectToWallet();
             
             this.intro.parentNode.removeChild(this.intro);
             this.startGame();
