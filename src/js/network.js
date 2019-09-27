@@ -95,33 +95,17 @@ class Network {
             process.nextTick(this.update.bind(this));
         })
         .catch(error => {
-            alert('로그인이 필요합니다.');
             this.waitRequest = false;
-            this.login()
-            .then(() => {
-                process.nextTick(this.update.bind(this));
-            });
+            alert('로그인이 필요합니다.');
+            location.reload();
         });
     }
 
-    login() {
+    login(id, pw) {
         // this.post()를 쓰면 안된다. 
         // 왜냐하면 얘는 여태 쌓인 큐를 무시하고 가장 먼저 실행되어야 하기 때문에.
         const promise = new Promise((resolve, reject) => {
             this.waitRequest = true;
-
-            let id, pw;
-
-            while (true) {
-                id = prompt("id:");
-                pw = prompt("pw:");
-
-                if (id && pw) {
-                    break;
-                }
-
-                alert("id와 password는 비어있지 않은 값을 사용합니다.");
-            }
 
             const data = {
                 id: id,
@@ -138,7 +122,10 @@ class Network {
                 this.waitRequest = false;
                 resolve();
             })
-            .catch(reject);
+            .catch(error => {
+                this.waitRequest = false;
+                reject(error);
+            });
         });
         return promise;
     }

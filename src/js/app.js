@@ -2,8 +2,6 @@ import Loader from './loader';
 import Storage from './storage';
 import DevConsole from './devconsole';
 import Game from './game';
-import Monster from './monster';
-import StoryMonsters from './storymonsters';
 import MakeDom from './ui/component/makedom';
 import SystemModal from './ui/systemmodal';
 import Inventory from './inventory';
@@ -36,33 +34,66 @@ export default class App {
         
         this.loadgame = document.createElement('a');
         this.loadgame.className = 'intro-button_load';
-        this.loadgame.innerText = '계속하기';
+        this.loadgame.innerText = '게임시작';
 
-        //buttonWrap.appendChild(this.newgame);
-        //buttonWrap.appendChild(this.loadgame);
+
+        const loginForm = new MakeDom('div', 'loginForm');
+        this.input_id = new MakeDom('input', 'input_id');
+        this.input_id.setAttribute('type', 'text');
+        this.input_id.setAttribute('placeholder', 'ID');
+        this.input_id.setAttribute('required', 'required');
+
+        this.input_pw = new MakeDom('input', 'input_pw');
+        this.input_pw.setAttribute('type', 'password');
+        this.input_pw.setAttribute('placeholder', 'Password');
+        this.input_pw.setAttribute('required', 'required');
+
+        loginForm.appendChild(this.input_id);
+        loginForm.appendChild(this.input_pw);
+
+        this.input_id.addEventListener('click', (e)=>{
+            e.target.setAttribute('placeholder', '');
+        });
+        this.input_pw.addEventListener('click', (e)=>{
+            e.target.setAttribute('placeholder', '');
+        });
+
+        this.input_pw.addEventListener('keyup', (e)=>{
+            if(e.keyCode === 13) {
+                this.tryLogin();
+            }
+        });
+
+        // buttonWrap.appendChild(this.newgame);
+        buttonWrap.appendChild(this.loadgame);
         this.intro.appendChild(logo);
+
+        this.intro.appendChild(loginForm);
         this.intro.appendChild(buttonWrap);
 
         document.body.appendChild(this.intro);
-        NetworkAPI.login()
-        .then(() => {
-            return NetworkAPI.loadNetworkStorage();
-        })
-        .then(result => {
-            if (result.exists) {
-                this.storage.data = JSON.parse(result.data);
-                buttonWrap.appendChild(this.loadgame);
-            } else {
-                buttonWrap.appendChild(this.newgame);
-            }
-            return NetworkAPI.loadNetworkInventory();
-        })
-        .then(inventoryData => {
-            this.storage.inventory = new Inventory(this.storage);
-            this.storage.inventory.load(inventoryData);
-        });
+    }
+
+    tryLogin() {
+        if(this.checkLoginInfo()) {
+            this.loadGame();
+        } else {
+            console.log('아이디, 패스워드 입력 확인해주세요.');
+        }
     }
     
+    checkLoginInfo() {
+        let result = true;
+        // 입력된 id, pw 체크
+        if(this.input_id.value === '') {
+            result = false;
+        } 
+        if(this.input_pw.value === '') {
+            result = false;
+        }
+        return result;
+    }
+
     showConfirmModal(result) {
         let text = '지난 게임의 데이터가 모두 삭제됩니다. 계속하시겠습니까?';
         
@@ -85,24 +116,39 @@ export default class App {
             this.initIntro();
 
             this.newgame.addEventListener('click', ()=> {
-                // this.showConfirmModal((result) => {
-                //     if(result === 'ok') {
-                //         this.storage.data = null;
-                //         this.intro.parentNode.removeChild(this.intro);
-                //         this.startGame();
-                //     } else {
-                //         this.intro.parentNode.removeChild(this.intro);
-                //         this.startGame();
-                //     }
-                // });
-                this.intro.parentNode.removeChild(this.intro);
-                this.startGame();
+                this.showConfirmModal((result) => {
+                    if(result === 'ok') {
+                        this.storage.data = null;
+                        this.intro.parentNode.removeChild(this.intro);
+                        this.startGame();
+                    } else {
+                        this.intro.parentNode.removeChild(this.intro);
+                        this.startGame();
+                    }
+                });
             });
 
             this.loadgame.addEventListener('click', ()=> {
-                this.intro.parentNode.removeChild(this.intro);
-                this.startGame();
+                this.tryLogin();
             });
+        });
+    }
+
+    loadGame(){
+        NetworkAPI.login(this.input_id.value, this.input_pw.value)
+        .then(() => {
+            return NetworkAPI.loadNetworkStorage();
+        })
+        .then(result => {
+            this.storage.data = result.exists ? JSON.parse(result.data) : null;
+            return NetworkAPI.loadNetworkInventory();
+        })
+        .then(inventoryData => {
+            this.storage.inventory = new Inventory(this.storage);
+            this.storage.inventory.load(inventoryData);
+            
+            this.intro.parentNode.removeChild(this.intro);
+            this.startGame();
         });
     }
 
