@@ -548,7 +548,6 @@ export default class DomUI extends EventEmitter {
                     this.emit('cancelSimulate');
                     characterDetail.statItem.data = null;
                 } else if (option === 'equip') {
-                    console.log('ui.장비 장착', result.data);
                     this.emit('equipItem', result.data.category, result.data.id, result.data.assetId, player.id);
                     characterDetail.statItem.data = null;
                     characterDetail.updateEquip();

@@ -922,8 +922,7 @@ export default class Game extends EventEmitter {
     }
 
     equipItem(itemCategory, itemId, assetId, cid) {
-        const unequipItem = this.player.characters[cid].equip(itemCategory, itemId, assetId);
-        console.log('game.equipItem', itemId, assetId);
+        const unequipItem = this.player.characters[cid].equip(itemCategory, itemId);
         this.player.inventory.deleteCertainItem(itemId, assetId);
         if (unequipItem) {
             this.player.inventory.addItem(unequipItem.id, 1);
