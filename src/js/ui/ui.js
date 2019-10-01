@@ -542,14 +542,14 @@ export default class DomUI extends EventEmitter {
             if (result.data !== null) {
                 if (option === 'simulationEquip') {
                     // console.log('아이템 고르기 - 시뮬레이션');
-                    this.emit('simulateEquip', result.data.category, result.item, player.id);
+                    this.emit('simulateEquip', result.data.category, result.data.id, player.id);
                 } else if (option === 'cancel') {
                     // console.log('시뮬레이션 취소');
                     this.emit('cancelSimulate');
                     characterDetail.statItem.data = null;
                 } else if (option === 'equip') {
-                    // console.log('장비 장착');
-                    this.emit('equipItem', result.data.category, result.item, player.id);
+                    console.log('ui.장비 장착', result.data);
+                    this.emit('equipItem', result.data.category, result.data.id, result.data.assetId, player.id);
                     characterDetail.statItem.data = null;
                     characterDetail.updateEquip();
                     characterDetail.showEquipInfo();

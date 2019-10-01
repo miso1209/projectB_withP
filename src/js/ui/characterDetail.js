@@ -266,8 +266,8 @@ export default class CharacterDetail extends Panel {
       liWrap.index = index;
 
       if (d.data !== null) {
-        let item = d.data.data;
-        let itemIcon = new ItemImage(item.image.texture, item.image.x, item.image.y);
+        let item = d.data;
+        let itemIcon = new ItemImage(item.data.image.texture, item.data.image.x, item.data.image.y);
         let rankIcon = new ItemImage('icon_rank.png', item.rank, 0);
         
         itemIcon.dom.style.display = 'inline-block';
@@ -432,7 +432,7 @@ export default class CharacterDetail extends Panel {
         isActive = liWrap;
         liWrap.classList.add('active');
         
-        this.statItem = item;
+        this.statItem.data = item;
         this.showEquipInfo();
       });
 

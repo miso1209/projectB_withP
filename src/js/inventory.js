@@ -1,5 +1,6 @@
 import Item from "./item";
 import NetworkAPI from "./network";
+import items from "./items";
 
 function addItems(itemMap, itemId, assetIds) {
     if (!itemMap[itemId]) {
@@ -41,9 +42,15 @@ export default class Inventory {
             });
     }
 
-    addItem(itemId, count) {
-        count = count || 1;
-        NetworkAPI.addAsset(itemId, count)
+    addItem(itemId, count = 1) {
+        let itemIdWithoutRank = itemId;
+        const propJson = {};
+        if (/^\D/.test(itemId)) {
+            const stringItemId = String(itemId);
+            itemIdWithoutRank = stringItemId.substring(1);
+            propJson.rank = stringItemId.substring(0, 1);
+        }
+        NetworkAPI.addAsset(itemIdWithoutRank, propJson, count)
         .then(result => {
             addItems(this.itemListMap, itemId, result);
         })
@@ -52,9 +59,7 @@ export default class Inventory {
         });
     }
 
-    deleteItem(itemId, count) {
-        // count 가 없으면 기본으로 1을 준다
-        count = count || 1;
+    deleteItem(itemId, count = 1) {
         const itemList = this.itemListMap[itemId];
         if (itemList && itemList.length >= count) {
             const assetsToDelete = itemList.splice(0, count);
@@ -70,6 +75,23 @@ export default class Inventory {
         }
     }
 
+    deleteCertainItem(itemId, assetId) {
+        const itemList = this.itemListMap[itemId];
+        if (itemList && itemList.includes(assetId)) {
+            const assetsToDelete = [assetId];
+            NetworkAPI.deleteAsset(assetsToDelete)
+            .then(() => {
+                deleteItems(this.itemListMap, itemId, assetsToDelete);
+            })
+            .catch(error => {
+                console.error('delete certain item failed.', error);
+            });
+        } else {
+            console.log('T.T', this.itemListMap);
+            throw new Error(`cannot deleteCeratinItem(${itemId}, ${assetId}): cannot find asset.`);
+        }
+    }
+
     getCount(itemId) {
         const itemList = this.itemListMap[itemId];
         if (itemList) {
@@ -81,9 +103,18 @@ export default class Inventory {
 
     forEach(callback) {
         for (const itemId in this.itemListMap) {
-            const count = this.getCount(itemId);
-            if (count > 0) {
-                callback(new Item(itemId, count));
+            const itemCategory = items[itemId].category;
+            const isBundleItem = itemCategory == "consumables" ||
+                                itemCategory == "material";
+            if (isBundleItem) {
+                const count = this.getCount(itemId);
+                if (count > 0) {
+                    callback(new Item(itemId, count));
+                }
+            } else {
+                this.itemListMap[itemId].forEach(assetId => {
+                    callback(new Item(itemId, 1, assetId));
+                });
             }
         }
     }

@@ -131,8 +131,8 @@ export default class Game extends EventEmitter {
             // 포션 사용.
             Sound.playSound('drink_potion_2.wav', { singleInstance: true });
         });
-        this.ui.on('equipItem', (itemCategory, itemId, cid) => {
-            this.equipItem(itemCategory, itemId, cid);
+        this.ui.on('equipItem', (itemCategory, itemId, assetId, cid) => {
+            this.equipItem(itemCategory, itemId, assetId, cid);
             this.ui.character = this.player.characters[cid];
         });
         // [정리] 착용하지 않고, 미리 스텟을 볼 수 있도록 하다보니.. 이런 것들이 생겼다. 어떻게 수정해야할까
@@ -867,10 +867,10 @@ export default class Game extends EventEmitter {
                 });
 
                 if (flag) {
-                    result.push({ item: item.id, data: item.data, owned: item.count });
+                    result.push(item);
                 }
             } else if (!filterOption.class) {
-                    result.push({ item: item.id, data: item.data, owned: item.count });
+                    result.push(item);
             }
         });
 
@@ -921,9 +921,10 @@ export default class Game extends EventEmitter {
         this.player.party.set(id, character);
     }
 
-    equipItem(itemCategory, itemId, cid) {
-        const unequipItem = this.player.characters[cid].equip(itemCategory, itemId);
-        this.player.inventory.deleteItem(itemId, 1);
+    equipItem(itemCategory, itemId, assetId, cid) {
+        const unequipItem = this.player.characters[cid].equip(itemCategory, itemId, assetId);
+        console.log('game.equipItem', itemId, assetId);
+        this.player.inventory.deleteCertainItem(itemId, assetId);
         if (unequipItem) {
             this.player.inventory.addItem(unequipItem.id, 1);
         }

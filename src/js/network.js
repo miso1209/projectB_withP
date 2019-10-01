@@ -74,7 +74,7 @@ class Network {
                 this.waitRequest = false;
                 this.refresh();
             } else {
-                request.reject(eror);
+                request.reject(error);
 
                 this.waitRequest = false;
                 process.nextTick(this.update.bind(this));
@@ -221,10 +221,15 @@ class Network {
                 const itemListMap = {};
                 result.forEach(asset => {
                     if (asset.appId == appId && !asset.locked) {
-                        if (!itemListMap[asset.defId]) {
-                            itemListMap[asset.defId] = [asset.assetId];
+                        let itemId = asset.defId;
+                        const propJson = JSON.parse(asset.propJson);
+                        if (propJson && propJson.rank) {
+                            itemId = `${propJson.rank}${asset.defId}`;
+                        }
+                        if (!itemListMap[itemId]) {
+                            itemListMap[itemId] = [asset.assetId];
                         } else {
-                            itemListMap[asset.defId].push(asset.assetId);
+                            itemListMap[itemId].push(asset.assetId);
                         }
                     }
                 });
@@ -235,20 +240,21 @@ class Network {
         return promise;
     }
 
-    addAsset(itemId, count) {
+    addAsset(itemId, propJson, count) {
         const promise = new Promise((resolve, reject) => {
-            const defId = [];
-            const propJson = [];
+            const defIds = [];
+            const propJsons = [];
+            propJson = JSON.stringify(propJson);
             for (let i = 0; i < count; ++i) {
-                defId.push(itemId);
-                propJson.push("");
+                defIds.push(itemId);
+                propJsons.push(propJson);
             }
             
             const data = {
                 appid: appId,
                 key: secret,
-                defid: defId,
-                propjson: propJson
+                defid: defIds,
+                propjson: propJsons
             }
 
             this.post('wallet/addasset', data)

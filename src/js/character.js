@@ -225,8 +225,8 @@ export default class Character {
         return Skill.New(this.skills.extra);
     }
 
-    equip(slot, itemId) {
-        const item = new Item(itemId);
+    equip(slot, itemId, assetId) {
+        const item = new Item(itemId, 1, assetId);
         if (!this.canEquip(slot, item)) {
             throw Error("can not equip item :" + item.name + " at " +  slot);
         }
@@ -405,8 +405,8 @@ export default class Character {
         this.level = data.level;
         this.exp = data.exp;
         for (const slot in data.equips) {
-            const itemId = data.equips[slot];
-            this.equip(slot, itemId);
+            const item = data.equips[slot];
+            this.equip(slot, item.itemId, item.assetId);
         }
         this.health = this.maxHealth;
         this.clearDirty();
@@ -418,7 +418,7 @@ export default class Character {
         for (const slot in this.equipments) {
             const item = this.equipments[slot];
             if (item) {
-                equips[slot] = item.id;
+                equips[slot] = { itemId: item.id, assetId: item.assetId };
             } 
         }
 

@@ -1,14 +1,15 @@
 import items from './items';
 
 export default class Item {
-    constructor(id, count) {
+    constructor(id, count, assetId) {
         this.data = items[id];
         if (!this.data) {
-            console.log('wrong data');
+            console.error('wrong data', id);
         }
         
         this.id = id;
         this.count = count || 1; // count 지정되지 않았다면, 1 로 설정한다
+        this.assetId = assetId;
     }
 
     get name() {
