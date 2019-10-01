@@ -1,7 +1,13 @@
 import items from './items';
+import {ConvertRankToItemIdBase} from './utils';
 
 export default class Item {
     constructor(id, count, assetId) {
+        if (/^\D/.test(id)) {
+            const stringItemId = String(id);
+            const rank = stringItemId.substring(0, 1);
+            id = Number(stringItemId.substring(1)) + ConvertRankToItemIdBase(rank);
+        }
         this.data = items[id];
         if (!this.data) {
             console.error('wrong data', id);

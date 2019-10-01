@@ -1,6 +1,7 @@
 import Item from "./item";
 import NetworkAPI from "./network";
 import items from "./items";
+import {ConvertRankToItemIdBase} from './utils';
 
 function addItems(itemMap, itemId, assetIds) {
     if (!itemMap[itemId]) {
@@ -43,14 +44,13 @@ export default class Inventory {
     }
 
     addItem(itemId, count = 1) {
-        let itemIdWithoutRank = itemId;
         const propJson = {};
         if (/^\D/.test(itemId)) {
             const stringItemId = String(itemId);
-            itemIdWithoutRank = stringItemId.substring(1);
-            propJson.rank = stringItemId.substring(0, 1);
+            const rank = stringItemId.substring(0, 1);
+            itemId = Number(stringItemId.substring(1)) + ConvertRankToItemIdBase(rank);
         }
-        NetworkAPI.addAsset(itemIdWithoutRank, propJson, count)
+        NetworkAPI.addAsset(itemId, propJson, count)
         .then(result => {
             addItems(this.itemListMap, itemId, result);
         })

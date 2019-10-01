@@ -23,6 +23,8 @@ import Item from './item';
 import MapGenerator from './mapgenerator';
 import items from './items';
 
+import {ConvertRankToItemIdBase} from './utils';
+
 export default class Game extends EventEmitter {
     constructor(pixi) {
 
@@ -1429,9 +1431,10 @@ export default class Game extends EventEmitter {
             if (category === 'weapon' || category === 'armor' || category === 'accessory') {
                 for (let rank in ranksStat) {
                     const newItem = Object.assign({}, item);
+                    const newItemId = Number(key) + ConvertRankToItemIdBase(rank);
                     newItem.rank = rank;
-                    newItem.id = `${rank}${key}`;
-                    newItems[`${rank}${key}`] = newItem;
+                    newItem.id = newItemId;
+                    newItems[newItemId] = newItem;
 
                     // ScriptParser로 모든 option rankStat만큼 증가.
                     newItem.options = newItem.options.map((option) => {

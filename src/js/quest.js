@@ -2,6 +2,7 @@ import quests from "./quests";
 import Items from "./items";
 import { EventEmitter } from "events";
 import ScriptParser from "./scriptparser";
+import {ConvertRankToItemIdBase} from './utils';
 
 export default class Quest extends EventEmitter {
     constructor(questid) {
@@ -121,7 +122,12 @@ export default class Quest extends EventEmitter {
             let count = 0;
 
             if(parser.name === "addItem") {
-                const itemId = parser.args[0];
+                let itemId = parser.args[0];
+                if (/^\D/.test(itemId)) {
+                    const stringItemId = String(itemId);
+                    const rank = stringItemId.substring(0, 1);
+                    itemId = Number(stringItemId.substring(1)) + ConvertRankToItemIdBase(rank);
+                }
                 count = parser.args[1];
                 item = Object.assign({}, Items[itemId]);
             }

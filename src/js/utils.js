@@ -79,3 +79,13 @@ export function ParsingNumber(input) {
     const text = input.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     return text;
 }
+
+export function ConvertRankToItemIdBase(rank) {
+    const ranksIdBase = {
+        B: 10000,
+        A: 20000,
+        S: 30000,
+        U: 40000
+    };
+    return ranksIdBase[rank];
+}
